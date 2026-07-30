@@ -14,7 +14,7 @@ export default function AboutIntro() {
             </div>
 
 
-            <h2 className="mb-6 text-4xl font-extrabold leading-tight text-slate-900 md:text-5xl">
+            <h2 className="mb-6 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl md:text-5xl">
               Empowering Journalists &
               <span className="text-blue-600">
                 {" "}Strengthening Independent Media
