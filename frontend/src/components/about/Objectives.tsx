@@ -34,7 +34,7 @@ const objectives = [
 
 export default function Objectives() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-50 py-12 sm:py-20">
       <div className="mx-auto max-w-7xl px-6">
 
 
@@ -46,7 +46,7 @@ export default function Objectives() {
           </span>
 
 
-          <h2 className="mt-5 text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl">
+          <h2 className="mt-5 text-4xl font-extrabold text-slate-900 md:text-5xl">
             What We Aim To Achieve
           </h2>
 

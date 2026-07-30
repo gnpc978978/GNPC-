@@ -3,7 +3,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 export default function GalleryCTA() {
   return (
-    <section className="relative overflow-hidden bg-blue-900 py-20">
+    <section className="relative overflow-hidden bg-blue-900 py-12 sm:py-20">
 
       {/* Glow */}
       <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-400/20 blur-3xl" />
