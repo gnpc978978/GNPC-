@@ -18,7 +18,7 @@ export default function HeroContent() {
       </span>
 
       {/* Heading */}
-      <h1 className="mt-8 text-5xl font-extrabold leading-tight tracking-tight md:text-6xl xl:text-7xl">
+      <h1 className="mt-8 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl xl:text-7xl">
         <span className="text-slate-900">
           Empowering
         </span>
