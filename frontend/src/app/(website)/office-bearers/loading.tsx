@@ -1,0 +1,2 @@
+import OfficeBearersSkeleton from "@/components/office-bearers/OfficeBearersSkeleton";
+export default function Loading() { return <section className="min-h-screen bg-slate-50 py-16 sm:py-20"><div className="mx-auto max-w-7xl px-6"><div className="mx-auto h-12 w-72 animate-pulse rounded bg-slate-200" /><div className="mx-auto mt-6 h-12 max-w-xl animate-pulse rounded-xl bg-slate-200" /><div className="mt-10"><OfficeBearersSkeleton count={12} /></div></div></section>; }

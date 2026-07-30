@@ -1,0 +1,58 @@
+import { GalleryImage } from "@/types/gallery";
+
+export const galleryImages: GalleryImage[] = [
+  {
+    id: 1,
+    title: "Annual Press Meet",
+    image: "/gallery/gallery1.jpg",
+    album: "Annual Meet",
+    category: "Events",
+    uploadedBy: "Admin",
+    date: "26 July 2026",
+  },
+  {
+    id: 2,
+    title: "Media Workshop",
+    image: "/gallery/gallery2.jpg",
+    album: "Workshop",
+    category: "Seminars",
+    uploadedBy: "Admin",
+    date: "25 July 2026",
+  },
+  {
+    id: 3,
+    title: "Press Conference",
+    image: "/gallery/gallery3.jpg",
+    album: "Conference",
+    category: "Press Conference",
+    uploadedBy: "Admin",
+    date: "24 July 2026",
+  },
+  {
+    id: 4,
+    title: "Award Ceremony",
+    image: "/gallery/gallery4.jpg",
+    album: "Awards",
+    category: "Awards",
+    uploadedBy: "Admin",
+    date: "23 July 2026",
+  },
+  {
+    id: 5,
+    title: "Club Meeting",
+    image: "/gallery/gallery5.jpg",
+    album: "Meetings",
+    category: "Meetings",
+    uploadedBy: "Admin",
+    date: "22 July 2026",
+  },
+  {
+    id: 6,
+    title: "Press Interaction",
+    image: "/gallery/gallery6.jpg",
+    album: "Media",
+    category: "Media",
+    uploadedBy: "Admin",
+    date: "21 July 2026",
+  },
+];

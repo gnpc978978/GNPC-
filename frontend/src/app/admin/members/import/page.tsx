@@ -1,0 +1,2 @@
+import MemberImport from "@/components/admin/members/MemberImport";
+export default function ImportOfficeBearersPage() { return <div className="p-6"><h1 className="mb-6 text-3xl font-bold">Import Office Bearers</h1><MemberImport /></div>; }
