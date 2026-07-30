@@ -8,7 +8,7 @@ export default function ContactHero() {
           Contact Us
         </span>
 
-        <h1 className="mt-6 text-4xl font-extrabold text-white md:text-6xl">
+        <h1 className="mt-6 text-3xl font-extrabold text-white sm:text-4xl md:text-6xl">
           Get In Touch
         </h1>
 
