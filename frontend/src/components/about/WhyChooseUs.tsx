@@ -46,7 +46,7 @@ export default function WhyChooseUs() {
           </span>
 
 
-          <h2 className="mt-5 text-4xl font-extrabold text-slate-900 md:text-5xl">
+          <h2 className="mt-5 text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl">
             Why Greater Noida Press Club Matters
           </h2>
 
