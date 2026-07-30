@@ -2,7 +2,7 @@ import { FaBullseye, FaEye } from "react-icons/fa";
 
 export default function MissionVision() {
   return (
-    <section className="bg-slate-50 py-24">
+    <section className="bg-slate-50 py-12 sm:py-20">
       <div className="mx-auto max-w-7xl px-6">
 
 

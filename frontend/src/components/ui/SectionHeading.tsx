@@ -22,8 +22,8 @@ export default function SectionHeading({
 
   const headingSize = {
     sm: "text-2xl sm:text-3xl",
-    md: "text-3xl sm:text-4xl lg:text-5xl",
-    lg: "text-3xl sm:text-4xl lg:text-5xl xl:text-6xl",
+    md: "text-2xl sm:text-4xl lg:text-5xl",
+    lg: "text-2xl sm:text-4xl lg:text-5xl xl:text-6xl",
   };
 
   return (

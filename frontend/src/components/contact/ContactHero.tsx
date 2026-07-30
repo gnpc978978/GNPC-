@@ -1,6 +1,6 @@
 export default function ContactHero() {
   return (
-    <section className="relative overflow-hidden bg-slate-950 py-24">
+    <section className="relative overflow-hidden bg-slate-950 py-12 sm:py-20">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-slate-950" />
 
       <div className="relative mx-auto max-w-7xl px-6 text-center">
@@ -8,7 +8,7 @@ export default function ContactHero() {
           Contact Us
         </span>
 
-        <h1 className="mt-6 text-3xl font-extrabold text-white sm:text-4xl md:text-6xl">
+        <h1 className="mt-6 text-2xl font-extrabold text-white sm:text-3xl md:text-6xl">
           Get In Touch
         </h1>
 
