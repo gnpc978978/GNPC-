@@ -18,35 +18,70 @@ interface Activity {
   };
 }
 
-const formatRelativeTime = (dateString: string) => {
+const formatActivityTime = (dateString: string) => {
   const date = new Date(dateString);
-  const now = new Date();
 
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown time";
+  }
+
+  const now = new Date();
   const difference = now.getTime() - date.getTime();
 
+  // Future timestamps
+  if (difference < 0) {
+    const futureSeconds = Math.abs(Math.floor(difference / 1000));
+
+    if (futureSeconds < 60) {
+      return "Just now";
+    }
+
+    const futureMinutes = Math.floor(futureSeconds / 60);
+
+    if (futureMinutes < 60) {
+      return `In ${futureMinutes} minute${
+        futureMinutes === 1 ? "" : "s"
+      }`;
+    }
+
+    const futureHours = Math.floor(futureMinutes / 60);
+
+    if (futureHours < 24) {
+      return `In ${futureHours} hour${
+        futureHours === 1 ? "" : "s"
+      }`;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
   const seconds = Math.floor(difference / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
 
   if (seconds < 60) {
     return "Just now";
   }
 
+  const minutes = Math.floor(seconds / 60);
+
   if (minutes < 60) {
     return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
   }
+
+  const hours = Math.floor(minutes / 60);
 
   if (hours < 24) {
     return `${hours} hour${hours === 1 ? "" : "s"} ago`;
   }
 
-  if (days === 1) {
-    return "Yesterday";
-  }
+  const days = Math.floor(hours / 24);
 
-  if (days < 7) {
-    return `${days} days ago`;
+  // Keep relative time for the first 30 days.
+  if (days < 30) {
+    return `${days} day${days === 1 ? "" : "s"} ago`;
   }
 
   return date.toLocaleDateString("en-IN", {
@@ -59,6 +94,7 @@ const formatRelativeTime = (dateString: string) => {
 export default function RecentActivities() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   const fetchActivities = async () => {
     try {
@@ -94,31 +130,29 @@ export default function RecentActivities() {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div
-      className="
-        rounded-2xl
-        bg-white
-        p-6
-        shadow-sm
-      "
-    >
-      <h2
-        className="
-          text-lg
-          font-bold
-          text-slate-900
-        "
-      >
-        Recent Activities
-      </h2>
+  const visibleActivities = showAll
+    ? activities
+    : activities.slice(0, 7);
 
-      <div
-        className="
-          mt-5
-          space-y-4
-        "
-      >
+  return (
+    <div className="rounded-2xl bg-white p-6 shadow-sm">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-slate-900">
+          Recent Activities
+        </h2>
+
+        {activities.length > 7 && (
+          <button
+            type="button"
+            onClick={() => setShowAll((value) => !value)}
+            className="text-sm font-semibold text-blue-600 transition hover:text-blue-800"
+          >
+            {showAll ? "Show Less" : "See More"}
+          </button>
+        )}
+      </div>
+
+      <div className="mt-5 space-y-4">
         {loading ? (
           <p className="text-sm text-slate-400">
             Loading activities...
@@ -128,27 +162,13 @@ export default function RecentActivities() {
             No recent activities.
           </p>
         ) : (
-          activities.map((item) => (
+          visibleActivities.map((item) => (
             <div
               key={item._id}
-              className="
-                flex
-                items-start
-                justify-between
-                gap-4
-                border-b
-                border-slate-100
-                pb-4
-              "
+              className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4 last:border-b-0"
             >
-              <div>
-                <p
-                  className="
-                    text-sm
-                    font-medium
-                    text-slate-700
-                  "
-                >
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-slate-700">
                   {item.description}
                 </p>
 
@@ -158,14 +178,16 @@ export default function RecentActivities() {
               </div>
 
               <span
-                className="
-                  whitespace-nowrap
-                  text-xs
-                  text-slate-400
-                "
-                title={new Date(item.createdAt).toLocaleString("en-IN")}
+                className="whitespace-nowrap text-xs text-slate-400"
+                title={new Date(item.createdAt).toLocaleString(
+                  "en-IN",
+                  {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  }
+                )}
               >
-                {formatRelativeTime(item.createdAt)}
+                {formatActivityTime(item.createdAt)}
               </span>
             </div>
           ))
