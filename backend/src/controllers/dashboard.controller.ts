@@ -7,10 +7,6 @@ import Gallery from "../models/Gallery";
 import ExecutiveCommittee from "../models/ExecutiveCommittee";
 import PressRelease from "../models/pressRelease.model";
 
-// =====================================================
-// DASHBOARD STATISTICS
-// =====================================================
-
 export const getDashboardStats = async (
   req: Request,
   res: Response
@@ -23,9 +19,7 @@ export const getDashboardStats = async (
       status: "PUBLISHED",
     });
 
-    const events = await Event.countDocuments({
-      isActive: { $ne: false },
-    });
+    const events = await Event.countDocuments();
 
     const gallery = await Gallery.countDocuments();
 
@@ -49,50 +43,50 @@ export const getDashboardStats = async (
   }
 };
 
-// =====================================================
-// DASHBOARD ANALYTICS / CHARTS
-// =====================================================
-
 export const getDashboardCharts = async (
   req: Request,
   res: Response
 ) => {
   try {
+    const requestedYear = Number(req.query.year);
+
     const year =
-      Number(req.query.year) ||
-      new Date().getFullYear();
+      Number.isInteger(requestedYear) &&
+      requestedYear >= 2000 &&
+      requestedYear <= 2100
+        ? requestedYear
+        : new Date().getFullYear();
 
-    const startOfYear = new Date(
-      year,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0
-    );
+    const start = new Date(Date.UTC(year, 0, 1));
+    const end = new Date(Date.UTC(year + 1, 0, 1));
 
-    const startOfNextYear = new Date(
-      year + 1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0
+    const months = Array.from(
+      { length: 12 },
+      (_, index) => ({
+        month: new Date(
+          Date.UTC(year, index, 1)
+        ).toLocaleString("en-US", {
+          month: "short",
+          timeZone: "UTC",
+        }),
+
+        pressReleases: 0,
+        events: 0,
+        gallery: 0,
+      })
     );
 
     const [
-      pressReleases,
-      events,
-      gallery,
+      pressReleaseCounts,
+      eventCounts,
+      galleryCounts,
     ] = await Promise.all([
       PressRelease.aggregate([
         {
           $match: {
             createdAt: {
-              $gte: startOfYear,
-              $lt: startOfNextYear,
+              $gte: start,
+              $lt: end,
             },
 
             isActive: {
@@ -120,8 +114,8 @@ export const getDashboardCharts = async (
         {
           $match: {
             createdAt: {
-              $gte: startOfYear,
-              $lt: startOfNextYear,
+              $gte: start,
+              $lt: end,
             },
 
             isActive: {
@@ -147,9 +141,11 @@ export const getDashboardCharts = async (
         {
           $match: {
             createdAt: {
-              $gte: startOfYear,
-              $lt: startOfNextYear,
+              $gte: start,
+              $lt: end,
             },
+
+            status: "active",
           },
         },
 
@@ -167,65 +163,61 @@ export const getDashboardCharts = async (
       ]),
     ]);
 
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
+    pressReleaseCounts.forEach(
+      (item: {
+        _id: number;
+        count: number;
+      }) => {
+        if (
+          item._id >= 1 &&
+          item._id <= 12
+        ) {
+          months[item._id - 1].pressReleases =
+            item.count;
+        }
+      }
+    );
 
-    const data = months.map(
-      (month, index) => {
-        const monthNumber = index + 1;
+    eventCounts.forEach(
+      (item: {
+        _id: number;
+        count: number;
+      }) => {
+        if (
+          item._id >= 1 &&
+          item._id <= 12
+        ) {
+          months[item._id - 1].events =
+            item.count;
+        }
+      }
+    );
 
-        const pressReleaseData =
-          pressReleases.find(
-            (item) =>
-              item._id === monthNumber
-          );
-
-        const eventData =
-          events.find(
-            (item) =>
-              item._id === monthNumber
-          );
-
-        const galleryData =
-          gallery.find(
-            (item) =>
-              item._id === monthNumber
-          );
-
-        return {
-          month,
-
-          pressReleases:
-            pressReleaseData?.count || 0,
-
-          events:
-            eventData?.count || 0,
-
-          gallery:
-            galleryData?.count || 0,
-        };
+    galleryCounts.forEach(
+      (item: {
+        _id: number;
+        count: number;
+      }) => {
+        if (
+          item._id >= 1 &&
+          item._id <= 12
+        ) {
+          months[item._id - 1].gallery =
+            item.count;
+        }
       }
     );
 
     res.status(200).json({
       success: true,
       year,
-      data,
+      data: months,
     });
   } catch (error) {
-    console.error("Charts Error:", error);
+    console.error(
+      "Charts Error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
@@ -234,15 +226,67 @@ export const getDashboardCharts = async (
   }
 };
 
-// =====================================================
-// TRAFFIC TRACKING
-// =====================================================
+export const getPublicStats = async (
+  _req: Request,
+  res: Response
+) => {
+  try {
+    const active = {
+      isActive: {
+        $ne: false,
+      },
+    };
+
+    const [
+      members,
+      pressReleases,
+      events,
+    ] = await Promise.all([
+      ExecutiveCommittee.countDocuments({
+        status: "active",
+      }),
+
+      PressRelease.countDocuments({
+        ...active,
+        status: "PUBLISHED",
+      }),
+
+      Event.countDocuments({
+        ...active,
+        status: "published",
+      }),
+    ]);
+
+    res.set(
+      "Cache-Control",
+      "public, max-age=60, stale-while-revalidate=300"
+    );
+
+    res.status(200).json({
+      members,
+      pressReleases,
+      events,
+    });
+  } catch (error) {
+    res.status(500).json({
+      members: 0,
+      pressReleases: 0,
+      events: 0,
+    });
+  }
+};
+
+/* =====================================================
+   TRAFFIC TRACKING
+   ===================================================== */
 
 const getTrafficCollections = () => {
   const db = mongoose.connection.db;
 
   if (!db) {
-    throw new Error("MongoDB connection is not ready");
+    throw new Error(
+      "MongoDB connection is not ready"
+    );
   }
 
   return {
@@ -251,14 +295,17 @@ const getTrafficCollections = () => {
   };
 };
 
-// Public endpoint called by the website
+/* Public website heartbeat */
+
 export const trackTraffic = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { sessions, stats } =
-      getTrafficCollections();
+    const {
+      sessions,
+      stats,
+    } = getTrafficCollections();
 
     const sessionId =
       typeof req.body?.sessionId === "string"
@@ -267,7 +314,7 @@ export const trackTraffic = async (
 
     const page =
       typeof req.body?.page === "string"
-        ? req.body.page.slice(0, 300)
+        ? req.body.page.substring(0, 300)
         : "/";
 
     if (
@@ -309,28 +356,36 @@ export const trackTraffic = async (
       });
     }
 
-    // A visitor is considered online if active
-    // within the last 2 minutes.
     const onlineSince = new Date(
-      now.getTime() - 2 * 60 * 1000
+      now.getTime() -
+        2 * 60 * 1000
     );
 
-    const onlineNow =
-      await sessions.countDocuments({
+    const startOfToday = new Date();
+
+    startOfToday.setHours(
+      0,
+      0,
+      0,
+      0
+    );
+
+    const [
+      onlineNow,
+      todayVisits,
+    ] = await Promise.all([
+      sessions.countDocuments({
         lastSeen: {
           $gte: onlineSince,
         },
-      });
+      }),
 
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-
-    const todayVisits =
-      await sessions.countDocuments({
+      sessions.countDocuments({
         createdAt: {
           $gte: startOfToday,
         },
-      });
+      }),
+    ]);
 
     let trafficStats =
       await stats.findOne({
@@ -346,65 +401,53 @@ export const trackTraffic = async (
         updatedAt: now,
       });
 
-      trafficStats = await stats.findOne({
-        _id: "global",
-      });
+      trafficStats =
+        await stats.findOne({
+          _id: "global",
+        });
     } else {
-      const isNewSession =
-        !existingSession;
+      const updateData: {
+        totalVisits?: number;
+        peakOnline?: number;
+        peakAt?: Date;
+        updatedAt: Date;
+      } = {
+        updatedAt: now,
+      };
+
+      if (!existingSession) {
+        updateData.totalVisits =
+          Number(
+            trafficStats.totalVisits || 0
+          ) + 1;
+      }
 
       if (
-        isNewSession ||
         onlineNow >
-          Number(trafficStats.peakOnline || 0)
+        Number(
+          trafficStats.peakOnline || 0
+        )
       ) {
-        const update: Record<
-          string,
-          unknown
-        > = {
-          updatedAt: now,
-        };
+        updateData.peakOnline =
+          onlineNow;
 
-        if (isNewSession) {
-          update.totalVisits =
-            Number(
-              trafficStats.totalVisits || 0
-            ) + 1;
-        }
-
-        if (
-          onlineNow >
-          Number(trafficStats.peakOnline || 0)
-        ) {
-          update.peakOnline = onlineNow;
-          update.peakAt = now;
-        }
-
-        await stats.updateOne(
-          {
-            _id: "global",
-          },
-          {
-            $set: update,
-          }
-        );
-
-        trafficStats =
-          await stats.findOne({
-            _id: "global",
-          });
-      } else {
-        await stats.updateOne(
-          {
-            _id: "global",
-          },
-          {
-            $set: {
-              updatedAt: now,
-            },
-          }
-        );
+        updateData.peakAt =
+          now;
       }
+
+      await stats.updateOne(
+        {
+          _id: "global",
+        },
+        {
+          $set: updateData,
+        }
+      );
+
+      trafficStats =
+        await stats.findOne({
+          _id: "global",
+        });
     }
 
     return res.status(200).json({
@@ -412,17 +455,23 @@ export const trackTraffic = async (
 
       traffic: {
         onlineNow,
+
         todayVisits,
+
         totalVisits:
           Number(
             trafficStats?.totalVisits || 0
           ),
+
         peakOnline:
           Number(
-            trafficStats?.peakOnline || onlineNow
+            trafficStats?.peakOnline ||
+              onlineNow
           ),
+
         peakAt:
-          trafficStats?.peakAt || now,
+          trafficStats?.peakAt ||
+          now,
       },
     });
   } catch (error) {
@@ -433,28 +482,39 @@ export const trackTraffic = async (
 
     return res.status(500).json({
       success: false,
-      message: "Failed to track traffic",
+      message:
+        "Failed to track traffic",
     });
   }
 };
 
-// Admin traffic overview
+/* Admin traffic overview */
+
 export const getTrafficAnalytics = async (
   _req: Request,
   res: Response
 ) => {
   try {
-    const { sessions, stats } =
-      getTrafficCollections();
+    const {
+      sessions,
+      stats,
+    } = getTrafficCollections();
 
     const now = new Date();
 
     const onlineSince = new Date(
-      now.getTime() - 2 * 60 * 1000
+      now.getTime() -
+        2 * 60 * 1000
     );
 
     const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
+
+    startOfToday.setHours(
+      0,
+      0,
+      0,
+      0
+    );
 
     const [
       onlineNow,
@@ -510,65 +570,6 @@ export const getTrafficAnalytics = async (
       success: false,
       message:
         "Failed to load traffic analytics",
-    });
-  }
-};
-
-// =====================================================
-// PUBLIC WEBSITE STATISTICS
-// =====================================================
-
-export const getPublicStats = async (
-  _req: Request,
-  res: Response
-) => {
-  try {
-    const active = {
-      isActive: {
-        $ne: false,
-      },
-    };
-
-    const [
-      members,
-      pressReleases,
-      events,
-    ] = await Promise.all([
-      ExecutiveCommittee.countDocuments({
-        status: "active",
-      }),
-
-      PressRelease.countDocuments({
-        ...active,
-        status: "PUBLISHED",
-      }),
-
-      Event.countDocuments({
-        ...active,
-        status: "published",
-      }),
-    ]);
-
-    res.set(
-      "Cache-Control",
-      "public, max-age=60, stale-while-revalidate=300"
-    );
-
-    res.status(200).json({
-      members,
-      pressReleases,
-      events,
-    });
-  } catch (error) {
-    console.error(
-      "Public Stats Error:",
-      error
-    );
-
-    res.status(500).json({
-      members: 0,
-      pressReleases: 0,
-      events: 0,
     });
   }
 };
