@@ -39,6 +39,13 @@ createdBy:(req as any).user.id
 
 });
 
+await createActivity({
+  user: (req as any).user.id,
+  action: "CREATE",
+  module: "PRESS_RELEASE",
+  description: `Created press release "${pressRelease.title}"`,
+});
+  
 res.status(201).json({
 success:true,
 message:"Press Release Created",
