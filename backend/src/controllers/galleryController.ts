@@ -1,3 +1,4 @@
+import { createActivity } from "../services/activity.service";
 import { Request, Response } from "express";
 import Gallery from "../models/Gallery";
 import cloudinary from "../config/cloudinary";
@@ -163,7 +164,12 @@ console.log("FILES:", req.files);
       });
 
 
-
+await createActivity({
+  user: (req as any).user.id,
+  action: "CREATE",
+  module: "GALLERY",
+  description: `Created gallery album "${gallery.title}"`,
+});
 
 
     return res.status(201).json({
