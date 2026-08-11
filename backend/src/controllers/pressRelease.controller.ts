@@ -1,3 +1,4 @@
+import { createActivity } from "../services/activity.service";
 import { Request, Response } from "express";
 import PressRelease from "../models/pressRelease.model";
 import mongoose from "mongoose";
