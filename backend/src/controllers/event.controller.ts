@@ -1,3 +1,4 @@
+import { createActivity } from "../services/activity.service";
 import { Request, Response } from "express";
 import Event from "../models/event.model";
 import mongoose from "mongoose";
@@ -26,7 +27,13 @@ export const createEvent = async (
         : [],
     });
 
-
+await createActivity({
+  user: (req as any).user.id,
+  action: "CREATE",
+  module: "EVENT",
+  description: `Created event "${event.title}"`,
+});
+    
     res.status(201).json({
       success:true,
       message:"Event created successfully",
