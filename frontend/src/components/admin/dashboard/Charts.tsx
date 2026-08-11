@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 
 import { useEffect, useState } from "react";
@@ -96,47 +97,44 @@ height="100%"
 >
 
 <LineChart
-data={data}
+  data={data}
 >
 
 <CartesianGrid
-strokeDasharray="3 3"
+  strokeDasharray="3 3"
 />
-
 
 <XAxis
-dataKey="month"
+  dataKey="month"
 />
-
 
 <YAxis
 />
 
+<Tooltip />
 
-<Tooltip
-/>
-
-
-<Line
-type="monotone"
-dataKey="pressReleases"
-strokeWidth={2}
-/>
-
+<Legend />
 
 <Line
-type="monotone"
-dataKey="events"
-strokeWidth={2}
+  type="monotone"
+  dataKey="pressReleases"
+  name="Press Releases"
+  strokeWidth={2}
 />
-
 
 <Line
-type="monotone"
-dataKey="gallery"
-strokeWidth={2}
+  type="monotone"
+  dataKey="events"
+  name="Events"
+  strokeWidth={2}
 />
 
+<Line
+  type="monotone"
+  dataKey="gallery"
+  name="Gallery"
+  strokeWidth={2}
+/>
 
 </LineChart>
 
