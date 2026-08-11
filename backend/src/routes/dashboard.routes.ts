@@ -12,33 +12,33 @@ import authMiddleware from "../middleware/auth.middleware";
 
 const router = express.Router();
 
-// Public website statistics
 router.get(
   "/public-stats",
   getPublicStats
 );
 
-// Public traffic heartbeat
+/*
+ * Public website traffic heartbeat.
+ * This MUST NOT use authMiddleware because
+ * normal website visitors are not logged in.
+ */
 router.post(
   "/traffic",
   trackTraffic
 );
 
-// Admin dashboard statistics
 router.get(
   "/stats",
   authMiddleware,
   getDashboardStats
 );
 
-// Admin dashboard charts
 router.get(
   "/charts",
   authMiddleware,
   getDashboardCharts
 );
 
-// Admin traffic analytics
 router.get(
   "/traffic",
   authMiddleware,
