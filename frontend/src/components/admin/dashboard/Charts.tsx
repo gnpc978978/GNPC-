@@ -117,8 +117,8 @@ height="100%"
 
 <Line
   type="monotone"
-  dataKey="pressReleases"
-  name="Press Releases"
+  dataKey="pressConferences"
+  name="Press Conferences"
   strokeWidth={2}
 />
 
