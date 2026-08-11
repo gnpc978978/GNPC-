@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Activity from "../models/activity.model";
 
 export const getActivities = async (
-  req: Request,
+  _req: Request,
   res: Response
 ) => {
   try {
@@ -25,8 +25,10 @@ export const getActivities = async (
 
     return res.status(500).json({
       success: false,
+
       message:
-        process.env.NODE_ENV !== "production" &&
+        process.env.NODE_ENV !==
+          "production" &&
         error instanceof Error
           ? error.message
           : "Failed to fetch activities",
