@@ -157,7 +157,7 @@ export default function Footer() {
           "
         >
           <p>© {new Date().getFullYear()} {settings.siteName || "Press Club"}. All Rights Reserved.</p>
-          <p className="mt-2 text-slate-400">Developed by <a href="https://www.linkedin.com/in/itxayushrajput" target="_blank" rel="noopener noreferrer" className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">Ayush Chauhan</a> and <a href="https://www.linkedin.com/in/shreyansh-mishra-66615437b" target="_blank" rel="noopener noreferrer" className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">Shreyansh Mishra</a></p>
+          <p className="mt-2 text-slate-400">Crafted with precision by <a href="https://www.linkedin.com/in/itxayushrajput" target="_blank" rel="noopener noreferrer" className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">Ayush Chauhan</a> & <a href="https://www.linkedin.com/in/shreyansh-mishra-66615437b" target="_blank" rel="noopener noreferrer" className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">Shreyansh Mishra</a></p>
         </div>
 
       </Container>
