@@ -504,3 +504,30 @@ p {
     font-size: 16px;
   }
 }
+
+/* =========================================================
+   GNPC PUBLIC RHYTHM
+   ========================================================= */
+
+.gnpc-public {
+  --public-content-width: 80rem;
+  --public-section-gap: clamp(4rem, 7vw, 6.5rem);
+}
+
+.gnpc-public section + section {
+  border-top: 1px solid var(--gnpc-border);
+}
+
+.gnpc-public .gnpc-container {
+  max-width: var(--public-content-width);
+}
+
+.gnpc-public h1,
+.gnpc-public h2,
+.gnpc-public h3 {
+  color: var(--gnpc-text);
+}
+
+.gnpc-public p {
+  color: var(--gnpc-text-muted);
+}
