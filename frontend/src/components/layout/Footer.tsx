@@ -25,7 +25,6 @@ export default function Footer() {
     "Greater Noida Press Club";
 
   const description =
-    settings.siteDescription ||
     settings.heroDescription ||
     "Greater Noida Press Club is a professional platform connecting journalists, media professionals and the community.";
 
@@ -35,12 +34,10 @@ export default function Footer() {
 
   const phone =
     settings.phone ||
-    settings.contactPhone ||
     "";
 
   const email =
     settings.email ||
-    settings.contactEmail ||
     "";
 
   const quickLinks = [
@@ -121,7 +118,6 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-slate-800 bg-slate-950 text-white">
-      {/* Main Footer */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1fr] lg:gap-12">
 
@@ -149,7 +145,6 @@ export default function Footer() {
                     className="mt-0.5 shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
-
                   <span>{address}</span>
                 </div>
               )}
@@ -164,7 +159,6 @@ export default function Footer() {
                     className="shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
-
                   <span>{phone}</span>
                 </a>
               )}
@@ -179,7 +173,6 @@ export default function Footer() {
                     className="shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
-
                   <span>{email}</span>
                 </a>
               )}
@@ -238,7 +231,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Connect */}
+          {/* Social / Contact */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Connect With Us
