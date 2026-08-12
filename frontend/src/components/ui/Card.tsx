@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type CardProps = {
   children: ReactNode;
@@ -30,10 +30,17 @@ export default function Card({
         border
         border-slate-200
         bg-white
+        shadow-sm
         ${paddingStyles[padding]}
         ${
           hover
-            ? "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            ? `
+              transition-all
+              duration-200
+              hover:-translate-y-0.5
+              hover:border-slate-300
+              hover:shadow-md
+            `
             : ""
         }
         ${onClick ? "cursor-pointer" : ""}
