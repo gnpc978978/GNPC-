@@ -1,16 +1,19 @@
 "use client";
+
 import Link from "next/link";
 import {
   ArrowUpRight,
-  Facebook,
-  Instagram,
-  Linkedin,
   Mail,
   MapPin,
   Phone,
-  Twitter,
-  Youtube,
 } from "lucide-react";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaXTwitter,
+  FaYoutube,
+} from "react-icons/fa6";
 
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
@@ -86,75 +89,70 @@ export default function Footer() {
     {
       label: "Facebook",
       href: settings.facebookUrl,
-      icon: Facebook,
+      icon: FaFacebookF,
     },
     {
       label: "Instagram",
       href: settings.instagramUrl,
-      icon: Instagram,
+      icon: FaInstagram,
     },
     {
-      label: "Twitter",
+      label: "X",
       href: settings.twitterUrl,
-      icon: Twitter,
+      icon: FaXTwitter,
     },
     {
       label: "LinkedIn",
       href: settings.linkedinUrl,
-      icon: Linkedin,
+      icon: FaLinkedinIn,
     },
     {
       label: "YouTube",
       href: settings.youtubeUrl,
-      icon: Youtube,
+      icon: FaYoutube,
     },
   ].filter(
     (
       item
     ): item is typeof item & {
       href: string;
-    } =>
-      Boolean(item.href)
+    } => Boolean(item.href)
   );
 
   return (
-    <footer className="border-t border-slate-200 bg-slate-950 text-white">
-      {/* Main footer */}
+    <footer className="border-t border-slate-800 bg-slate-950 text-white">
+      {/* =====================================================
+          MAIN FOOTER
+          ===================================================== */}
+
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1fr] lg:gap-12">
-          {/* Brand */}
+
+          {/* =================================================
+              BRAND / CONTACT
+              ================================================= */}
+
           <div>
             <Link
               href="/"
               aria-label={`${siteName} home`}
-              className="group inline-flex items-center"
+              className="inline-flex items-center"
             >
-              <div className="relative flex min-h-16 min-w-16 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white p-2 shadow-lg transition-transform duration-300 group-hover:-translate-y-0.5">
-                <Image
-                  src={logo}
-                  alt={`${siteName} logo`}
-                  width={150}
-                  height={70}
-                  className="h-auto max-h-14 w-auto max-w-[150px] object-contain"
-                />
-              </div>
+              <span className="text-xl font-extrabold tracking-tight text-white">
+                {siteName}
+              </span>
             </Link>
 
-            <h2 className="mt-5 text-lg font-bold text-white">
-              {siteName}
-            </h2>
-
-            <p className="mt-3 max-w-md text-sm leading-6 text-slate-400">
+            <p className="mt-4 max-w-md text-sm leading-7 text-slate-400">
               {description}
             </p>
 
-            {/* Contact information */}
             <div className="mt-6 space-y-3">
               {address && (
                 <div className="flex items-start gap-3 text-sm text-slate-400">
                   <MapPin
                     size={17}
-                    className="mt-0.5 shrink-0 text-blue-400"
+                    className="mt-0.5 shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
 
@@ -165,11 +163,11 @@ export default function Footer() {
               {phone && (
                 <a
                   href={`tel:${phone}`}
-                  className="flex items-center gap-3 text-sm text-slate-400 transition hover:text-white"
+                  className="flex items-center gap-3 text-sm text-slate-400 transition-colors duration-200 hover:text-white"
                 >
                   <Phone
                     size={17}
-                    className="shrink-0 text-blue-400"
+                    className="shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
 
@@ -180,11 +178,11 @@ export default function Footer() {
               {email && (
                 <a
                   href={`mailto:${email}`}
-                  className="flex items-center gap-3 break-all text-sm text-slate-400 transition hover:text-white"
+                  className="flex items-center gap-3 break-all text-sm text-slate-400 transition-colors duration-200 hover:text-white"
                 >
                   <Mail
                     size={17}
-                    className="shrink-0 text-blue-400"
+                    className="shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
 
@@ -194,9 +192,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick links */}
+          {/* =================================================
+              QUICK LINKS
+              ================================================= */}
+
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+            <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Quick Links
             </h3>
 
@@ -205,13 +206,13 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+                    className="group inline-flex items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-white"
                   >
                     <span>{link.label}</span>
 
                     <ArrowUpRight
                       size={13}
-                      className="opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
+                      className="opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
                       aria-hidden="true"
                     />
                   </Link>
@@ -220,44 +221,47 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Latest Updates */}
+          {/* =================================================
+              LATEST UPDATES
+              ================================================= */}
+
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+            <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Latest Updates
             </h3>
 
             <ul className="mt-5 space-y-3">
-              {latestUpdateLinks.map(
-                (link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="group inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
-                    >
-                      <span>{link.label}</span>
+              {latestUpdateLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="group inline-flex items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-white"
+                  >
+                    <span>{link.label}</span>
 
-                      <ArrowUpRight
-                        size={13}
-                        className="opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-                        aria-hidden="true"
-                      />
-                    </Link>
-                  </li>
-                )
-              )}
+                    <ArrowUpRight
+                      size={13}
+                      className="opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Connect */}
+          {/* =================================================
+              CONNECT
+              ================================================= */}
+
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+            <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Connect With Us
             </h3>
 
-            <p className="mt-5 text-sm leading-6 text-slate-400">
+            <p className="mt-5 text-sm leading-7 text-slate-400">
               Stay connected with GNPC for the latest
-              announcements, press activities and
-              updates.
+              announcements, press activities and updates.
             </p>
 
             {socialLinks.length > 0 && (
@@ -274,10 +278,27 @@ export default function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={label}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                      className="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-xl
+                        border
+                        border-white/10
+                        bg-white/[0.04]
+                        text-slate-400
+                        transition-all
+                        duration-200
+                        hover:-translate-y-0.5
+                        hover:border-white/20
+                        hover:bg-white/10
+                        hover:text-white
+                      "
                     >
                       <Icon
-                        size={17}
+                        size={16}
                         aria-hidden="true"
                       />
                     </a>
@@ -288,13 +309,32 @@ export default function Footer() {
 
             <Link
               href="/contact"
-              className="group mt-6 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.05] px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/10"
+              className="
+                group
+                mt-6
+                inline-flex
+                items-center
+                gap-2
+                rounded-xl
+                border
+                border-white/15
+                bg-white/[0.05]
+                px-4
+                py-3
+                text-sm
+                font-semibold
+                text-white
+                transition-all
+                duration-200
+                hover:border-white/25
+                hover:bg-white/10
+              "
             >
               Get in touch
 
               <ArrowUpRight
                 size={16}
-                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
             </Link>
@@ -302,9 +342,27 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* =====================================================
+          BOTTOM BAR
+          ===================================================== */}
+
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+        <div
+          className="
+            mx-auto
+            flex
+            max-w-7xl
+            flex-col
+            gap-4
+            px-4
+            py-5
+            sm:px-6
+            md:flex-row
+            md:items-center
+            md:justify-between
+            lg:px-8
+          "
+        >
           <p className="text-xs leading-5 text-slate-500 sm:text-sm">
             © {new Date().getFullYear()}{" "}
             {siteName}. All rights reserved.
@@ -313,20 +371,18 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
             <Link
               href="/privacy-policy"
-              className="text-slate-500 transition hover:text-white"
+              className="text-slate-500 transition-colors duration-200 hover:text-white"
             >
               Privacy Policy
             </Link>
 
             <Link
               href="/terms"
-              className="text-slate-500 transition hover:text-white"
+              className="text-slate-500 transition-colors duration-200 hover:text-white"
             >
               Terms & Conditions
             </Link>
 
-            {/* Developer credit intentionally remains
-                outside CMS/admin control. */}
             <span className="text-slate-600">
               Designed & Developed by Ayzent Solutions
             </span>
