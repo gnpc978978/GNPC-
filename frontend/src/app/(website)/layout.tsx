@@ -6,26 +6,26 @@ import TopBar from "@/components/layout/TopBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
+interface WebsiteLayoutProps {
+  children: React.ReactNode;
+}
+
 export default function WebsiteLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: WebsiteLayoutProps) {
   useEffect(() => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     if (!apiUrl) {
       console.error(
-        "NEXT_PUBLIC_API_URL is not configured"
+        "NEXT_PUBLIC_API_URL is not configured."
       );
+
       return;
     }
 
     let sessionId =
-      localStorage.getItem(
-        "gnpc_traffic_session"
-      );
+      localStorage.getItem("gnpc_traffic_session");
 
     if (!sessionId) {
       sessionId =
@@ -48,19 +48,14 @@ export default function WebsiteLayout({
           `${apiUrl}/dashboard/traffic`,
           {
             method: "POST",
-
             headers: {
-              "Content-Type":
-                "application/json",
+              "Content-Type": "application/json",
             },
-
+            credentials: "include",
             body: JSON.stringify({
               sessionId,
-              page:
-                window.location.pathname,
+              page: window.location.pathname,
             }),
-
-            credentials: "include",
           }
         );
       } catch (error) {
@@ -71,33 +66,38 @@ export default function WebsiteLayout({
       }
     };
 
-    // Initial visit
     sendHeartbeat();
 
-    // Keep visitor online
-    const interval = setInterval(
+    const interval = window.setInterval(
       sendHeartbeat,
-      30000
+      30_000
     );
 
     return () => {
-      clearInterval(interval);
+      window.clearInterval(interval);
     };
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen bg-white text-slate-900">
+      {/* Global Public Navigation */}
       <Navbar />
 
+      {/* 
+        Navbar is fixed.
+        This top padding prevents page content from
+        being hidden underneath it.
+      */}
       <div className="pt-16 sm:pt-[76px]">
+        {/* Global Public Top Bar */}
         <TopBar />
 
-        <main>
-          {children}
-        </main>
+        {/* Public Page Content */}
+        <main>{children}</main>
       </div>
 
+      {/* Global Public Footer */}
       <Footer />
-    </>
+    </div>
   );
 }
