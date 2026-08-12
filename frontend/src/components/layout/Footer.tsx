@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import LogoUpload from "@/components/admin/settings/LogoUpload";
 import Link from "next/link";
 import {
   ArrowUpRight,
