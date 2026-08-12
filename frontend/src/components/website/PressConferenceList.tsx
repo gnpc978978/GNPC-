@@ -6,6 +6,7 @@ import {
   FaCalendarAlt,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+
 import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
@@ -18,50 +19,104 @@ type Conference = {
   description?: string;
   content?: string;
   featuredImage?: string;
-  pdfFile?: string;
+  image?: string;
   createdAt?: string;
+  slug?: string;
+  source: "conference" | "legacy-release";
 };
+
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function PressConferenceList({
   latestOnly = false,
 }: {
   latestOnly?: boolean;
 }) {
-  const [items, setItems] =
-    useState<Conference[]>([]);
-
-  const [loading, setLoading] =
-    useState(true);
+  const [items, setItems] = useState<Conference[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/press-conferences`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const conferences = Array.isArray(data.data)
-          ? data.data
+    const load = async () => {
+      try {
+        const [conferenceResponse, releaseResponse] =
+          await Promise.all([
+            fetch(`${API}/press-conferences`),
+            fetch(`${API}/press-releases`),
+          ]);
+
+        const conferenceData =
+          await conferenceResponse
+            .json()
+            .catch(() => ({ data: [] }));
+
+        const releaseData =
+          await releaseResponse
+            .json()
+            .catch(() => ({ data: [] }));
+
+        const conferences: Conference[] = Array.isArray(
+          conferenceData.data
+        )
+          ? conferenceData.data.map((item: any) => ({
+              ...item,
+              source: "conference" as const,
+            }))
           : [];
 
+        const legacyReleases: Conference[] =
+          Array.isArray(releaseData.data)
+            ? releaseData.data.map((item: any) => ({
+                _id: item._id,
+                title: item.title,
+                venue:
+                  "Greater Noida Press Club",
+                date: item.createdAt,
+                description:
+                  item.description || "",
+                content: item.content || "",
+                image: item.image,
+                createdAt: item.createdAt,
+                slug: item.slug,
+                source: "legacy-release" as const,
+              }))
+            : [];
+
+        const merged = [
+          ...conferences,
+          ...legacyReleases,
+        ].sort((a, b) => {
+          const aDate = new Date(
+            a.date || a.createdAt || 0
+          ).getTime();
+
+          const bDate = new Date(
+            b.date || b.createdAt || 0
+          ).getTime();
+
+          return bDate - aDate;
+        });
+
         setItems(
-          conferences.slice(
-            0,
-            latestOnly ? 1 : 12
-          )
+          merged.slice(0, latestOnly ? 1 : 12)
         );
-      })
-      .catch(() => {
+      } catch (error) {
+        console.error(
+          "Failed to load press conferences:",
+          error
+        );
+
         setItems([]);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    void load();
   }, [latestOnly]);
 
   return (
     <section className="py-16 sm:py-24">
       <Container>
-
         <SectionHeading
           badge="Press Conference"
           title={
@@ -69,7 +124,7 @@ export default function PressConferenceList({
               ? "Latest Press Conference"
               : "Press Conferences & Media Events"
           }
-          description="Stay informed about our media interactions, public briefings and announcements."
+          description="Stay informed about our media interactions, public briefings and official announcements."
         />
 
         {loading ? (
@@ -82,65 +137,75 @@ export default function PressConferenceList({
           </p>
         ) : (
           <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {items.map((item) => {
+              const date =
+                item.date || item.createdAt;
 
-            {items.map((item) => (
-              <Card key={item._id}>
+              const image =
+                item.featuredImage || item.image;
 
-                {item.featuredImage && (
-                  <img
-                    src={item.featuredImage}
-                    alt={item.title}
-                    className="mb-5 h-56 w-full rounded-xl object-cover"
-                  />
-                )}
+              const identifier =
+                item.slug || item._id;
 
-                <h2 className="text-2xl font-bold text-slate-900">
-                  {item.title}
-                </h2>
+              return (
+                <Card key={`${item.source}-${item._id}`}>
+                  <p className="text-sm font-semibold text-blue-700">
+                    Press Conference
+                  </p>
 
-                <div className="mt-5 flex items-center gap-3 text-sm text-slate-600">
-                  <FaCalendarAlt className="text-blue-600" />
+                  <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                    {item.title}
+                  </h2>
 
-                  {item.date
-                    ? new Date(
-                        item.date
-                      ).toLocaleDateString(
-                        "en-IN",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        }
-                      )
-                    : "Date not available"}
-                </div>
+                  <div className="mt-5 flex items-center gap-3 text-sm text-slate-600">
+                    <FaCalendarAlt className="text-blue-600" />
 
-                <div className="mt-3 flex items-center gap-3 text-sm text-slate-600">
-                  <FaMapMarkerAlt className="text-blue-600" />
+                    {date
+                      ? new Date(
+                          date
+                        ).toLocaleDateString(
+                          "en-IN",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )
+                      : "Recent update"}
+                  </div>
 
-                  {item.venue ||
-                    "Greater Noida Press Club"}
-                </div>
+                  <div className="mt-3 flex items-center gap-3 text-sm text-slate-600">
+                    <FaMapMarkerAlt className="text-blue-600" />
 
-                <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
-                  {item.description ||
-                    item.content ||
-                    "Press conference details."}
-                </p>
+                    {item.venue ||
+                      "Greater Noida Press Club"}
+                  </div>
 
-                <Link
-                  href={`/press-conference/${item._id}`}
-                  className="mt-7 inline-flex rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800"
-                >
-                  View Details
-                </Link>
+                  {image && (
+                    <img
+                      src={image}
+                      alt={item.title}
+                      className="mt-5 h-48 w-full rounded-xl object-cover"
+                    />
+                  )}
 
-              </Card>
-            ))}
+                  <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
+                    {item.description ||
+                      item.content ||
+                      "Read the latest press conference update."}
+                  </p>
 
+                  <Link
+                    href={`/press-conference/${identifier}`}
+                    className="mt-7 inline-flex rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800"
+                  >
+                    View Details
+                  </Link>
+                </Card>
+              );
+            })}
           </div>
         )}
-
       </Container>
     </section>
   );
