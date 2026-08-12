@@ -25,8 +25,8 @@ export default function Footer() {
     "Greater Noida Press Club";
 
   const description =
-    settings.footerDescription ||
     settings.siteDescription ||
+    settings.heroDescription ||
     "Greater Noida Press Club is a professional platform connecting journalists, media professionals and the community.";
 
   const address =
@@ -121,17 +121,11 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-slate-800 bg-slate-950 text-white">
-      {/* =====================================================
-          MAIN FOOTER
-          ===================================================== */}
-
+      {/* Main Footer */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1fr] lg:gap-12">
 
-          {/* =================================================
-              BRAND / CONTACT
-              ================================================= */}
-
+          {/* Brand / Contact */}
           <div>
             <Link
               href="/"
@@ -192,10 +186,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* =================================================
-              QUICK LINKS
-              ================================================= */}
-
+          {/* Quick Links */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Quick Links
@@ -221,10 +212,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* =================================================
-              LATEST UPDATES
-              ================================================= */}
-
+          {/* Latest Updates */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Latest Updates
@@ -250,10 +238,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* =================================================
-              CONNECT
-              ================================================= */}
-
+          {/* Connect */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Connect With Us
@@ -342,10 +327,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* =====================================================
-          BOTTOM BAR
-          ===================================================== */}
-
+      {/* Bottom Bar */}
       <div className="border-t border-white/10">
         <div
           className="
