@@ -8,21 +8,10 @@ const getTrafficCollections = () => {
   }
 
   const sessions =
-    db.collection<{
-      sessionId: string;
-      createdAt: Date;
-      lastSeen: Date;
-      page: string;
-    }>("traffic_sessions");
+    db.collection<any>("traffic_sessions");
 
   const stats =
-    db.collection<{
-      _id: string;
-      totalVisits?: number;
-      peakOnline?: number;
-      peakAt?: Date;
-      updatedAt?: Date;
-    }>("traffic_stats");
+    db.collection<any>("traffic_stats");
 
   return {
     sessions,
