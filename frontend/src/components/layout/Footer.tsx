@@ -40,6 +40,42 @@ export default function Footer() {
     settings.email ||
     "";
 
+  /*
+   * Social URLs are intentionally kept outside WebsiteSettings
+   * because the current WebsiteSettings type does not expose
+   * social-media URL fields.
+   *
+   * These can be connected to CMS settings later after the
+   * actual WebsiteSettings schema is verified.
+   */
+  const socialLinks = [
+    {
+      label: "Facebook",
+      href: "",
+      icon: FaFacebookF,
+    },
+    {
+      label: "Instagram",
+      href: "",
+      icon: FaInstagram,
+    },
+    {
+      label: "X",
+      href: "",
+      icon: FaXTwitter,
+    },
+    {
+      label: "LinkedIn",
+      href: "",
+      icon: FaLinkedinIn,
+    },
+    {
+      label: "YouTube",
+      href: "",
+      icon: FaYoutube,
+    },
+  ].filter((item) => Boolean(item.href));
+
   const quickLinks = [
     {
       label: "About Us",
@@ -82,40 +118,6 @@ export default function Footer() {
     },
   ];
 
-  const socialLinks = [
-    {
-      label: "Facebook",
-      href: settings.facebookUrl,
-      icon: FaFacebookF,
-    },
-    {
-      label: "Instagram",
-      href: settings.instagramUrl,
-      icon: FaInstagram,
-    },
-    {
-      label: "X",
-      href: settings.twitterUrl,
-      icon: FaXTwitter,
-    },
-    {
-      label: "LinkedIn",
-      href: settings.linkedinUrl,
-      icon: FaLinkedinIn,
-    },
-    {
-      label: "YouTube",
-      href: settings.youtubeUrl,
-      icon: FaYoutube,
-    },
-  ].filter(
-    (
-      item
-    ): item is typeof item & {
-      href: string;
-    } => Boolean(item.href)
-  );
-
   return (
     <footer className="border-t border-slate-800 bg-slate-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
@@ -145,6 +147,7 @@ export default function Footer() {
                     className="mt-0.5 shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
+
                   <span>{address}</span>
                 </div>
               )}
@@ -159,6 +162,7 @@ export default function Footer() {
                     className="shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
+
                   <span>{phone}</span>
                 </a>
               )}
@@ -173,6 +177,7 @@ export default function Footer() {
                     className="shrink-0 text-[#5da9e9]"
                     aria-hidden="true"
                   />
+
                   <span>{email}</span>
                 </a>
               )}
@@ -231,7 +236,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social / Contact */}
+          {/* Connect */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Connect With Us
@@ -339,8 +344,7 @@ export default function Footer() {
           "
         >
           <p className="text-xs leading-5 text-slate-500 sm:text-sm">
-            © {new Date().getFullYear()}{" "}
-            {siteName}. All rights reserved.
+            © {new Date().getFullYear()} {siteName}. All rights reserved.
           </p>
 
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
