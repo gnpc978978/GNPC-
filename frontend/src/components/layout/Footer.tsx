@@ -2,372 +2,344 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-} from "react-icons/fa";
+  ArrowUpRight,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 
-import Container from "@/components/ui/Container";
-
-const quickLinks = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Announcements", href: "/announcements" },
-  { name: "Press Conferences", href: "/press-conference" },
-  { name: "Gallery", href: "/gallery" },
-  { name: "Contact", href: "/contact" },
-];
-
-const socialIcons = [
-  {
-    icon: FaFacebookF,
-    name: "facebook",
-  },
-  {
-    icon: FaTwitter,
-    name: "twitter",
-  },
-  {
-    icon: FaInstagram,
-    name: "instagram",
-  },
-  {
-    icon: FaLinkedinIn,
-    name: "linkedin",
-  },
-];
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
 export default function Footer() {
   const { settings } = useWebsiteSettings();
 
-  const socialLinks = settings.socialLinks || {};
+  const logo =
+    settings.logo ||
+    settings.websiteLogo ||
+    "/Logo.png";
 
-  const [feedback, setFeedback] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const siteName =
+    settings.siteName ||
+    "Greater Noida Press Club";
 
-  const [sending, setSending] = useState(false);
+  const description =
+    settings.footerDescription ||
+    settings.siteDescription ||
+    "Greater Noida Press Club is a professional platform connecting journalists, media professionals and the community.";
 
-  const [feedbackStatus, setFeedbackStatus] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
+  const address =
+    settings.address ||
+    "Greater Noida, Uttar Pradesh, India";
 
-  const handleFeedbackSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
+  const phone =
+    settings.phone ||
+    settings.contactPhone ||
+    "";
 
-    const name = feedback.name.trim();
-    const email = feedback.email.trim();
-    const message = feedback.message.trim();
+  const email =
+    settings.email ||
+    settings.contactEmail ||
+    "";
 
-    if (!name || !email || !message) {
-      setFeedbackStatus({
-        type: "error",
-        message: "Please fill all feedback fields.",
-      });
-      return;
-    }
+  const quickLinks = [
+    {
+      label: "About Us",
+      href: "/about",
+    },
+    {
+      label: "Latest Updates",
+      href: "/latest-updates",
+    },
+    {
+      label: "Gallery",
+      href: "/gallery",
+    },
+    {
+      label: "Office Bearers",
+      href: "/office-bearers",
+    },
+    {
+      label: "Contact",
+      href: "/contact",
+    },
+  ];
 
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setFeedbackStatus({
-        type: "error",
-        message: "Please enter a valid email address.",
-      });
-      return;
-    }
+  const latestUpdateLinks = [
+    {
+      label: "Press Releases",
+      href: "/press-releases",
+    },
+    {
+      label: "Announcements",
+      href: "/announcements",
+    },
+    {
+      label: "Events",
+      href: "/events",
+    },
+    {
+      label: "Press Conferences",
+      href: "/press-conference",
+    },
+  ];
 
-    try {
-      setSending(true);
-      setFeedbackStatus(null);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact-messages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            subject: "Website Feedback",
-            message,
-          }),
-        }
-      );
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message || "Unable to send feedback."
-        );
-      }
-
-      setFeedback({
-        name: "",
-        email: "",
-        message: "",
-      });
-
-      setFeedbackStatus({
-        type: "success",
-        message: "Thank you. Your feedback has been sent.",
-      });
-    } catch (error) {
-      setFeedbackStatus({
-        type: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Unable to send feedback.",
-      });
-    } finally {
-      setSending(false);
-    }
-  };
+  const socialLinks = [
+    {
+      label: "Facebook",
+      href: settings.facebookUrl,
+      icon: Facebook,
+    },
+    {
+      label: "Instagram",
+      href: settings.instagramUrl,
+      icon: Instagram,
+    },
+    {
+      label: "Twitter",
+      href: settings.twitterUrl,
+      icon: Twitter,
+    },
+    {
+      label: "LinkedIn",
+      href: settings.linkedinUrl,
+      icon: Linkedin,
+    },
+    {
+      label: "YouTube",
+      href: settings.youtubeUrl,
+      icon: Youtube,
+    },
+  ].filter(
+    (
+      item
+    ): item is typeof item & {
+      href: string;
+    } =>
+      Boolean(item.href)
+  );
 
   return (
-    <footer
-      id="contact"
-      className="bg-slate-950 text-slate-300"
-    >
-      <Container>
-        {/* Main Footer */}
-        <div className="grid gap-10 py-12 sm:py-16 md:grid-cols-2 lg:grid-cols-4">
-          {/* About + Logo */}
+    <footer className="border-t border-slate-200 bg-slate-950 text-white">
+      {/* Main footer */}
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1fr] lg:gap-12">
+          {/* Brand */}
           <div>
             <Link
               href="/"
-              className="inline-flex items-center gap-4"
+              aria-label={`${siteName} home`}
+              className="group inline-flex items-center"
             >
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white p-2 shadow-lg">
+              <div className="relative flex min-h-16 min-w-16 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white p-2 shadow-lg transition-transform duration-300 group-hover:-translate-y-0.5">
                 <Image
-                  src={settings.logo || "/Logo.png"}
-                  alt={
-                    settings.siteName ||
-                    "Greater Noida Press Club"
-                  }
-                  width={56}
-                  height={56}
-                  className="h-full w-full object-contain"
+                  src={logo}
+                  alt={`${siteName} logo`}
+                  width={150}
+                  height={70}
+                  className="h-auto max-h-14 w-auto max-w-[150px] object-contain"
                 />
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold leading-tight text-white">
-                  {settings.siteName ||
-                    "Greater Noida Press Club"}
-                </h3>
-
-                <p className="mt-1 text-xs text-slate-500">
-                  Official Website
-                </p>
               </div>
             </Link>
 
-            <p className="mt-6 text-sm leading-7 text-slate-400">
-              Empowering journalists through ethical
-              journalism, networking, training and media
-              excellence.
+            <h2 className="mt-5 text-lg font-bold text-white">
+              {siteName}
+            </h2>
+
+            <p className="mt-3 max-w-md text-sm leading-6 text-slate-400">
+              {description}
             </p>
+
+            {/* Contact information */}
+            <div className="mt-6 space-y-3">
+              {address && (
+                <div className="flex items-start gap-3 text-sm text-slate-400">
+                  <MapPin
+                    size={17}
+                    className="mt-0.5 shrink-0 text-blue-400"
+                    aria-hidden="true"
+                  />
+
+                  <span>{address}</span>
+                </div>
+              )}
+
+              {phone && (
+                <a
+                  href={`tel:${phone}`}
+                  className="flex items-center gap-3 text-sm text-slate-400 transition hover:text-white"
+                >
+                  <Phone
+                    size={17}
+                    className="shrink-0 text-blue-400"
+                    aria-hidden="true"
+                  />
+
+                  <span>{phone}</span>
+                </a>
+              )}
+
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  className="flex items-center gap-3 break-all text-sm text-slate-400 transition hover:text-white"
+                >
+                  <Mail
+                    size={17}
+                    className="shrink-0 text-blue-400"
+                    aria-hidden="true"
+                  />
+
+                  <span>{email}</span>
+                </a>
+              )}
+            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick links */}
           <div>
-            <h4 className="text-lg font-semibold text-white">
+            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
               Quick Links
-            </h4>
+            </h3>
 
             <ul className="mt-5 space-y-3">
               {quickLinks.map((link) => (
-                <li key={link.name}>
+                <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="transition hover:text-blue-400"
+                    className="group inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
                   >
-                    {link.name}
+                    <span>{link.label}</span>
+
+                    <ArrowUpRight
+                      size={13}
+                      className="opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Latest Updates */}
           <div>
-            <h4 className="text-lg font-semibold text-white">
-              Contact
-            </h4>
+            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+              Latest Updates
+            </h3>
 
-            <ul className="mt-5 space-y-4 text-sm leading-6">
-              <li className="font-medium text-slate-300">
-                {settings.siteName || "Press Club"}
-              </li>
+            <ul className="mt-5 space-y-3">
+              {latestUpdateLinks.map(
+                (link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="group inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+                    >
+                      <span>{link.label}</span>
 
-              <li>
-                <span className="mr-2">📍</span>
-                {settings.address || "Address coming soon"}
-              </li>
-
-              <li>
-                <span className="mr-2">📞</span>
-                {settings.phone || "Phone coming soon"}
-              </li>
-
-              <li className="break-all">
-                <span className="mr-2">📧</span>
-                {settings.email || "Email coming soon"}
-              </li>
+                      <ArrowUpRight
+                        size={13}
+                        className="opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
-
-            <div className="mt-6">
-              <h5 className="text-sm font-semibold text-white">
-                Follow Us
-              </h5>
-
-              <div className="mt-3 flex gap-3">
-                {socialIcons
-                  .filter((social) =>
-                    Boolean(socialLinks[social.name])
-                  )
-                  .map((social) => {
-                    const Icon = social.icon;
-
-                    return (
-                      <a
-                        key={social.name}
-                        href={socialLinks[social.name]}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={social.name}
-                        className="rounded-full bg-slate-800 p-3 transition-all duration-300 hover:-translate-y-1 hover:bg-blue-600"
-                      >
-                        <Icon />
-                      </a>
-                    );
-                  })}
-              </div>
-            </div>
           </div>
 
-          {/* Feedback */}
-          <div id="feedback">
-            <h4 className="text-lg font-semibold text-white">
-              Send Feedback
-            </h4>
+          {/* Connect */}
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+              Connect With Us
+            </h3>
 
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              Help us improve the Greater Noida Press Club
-              website.
+            <p className="mt-5 text-sm leading-6 text-slate-400">
+              Stay connected with GNPC for the latest
+              announcements, press activities and
+              updates.
             </p>
 
-            <form
-              onSubmit={handleFeedbackSubmit}
-              className="mt-5 space-y-3"
+            {socialLinks.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                {socialLinks.map(
+                  ({
+                    label,
+                    href,
+                    icon: Icon,
+                  }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                    >
+                      <Icon
+                        size={17}
+                        aria-hidden="true"
+                      />
+                    </a>
+                  )
+                )}
+              </div>
+            )}
+
+            <Link
+              href="/contact"
+              className="group mt-6 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.05] px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/10"
             >
-              <input
-                type="text"
-                placeholder="Your name"
-                value={feedback.name}
-                onChange={(event) =>
-                  setFeedback({
-                    ...feedback,
-                    name: event.target.value,
-                  })
-                }
-                disabled={sending}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500"
+              Get in touch
+
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
               />
-
-              <input
-                type="email"
-                placeholder="Your email"
-                value={feedback.email}
-                onChange={(event) =>
-                  setFeedback({
-                    ...feedback,
-                    email: event.target.value,
-                  })
-                }
-                disabled={sending}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500"
-              />
-
-              <textarea
-                placeholder="Your feedback..."
-                rows={4}
-                value={feedback.message}
-                onChange={(event) =>
-                  setFeedback({
-                    ...feedback,
-                    message: event.target.value,
-                  })
-                }
-                disabled={sending}
-                className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500"
-              />
-
-              {feedbackStatus && (
-                <p
-                  className={`rounded-lg px-3 py-2 text-xs ${
-                    feedbackStatus.type === "success"
-                      ? "bg-green-950 text-green-300"
-                      : "bg-red-950 text-red-300"
-                  }`}
-                >
-                  {feedbackStatus.message}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={sending}
-                className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {sending ? "Sending..." : "Send Feedback"}
-              </button>
-            </form>
+            </Link>
           </div>
         </div>
+      </div>
 
-        {/* Bottom */}
-        <div className="border-t border-slate-800 py-7 text-center">
-          <p className="text-sm text-slate-500">
+      {/* Bottom bar */}
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+          <p className="text-xs leading-5 text-slate-500 sm:text-sm">
             © {new Date().getFullYear()}{" "}
-            {settings.siteName || "Greater Noida Press Club"}.
-            All Rights Reserved.
+            {siteName}. All rights reserved.
           </p>
 
-          <p className="mt-3 text-sm text-slate-400">
-            Designed & Developed by{" "}
-            <a
-              href="https://www.linkedin.com/in/itxayushrajput"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-slate-300 transition hover:text-blue-400"
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
+            <Link
+              href="/privacy-policy"
+              className="text-slate-500 transition hover:text-white"
             >
-              Ayush Chauhan
-            </a>{" "}
-            &{" "}
-            <a
-              href="https://www.linkedin.com/in/shreyansh-mishra-66615437b"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-slate-300 transition hover:text-blue-400"
+              Privacy Policy
+            </Link>
+
+            <Link
+              href="/terms"
+              className="text-slate-500 transition hover:text-white"
             >
-              Shreyansh Mishra
-            </a>
-          </p>
+              Terms & Conditions
+            </Link>
+
+            {/* Developer credit intentionally remains
+                outside CMS/admin control. */}
+            <span className="text-slate-600">
+              Designed & Developed by Ayzent Solutions
+            </span>
+          </div>
         </div>
-      </Container>
+      </div>
     </footer>
   );
 }
