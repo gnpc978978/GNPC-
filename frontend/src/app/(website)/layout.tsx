@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 import TopBar from "@/components/layout/TopBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import FloatingContactButton from "@/components/layout/FloatingContactButton";
 
 interface WebsiteLayoutProps {
   children: React.ReactNode;
@@ -13,6 +15,8 @@ interface WebsiteLayoutProps {
 export default function WebsiteLayout({
   children,
 }: WebsiteLayoutProps) {
+  const pathname = usePathname();
+
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -66,7 +70,7 @@ export default function WebsiteLayout({
       }
     };
 
-    sendHeartbeat();
+    void sendHeartbeat();
 
     const interval = window.setInterval(
       sendHeartbeat,
@@ -78,26 +82,25 @@ export default function WebsiteLayout({
     };
   }, []);
 
+  const isContactPage =
+    pathname === "/contact" ||
+    pathname.startsWith("/contact/");
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      {/* Global Public Navigation */}
       <Navbar />
 
-      {/* 
-        Navbar is fixed.
-        This top padding prevents page content from
-        being hidden underneath it.
-      */}
       <div className="pt-16 sm:pt-[76px]">
-        {/* Global Public Top Bar */}
         <TopBar />
 
-        {/* Public Page Content */}
         <main>{children}</main>
       </div>
 
-      {/* Global Public Footer */}
       <Footer />
+
+      {!isContactPage && (
+        <FloatingContactButton />
+      )}
     </div>
   );
 }
