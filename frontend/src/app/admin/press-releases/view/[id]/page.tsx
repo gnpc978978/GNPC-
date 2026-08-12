@@ -1,44 +1,110 @@
+"use client";
+
 import Link from "next/link";
-import { FaArrowLeft, FaEdit } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import {
+  FaArrowLeft,
+  FaEdit,
+} from "react-icons/fa";
 
 import StatusBadge from "@/components/admin/press-releases/StatusBadge";
-import { pressReleases } from "@/data/pressReleases";
 
+type PressRelease = {
+  _id: string;
+  title: string;
+  content: string;
+  category: string;
+  status: string;
+  image?: string;
+  createdAt?: string;
+  createdBy?: {
+    name?: string;
+    email?: string;
+  };
+};
 
-interface Props {
-  params: Promise<{
-    id: string;
-  }>;
-}
+export default function ViewPressReleasePage() {
+  const { id } =
+    useParams<{ id: string }>();
 
+  const [pressRelease, setPressRelease] =
+    useState<PressRelease | null>(null);
 
-export default async function ViewPressReleasePage({
-  params,
-}: Props) {
+  const [loading, setLoading] =
+    useState(true);
 
-  const { id } = await params;
+  const [error, setError] =
+    useState(false);
 
+  useEffect(() => {
+    if (!id) return;
 
-  const pressRelease = pressReleases.find(
-    (item) => item.id === Number(id)
-  );
+    const token =
+      localStorage.getItem("token");
 
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/press-releases/${id}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${token || ""}`,
+        },
+      }
+    )
+      .then(async (response) => {
+        const data = await response.json();
 
-  if (!pressRelease) {
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+              "Press Release not found"
+          );
+        }
+
+        return data;
+      })
+      .then((data) => {
+        setPressRelease(data.data);
+      })
+      .catch(() => {
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
     return (
-      <div className="rounded-xl bg-white p-8 shadow">
-        <h1 className="text-xl font-bold">
-          Press Release Not Found
-        </h1>
+      <div className="p-6">
+        Loading Press Release...
       </div>
     );
   }
 
+  if (error || !pressRelease) {
+    return (
+      <div className="rounded-xl bg-white p-8 shadow">
+
+        <h1 className="text-xl font-bold">
+          Press Release Not Found
+        </h1>
+
+        <Link
+          href="/admin/press-releases"
+          className="mt-4 inline-block text-blue-600"
+        >
+          ← Back to Press Releases
+        </Link>
+
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div className="flex items-center justify-between">
 
         <div>
@@ -47,10 +113,9 @@ export default async function ViewPressReleasePage({
           </h1>
 
           <p className="text-gray-500">
-            Preview press release details
+            Press release details
           </p>
         </div>
-
 
         <div className="flex gap-3">
 
@@ -62,9 +127,8 @@ export default async function ViewPressReleasePage({
             Back
           </Link>
 
-
           <Link
-            href={`/admin/press-releases/edit/${pressRelease.id}`}
+            href={`/admin/press-releases/edit/${pressRelease._id}`}
             className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
           >
             <FaEdit />
@@ -75,31 +139,41 @@ export default async function ViewPressReleasePage({
 
       </div>
 
-
-      {/* Content Card */}
       <div className="rounded-xl bg-white p-8 shadow">
+
+        {pressRelease.image && (
+          <img
+            src={pressRelease.image}
+            alt={pressRelease.title}
+            className="mb-8 max-h-[400px] w-full rounded-xl object-cover"
+          />
+        )}
 
         <h2 className="text-2xl font-bold text-gray-900">
           {pressRelease.title}
         </h2>
 
-
         <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-600">
 
           <span>
-            Category: {pressRelease.category}
+            Category:{" "}
+            {pressRelease.category}
           </span>
-
 
           <span>
-            Author: {pressRelease.author}
+            Author:{" "}
+            {pressRelease.createdBy?.name ||
+              "Admin"}
           </span>
 
-
-          <span>
-            Date: {pressRelease.date}
-          </span>
-
+          {pressRelease.createdAt && (
+            <span>
+              Date:{" "}
+              {new Date(
+                pressRelease.createdAt
+              ).toLocaleDateString("en-IN")}
+            </span>
+          )}
 
           <StatusBadge
             status={pressRelease.status}
@@ -107,35 +181,19 @@ export default async function ViewPressReleasePage({
 
         </div>
 
-
         <hr className="my-6" />
-
 
         <div>
 
-          <h3 className="mb-2 text-lg font-semibold">
-            Short Description
-          </h3>
-
-          <p className="text-gray-600">
-            {pressRelease.description}
-          </p>
-
-        </div>
-
-
-        <div className="mt-6">
-
-          <h3 className="mb-2 text-lg font-semibold">
+          <h3 className="mb-3 text-lg font-semibold">
             Content
           </h3>
 
-          <p className="leading-7 text-gray-700">
+          <div className="whitespace-pre-line leading-7 text-gray-700">
             {pressRelease.content}
-          </p>
+          </div>
 
         </div>
-
 
       </div>
 
