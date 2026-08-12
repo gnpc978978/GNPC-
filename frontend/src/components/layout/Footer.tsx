@@ -4,14 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowUpRight,
-  Facebook,
-  Instagram,
-  Linkedin,
   Mail,
   MapPin,
   Phone,
-  Twitter,
-  Youtube,
 } from "lucide-react";
 
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
@@ -21,34 +16,123 @@ const FALLBACK_LOGO = "/gnpc-logo.png";
 export default function Footer() {
   const { settings } = useWebsiteSettings();
 
+  /*
+   * Keep the footer tolerant of the existing settings schema.
+   * This prevents the footer from breaking if some optional
+   * CMS fields are not present in the TypeScript interface.
+   */
+  const siteSettings =
+    (settings ?? {}) as Record<string, unknown>;
+
+  const getString = (
+    ...keys: string[]
+  ): string => {
+    for (const key of keys) {
+      const value = siteSettings[key];
+
+      if (
+        typeof value === "string" &&
+        value.trim().length > 0
+      ) {
+        return value.trim();
+      }
+    }
+
+    return "";
+  };
+
   const logo =
-    typeof settings.logo === "string" &&
-    settings.logo.trim().length > 0
-      ? settings.logo
-      : FALLBACK_LOGO;
+    getString(
+      "logo",
+      "websiteLogo",
+      "siteLogo"
+    ) || FALLBACK_LOGO;
 
   const siteName =
-    settings.siteName ||
-    "Greater Noida Press Club";
+    getString(
+      "siteName",
+      "websiteName",
+      "name"
+    ) || "Greater Noida Press Club";
 
   const description =
-    settings.footerDescription ||
-    settings.siteDescription ||
+    getString(
+      "footerDescription",
+      "siteDescription",
+      "description"
+    ) ||
     "Greater Noida Press Club is a professional platform connecting journalists, media professionals and the community.";
 
   const address =
-    settings.address ||
+    getString(
+      "address",
+      "officeAddress",
+      "contactAddress"
+    ) ||
     "Greater Noida, Uttar Pradesh, India";
 
-  const phone =
-    settings.phone ||
-    settings.contactPhone ||
-    "";
+  const phone = getString(
+    "phone",
+    "contactPhone",
+    "mobile"
+  );
 
-  const email =
-    settings.email ||
-    settings.contactEmail ||
-    "";
+  const email = getString(
+    "email",
+    "contactEmail"
+  );
+
+  const socialLinks = [
+    {
+      label: "Facebook",
+      href: getString(
+        "facebookUrl",
+        "facebook",
+        "facebookLink"
+      ),
+    },
+    {
+      label: "Instagram",
+      href: getString(
+        "instagramUrl",
+        "instagram",
+        "instagramLink"
+      ),
+    },
+    {
+      label: "LinkedIn",
+      href: getString(
+        "linkedinUrl",
+        "linkedin",
+        "linkedinLink"
+      ),
+    },
+    {
+      label: "YouTube",
+      href: getString(
+        "youtubeUrl",
+        "youtube",
+        "youtubeLink"
+      ),
+    },
+    {
+      label: "X",
+      href: getString(
+        "twitterUrl",
+        "twitter",
+        "twitterLink",
+        "xUrl",
+        "x"
+      ),
+    },
+  ].filter(
+    (
+      item
+    ): item is {
+      label: string;
+      href: string;
+    } => Boolean(item.href)
+  );
 
   const quickLinks = [
     {
@@ -86,50 +170,13 @@ export default function Footer() {
       label: "Events",
       href: "/events",
     },
-    {
-      label: "Press Conferences",
-      href: "/press-conference",
-    },
   ];
-
-  const socialLinks = [
-    {
-      label: "Facebook",
-      href: settings.facebookUrl,
-      icon: Facebook,
-    },
-    {
-      label: "Instagram",
-      href: settings.instagramUrl,
-      icon: Instagram,
-    },
-    {
-      label: "Twitter",
-      href: settings.twitterUrl,
-      icon: Twitter,
-    },
-    {
-      label: "LinkedIn",
-      href: settings.linkedinUrl,
-      icon: Linkedin,
-    },
-    {
-      label: "YouTube",
-      href: settings.youtubeUrl,
-      icon: Youtube,
-    },
-  ].filter(
-    (
-      item
-    ): item is typeof item & {
-      href: string;
-    } => Boolean(item.href)
-  );
 
   return (
     <footer className="border-t border-slate-200 bg-slate-950 text-white">
+      {/* Main Footer */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1fr] lg:gap-12">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_0.8fr_0.8fr_1fr] lg:gap-12">
           {/* Brand */}
           <div>
             <Link
@@ -137,14 +184,13 @@ export default function Footer() {
               aria-label={`${siteName} home`}
               className="group inline-flex items-center"
             >
-              <div className="relative flex h-16 w-auto min-w-16 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white px-3 py-2 shadow-lg transition-transform duration-300 group-hover:-translate-y-0.5">
+              <div className="relative flex h-16 min-w-16 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white px-3 py-2 shadow-lg transition-transform duration-300 group-hover:-translate-y-0.5">
                 <Image
                   src={logo}
                   alt={`${siteName} logo`}
                   width={150}
                   height={70}
                   priority
-                  fetchPriority="high"
                   className="h-auto max-h-14 w-auto max-w-[150px] object-contain"
                 />
               </div>
@@ -158,6 +204,7 @@ export default function Footer() {
               {description}
             </p>
 
+            {/* Address */}
             {address && (
               <div className="mt-6 flex items-start gap-3 text-sm text-slate-400">
                 <MapPin
@@ -170,6 +217,7 @@ export default function Footer() {
               </div>
             )}
 
+            {/* Phone */}
             {phone && (
               <a
                 href={`tel:${phone}`}
@@ -185,6 +233,7 @@ export default function Footer() {
               </a>
             )}
 
+            {/* Email */}
             {email && (
               <a
                 href={`mailto:${email}`}
@@ -264,28 +313,27 @@ export default function Footer() {
               announcements, press activities and updates.
             </p>
 
+            {/* Social Links */}
             {socialLinks.length > 0 && (
               <div className="mt-6 flex flex-wrap gap-2">
                 {socialLinks.map(
-                  ({ label, href, icon: Icon }) => (
+                  ({ label, href }) => (
                     <a
                       key={label}
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={label}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                      className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-400 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
                     >
-                      <Icon
-                        size={17}
-                        aria-hidden="true"
-                      />
+                      {label}
                     </a>
                   )
                 )}
               </div>
             )}
 
+            {/* Contact CTA */}
             <Link
               href="/contact"
               className="group mt-6 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.05] px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/10"
@@ -302,7 +350,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* Bottom Bar */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p className="text-xs leading-5 text-slate-500 sm:text-sm">
