@@ -11,7 +11,7 @@ import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 
-type Conference = {
+type PressConference = {
   _id: string;
   title: string;
   venue?: string;
@@ -19,10 +19,7 @@ type Conference = {
   description?: string;
   content?: string;
   featuredImage?: string;
-  image?: string;
   createdAt?: string;
-  slug?: string;
-  source: "conference" | "legacy-release";
 };
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -32,72 +29,24 @@ export default function PressConferenceList({
 }: {
   latestOnly?: boolean;
 }) {
-  const [items, setItems] = useState<Conference[]>([]);
+  const [items, setItems] = useState<PressConference[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [conferenceResponse, releaseResponse] =
-          await Promise.all([
-            fetch(`${API}/press-conferences`),
-            fetch(`${API}/press-releases`),
-          ]);
+        const response = await fetch(
+          `${API}/press-conferences`
+        );
 
-        const conferenceData =
-          await conferenceResponse
-            .json()
-            .catch(() => ({ data: [] }));
-
-        const releaseData =
-          await releaseResponse
-            .json()
-            .catch(() => ({ data: [] }));
-
-        const conferences: Conference[] = Array.isArray(
-          conferenceData.data
-        )
-          ? conferenceData.data.map((item: any) => ({
-              ...item,
-              source: "conference" as const,
-            }))
-          : [];
-
-        const legacyReleases: Conference[] =
-          Array.isArray(releaseData.data)
-            ? releaseData.data.map((item: any) => ({
-                _id: item._id,
-                title: item.title,
-                venue:
-                  "Greater Noida Press Club",
-                date: item.createdAt,
-                description:
-                  item.description || "",
-                content: item.content || "",
-                image: item.image,
-                createdAt: item.createdAt,
-                slug: item.slug,
-                source: "legacy-release" as const,
-              }))
-            : [];
-
-        const merged = [
-          ...conferences,
-          ...legacyReleases,
-        ].sort((a, b) => {
-          const aDate = new Date(
-            a.date || a.createdAt || 0
-          ).getTime();
-
-          const bDate = new Date(
-            b.date || b.createdAt || 0
-          ).getTime();
-
-          return bDate - aDate;
-        });
+        const data = await response
+          .json()
+          .catch(() => ({ data: [] }));
 
         setItems(
-          merged.slice(0, latestOnly ? 1 : 12)
+          Array.isArray(data.data)
+            ? data.data.slice(0, latestOnly ? 1 : 12)
+            : []
         );
       } catch (error) {
         console.error(
@@ -141,14 +90,8 @@ export default function PressConferenceList({
               const date =
                 item.date || item.createdAt;
 
-              const image =
-                item.featuredImage || item.image;
-
-              const identifier =
-                item.slug || item._id;
-
               return (
-                <Card key={`${item.source}-${item._id}`}>
+                <Card key={item._id}>
                   <p className="text-sm font-semibold text-blue-700">
                     Press Conference
                   </p>
@@ -161,9 +104,7 @@ export default function PressConferenceList({
                     <FaCalendarAlt className="text-blue-600" />
 
                     {date
-                      ? new Date(
-                          date
-                        ).toLocaleDateString(
+                      ? new Date(date).toLocaleDateString(
                           "en-IN",
                           {
                             day: "numeric",
@@ -181,9 +122,9 @@ export default function PressConferenceList({
                       "Greater Noida Press Club"}
                   </div>
 
-                  {image && (
+                  {item.featuredImage && (
                     <img
-                      src={image}
+                      src={item.featuredImage}
                       alt={item.title}
                       className="mt-5 h-48 w-full rounded-xl object-cover"
                     />
@@ -196,7 +137,7 @@ export default function PressConferenceList({
                   </p>
 
                   <Link
-                    href={`/press-conference/${identifier}`}
+                    href={`/press-conference/${item._id}`}
                     className="mt-7 inline-flex rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800"
                   >
                     View Details
