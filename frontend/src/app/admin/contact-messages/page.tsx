@@ -11,133 +11,66 @@ import {
 
 import { ContactMessage } from "@/types/contactMessage";
 
-
 export default function ContactMessagesPage() {
-
-
-  const [messages, setMessages] =
-    useState<ContactMessage[]>([]);
-
-
-  const [loading, setLoading] =
-    useState(true);
-
-
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchMessages = async () => {
-
     try {
-
-      const data =
-        await getContactMessages();
-
+      const data = await getContactMessages();
       setMessages(data);
-
-
-    } catch(error) {
-
-      console.log(error);
-
+    } catch (error) {
+      console.error("Failed to load feedback/messages:", error);
     } finally {
-
       setLoading(false);
-
     }
-
   };
-
-
-
 
   useEffect(() => {
-
-    fetchMessages();
-
+    void fetchMessages();
   }, []);
 
-
-
-
-
-  const handleDelete = async (
-    id:string
-  ) => {
-
-
-    const confirmDelete =
-      confirm(
-        "Delete this message?"
-      );
-
-
-    if(!confirmDelete)
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this feedback/message?")) {
       return;
+    }
 
+    try {
+      await deleteContactMessage(id);
 
-
-    await deleteContactMessage(id);
-
-
-
-    setMessages(
-      messages.filter(
-        (item)=>item.id !== id
-      )
-    );
-
+      setMessages((items) =>
+        items.filter((item) => item.id !== id)
+      );
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+    }
   };
 
-
-
-
-
-  if(loading){
-
+  if (loading) {
     return (
-
       <div className="p-6">
-        Loading messages...
+        Loading feedback & messages...
       </div>
-
     );
-
   }
 
-
-
-
   return (
-
     <div className="p-6">
-
-
       <div className="mb-6">
-
         <h1 className="text-2xl font-bold">
-          Contact Messages
+          Feedback & Messages
         </h1>
 
-
         <p className="text-gray-500">
-          Manage website contact inquiries
+          Manage website feedback, contact inquiries and
+          messages.
         </p>
-
       </div>
 
-
-
-
       <ContactTable
-
         messages={messages}
-
         onDelete={handleDelete}
-
       />
-
-
     </div>
-
   );
-
 }
