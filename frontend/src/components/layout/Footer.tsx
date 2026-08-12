@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -18,11 +16,6 @@ import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
 export default function Footer() {
   const { settings } = useWebsiteSettings();
-
-  const logo =
-    settings.logo ||
-    settings.websiteLogo ||
-    "/Logo.png";
 
   const siteName =
     settings.siteName ||
