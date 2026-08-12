@@ -1,15 +1,10 @@
-import { redirect } from "next/navigation";
+import UpdateDetailsPage from "@/components/latest-updates/UpdateDetailsPage";
 
-interface Props {
-  params: Promise<{
-    slug: string;
-  }>;
-}
-
-export default async function LegacyPressReleasePage({
-  params,
-}: Props) {
-  const { slug } = await params;
-
-  redirect(`/press-conference/${slug}`);
+export default function Page() {
+  return (
+    <UpdateDetailsPage
+      type="press-releases"
+      label="Press Release"
+    />
+  );
 }
