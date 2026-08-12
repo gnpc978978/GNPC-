@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+import mongoose from "mongoose";
 const getTrafficCollections = () => {
   const db = mongoose.connection.db;
 
