@@ -10,33 +10,61 @@ function normalizeWhatsAppNumber(value: string) {
 export default function FloatingContactButton() {
   const { settings } = useWebsiteSettings();
 
-  const rawNumber =
-    settings.whatsappNumber?.trim() ||
-    settings.phone?.trim() ||
-    "";
+  /*
+   * WhatsApp number is controlled from CMS.
+   *
+   * Preferred:
+   *   settings.whatsappNumber
+   *
+   * Fallback:
+   *   settings.phone
+   *
+   * The CMS number can contain:
+   * +91 98765 43210
+   * 91-9876543210
+   * 919876543210
+   *
+   * All non-numeric characters are removed before
+   * creating the WhatsApp URL.
+   */
+  const whatsappNumber = normalizeWhatsAppNumber(
+    settings.whatsappNumber || settings.phone || ""
+  );
 
-  const number = normalizeWhatsAppNumber(rawNumber);
-  const label = settings.whatsappLabel?.trim() || "WhatsApp";
+  /*
+   * Button text is also CMS controlled.
+   *
+   * If no label has been configured in CMS,
+   * "WhatsApp" is used as the safe default.
+   */
+  const whatsappLabel =
+    settings.whatsappLabel?.trim() || "WhatsApp";
 
-  if (!number) {
+  /*
+   * Do not render an invalid floating button.
+   *
+   * This prevents the website from showing a
+   * WhatsApp button that does not have a number.
+   */
+  if (!whatsappNumber) {
     return null;
   }
 
-  const whatsappUrl = `https://wa.me/${number}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`${label} - Greater Noida Press Club`}
-      title={label}
+      aria-label={`Contact us on WhatsApp: ${whatsappLabel}`}
+      title={whatsappLabel}
       className="
         group
         fixed
         bottom-5
         right-4
-        z-[999]
+        z-50
         inline-flex
         min-h-12
         items-center
@@ -48,13 +76,13 @@ export default function FloatingContactButton() {
         text-sm
         font-bold
         text-white
-        shadow-xl
-        shadow-slate-950/20
+        shadow-lg
+        shadow-black/20
         transition-all
         duration-300
         hover:-translate-y-1
         hover:bg-[#1ebe5d]
-        hover:shadow-2xl
+        hover:shadow-xl
         focus-visible:outline-none
         focus-visible:ring-2
         focus-visible:ring-[#25D366]
@@ -78,10 +106,16 @@ export default function FloatingContactButton() {
           bg-white/15
         "
       >
-        <MessageCircle size={17} />
+        <MessageCircle
+          size={17}
+          strokeWidth={2.5}
+          aria-hidden="true"
+        />
       </span>
 
-      <span>{label}</span>
+      <span className="whitespace-nowrap">
+        {whatsappLabel}
+      </span>
     </a>
   );
 }
