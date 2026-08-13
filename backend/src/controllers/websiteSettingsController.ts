@@ -3,21 +3,14 @@ import WebsiteSettings from "../models/WebsiteSettings";
 
 /**
  * Get public website settings.
- *
- * This endpoint is intentionally safe for the public website.
- * Only settings that are meant to be displayed publicly are
- * returned.
  */
-export const getWebsiteSettings = async (
+export const getSettings = async (
   req: Request,
   res: Response
 ) => {
   try {
     let settings = await WebsiteSettings.findOne();
 
-    /*
-     * Create the settings document if this is the first request.
-     */
     if (!settings) {
       settings = await WebsiteSettings.create({
         siteName: "",
@@ -28,6 +21,11 @@ export const getWebsiteSettings = async (
         address: "",
         whatsappNumber: "",
         whatsappLabel: "WhatsApp",
+        logo: "",
+        favicon: "",
+        heroImage: "",
+        aboutImage: "",
+        membershipPdf: "",
         socialLinks: {},
         seo: {},
       });
@@ -52,12 +50,8 @@ export const getWebsiteSettings = async (
 
 /**
  * Update website settings from the CMS.
- *
- * Every field below is explicitly whitelisted.
- * This prevents arbitrary request properties from being
- * written directly into MongoDB.
  */
-export const updateWebsiteSettings = async (
+export const updateSettings = async (
   req: Request,
   res: Response
 ) => {
@@ -66,17 +60,16 @@ export const updateWebsiteSettings = async (
       siteName,
       heroTitle,
       heroDescription,
-
       email,
       phone,
       address,
-
-      /*
-       * WhatsApp CMS fields.
-       */
       whatsappNumber,
       whatsappLabel,
-
+      logo,
+      favicon,
+      heroImage,
+      aboutImage,
+      membershipPdf,
       socialLinks,
       seo,
     } = req.body;
@@ -87,11 +80,6 @@ export const updateWebsiteSettings = async (
       settings = new WebsiteSettings();
     }
 
-    /*
-     * Only update fields that were actually supplied.
-     * This prevents one CMS section from accidentally
-     * clearing values belonging to another section.
-     */
     if (siteName !== undefined) {
       settings.siteName = siteName;
     }
@@ -116,16 +104,6 @@ export const updateWebsiteSettings = async (
       settings.address = address;
     }
 
-    /*
-     * WhatsApp number.
-     *
-     * Store a clean value while still allowing the CMS
-     * administrator to enter:
-     *
-     * +91 98765 43210
-     * 91-9876543210
-     * 919876543210
-     */
     if (whatsappNumber !== undefined) {
       const cleanedNumber = String(
         whatsappNumber
@@ -143,13 +121,9 @@ export const updateWebsiteSettings = async (
         });
       }
 
-      settings.whatsappNumber =
-        cleanedNumber;
+      settings.whatsappNumber = cleanedNumber;
     }
 
-    /*
-     * WhatsApp floating-button label.
-     */
     if (whatsappLabel !== undefined) {
       const label = String(whatsappLabel).trim();
 
@@ -163,6 +137,26 @@ export const updateWebsiteSettings = async (
 
       settings.whatsappLabel =
         label || "WhatsApp";
+    }
+
+    if (logo !== undefined) {
+      settings.logo = logo;
+    }
+
+    if (favicon !== undefined) {
+      settings.favicon = favicon;
+    }
+
+    if (heroImage !== undefined) {
+      settings.heroImage = heroImage;
+    }
+
+    if (aboutImage !== undefined) {
+      settings.aboutImage = aboutImage;
+    }
+
+    if (membershipPdf !== undefined) {
+      settings.membershipPdf = membershipPdf;
     }
 
     if (socialLinks !== undefined) {
@@ -181,13 +175,10 @@ export const updateWebsiteSettings = async (
 
     await settings.save();
 
-    /*
-     * Return the complete current settings document so
-     * the CMS can immediately refresh its local state.
-     */
     return res.status(200).json({
       success: true,
-      message: "Website settings updated successfully.",
+      message:
+        "Website settings updated successfully.",
       data: settings,
     });
   } catch (error) {
@@ -202,3 +193,46 @@ export const updateWebsiteSettings = async (
     });
   }
 };
+
+/**
+ * Download the membership form configured in CMS.
+ */
+export const downloadMembershipForm = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const settings =
+      await WebsiteSettings.findOne();
+
+    if (!settings?.membershipPdf) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Membership form is not configured.",
+      });
+    }
+
+    return res.redirect(settings.membershipPdf);
+  } catch (error) {
+    console.error(
+      "Failed to download membership form:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Unable to download membership form.",
+    });
+  }
+};
+
+/*
+ * Backward-compatible aliases.
+ *
+ * These prevent existing imports elsewhere in the
+ * backend from breaking if they still use the old names.
+ */
+export const getWebsiteSettings = getSettings;
+export const updateWebsiteSettings = updateSettings;
