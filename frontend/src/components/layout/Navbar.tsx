@@ -4,8 +4,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { HiBars3 } from "react-icons/hi2";
+
 import Container from "@/components/ui/Container";
+import Button from "@/components/ui/Button";
+
 import { navigation } from "@/data/navigation";
+
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
@@ -14,12 +18,218 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  /*
+   * -------------------------------------------------------
+   * SCROLL STATE
+   * -------------------------------------------------------
+   *
+   * Navbar remains fixed.
+   * On scroll we add subtle elevation and backdrop blur.
+   */
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 12);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 12);
+    };
+
     handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    window.addEventListener(
+      "scroll",
+      handleScroll,
+      { passive: true }
+    );
+
+    return () => {
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
+    };
   }, []);
 
-  return <><motion.header initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: "easeOut" }} className={`fixed inset-x-0 top-0 z-[100] border-b transition-[background-color,box-shadow,border-color] duration-300 ${scrolled ? "border-slate-200 bg-white/95 shadow-md backdrop-blur-xl" : "border-slate-100 bg-white"}`}><Container><div className="grid h-16 grid-cols-[1fr_auto] items-center sm:h-[76px] min-[1440px]:grid-cols-[minmax(210px,1fr)_auto_minmax(210px,1fr)]"><div className="min-w-0"><Logo /></div><nav aria-label="Primary navigation" className="hidden items-center justify-center gap-7 min-[1440px]:flex">{navigation.map((item, index) => <motion.div key={item.name} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: index * 0.035 }}><NavLink href={item.href}>{item.name}</NavLink></motion.div>)}</nav><div className="hidden items-center justify-end min-[1440px]:flex"><motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}><Link href="/admin/login" className="inline-flex h-[46px] items-center rounded-[14px] border border-blue-600 bg-white px-6 text-sm font-semibold text-blue-700 transition-colors duration-300 hover:bg-blue-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">Login</Link></motion.div></div><button type="button" onClick={() => setMenuOpen(true)} aria-label="Open navigation menu" aria-expanded={menuOpen} aria-controls="mobile-navigation" className="justify-self-end rounded-xl p-2.5 text-3xl text-slate-700 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-[1440px]:hidden"><HiBars3 aria-hidden="true" /></button></div></Container></motion.header><MobileMenu open={menuOpen} setOpen={setMenuOpen} /></>;
+  /*
+   * Prevent body scrolling while mobile navigation is open.
+   */
+  useEffect(() => {
+    if (!menuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  return (
+    <>
+      <motion.nav
+        initial={{
+          opacity: 0,
+          y: -12,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.35,
+          ease: "easeOut",
+        }}
+        aria-label="Primary navigation"
+        className={[
+          "fixed",
+          "inset-x-0",
+          "top-0",
+          "z-[100]",
+
+          "border-b",
+
+          "transition-all",
+          "duration-300",
+
+          scrolled
+            ? [
+                "border-slate-200",
+                "bg-white/95",
+                "shadow-md",
+                "backdrop-blur-xl",
+              ].join(" ")
+            : [
+                "border-slate-100",
+                "bg-white",
+              ].join(" "),
+        ].join(" ")}
+      >
+        <Container>
+          <div
+            className={[
+              "flex",
+              "h-[72px]",
+              "items-center",
+              "justify-between",
+              "gap-6",
+
+              "sm:h-[76px]",
+            ].join(" ")}
+          >
+            {/* ---------------------------------------------
+                LOGO
+               --------------------------------------------- */}
+            <div className="min-w-0 shrink-0">
+              <Logo />
+            </div>
+
+            {/* ---------------------------------------------
+                DESKTOP NAVIGATION
+               --------------------------------------------- */}
+            <div className="hidden min-[1440px]:flex min-w-0 flex-1 justify-center">
+              <nav
+                aria-label="Desktop navigation"
+                className="flex items-center gap-6 xl:gap-7"
+              >
+                {navigation.map(
+                  (item, index) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{
+                        opacity: 0,
+                        y: -6,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      transition={{
+                        duration: 0.25,
+                        delay:
+                          index * 0.035,
+                      }}
+                    >
+                      <NavLink
+                        href={item.href}
+                      >
+                        {item.name}
+                      </NavLink>
+                    </motion.div>
+                  )
+                )}
+              </nav>
+            </div>
+
+            {/* ---------------------------------------------
+                DESKTOP ADMIN LOGIN
+               --------------------------------------------- */}
+            <div className="hidden shrink-0 min-[1440px]:block">
+              <Link
+                href="/admin/login"
+                className="inline-flex"
+              >
+                <Button
+                  variant="outline"
+                  size="md"
+                >
+                  Login
+                </Button>
+              </Link>
+            </div>
+
+            {/* ---------------------------------------------
+                MOBILE MENU BUTTON
+               --------------------------------------------- */}
+            <button
+              type="button"
+              onClick={() =>
+                setMenuOpen(true)
+              }
+              aria-label="Open navigation menu"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
+              className={[
+                "flex",
+                "h-11",
+                "w-11",
+                "items-center",
+                "justify-center",
+
+                "rounded-xl",
+
+                "border",
+                "border-slate-200",
+
+                "bg-white",
+
+                "text-[#0f4c81]",
+
+                "transition-all",
+                "duration-200",
+
+                "hover:border-[#0f4c81]",
+                "hover:bg-[#eaf3fa]",
+
+                "focus-visible:outline-none",
+                "focus-visible:ring-2",
+                "focus-visible:ring-[#0f4c81]",
+                "focus-visible:ring-offset-2",
+
+                "min-[1440px]:hidden",
+              ].join(" ")}
+            >
+              <HiBars3
+                size={25}
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+        </Container>
+      </motion.nav>
+
+      <MobileMenu
+        open={menuOpen}
+        setOpen={setMenuOpen}
+      />
+    </>
+  );
 }
