@@ -9,8 +9,13 @@ export default function GalleryPage() {
         title="Photo Gallery"
         description="Explore moments, events and activities from Greater Noida Press Club."
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Gallery" },
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label: "Gallery",
+          },
         ]}
       />
 
