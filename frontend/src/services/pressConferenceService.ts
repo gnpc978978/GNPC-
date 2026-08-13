@@ -1,56 +1,162 @@
-import type { PressConference, PressConferenceFormData } from "@/types/pressConference";
+import type {
+  PressConference,
+  PressConferenceFormData,
+} from "@/types/pressConference";
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/press-conferences`;
+import {
+  apiFetch,
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
 
-const authHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-});
-
-const getResponseData = async <T>(response: Response): Promise<T> => {
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(data.message || "Press conference request failed.");
-  }
-
-  return data.data as T;
+type ApiResponse<T> = {
+  success: boolean;
+  data: T;
+  message?: string;
 };
 
-const toFormData = (data: PressConferenceFormData) => {
-  const formData = new FormData();
-  formData.append("title", data.title);
-  formData.append("venue", data.venue);
-  formData.append("date", data.date);
-  formData.append("description", data.description);
-  formData.append("content", data.content);
+const toFormData = (
+  data: PressConferenceFormData
+) => {
+  const formData =
+    new FormData();
 
-  if (data.featuredImage) formData.append("featuredImage", data.featuredImage);
-  if (data.pdfFile) formData.append("pdfFile", data.pdfFile);
+  formData.append(
+    "title",
+    data.title
+  );
+
+  formData.append(
+    "venue",
+    data.venue
+  );
+
+  formData.append(
+    "date",
+    data.date
+  );
+
+  formData.append(
+    "description",
+    data.description
+  );
+
+  formData.append(
+    "content",
+    data.content
+  );
+
+  if (data.featuredImage) {
+    formData.append(
+      "featuredImage",
+      data.featuredImage
+    );
+  }
+
+  if (data.pdfFile) {
+    formData.append(
+      "pdfFile",
+      data.pdfFile
+    );
+  }
 
   return formData;
 };
 
-export const getPressConferences = async (): Promise<PressConference[]> =>
-  getResponseData<PressConference[]>(await fetch(API_URL));
+export const getPressConferences =
+  async (): Promise<
+    PressConference[]
+  > => {
+    const response =
+      await apiFetch(
+        "/press-conferences"
+      );
 
-export const getPressConference = async (id: string): Promise<PressConference> =>
-  getResponseData<PressConference>(await fetch(`${API_URL}/${id}`));
+    const payload =
+      await responseJson<
+        ApiResponse<PressConference[]>
+      >(response);
 
-export const createPressConference = async (data: PressConferenceFormData): Promise<PressConference> =>
-  getResponseData<PressConference>(
-    await fetch(API_URL, { method: "POST", headers: authHeaders(), body: toFormData(data) })
-  );
+    return payload.data || [];
+  };
 
-export const updatePressConference = async (
-  id: string,
-  data: PressConferenceFormData
-): Promise<PressConference> =>
-  getResponseData<PressConference>(
-    await fetch(`${API_URL}/${id}`, { method: "PUT", headers: authHeaders(), body: toFormData(data) })
-  );
+export const getPressConference =
+  async (
+    id: string
+  ): Promise<PressConference> => {
+    const response =
+      await apiFetch(
+        `/press-conferences/${encodeURIComponent(
+          id
+        )}`
+      );
 
-export const deletePressConference = async (id: string): Promise<void> => {
-  await getResponseData<unknown>(
-    await fetch(`${API_URL}/${id}`, { method: "DELETE", headers: authHeaders() })
-  );
-};
+    const payload =
+      await responseJson<
+        ApiResponse<PressConference>
+      >(response);
+
+    return payload.data;
+  };
+
+export const createPressConference =
+  async (
+    data: PressConferenceFormData
+  ): Promise<PressConference> => {
+    const response =
+      await authenticatedApiFetch(
+        "/press-conferences",
+        {
+          method: "POST",
+          body: toFormData(data),
+        }
+      );
+
+    const payload =
+      await responseJson<
+        ApiResponse<PressConference>
+      >(response);
+
+    return payload.data;
+  };
+
+export const updatePressConference =
+  async (
+    id: string,
+    data: PressConferenceFormData
+  ): Promise<PressConference> => {
+    const response =
+      await authenticatedApiFetch(
+        `/press-conferences/${encodeURIComponent(
+          id
+        )}`,
+        {
+          method: "PUT",
+          body: toFormData(data),
+        }
+      );
+
+    const payload =
+      await responseJson<
+        ApiResponse<PressConference>
+      >(response);
+
+    return payload.data;
+  };
+
+export const deletePressConference =
+  async (
+    id: string
+  ): Promise<void> => {
+    const response =
+      await authenticatedApiFetch(
+        `/press-conferences/${encodeURIComponent(
+          id
+        )}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+    await responseJson(response);
+  };
