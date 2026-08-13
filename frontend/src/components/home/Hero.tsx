@@ -179,9 +179,9 @@ export default function Hero() {
               <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-white/5 p-1.5 shadow-2xl shadow-black/40 sm:rounded-[2rem] sm:p-2">
                 <div className="relative h-[290px] overflow-hidden rounded-[1.15rem] bg-slate-900 sm:h-[420px] sm:rounded-[1.5rem] lg:h-[510px] xl:h-[550px]">
                   <HeroCarousel
-                    fallbackImage={settings.heroImage}
-                    alt={heroTitle}
-                  />
+  fallbackImage={settings.heroImage}
+  alt={settings.heroTitle || settings.siteName || "Press Club"}
+/>
 
                   {/* Image readability overlay */}
                   <div
