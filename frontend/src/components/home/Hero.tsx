@@ -17,15 +17,13 @@ export default function Hero() {
   const { settings } = useWebsiteSettings();
 
   const siteName =
-    settings.siteName || "Greater Noida Press Club";
+    settings.siteName || "Greater Noida Press Club's Official Website";
 
   const heroTitle =
-    settings.heroTitle ||
-    "Journalism That Informs, Connects & Represents";
+    settings.heroTitle;
 
   const heroDescription =
-    settings.heroDescription ||
-    "Greater Noida Press Club brings journalists, media professionals and the community together through responsible journalism, collaboration and professional engagement.";
+    settings.heroDescription;
 
   return (
     <section className="relative isolate overflow-hidden bg-slate-950 text-white">
