@@ -1,15 +1,46 @@
 "use client";
 
-import type { AnchorHTMLAttributes, ReactNode } from "react";
+import type {
+  AnchorHTMLAttributes,
+  ReactNode,
+} from "react";
+
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
-type MembershipFormLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "children"> & {
-  children: ReactNode;
-  unavailableLabel?: string;
-  unavailableClassName?: string;
-};
+type MembershipFormLinkProps =
+  Omit<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    "href" | "children"
+  > & {
+    children: ReactNode;
 
-const membershipFormEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/settings/membership-form`;
+    unavailableLabel?: string;
+
+    unavailableClassName?: string;
+
+    className?: string;
+  };
+
+const membershipFormEndpoint =
+  `${process.env.NEXT_PUBLIC_API_URL}/settings/membership-form`;
+
+const defaultAvailableClassName = [
+  "gnpc-btn",
+  "gnpc-btn-primary",
+  "gnpc-btn-md",
+  "focus-visible:outline-none",
+  "focus-visible:ring-2",
+  "focus-visible:ring-[#0f4c81]",
+  "focus-visible:ring-offset-2",
+].join(" ");
+
+const defaultUnavailableClassName = [
+  "gnpc-btn",
+  "gnpc-btn-soft",
+  "gnpc-btn-md",
+  "cursor-not-allowed",
+  "opacity-60",
+].join(" ");
 
 export default function MembershipFormLink({
   children,
@@ -18,15 +49,73 @@ export default function MembershipFormLink({
   className,
   ...props
 }: MembershipFormLinkProps) {
-  const { settings, loading, error } = useWebsiteSettings();
+  const {
+    settings,
+    loading,
+    error,
+  } = useWebsiteSettings();
+
+  /*
+   * =========================================================
+   * LOADING
+   * =========================================================
+   */
 
   if (loading) {
-    return <span aria-disabled="true" className={unavailableClassName}>{"Loading membership form..."}</span>;
+    return (
+      <span
+        aria-disabled="true"
+        className={
+          unavailableClassName ||
+          defaultUnavailableClassName
+        }
+      >
+        Loading membership form...
+      </span>
+    );
   }
 
-  if (error || !settings.membershipPdf) {
-    return <span aria-disabled="true" className={unavailableClassName}>{unavailableLabel}</span>;
+  /*
+   * =========================================================
+   * UNAVAILABLE
+   * =========================================================
+   */
+
+  if (
+    error ||
+    !settings.membershipPdf
+  ) {
+    return (
+      <span
+        aria-disabled="true"
+        className={
+          unavailableClassName ||
+          defaultUnavailableClassName
+        }
+      >
+        {unavailableLabel}
+      </span>
+    );
   }
 
-  return <a href={membershipFormEndpoint} target="_blank" rel="noopener noreferrer" className={className} {...props}>{children}</a>;
+  /*
+   * =========================================================
+   * AVAILABLE
+   * =========================================================
+   */
+
+  return (
+    <a
+      href={membershipFormEndpoint}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={
+        className ||
+        defaultAvailableClassName
+      }
+      {...props}
+    >
+      {children}
+    </a>
+  );
 }
