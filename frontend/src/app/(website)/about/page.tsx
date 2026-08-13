@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import {
   CheckCircle2,
@@ -14,7 +14,7 @@ const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(
     /\/+$/,
     ""
-  );
+  ) || "";
 
 type Objective = {
   title: string;
@@ -73,109 +73,102 @@ type AboutSettings = {
   ctaSecondaryLabel: string;
 };
 
-const normalizeContent = (
-  data: Partial<AboutSettings>
-): AboutSettings => {
+const emptyContent: AboutSettings = {
+  heroEyebrow: "",
+  heroTitle: "",
+  heroDescription: "",
+
+  image: "",
+  heading: "",
+  description: "",
+  secondaryDescription: "",
+
+  commitmentTitle: "",
+  commitmentDescription: "",
+
+  foundationEyebrow: "",
+  foundationTitle: "",
+  foundationDescription: "",
+
+  missionTitle: "",
+  missionDescription: "",
+
+  visionTitle: "",
+  visionDescription: "",
+
+  objectivesEyebrow: "",
+  objectivesTitle: "",
+  objectivesDescription: "",
+  objectives: [],
+
+  presidentName: "",
+  presidentDesignation: "",
+  presidentMessage: "",
+  presidentPhoto: "",
+
+  whyChooseUsEyebrow: "",
+  whyChooseUsTitle: "",
+  whyChooseUsDescription: "",
+  reasons: [],
+
+  ctaTitle:
+    "Become a Part of Our Greater Noida Press Club",
+
+  ctaDescription:
+    "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.",
+
+  ctaPrimaryLabel:
+    "Become a Member",
+
+  ctaSecondaryLabel:
+    "Meet Our Office Bearers",
+};
+
+function normalizeAboutData(
+  data: Partial<AboutSettings> | undefined
+): AboutSettings {
   return {
-    heroEyebrow:
-      data.heroEyebrow ?? "",
-    heroTitle:
-      data.heroTitle ?? "",
-    heroDescription:
-      data.heroDescription ?? "",
-
-    image: data.image ?? "",
-
-    heading:
-      data.heading ?? "",
-    description:
-      data.description ?? "",
-    secondaryDescription:
-      data.secondaryDescription ?? "",
-
-    commitmentTitle:
-      data.commitmentTitle ?? "",
-    commitmentDescription:
-      data.commitmentDescription ?? "",
-
-    foundationEyebrow:
-      data.foundationEyebrow ?? "",
-    foundationTitle:
-      data.foundationTitle ?? "",
-    foundationDescription:
-      data.foundationDescription ?? "",
-
-    missionTitle:
-      data.missionTitle ?? "",
-    missionDescription:
-      data.missionDescription ?? "",
-
-    visionTitle:
-      data.visionTitle ?? "",
-    visionDescription:
-      data.visionDescription ?? "",
-
-    objectivesEyebrow:
-      data.objectivesEyebrow ?? "",
-    objectivesTitle:
-      data.objectivesTitle ?? "",
-    objectivesDescription:
-      data.objectivesDescription ?? "",
+    ...emptyContent,
+    ...data,
 
     objectives:
-      Array.isArray(data.objectives)
+      Array.isArray(data?.objectives)
         ? data.objectives
         : [],
 
-    presidentName:
-      data.presidentName ?? "",
-    presidentDesignation:
-      data.presidentDesignation ?? "",
-    presidentMessage:
-      data.presidentMessage ?? "",
-    presidentPhoto:
-      data.presidentPhoto ?? "",
-
-    whyChooseUsEyebrow:
-      data.whyChooseUsEyebrow ?? "",
-    whyChooseUsTitle:
-      data.whyChooseUsTitle ?? "",
-    whyChooseUsDescription:
-      data.whyChooseUsDescription ?? "",
-
     reasons:
-      Array.isArray(data.reasons)
+      Array.isArray(data?.reasons)
         ? data.reasons
         : [],
 
     ctaTitle:
-      data.ctaTitle ?? "",
+      typeof data?.ctaTitle === "string" &&
+      data.ctaTitle.trim()
+        ? data.ctaTitle.trim()
+        : emptyContent.ctaTitle,
+
     ctaDescription:
-      data.ctaDescription ?? "",
+      typeof data?.ctaDescription ===
+        "string" &&
+      data.ctaDescription.trim()
+        ? data.ctaDescription.trim()
+        : emptyContent.ctaDescription,
+
     ctaPrimaryLabel:
-      data.ctaPrimaryLabel ?? "",
+      typeof data?.ctaPrimaryLabel ===
+        "string" &&
+      data.ctaPrimaryLabel.trim()
+        ? data.ctaPrimaryLabel.trim()
+        : emptyContent.ctaPrimaryLabel,
+
     ctaSecondaryLabel:
-      data.ctaSecondaryLabel ?? "",
+      typeof data?.ctaSecondaryLabel ===
+        "string" &&
+      data.ctaSecondaryLabel.trim()
+        ? data.ctaSecondaryLabel.trim()
+        : emptyContent.ctaSecondaryLabel,
   };
-};
-
-const getErrorMessage = (
-  error: unknown
-): string => {
-  if (axios.isAxiosError(error)) {
-    return (
-      error.response?.data?.message ||
-      error.message ||
-      "Unable to load About page content."
-    );
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return "Unable to load About page content.";
-};
+}
 
 export default function AboutPage() {
   const [content, setContent] =
@@ -187,86 +180,114 @@ export default function AboutPage() {
   const [error, setError] =
     useState<string | null>(null);
 
-  const loadAboutContent = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const loadAboutContent =
+    useCallback(async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      if (!API_URL) {
-        throw new Error(
-          "NEXT_PUBLIC_API_URL is not configured."
-        );
-      }
-
-      /*
-       * Correct CMS endpoint:
-       *
-       * GET /api/settings/about
-       *
-       * NEXT_PUBLIC_API_URL should normally contain:
-       * http://localhost:5000/api
-       *
-       * or the production API base ending in /api.
-       */
-      const response = await axios.get(
-        `${API_URL}/settings/about`,
-        {
-          timeout: 10000,
+        if (!API_URL) {
+          throw new Error(
+            "NEXT_PUBLIC_API_URL is not configured."
+          );
         }
-      );
 
-      if (!response.data?.success) {
-        throw new Error(
-          response.data?.message ||
+        /*
+         * Canonical About API endpoint.
+         *
+         * Backend:
+         * GET /api/settings/about
+         *
+         * NEXT_PUBLIC_API_URL:
+         * http://localhost:5000/api
+         */
+        const response =
+          await axios.get<{
+            success?: boolean;
+            data?: AboutSettings;
+            message?: string;
+          }>(
+            `${API_URL}/settings/about`,
+            {
+              timeout: 10000,
+            }
+          );
+
+        const payload =
+          response.data;
+
+        if (
+          payload?.success === false
+        ) {
+          throw new Error(
+            payload.message ||
+              "Unable to load About content."
+          );
+        }
+
+        if (!payload?.data) {
+          throw new Error(
+            "About API returned no content."
+          );
+        }
+
+        /*
+         * CMS is now the source of truth.
+         *
+         * We only use defaults for fields that
+         * are genuinely empty/missing.
+         */
+        setContent(
+          normalizeAboutData(
+            payload.data
+          )
+        );
+      } catch (requestError) {
+        console.error(
+          "Failed to load About content:",
+          requestError
+        );
+
+        setContent(null);
+
+        if (
+          axios.isAxiosError(
+            requestError
+          )
+        ) {
+          setError(
+            requestError.response
+              ?.data?.message ||
+              requestError.message ||
+              "Unable to load About page content."
+          );
+        } else if (
+          requestError instanceof Error
+        ) {
+          setError(
+            requestError.message
+          );
+        } else {
+          setError(
             "Unable to load About page content."
-        );
+          );
+        }
+      } finally {
+        setLoading(false);
       }
-
-      if (!response.data?.data) {
-        throw new Error(
-          "About API returned no data."
-        );
-      }
-
-      /*
-       * Only use CMS data.
-       *
-       * Do NOT silently merge fallback content here.
-       * Otherwise a broken CMS/API can look like
-       * successfully loaded content.
-       */
-      setContent(
-        normalizeContent(
-          response.data.data
-        )
-      );
-    } catch (error) {
-      console.error(
-        "Failed to load About content:",
-        error
-      );
-
-      setContent(null);
-      setError(
-        getErrorMessage(error)
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    }, []);
 
   useEffect(() => {
     void loadAboutContent();
 
-    /*
-     * Refresh the public page if the admin CMS
-     * updates About settings while both pages
-     * are open.
-     */
     const handleUpdate = () => {
       void loadAboutContent();
     };
 
+    /*
+     * CMS can trigger this event when admin and
+     * public pages are open in the same browser.
+     */
     window.addEventListener(
       "about-settings-updated",
       handleUpdate
@@ -278,15 +299,12 @@ export default function AboutPage() {
         handleUpdate
       );
     };
-  }, []);
+  }, [loadAboutContent]);
 
-  /*
-   * Loading state
-   */
   if (loading) {
     return (
       <main className="min-h-screen bg-white">
-        <section className="bg-slate-900 px-6 py-24">
+        <section className="bg-slate-950 px-6 py-24">
           <div className="mx-auto max-w-7xl animate-pulse">
             <div className="h-5 w-56 rounded bg-white/20" />
 
@@ -307,9 +325,6 @@ export default function AboutPage() {
     );
   }
 
-  /*
-   * API/CMS failure state
-   */
   if (!content) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center px-6">
@@ -320,7 +335,7 @@ export default function AboutPage() {
 
           <p className="mt-3 text-slate-500">
             {error ||
-              "We could not load the latest About page content."}
+              "Unable to load the latest About content."}
           </p>
 
           <button
@@ -328,7 +343,7 @@ export default function AboutPage() {
             onClick={() =>
               void loadAboutContent()
             }
-            className="mt-6 rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            className="mt-6 rounded-lg bg-slate-900 px-5 py-3 font-semibold text-white hover:bg-slate-800"
           >
             Try Again
           </button>
@@ -413,7 +428,7 @@ export default function AboutPage() {
                 src={content.image}
                 alt={
                   content.heading ||
-                  "About us"
+                  "About Greater Noida Press Club"
                 }
                 className="h-full max-h-[520px] w-full object-cover"
                 loading="lazy"
@@ -530,10 +545,7 @@ export default function AboutPage() {
 
             <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {content.objectives.map(
-                (
-                  objective,
-                  index
-                ) => (
+                (objective, index) => (
                   <article
                     key={`${objective.title}-${index}`}
                     className="rounded-2xl border border-slate-200 p-6 transition hover:-translate-y-1 hover:shadow-lg"
@@ -546,15 +558,11 @@ export default function AboutPage() {
                     </div>
 
                     <h3 className="mt-5 text-xl font-bold">
-                      {
-                        objective.title
-                      }
+                      {objective.title}
                     </h3>
 
                     <p className="mt-3 leading-7 text-slate-600">
-                      {
-                        objective.description
-                      }
+                      {objective.description}
                     </p>
                   </article>
                 )
@@ -573,9 +581,7 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[280px_1fr] lg:items-center">
             {content.presidentPhoto ? (
               <img
-                src={
-                  content.presidentPhoto
-                }
+                src={content.presidentPhoto}
                 alt={
                   content.presidentName ||
                   "President"
@@ -600,9 +606,7 @@ export default function AboutPage() {
               {content.presidentMessage && (
                 <blockquote className="mt-5 text-xl leading-9 text-slate-200 md:text-2xl">
                   “
-                  {
-                    content.presidentMessage
-                  }
+                  {content.presidentMessage}
                   ”
                 </blockquote>
               )}
@@ -610,9 +614,7 @@ export default function AboutPage() {
               {content.presidentName && (
                 <div className="mt-7">
                   <p className="text-lg font-bold">
-                    {
-                      content.presidentName
-                    }
+                    {content.presidentName}
                   </p>
 
                   {content.presidentDesignation && (
@@ -691,19 +693,18 @@ export default function AboutPage() {
       )}
 
       {/* =====================================================
-          CTA
-          
-          IMPORTANT:
-          The old inline CTA used:
-
-              href="/membership"
-
-          That route does not exist.
-
-          AboutCTA already uses MembershipFormLink,
-          which connects to the CMS membership form.
+          CMS CONTROLLED CTA
       ====================================================== */}
-      <AboutCTA />
+      <AboutCTA
+        title={content.ctaTitle}
+        description={content.ctaDescription}
+        primaryLabel={
+          content.ctaPrimaryLabel
+        }
+        secondaryLabel={
+          content.ctaSecondaryLabel
+        }
+      />
     </main>
   );
 }
