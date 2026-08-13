@@ -18,13 +18,14 @@ export default function WebsiteLayout({
   const pathname = usePathname();
 
   /*
-   * -------------------------------------------------------
+   * =========================================================
    * WEBSITE TRAFFIC TRACKING
-   * -------------------------------------------------------
+   * =========================================================
    */
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl =
+      process.env.NEXT_PUBLIC_API_URL;
 
     if (!apiUrl) {
       console.error(
@@ -35,12 +36,15 @@ export default function WebsiteLayout({
     }
 
     let sessionId =
-      localStorage.getItem("gnpc_traffic_session");
+      localStorage.getItem(
+        "gnpc_traffic_session"
+      );
 
     if (!sessionId) {
       sessionId =
         typeof crypto !== "undefined" &&
-        typeof crypto.randomUUID === "function"
+        typeof crypto.randomUUID ===
+          "function"
           ? crypto.randomUUID()
           : `${Date.now()}-${Math.random()
               .toString(36)
@@ -52,39 +56,44 @@ export default function WebsiteLayout({
       );
     }
 
-    const sendHeartbeat = async () => {
-      try {
-        await fetch(
-          `${apiUrl}/dashboard/traffic`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              sessionId,
-              page: window.location.pathname,
-            }),
-          }
-        );
-      } catch (error) {
-        /*
-         * Analytics must never break the public website.
-         */
-        console.error(
-          "Traffic heartbeat error:",
-          error
-        );
-      }
-    };
+    const sendHeartbeat =
+      async () => {
+        try {
+          await fetch(
+            `${apiUrl}/dashboard/traffic`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                sessionId,
+                page:
+                  window.location.pathname,
+              }),
+            }
+          );
+        } catch (error) {
+          /*
+           * Analytics must never
+           * break the website.
+           */
+          console.error(
+            "Traffic heartbeat error:",
+            error
+          );
+        }
+      };
 
     void sendHeartbeat();
 
-    const interval = window.setInterval(
-      sendHeartbeat,
-      30_000
-    );
+    const interval =
+      window.setInterval(
+        sendHeartbeat,
+        30_000
+      );
 
     return () => {
       window.clearInterval(interval);
@@ -92,9 +101,9 @@ export default function WebsiteLayout({
   }, []);
 
   /*
-   * -------------------------------------------------------
+   * =========================================================
    * CONTACT PAGE
-   * -------------------------------------------------------
+   * =========================================================
    */
 
   const isContactPage =
@@ -110,17 +119,9 @@ export default function WebsiteLayout({
         "text-slate-900",
       ].join(" ")}
     >
-      {/* ===================================================
+      {/* =====================================================
           GLOBAL WEBSITE HEADER
-          ===================================================
-
-          The TopBar and Navbar are now treated as ONE
-          fixed header system.
-
-          This prevents the Navbar from covering the
-          TopBar and prevents page content from hiding
-          underneath the combined header.
-          =================================================== */}
+          ===================================================== */}
 
       <header
         className={[
@@ -128,75 +129,50 @@ export default function WebsiteLayout({
           "inset-x-0",
           "top-0",
           "z-[100]",
+          "w-full",
         ].join(" ")}
       >
-        {/* -----------------------------------------------
-            TOP BAR
-            ----------------------------------------------- */}
-
-        <div className="relative z-[110]">
-          <TopBar />
-        </div>
-
-        {/* -----------------------------------------------
-            MAIN NAVIGATION
-            ----------------------------------------------- */}
-
-        <div className="relative z-[100]">
-          <Navbar />
-        </div>
+        <TopBar />
+        <Navbar />
       </header>
 
-      {/* ===================================================
-          HEADER SPACER
-          ===================================================
+      {/* =====================================================
+          HEADER SPACE RESERVATION
+          =====================================================
 
-          The complete header consists of:
+          TopBar:
+          42px
 
-          TopBar
-          +
-          Navbar
+          Navbar:
+          74px
 
-          Current TopBar:
-          approximately 40px on desktop
+          Total:
+          116px
 
-          Current Navbar:
-          72px / 76px
-
-          We reserve the combined space here so the Hero
-          and every other public page begins below the
-          complete header.
-
-          The extra responsive spacing accounts for the
-          TopBar wrapping on smaller screens.
-          =================================================== */}
+          This value is kept synchronized with the actual
+          desktop header dimensions.
+          ===================================================== */}
 
       <div
         aria-hidden="true"
-        className={[
-          "h-[116px]",
-
-          "sm:h-[116px]",
-
-          "lg:h-[116px]",
-        ].join(" ")}
+        className="h-[116px]"
       />
 
-      {/* ===================================================
-          MAIN CONTENT
-          =================================================== */}
+      {/* =====================================================
+          MAIN WEBSITE CONTENT
+          ===================================================== */}
 
       <main>{children}</main>
 
-      {/* ===================================================
-          GLOBAL FOOTER
-          =================================================== */}
+      {/* =====================================================
+          FOOTER
+          ===================================================== */}
 
       <Footer />
 
-      {/* ===================================================
+      {/* =====================================================
           FLOATING CONTACT ACTION
-          =================================================== */}
+          ===================================================== */}
 
       {!isContactPage && (
         <FloatingContactButton />
