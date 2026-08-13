@@ -17,227 +17,829 @@ export default function Hero() {
   const { settings } = useWebsiteSettings();
 
   const siteName =
-    settings.siteName;
+    settings.siteName ||
+    "Greater Noida Press Club";
 
   const heroTitle =
-    settings.heroTitle;
+    settings.heroTitle ||
+    "Connecting Journalism, Media & Community";
 
   const heroDescription =
-    settings.heroDescription;
+    settings.heroDescription ||
+    "A professional platform for journalists, media professionals and the community of Greater Noida.";
+
+  const heroImage =
+    settings.heroImage || "/Logo.png";
 
   return (
-    <section className="relative isolate overflow-hidden bg-slate-950 text-white">
-      {/* Background atmosphere */}
+    <section
+      aria-labelledby="gnpc-hero-title"
+      className={[
+        "relative",
+        "isolate",
+        "overflow-hidden",
+
+        "bg-[#0a3a61]",
+
+        "text-white",
+      ].join(" ")}
+    >
+      {/* ==================================================
+          BACKGROUND
+          ================================================== */}
+
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_15%_20%,rgba(15,76,129,0.42),transparent_35%),radial-gradient(circle_at_85%_80%,rgba(200,16,46,0.18),transparent_30%),linear-gradient(135deg,#06111f_0%,#0a2036_48%,#07111d_100%)]"
+        className={[
+          "absolute",
+          "inset-0",
+          "-z-20",
+
+          "bg-[#0a3a61]",
+        ].join(" ")}
       />
 
-      {/* Decorative grid */}
+      {/* Subtle GNPC blue atmosphere */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 opacity-[0.08]"
+        className={[
+          "absolute",
+          "-left-40",
+          "-top-40",
+          "-z-10",
+
+          "h-[34rem]",
+          "w-[34rem]",
+
+          "rounded-full",
+
+          "bg-[#0f4c81]/30",
+
+          "blur-3xl",
+        ].join(" ")}
+      />
+
+      <div
+        aria-hidden="true"
+        className={[
+          "absolute",
+          "-bottom-48",
+          "-right-40",
+          "-z-10",
+
+          "h-[32rem]",
+          "w-[32rem]",
+
+          "rounded-full",
+
+          "bg-black/20",
+
+          "blur-3xl",
+        ].join(" ")}
+      />
+
+      {/* Very subtle editorial grid */}
+      <div
+        aria-hidden="true"
+        className={[
+          "pointer-events-none",
+          "absolute",
+          "inset-0",
+          "-z-10",
+
+          "opacity-[0.045]",
+        ].join(" ")}
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px)",
-          backgroundSize: "42px 42px",
+            "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+          backgroundSize:
+            "56px 56px",
         }}
       />
 
-      {/* Ambient glow */}
-      <div
-        aria-hidden="true"
-        className="absolute -right-32 -top-32 -z-10 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"
-      />
+      {/* ==================================================
+          HERO CONTENT
+          ================================================== */}
 
       <div
-        aria-hidden="true"
-        className="absolute -bottom-40 -left-40 -z-10 h-[28rem] w-[28rem] rounded-full bg-red-500/10 blur-3xl"
-      />
+        className={[
+          "mx-auto",
+          "max-w-7xl",
 
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20 xl:py-24">
-        <div className="grid items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 xl:gap-20">
-          {/* Content */}
+          "px-4",
+          "py-10",
+
+          "sm:px-6",
+          "sm:py-14",
+
+          "lg:px-8",
+          "lg:py-20",
+
+          "xl:py-24",
+        ].join(" ")}
+      >
+        <div
+          className={[
+            "grid",
+            "items-center",
+
+            "gap-12",
+
+            "lg:grid-cols-[0.9fr_1.1fr]",
+            "lg:gap-14",
+
+            "xl:grid-cols-[0.86fr_1.14fr]",
+            "xl:gap-20",
+          ].join(" ")}
+        >
+          {/* =================================================
+              LEFT — EDITORIAL CONTENT
+              ================================================= */}
+
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="order-2 lg:order-1"
+            initial={{
+              opacity: 0,
+              y: 24,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.7,
+              ease: "easeOut",
+            }}
+            className={[
+              "order-2",
+              "lg:order-1",
+            ].join(" ")}
           >
-            {/* Organization badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-blue-100 backdrop-blur-md sm:px-4 sm:text-sm">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/20">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3">
+              <span
+                aria-hidden="true"
+                className="h-px w-9 bg-white/60"
+              />
+
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/70 sm:text-sm">
+                Greater Noida Press Club
+              </span>
+            </div>
+
+            {/* Small organization label */}
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-2 text-xs font-bold text-white/80 backdrop-blur-md">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
                 <Newspaper
                   size={13}
                   aria-hidden="true"
                 />
               </span>
 
-              <span>{siteName}</span>
+              <span>
+                Journalism • Media • Community
+              </span>
             </div>
 
-            {/* Editorial label */}
-            <div className="mt-7 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-blue-300 sm:mt-9 sm:text-sm">
-              <span className="h-px w-8 bg-blue-400/70" />
-              GNPC
-            </div>
+            {/* Main title */}
+            <h1
+              id="gnpc-hero-title"
+              className={[
+                "mt-6",
 
-            {/* Main heading */}
-            <h1 className="mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
+                "max-w-3xl",
+
+                "text-4xl",
+                "font-black",
+
+                "leading-[1.02]",
+                "tracking-[-0.035em]",
+
+                "sm:text-5xl",
+
+                "md:text-6xl",
+
+                "lg:text-[4.1rem]",
+
+                "xl:text-[4.7rem]",
+              ].join(" ")}
+            >
               {heroTitle}
             </h1>
 
             {/* Description */}
-            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+            <p
+              className={[
+                "mt-6",
+
+                "max-w-2xl",
+
+                "text-base",
+                "leading-7",
+
+                "text-white/70",
+
+                "sm:text-lg",
+                "sm:leading-8",
+              ].join(" ")}
+            >
               {heroDescription}
             </p>
 
-            {/* CTAs */}
-            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-4">
+            {/* =================================================
+                PRIMARY ACTIONS
+                ================================================= */}
+
+            <div
+              className={[
+                "mt-8",
+
+                "flex",
+                "flex-col",
+                "gap-3",
+
+                "sm:mt-10",
+                "sm:flex-row",
+                "sm:flex-wrap",
+                "sm:gap-4",
+              ].join(" ")}
+            >
+              {/* Become a member */}
               <MembershipFormLink
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#0f4c81] px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#12609f] hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-6 sm:text-base"
-                unavailableClassName="inline-flex cursor-not-allowed items-center justify-center rounded-xl bg-[#0f4c81] px-5 py-3.5 text-sm font-bold text-white opacity-60 sm:px-6 sm:text-base"
+                className={[
+                  "group",
+
+                  "inline-flex",
+                  "items-center",
+                  "justify-center",
+                  "gap-2",
+
+                  "rounded-xl",
+
+                  "border",
+                  "border-white",
+
+                  "bg-white",
+
+                  "px-5",
+                  "py-3.5",
+
+                  "text-sm",
+                  "font-extrabold",
+
+                  "text-[#0a3a61]",
+
+                  "shadow-xl",
+                  "shadow-black/10",
+
+                  "transition-all",
+                  "duration-300",
+
+                  "hover:-translate-y-0.5",
+                  "hover:bg-slate-50",
+                  "hover:shadow-2xl",
+
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-white",
+                  "focus-visible:ring-offset-2",
+                  "focus-visible:ring-offset-[#0a3a61]",
+
+                  "sm:px-6",
+                  "sm:text-base",
+                ].join(" ")}
+                unavailableClassName={[
+                  "inline-flex",
+                  "cursor-not-allowed",
+                  "items-center",
+                  "justify-center",
+
+                  "rounded-xl",
+
+                  "border",
+                  "border-white/20",
+
+                  "bg-white/50",
+
+                  "px-5",
+                  "py-3.5",
+
+                  "text-sm",
+                  "font-extrabold",
+
+                  "text-[#0a3a61]",
+
+                  "opacity-60",
+
+                  "sm:px-6",
+                  "sm:text-base",
+                ].join(" ")}
               >
                 Become A Member
+
                 <ArrowRight
                   size={18}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className={[
+                    "transition-transform",
+                    "duration-300",
+
+                    "group-hover:translate-x-1",
+                  ].join(" ")}
                   aria-hidden="true"
                 />
               </MembershipFormLink>
 
+              {/* Latest updates */}
               <Link
                 href="/latest-updates"
-                className="group inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-5 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-6 sm:text-base"
+                className={[
+                  "group",
+
+                  "inline-flex",
+                  "items-center",
+                  "justify-center",
+                  "gap-2",
+
+                  "rounded-xl",
+
+                  "border",
+                  "border-white/20",
+
+                  "bg-white/[0.06]",
+
+                  "px-5",
+                  "py-3.5",
+
+                  "text-sm",
+                  "font-bold",
+
+                  "text-white",
+
+                  "backdrop-blur-md",
+
+                  "transition-all",
+                  "duration-300",
+
+                  "hover:-translate-y-0.5",
+                  "hover:border-white/35",
+                  "hover:bg-white/10",
+
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-white",
+                  "focus-visible:ring-offset-2",
+                  "focus-visible:ring-offset-[#0a3a61]",
+
+                  "sm:px-6",
+                  "sm:text-base",
+                ].join(" ")}
               >
                 Latest Updates
+
                 <ArrowRight
                   size={18}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className={[
+                    "transition-transform",
+                    "duration-300",
+
+                    "group-hover:translate-x-1",
+                  ].join(" ")}
                   aria-hidden="true"
                 />
               </Link>
             </div>
 
-            {/* Quick information */}
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-6 sm:mt-10">
+            {/* =================================================
+                QUICK LINKS
+                ================================================= */}
+
+            <div
+              className={[
+                "mt-8",
+
+                "flex",
+                "flex-wrap",
+
+                "gap-x-6",
+                "gap-y-3",
+
+                "border-t",
+                "border-white/10",
+
+                "pt-6",
+
+                "sm:mt-10",
+              ].join(" ")}
+            >
               <Link
-                href="/press-conference"
-                className="group inline-flex items-center gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
+                href="/press-releases"
+                className={[
+                  "group",
+
+                  "inline-flex",
+                  "items-center",
+                  "gap-2",
+
+                  "text-sm",
+                  "font-semibold",
+
+                  "text-white/65",
+
+                  "transition-colors",
+                  "duration-200",
+
+                  "hover:text-white",
+                ].join(" ")}
               >
-                <CalendarDays
+                <Newspaper
                   size={16}
-                  className="text-blue-300"
+                  className="text-white/60"
                   aria-hidden="true"
                 />
-                <span>Press Conferences</span>
+
+                <span>
+                  Press Releases
+                </span>
+
                 <ArrowRight
                   size={14}
-                  className="opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
+                  className={[
+                    "opacity-0",
+
+                    "transition-all",
+                    "duration-200",
+
+                    "group-hover:translate-x-1",
+                    "group-hover:opacity-100",
+                  ].join(" ")}
                   aria-hidden="true"
                 />
               </Link>
 
               <Link
-                href="/press-releases"
-                className="group inline-flex items-center gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
+                href="/events"
+                className={[
+                  "group",
+
+                  "inline-flex",
+                  "items-center",
+                  "gap-2",
+
+                  "text-sm",
+                  "font-semibold",
+
+                  "text-white/65",
+
+                  "transition-colors",
+                  "duration-200",
+
+                  "hover:text-white",
+                ].join(" ")}
               >
-                <Newspaper
+                <CalendarDays
                   size={16}
-                  className="text-blue-300"
+                  className="text-white/60"
                   aria-hidden="true"
                 />
-                <span>Press Releases</span>
+
+                <span>
+                  Events
+                </span>
+
                 <ArrowRight
                   size={14}
-                  className="opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
+                  className={[
+                    "opacity-0",
+
+                    "transition-all",
+                    "duration-200",
+
+                    "group-hover:translate-x-1",
+                    "group-hover:opacity-100",
+                  ].join(" ")}
                   aria-hidden="true"
                 />
               </Link>
             </div>
           </motion.div>
 
-          {/* Hero visual */}
+          {/* =================================================
+              RIGHT — HERO VISUAL
+              ================================================= */}
+
           <motion.div
-            initial={{ opacity: 0, x: 32, scale: 0.97 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
+            initial={{
+              opacity: 0,
+              x: 30,
+              scale: 0.97,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              scale: 1,
+            }}
             transition={{
               duration: 0.8,
               delay: 0.1,
               ease: "easeOut",
             }}
-            className="order-1 lg:order-2"
+            className={[
+              "order-1",
+              "lg:order-2",
+            ].join(" ")}
           >
             <div className="relative">
-              {/* Outer glow */}
+              {/* Outer frame */}
               <div
                 aria-hidden="true"
-                className="absolute -inset-4 rounded-[2rem] bg-blue-500/10 blur-2xl"
+                className={[
+                  "absolute",
+                  "-inset-3",
+
+                  "rounded-[2rem]",
+
+                  "border",
+                  "border-white/[0.06]",
+                ].join(" ")}
               />
 
               {/* Image frame */}
-              <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-white/5 p-1.5 shadow-2xl shadow-black/40 sm:rounded-[2rem] sm:p-2">
-                <div className="relative h-[290px] overflow-hidden rounded-[1.15rem] bg-slate-900 sm:h-[420px] sm:rounded-[1.5rem] lg:h-[510px] xl:h-[550px]">
-                  <HeroCarousel
-  fallbackImage={settings.heroImage}
-  alt={settings.heroTitle || settings.siteName || "Press Club"}
-/>
+              <div
+                className={[
+                  "relative",
 
-                  {/* Image readability overlay */}
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent"
+                  "overflow-hidden",
+
+                  "rounded-[1.5rem]",
+
+                  "border",
+                  "border-white/15",
+
+                  "bg-white/[0.04]",
+
+                  "p-1.5",
+
+                  "shadow-2xl",
+                  "shadow-black/35",
+
+                  "sm:rounded-[2rem]",
+                  "sm:p-2",
+                ].join(" ")}
+              >
+                <div
+                  className={[
+                    "relative",
+
+                    "h-[300px]",
+
+                    "overflow-hidden",
+
+                    "rounded-[1.15rem]",
+
+                    "bg-[#061f35]",
+
+                    "sm:h-[420px]",
+
+                    "sm:rounded-[1.5rem]",
+
+                    "lg:h-[500px]",
+
+                    "xl:h-[550px]",
+                  ].join(" ")}
+                >
+                  {/* Carousel */}
+                  <HeroCarousel
+                    fallbackImage={
+                      heroImage
+                    }
+                    alt={
+                      heroTitle
+                    }
                   />
 
-                  {/* Live editorial marker */}
-                  <div className="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-slate-950/60 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md sm:left-5 sm:top-5 sm:text-xs">
-                    <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                  {/* Editorial readability overlay */}
+                  <div
+                    aria-hidden="true"
+                    className={[
+                      "pointer-events-none",
+                      "absolute",
+                      "inset-0",
+
+                      "bg-gradient-to-t",
+                      "from-black/50",
+                      "via-transparent",
+                      "to-black/10",
+                    ].join(" ")}
+                  />
+
+                  {/* Top editorial label */}
+                  <div
+                    className={[
+                      "pointer-events-none",
+
+                      "absolute",
+                      "left-4",
+                      "top-4",
+
+                      "inline-flex",
+                      "items-center",
+                      "gap-2",
+
+                      "rounded-full",
+
+                      "border",
+                      "border-white/15",
+
+                      "bg-[#0a3a61]/80",
+
+                      "px-3",
+                      "py-2",
+
+                      "text-[10px]",
+                      "font-extrabold",
+                      "uppercase",
+                      "tracking-[0.18em]",
+
+                      "text-white",
+
+                      "backdrop-blur-md",
+
+                      "sm:left-5",
+                      "sm:top-5",
+
+                      "sm:text-xs",
+                    ].join(" ")}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="relative flex h-2 w-2"
+                    >
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-50" />
+
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
                     </span>
+
                     GNPC
+                  </div>
+
+                  {/* Bottom image information */}
+                  <div
+                    className={[
+                      "pointer-events-none",
+
+                      "absolute",
+                      "bottom-0",
+                      "left-0",
+                      "right-0",
+
+                      "p-5",
+
+                      "sm:p-6",
+                    ].join(" ")}
+                  >
+                    <div className="max-w-md">
+                      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/60">
+                        {siteName}
+                      </p>
+
+                      <p className="mt-1 text-sm font-bold leading-5 text-white sm:text-base">
+                        Journalism, media and community — connected through GNPC.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating editorial card */}
-              <div className="absolute -bottom-5 left-4 hidden max-w-[250px] rounded-2xl border border-white/15 bg-slate-950/85 p-4 shadow-2xl backdrop-blur-xl sm:block lg:-left-7">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300">
+              {/* =================================================
+                  FLOATING INFORMATION CARD
+                  ================================================= */}
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 12,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.75,
+                }}
+                className={[
+                  "absolute",
+
+                  "-bottom-5",
+                  "left-4",
+
+                  "hidden",
+
+                  "max-w-[270px]",
+
+                  "rounded-2xl",
+
+                  "border",
+                  "border-white/15",
+
+                  "bg-[#061f35]/95",
+
+                  "p-4",
+
+                  "shadow-2xl",
+
+                  "backdrop-blur-xl",
+
+                  "sm:block",
+
+                  "lg:-left-7",
+                ].join(" ")}
+              >
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/50">
                   Greater Noida
                 </p>
 
                 <p className="mt-1 text-sm font-bold leading-5 text-white">
-                  A platform for journalism, media professionals and the community.
+                  A professional platform for journalists, media professionals and the community.
                 </p>
-              </div>
+              </motion.div>
 
-              {/* Scroll indicator */}
+              {/* =================================================
+                  SCROLL PROMPT
+                  ================================================= */}
+
               <motion.div
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.7,
-                  delay: 1,
-                  repeat: Infinity,
-                  repeatType: "reverse",
+                initial={{
+                  opacity: 0,
                 }}
-                className="absolute -bottom-10 right-2 hidden items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400 xl:flex"
+                animate={{
+                  opacity: 1,
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 1.1,
+                }}
+                className={[
+                  "absolute",
+
+                  "-bottom-11",
+                  "right-2",
+
+                  "hidden",
+
+                  "items-center",
+                  "gap-2",
+
+                  "text-[10px]",
+                  "font-bold",
+                  "uppercase",
+                  "tracking-[0.16em]",
+
+                  "text-white/40",
+
+                  "xl:flex",
+                ].join(" ")}
               >
-                <ChevronDown
-                  size={15}
-                  aria-hidden="true"
-                />
-                Explore
+                <span>
+                  Explore
+                </span>
+
+                <motion.span
+                  animate={{
+                    y: [0, 4, 0],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <ChevronDown
+                    size={15}
+                    aria-hidden="true"
+                  />
+                </motion.span>
               </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Bottom edge */}
+      {/* ==================================================
+          BOTTOM EDGE
+          ================================================== */}
+
       <div
         aria-hidden="true"
-        className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        className={[
+          "absolute",
+          "bottom-0",
+          "left-0",
+          "right-0",
+
+          "h-px",
+
+          "bg-white/10",
+        ].join(" ")}
       />
     </section>
   );
