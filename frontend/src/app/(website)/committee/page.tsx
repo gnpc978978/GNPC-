@@ -1,11 +1,20 @@
+import PageHero from "@/components/ui/PageHero";
 import ExecutiveCommitteeSection from "@/components/website/ExecutiveCommitteeSection";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Executive Committee",
-  description: "Meet the Executive Committee of Greater Noida Press Club.",
-};
 
 export default function CommitteePage() {
-  return <ExecutiveCommitteeSection title="Executive Committee" />;
+  return (
+    <main className="bg-white">
+      <PageHero
+        eyebrow="Executive Committee"
+        title="Our Executive Committee"
+        description="Meet the office bearers and executive committee members of Greater Noida Press Club."
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "Executive Committee" },
+        ]}
+      />
+
+      <ExecutiveCommitteeSection />
+    </main>
+  );
 }
