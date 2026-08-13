@@ -1,34 +1,88 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
-const getTrafficCollections = () => {
-  const db = mongoose.connection.db;
-
-  if (!db) {
-    throw new Error("MongoDB connection is not ready");
-  }
-import { Request, Response } from "express";
-import mongoose from "mongoose";
-
-import User from "../models/User";
-import PressRelease from "../models/pressRelease.model";
-import Event from "../models/event.model";
-import Gallery from "../models/Gallery";
-import PressConference from "../models/PressConference";
-
-const getTrafficCollections = () => {
+/**
+ * Get MongoDB database.
+ */
+const getDatabase = () => {
   const db = mongoose.connection.db;
 
   if (!db) {
     throw new Error("MongoDB connection is not ready");
   }
 
-  const sessions = db.collection("traffic_sessions");
-  const stats = db.collection("traffic_stats");
+  return db;
+};
+
+/**
+ * Find the first existing collection from a list of possible names.
+ *
+ * This keeps the dashboard independent from Mongoose model filenames.
+ */
+const findCollection = async (
+  names: string[]
+) => {
+  const db = getDatabase();
+
+  const existingCollections =
+    await db
+      .listCollections()
+      .toArray();
+
+  const existingNames =
+    new Set(
+      existingCollections.map(
+        (collection) =>
+          collection.name
+      )
+    );
+
+  for (const name of names) {
+    if (existingNames.has(name)) {
+      return db.collection(name);
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Count documents safely.
+ *
+ * If a collection does not exist, return 0.
+ */
+const countCollection = async (
+  names: string[],
+  filter: Record<string, unknown> = {}
+) => {
+  const collection =
+    await findCollection(names);
+
+  if (!collection) {
+    return 0;
+  }
+
+  return collection.countDocuments(
+    filter
+  );
+};
+
+/**
+ * Traffic collections.
+ */
+const getTrafficCollections = () => {
+  const db = getDatabase();
 
   return {
-    sessions,
-    stats,
+    sessions:
+      db.collection(
+        "traffic_sessions"
+      ),
+
+    stats:
+      db.collection(
+        "traffic_stats"
+      ),
   };
 };
 
@@ -45,23 +99,25 @@ export const getPublicStats = async (
       events,
       gallery,
     ] = await Promise.all([
-      PressRelease.countDocuments({
-        status: "PUBLISHED",
-        isActive: true,
-      }),
+      countCollection([
+        "press_releases",
+        "pressReleases",
+        "pressreleases",
+      ]),
 
-      Event.countDocuments({
-        status: "published",
-        isActive: true,
-      }),
+      countCollection([
+        "events",
+      ]),
 
-      Gallery.countDocuments({
-        status: "active",
-      }),
+      countCollection([
+        "gallery",
+        "galleries",
+      ]),
     ]);
 
     return res.status(200).json({
       success: true,
+
       data: {
         pressReleases,
         events,
@@ -76,7 +132,8 @@ export const getPublicStats = async (
 
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch public statistics.",
+      message:
+        "Failed to fetch public statistics.",
     });
   }
 };
@@ -99,14 +156,18 @@ export const trackTraffic = async (
     const now = new Date();
 
     const path =
-      typeof req.body?.path === "string"
+      typeof req.body?.path ===
+      "string"
         ? req.body.path.trim()
         : "/";
 
     const userAgent =
-      typeof req.headers["user-agent"] ===
-      "string"
-        ? req.headers["user-agent"]
+      typeof req.headers[
+        "user-agent"
+      ] === "string"
+        ? req.headers[
+            "user-agent"
+          ]
         : "";
 
     await sessions.insertOne({
@@ -116,7 +177,10 @@ export const trackTraffic = async (
     });
 
     const date =
-      now.toISOString().slice(0, 10);
+      now.toISOString().slice(
+        0,
+        10
+      );
 
     await stats.updateOne(
       { date },
@@ -124,6 +188,7 @@ export const trackTraffic = async (
         $inc: {
           visits: 1,
         },
+
         $set: {
           updatedAt: now,
         },
@@ -143,8 +208,8 @@ export const trackTraffic = async (
     );
 
     /*
-     * Analytics must never break the
-     * public website.
+     * Analytics failure must never
+     * break the public website.
      */
     return res.status(200).json({
       success: false,
@@ -155,18 +220,12 @@ export const trackTraffic = async (
 /**
  * DASHBOARD STATS
  *
- * IMPORTANT:
- * The frontend expects:
+ * Frontend contract:
  *
- * {
- *   success: true,
- *   stats: {
- *     admins,
- *     pressReleases,
- *     events,
- *     gallery
- *   }
- * }
+ * data.stats.admins
+ * data.stats.pressReleases
+ * data.stats.events
+ * data.stats.gallery
  */
 export const getDashboardStats = async (
   _req: Request,
@@ -179,28 +238,36 @@ export const getDashboardStats = async (
       events,
       gallery,
     ] = await Promise.all([
-      User.countDocuments({
-        role: {
-          $in: [
-            "ADMIN",
-            "SUPER_ADMIN",
-          ],
-        },
-      }),
+      countCollection(
+        [
+          "users",
+          "admins",
+          "admin_users",
+        ],
+        {
+          role: {
+            $in: [
+              "ADMIN",
+              "SUPER_ADMIN",
+            ],
+          },
+        }
+      ),
 
-      PressRelease.countDocuments({
-        status: "PUBLISHED",
-        isActive: true,
-      }),
+      countCollection([
+        "press_releases",
+        "pressReleases",
+        "pressreleases",
+      ]),
 
-      Event.countDocuments({
-        status: "published",
-        isActive: true,
-      }),
+      countCollection([
+        "events",
+      ]),
 
-      Gallery.countDocuments({
-        status: "active",
-      }),
+      countCollection([
+        "gallery",
+        "galleries",
+      ]),
     ]);
 
     const stats = {
@@ -214,13 +281,13 @@ export const getDashboardStats = async (
       success: true,
 
       /*
-       * Frontend dashboard uses data.stats.
+       * Expected by the dashboard.
        */
       stats,
 
       /*
-       * Keep data as well for compatibility
-       * with any other frontend code.
+       * Compatibility with other
+       * consumers.
        */
       data: stats,
     });
@@ -232,8 +299,10 @@ export const getDashboardStats = async (
 
     return res.status(500).json({
       success: false,
+
       message:
         "Failed to fetch dashboard statistics.",
+
       stats: {
         admins: 0,
         pressReleases: 0,
@@ -247,15 +316,7 @@ export const getDashboardStats = async (
 /**
  * DASHBOARD CHARTS
  *
- * Returns the last 6 months.
- *
- * The frontend Charts component expects:
- *
- * month
- * pressReleases
- * events
- * gallery
- * pressConferences
+ * Last 6 months.
  */
 export const getDashboardCharts = async (
   _req: Request,
@@ -264,83 +325,132 @@ export const getDashboardCharts = async (
   try {
     const now = new Date();
 
-    const months: {
+    const months: Array<{
       month: string;
       start: Date;
       end: Date;
-    }[] = [];
+    }> = [];
 
-    for (let i = 5; i >= 0; i--) {
-      const start = new Date(
-        now.getFullYear(),
-        now.getMonth() - i,
-        1
-      );
+    for (
+      let i = 5;
+      i >= 0;
+      i--
+    ) {
+      const start =
+        new Date(
+          now.getFullYear(),
+          now.getMonth() - i,
+          1
+        );
 
-      const end = new Date(
-        now.getFullYear(),
-        now.getMonth() - i + 1,
-        1
-      );
+      const end =
+        new Date(
+          now.getFullYear(),
+          now.getMonth() - i + 1,
+          1
+        );
 
       months.push({
-        month: start.toLocaleString(
-          "en-IN",
-          {
-            month: "short",
-          }
-        ),
+        month:
+          start.toLocaleString(
+            "en-IN",
+            {
+              month: "short",
+            }
+          ),
+
         start,
         end,
       });
     }
 
-    const data = await Promise.all(
-      months.map(async (item) => {
-        const [
-          pressReleases,
-          events,
-          gallery,
-          pressConferences,
-        ] = await Promise.all([
-          PressRelease.countDocuments({
-            createdAt: {
-              $gte: item.start,
-              $lt: item.end,
-            },
-          }),
+    const data =
+      await Promise.all(
+        months.map(
+          async (item) => {
+            const [
+              pressReleases,
+              pressConferences,
+              events,
+              gallery,
+            ] =
+              await Promise.all([
+                countCollection(
+                  [
+                    "press_releases",
+                    "pressReleases",
+                    "pressreleases",
+                  ],
+                  {
+                    createdAt: {
+                      $gte:
+                        item.start,
+                      $lt:
+                        item.end,
+                    },
+                  }
+                ),
 
-          Event.countDocuments({
-            createdAt: {
-              $gte: item.start,
-              $lt: item.end,
-            },
-          }),
+                countCollection(
+                  [
+                    "press_conferences",
+                    "pressConferences",
+                    "pressconference",
+                    "press_conference",
+                  ],
+                  {
+                    createdAt: {
+                      $gte:
+                        item.start,
+                      $lt:
+                        item.end,
+                    },
+                  }
+                ),
 
-          Gallery.countDocuments({
-            createdAt: {
-              $gte: item.start,
-              $lt: item.end,
-            },
-          }),
+                countCollection(
+                  ["events"],
+                  {
+                    createdAt: {
+                      $gte:
+                        item.start,
+                      $lt:
+                        item.end,
+                    },
+                  }
+                ),
 
-          PressConference.countDocuments({
-            createdAt: {
-              $gte: item.start,
-              $lt: item.end,
-            },
-          }),
-        ]);
+                countCollection(
+                  [
+                    "gallery",
+                    "galleries",
+                  ],
+                  {
+                    createdAt: {
+                      $gte:
+                        item.start,
+                      $lt:
+                        item.end,
+                    },
+                  }
+                ),
+              ]);
 
-        return {
-          month: item.month,
-          pressReleases,
-          pressConferences,
-          events,
-          gallery,
-        };
-      })
-    );
+            return {
+              month:
+                item.month,
+
+              pressReleases,
+
+              pressConferences,
+
+              events,
+
+              gallery,
+            };
+          }
+        )
+      );
 
     return res.status(200).json({
       success: true,
@@ -354,8 +464,10 @@ export const getDashboardCharts = async (
 
     return res.status(500).json({
       success: false,
+
       message:
         "Failed to fetch dashboard chart data.",
+
       data: [],
     });
   }
@@ -363,8 +475,6 @@ export const getDashboardCharts = async (
 
 /**
  * TRAFFIC ANALYTICS
- *
- * Protected endpoint.
  */
 export const getTrafficAnalytics = async (
   _req: Request,
@@ -399,8 +509,11 @@ export const getTrafficAnalytics = async (
 
     return res.status(200).json({
       success: true,
+
       data: {
-        dailyStats: dailyStats.reverse(),
+        dailyStats:
+          dailyStats.reverse(),
+
         recentSessions,
       },
     });
@@ -412,268 +525,14 @@ export const getTrafficAnalytics = async (
 
     return res.status(500).json({
       success: false,
+
       message:
         "Failed to fetch traffic analytics.",
+
       data: {
         dailyStats: [],
         recentSessions: [],
       },
-    });
-  }
-};
-  const sessions = db.collection("traffic_sessions");
-  const stats = db.collection("traffic_stats");
-
-  return {
-    sessions,
-    stats,
-  };
-};
-
-/**
- * Public statistics.
- *
- * Keep this endpoint intentionally lightweight.
- * The public website must continue working even if
- * traffic collections are unavailable.
- */
-export const getPublicStats = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const db = mongoose.connection.db;
-
-    if (!db) {
-      return res.status(503).json({
-        success: false,
-        message: "Database connection is not ready.",
-      });
-    }
-
-    const { stats } = getTrafficCollections();
-
-    const latest = await stats
-      .find({})
-      .sort({ date: -1 })
-      .limit(1)
-      .toArray();
-
-    const latestStats = latest[0] || {};
-
-    return res.status(200).json({
-      success: true,
-      data: {
-        visitors: latestStats.visitors ?? 0,
-        visits: latestStats.visits ?? 0,
-      },
-    });
-  } catch (error) {
-    console.error(
-      "Failed to fetch public statistics:",
-      error
-    );
-
-    return res.status(200).json({
-      success: true,
-      data: {
-        visitors: 0,
-        visits: 0,
-      },
-    });
-  }
-};
-
-/**
- * Public traffic heartbeat.
- *
- * This route is intentionally unauthenticated.
- */
-export const trackTraffic = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { sessions, stats } =
-      getTrafficCollections();
-
-    const now = new Date();
-
-    const path =
-      typeof req.body?.path === "string"
-        ? req.body.path
-        : "/";
-
-    const userAgent =
-      typeof req.headers["user-agent"] === "string"
-        ? req.headers["user-agent"]
-        : "";
-
-    await sessions.insertOne({
-      path,
-      userAgent,
-      createdAt: now,
-    });
-
-    const date = now.toISOString().slice(0, 10);
-
-    await stats.updateOne(
-      { date },
-      {
-        $inc: {
-          visits: 1,
-          visitors: 1,
-        },
-        $set: {
-          updatedAt: now,
-        },
-      },
-      { upsert: true }
-    );
-
-    return res.status(200).json({
-      success: true,
-    });
-  } catch (error) {
-    console.error(
-      "Traffic tracking failed:",
-      error
-    );
-
-    /*
-     * Never make the public website fail because
-     * analytics tracking failed.
-     */
-    return res.status(200).json({
-      success: false,
-    });
-  }
-};
-
-/**
- * Protected dashboard statistics.
- */
-export const getDashboardStats = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { sessions, stats } =
-      getTrafficCollections();
-
-    const totalVisitors =
-      await sessions.countDocuments();
-
-    const latestStats = await stats
-      .find({})
-      .sort({ date: -1 })
-      .limit(1)
-      .toArray();
-
-    const latest = latestStats[0] || {};
-
-    return res.status(200).json({
-      success: true,
-      data: {
-        visitors: totalVisitors,
-        visits: latest.visits ?? 0,
-        today: latest,
-      },
-    });
-  } catch (error) {
-    console.error(
-      "Failed to fetch dashboard statistics:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Unable to fetch dashboard statistics.",
-    });
-  }
-};
-
-/**
- * Protected dashboard chart data.
- */
-export const getDashboardCharts = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { stats } =
-      getTrafficCollections();
-
-    const data = await stats
-      .find({})
-      .sort({ date: -1 })
-      .limit(30)
-      .toArray();
-
-    data.reverse();
-
-    return res.status(200).json({
-      success: true,
-      data,
-    });
-  } catch (error) {
-    console.error(
-      "Failed to fetch dashboard charts:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Unable to fetch dashboard chart data.",
-    });
-  }
-};
-
-/**
- * Protected traffic analytics.
- */
-export const getTrafficAnalytics = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { sessions, stats } =
-      getTrafficCollections();
-
-    const [dailyStats, recentSessions] =
-      await Promise.all([
-        stats
-          .find({})
-          .sort({ date: -1 })
-          .limit(30)
-          .toArray(),
-
-        sessions
-          .find({})
-          .sort({ createdAt: -1 })
-          .limit(100)
-          .toArray(),
-      ]);
-
-    return res.status(200).json({
-      success: true,
-      data: {
-        dailyStats: dailyStats.reverse(),
-        recentSessions,
-      },
-    });
-  } catch (error) {
-    console.error(
-      "Failed to fetch traffic analytics:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Unable to fetch traffic analytics.",
     });
   }
 };
