@@ -30,6 +30,36 @@ export default function Hero() {
   const heroImage =
     settings.heroImage || "/Logo.png";
 
+  const buttonClass = [
+    "group",
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "gap-2",
+    "rounded-xl",
+    "border",
+    "border-slate-200",
+    "bg-white",
+    "px-5",
+    "py-3.5",
+    "text-sm",
+    "font-bold",
+    "text-[#0f4c81]",
+    "shadow-sm",
+    "transition-all",
+    "duration-300",
+    "hover:-translate-y-0.5",
+    "hover:border-slate-300",
+    "hover:bg-slate-50",
+    "hover:shadow-md",
+    "focus-visible:outline-none",
+    "focus-visible:ring-2",
+    "focus-visible:ring-[#155eef]",
+    "focus-visible:ring-offset-2",
+    "sm:px-6",
+    "sm:text-base",
+  ].join(" ");
+
   return (
     <section
       aria-labelledby="gnpc-hero-title"
@@ -103,9 +133,7 @@ export default function Hero() {
                 aria-hidden="true"
                 className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef] shadow-sm"
               >
-                <Newspaper
-                  size={13}
-                />
+                <Newspaper size={13} />
               </span>
 
               <span>
@@ -119,23 +147,15 @@ export default function Hero() {
               id="gnpc-hero-title"
               className={[
                 "mt-6",
-
                 "max-w-3xl",
-
                 "text-[2.35rem]",
                 "font-black",
-
                 "leading-[1.08]",
                 "tracking-[-0.035em]",
-
                 "text-[#101828]",
-
                 "sm:text-5xl",
-
                 "md:text-[3.5rem]",
-
                 "lg:text-[4rem]",
-
                 "xl:text-[4.5rem]",
               ].join(" ")}
             >
@@ -147,14 +167,10 @@ export default function Hero() {
             <p
               className={[
                 "mt-6",
-
                 "max-w-2xl",
-
                 "text-base",
                 "leading-7",
-
                 "text-slate-600",
-
                 "sm:text-lg",
                 "sm:leading-8",
               ].join(" ")}
@@ -169,42 +185,38 @@ export default function Hero() {
             <div
               className={[
                 "mt-8",
-
                 "flex",
                 "flex-col",
-
                 "gap-3",
-
                 "sm:mt-10",
                 "sm:flex-row",
                 "sm:flex-wrap",
                 "sm:gap-4",
               ].join(" ")}
             >
-              {/* Membership */}
+              {/* Become a Member */}
 
               <MembershipFormLink
-                className={[
-                  "gnpc-btn",
-                  "gnpc-btn-primary",
-                  "gnpc-btn-lg",
-
-                  "group",
-
-                  "focus-visible:outline-none",
-                  "focus-visible:ring-2",
-                  "focus-visible:ring-[#155eef]",
-                  "focus-visible:ring-offset-2",
-                ].join(" ")}
+                className={buttonClass}
                 unavailableClassName={[
-                  "gnpc-btn",
-                  "gnpc-btn-soft",
-                  "gnpc-btn-lg",
-
                   "group",
-
+                  "inline-flex",
                   "cursor-not-allowed",
+                  "items-center",
+                  "justify-center",
+                  "gap-2",
+                  "rounded-xl",
+                  "border",
+                  "border-slate-200",
+                  "bg-slate-50",
+                  "px-5",
+                  "py-3.5",
+                  "text-sm",
+                  "font-bold",
+                  "text-[#0f4c81]",
                   "opacity-60",
+                  "sm:px-6",
+                  "sm:text-base",
                 ].join(" ")}
               >
                 Become a Member
@@ -212,7 +224,7 @@ export default function Hero() {
                 <ArrowRight
                   size={18}
                   aria-hidden="true"
-                  className="transition-transform duration-200 group-hover:translate-x-1"
+                  className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </MembershipFormLink>
 
@@ -220,25 +232,14 @@ export default function Hero() {
 
               <Link
                 href="/latest-updates"
-                className={[
-                  "gnpc-btn",
-                  "gnpc-btn-outline",
-                  "gnpc-btn-lg",
-
-                  "group",
-
-                  "focus-visible:outline-none",
-                  "focus-visible:ring-2",
-                  "focus-visible:ring-[#155eef]",
-                  "focus-visible:ring-offset-2",
-                ].join(" ")}
+                className={buttonClass}
               >
                 Latest Updates
 
                 <ArrowRight
                   size={18}
                   aria-hidden="true"
-                  className="transition-transform duration-200 group-hover:translate-x-1"
+                  className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
             </div>
@@ -250,18 +251,13 @@ export default function Hero() {
             <div
               className={[
                 "mt-8",
-
                 "flex",
                 "flex-wrap",
-
                 "gap-x-6",
                 "gap-y-3",
-
                 "border-t",
                 "border-slate-200",
-
                 "pt-6",
-
                 "sm:mt-10",
               ].join(" ")}
             >
@@ -269,19 +265,14 @@ export default function Hero() {
                 href="/press-releases"
                 className={[
                   "group",
-
                   "inline-flex",
                   "items-center",
                   "gap-2",
-
                   "text-sm",
                   "font-semibold",
-
                   "text-slate-600",
-
                   "transition-colors",
                   "duration-200",
-
                   "hover:text-[#155eef]",
                 ].join(" ")}
               >
@@ -299,10 +290,8 @@ export default function Hero() {
                   size={14}
                   className={[
                     "opacity-0",
-
                     "transition-all",
                     "duration-200",
-
                     "group-hover:translate-x-1",
                     "group-hover:opacity-100",
                   ].join(" ")}
@@ -314,19 +303,14 @@ export default function Hero() {
                 href="/events"
                 className={[
                   "group",
-
                   "inline-flex",
                   "items-center",
                   "gap-2",
-
                   "text-sm",
                   "font-semibold",
-
                   "text-slate-600",
-
                   "transition-colors",
                   "duration-200",
-
                   "hover:text-[#155eef]",
                 ].join(" ")}
               >
@@ -344,14 +328,10 @@ export default function Hero() {
                   size={14}
                   className={[
                     "opacity-0",
-
                     "transition-all",
                     "duration-200",
-
                     "group-hover:translate-x-1",
                     "group-hover:opacity-100",
-
-                    "sm:opacity-0",
                   ].join(" ")}
                   aria-hidden="true"
                 />
@@ -390,12 +370,9 @@ export default function Hero() {
                 className={[
                   "absolute",
                   "-inset-3",
-
                   "rounded-[2rem]",
-
                   "border",
                   "border-blue-100",
-
                   "bg-blue-50/50",
                 ].join(" ")}
               />
@@ -405,21 +382,14 @@ export default function Hero() {
               <div
                 className={[
                   "relative",
-
                   "overflow-hidden",
-
                   "rounded-[1.5rem]",
-
                   "border",
                   "border-slate-200",
-
                   "bg-white",
-
                   "p-2",
-
                   "shadow-xl",
                   "shadow-slate-200/70",
-
                   "sm:rounded-[2rem]",
                   "sm:p-2.5",
                 ].join(" ")}
@@ -427,21 +397,13 @@ export default function Hero() {
                 <div
                   className={[
                     "relative",
-
                     "h-[300px]",
-
                     "overflow-hidden",
-
                     "rounded-[1.15rem]",
-
                     "bg-slate-100",
-
                     "sm:h-[410px]",
-
                     "sm:rounded-[1.5rem]",
-
                     "lg:h-[480px]",
-
                     "xl:h-[530px]",
                   ].join(" ")}
                 >
@@ -452,18 +414,15 @@ export default function Hero() {
                     alt={heroTitle}
                   />
 
-                  {/* Light image readability overlay */}
+                  {/* Readability overlay */}
 
                   <div
                     aria-hidden="true"
                     className={[
                       "pointer-events-none",
-
                       "absolute",
                       "inset-0",
-
                       "bg-gradient-to-t",
-
                       "from-[#0f4c81]/65",
                       "via-transparent",
                       "to-white/5",
@@ -475,37 +434,26 @@ export default function Hero() {
                   <div
                     className={[
                       "absolute",
-
                       "left-4",
                       "top-4",
-
                       "inline-flex",
                       "items-center",
                       "gap-2",
-
                       "rounded-full",
-
                       "border",
                       "border-white/40",
-
                       "bg-white/90",
-
                       "px-3",
                       "py-2",
-
                       "text-[10px]",
                       "font-extrabold",
                       "uppercase",
                       "tracking-[0.16em]",
-
                       "text-[#0f4c81]",
-
                       "shadow-sm",
                       "backdrop-blur-md",
-
                       "sm:left-5",
                       "sm:top-5",
-
                       "sm:text-xs",
                     ].join(" ")}
                   >
@@ -522,13 +470,10 @@ export default function Hero() {
                   <div
                     className={[
                       "absolute",
-
                       "bottom-0",
                       "left-0",
                       "right-0",
-
                       "p-5",
-
                       "sm:p-7",
                     ].join(" ")}
                   >
@@ -538,14 +483,17 @@ export default function Hero() {
                       </p>
 
                       <p className="mt-1.5 text-sm font-bold leading-6 text-white sm:text-base sm:leading-7">
-                       
+                        Journalism, media and community — connected through GNPC.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
 
-             
       {/* =====================================================
           TRUST / IDENTITY STRIP
           ===================================================== */}
