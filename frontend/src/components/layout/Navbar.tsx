@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { HiBars3 } from "react-icons/hi2";
 
 import Container from "@/components/ui/Container";
-import Button from "@/components/ui/Button";
 
 import { navigation } from "@/data/navigation";
 
@@ -15,23 +13,12 @@ import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] =
-    useState(false);
-
-  const [scrolled, setScrolled] =
-    useState(false);
-
-  /*
-   * -------------------------------------------------------
-   * SCROLL STATE
-   * -------------------------------------------------------
-   */
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(
-        window.scrollY > 12
-      );
+      setScrolled(window.scrollY > 8);
     };
 
     handleScroll();
@@ -39,9 +26,7 @@ export default function Navbar() {
     window.addEventListener(
       "scroll",
       handleScroll,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     return () => {
@@ -51,12 +36,6 @@ export default function Navbar() {
       );
     };
   }, []);
-
-  /*
-   * -------------------------------------------------------
-   * MOBILE MENU SCROLL LOCK
-   * -------------------------------------------------------
-   */
 
   useEffect(() => {
     if (!menuOpen) {
@@ -73,65 +52,30 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav
+      <nav
         aria-label="Primary navigation"
-        initial={{
-          opacity: 0,
-          y: -8,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.35,
-          ease: "easeOut",
-        }}
         className={[
-          /*
-           * IMPORTANT:
-           *
-           * Do NOT use fixed here.
-           *
-           * WebsiteLayout controls the fixed header.
-           *
-           * This navbar therefore remains in normal flow
-           * directly underneath TopBar.
-           */
           "relative",
           "w-full",
-
           "border-b",
-
-          "transition-all",
-          "duration-300",
-
+          "border-slate-200",
+          "bg-white",
+          "transition-shadow",
+          "duration-200",
           scrolled
-            ? [
-                "border-slate-200",
-                "bg-white/95",
-                "shadow-md",
-                "backdrop-blur-xl",
-              ].join(" ")
-            : [
-                "border-slate-100",
-                "bg-white",
-              ].join(" "),
+            ? "shadow-[0_4px_18px_rgba(15,76,129,0.08)]"
+            : "shadow-none",
         ].join(" ")}
       >
         <Container>
           <div
             className={[
               "flex",
-
-              "h-[72px]",
-
+              "h-[74px]",
               "items-center",
               "justify-between",
-
-              "gap-6",
-
-              "sm:h-[76px]",
+              "gap-5",
+              "lg:h-[76px]",
             ].join(" ")}
           >
             {/* =================================================
@@ -146,79 +90,52 @@ export default function Navbar() {
                 DESKTOP NAVIGATION
                 ================================================= */}
 
-            <div
-              className={[
-                "hidden",
-
-                "min-w-0",
-                "flex-1",
-
-                "justify-center",
-
-                "min-[1440px]:flex",
-              ].join(" ")}
-            >
+            <div className="hidden min-w-0 flex-1 items-center justify-end xl:flex">
               <nav
                 aria-label="Desktop navigation"
-                className="flex items-center gap-6 xl:gap-7"
+                className="flex items-center gap-4 2xl:gap-6"
               >
-                {navigation.map(
-                  (
-                    item,
-                    index
-                  ) => (
-                    <motion.div
-                      key={item.name}
-                      initial={{
-                        opacity: 0,
-                        y: -6,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.25,
-                        delay:
-                          index *
-                          0.035,
-                      }}
-                    >
-                      <NavLink
-                        href={
-                          item.href
-                        }
-                      >
-                        {item.name}
-                      </NavLink>
-                    </motion.div>
-                  )
-                )}
+                {navigation.map((item) => (
+                  <NavLink
+                    key={item.name}
+                    href={item.href}
+                  >
+                    {item.name}
+                  </NavLink>
+                ))}
               </nav>
-            </div>
 
-            {/* =================================================
-                ADMIN LOGIN
-                ================================================= */}
+              {/* =================================================
+                  LOGIN
+                  ================================================= */}
 
-            <div
-              className={[
-                "hidden",
-                "shrink-0",
-
-                "min-[1440px]:block",
-              ].join(" ")}
-            >
               <Link
                 href="/admin/login"
-                className="inline-flex"
+                className={[
+                  "ml-5",
+                  "inline-flex",
+                  "h-11",
+                  "items-center",
+                  "justify-center",
+                  "rounded-xl",
+                  "border",
+                  "border-[#0f4c81]",
+                  "bg-white",
+                  "px-5",
+                  "text-sm",
+                  "font-bold",
+                  "text-[#0f4c81]",
+                  "transition-all",
+                  "duration-200",
+                  "hover:bg-[#0f4c81]",
+                  "hover:text-white",
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-[#0f4c81]",
+                  "focus-visible:ring-offset-2",
+                ].join(" ")}
               >
-                <Button
-                  variant="outline"
-                  size="md"
-                >
-                  Login
-                </Button>
+                Login
               </Link>
             </div>
 
@@ -228,44 +145,30 @@ export default function Navbar() {
 
             <button
               type="button"
-              onClick={() =>
-                setMenuOpen(true)
-              }
+              onClick={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
-              aria-expanded={
-                menuOpen
-              }
+              aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
               className={[
                 "flex",
-
                 "h-11",
                 "w-11",
-
                 "items-center",
                 "justify-center",
-
                 "rounded-xl",
-
                 "border",
                 "border-slate-200",
-
                 "bg-white",
-
                 "text-[#0f4c81]",
-
                 "transition-all",
                 "duration-200",
-
                 "hover:border-[#0f4c81]",
-                "hover:bg-[#eaf3fa]",
-
+                "hover:bg-[#eef6fc]",
                 "focus-visible:outline-none",
                 "focus-visible:ring-2",
                 "focus-visible:ring-[#0f4c81]",
                 "focus-visible:ring-offset-2",
-
-                "min-[1440px]:hidden",
+                "xl:hidden",
               ].join(" ")}
             >
               <HiBars3
@@ -275,11 +178,7 @@ export default function Navbar() {
             </button>
           </div>
         </Container>
-      </motion.nav>
-
-      {/* ===================================================
-          MOBILE NAVIGATION
-          =================================================== */}
+      </nav>
 
       <MobileMenu
         open={menuOpen}
