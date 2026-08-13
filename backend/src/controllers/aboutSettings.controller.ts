@@ -3,20 +3,16 @@ import AboutSettings from "../models/AboutSettings";
 
 /**
  * GET /api/settings/about
- *
- * Public + CMS endpoint.
  */
 export const getAboutSettings = async (
   _req: Request,
   res: Response
 ) => {
   try {
-    let settings =
-      await AboutSettings.findOne();
+    let settings = await AboutSettings.findOne();
 
     if (!settings) {
-      settings =
-        await AboutSettings.create({});
+      settings = await AboutSettings.create({});
     }
 
     return res.status(200).json({
@@ -31,343 +27,113 @@ export const getAboutSettings = async (
 
     return res.status(500).json({
       success: false,
-      message:
-        "Unable to fetch About page content.",
+      message: "Unable to fetch About page content.",
     });
   }
 };
 
 /**
  * PUT /api/settings/about
- *
- * Update About page text/content.
  */
 export const updateAboutSettings = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const {
-      heroEyebrow,
-      heroTitle,
-      heroDescription,
-
-      image,
-      heading,
-      description,
-      secondaryDescription,
-
-      commitmentTitle,
-      commitmentDescription,
-
-      foundationEyebrow,
-      foundationTitle,
-      foundationDescription,
-
-      missionTitle,
-      missionDescription,
-
-      visionTitle,
-      visionDescription,
-
-      objectivesEyebrow,
-      objectivesTitle,
-      objectivesDescription,
-      objectives,
-
-      presidentName,
-      presidentDesignation,
-      presidentMessage,
-      presidentPhoto,
-
-      whyChooseUsEyebrow,
-      whyChooseUsTitle,
-      whyChooseUsDescription,
-      reasons,
-
-      ctaTitle,
-      ctaDescription,
-      ctaPrimaryLabel,
-      ctaSecondaryLabel,
-    } = req.body;
-
-    let settings =
-      await AboutSettings.findOne();
+    let settings = await AboutSettings.findOne();
 
     if (!settings) {
-      settings =
-        new AboutSettings();
+      settings = new AboutSettings();
+    }
+
+    const body = req.body || {};
+
+    /*
+     * Simple string fields
+     */
+    const stringFields = [
+      "heroEyebrow",
+      "heroTitle",
+      "heroDescription",
+
+      "image",
+      "heading",
+      "description",
+      "secondaryDescription",
+
+      "commitmentTitle",
+      "commitmentDescription",
+
+      "foundationEyebrow",
+      "foundationTitle",
+      "foundationDescription",
+
+      "missionTitle",
+      "missionDescription",
+
+      "visionTitle",
+      "visionDescription",
+
+      "objectivesEyebrow",
+      "objectivesTitle",
+      "objectivesDescription",
+
+      "presidentName",
+      "presidentDesignation",
+      "presidentMessage",
+      "presidentPhoto",
+
+      "whyChooseUsEyebrow",
+      "whyChooseUsTitle",
+      "whyChooseUsDescription",
+
+      "ctaTitle",
+      "ctaDescription",
+      "ctaPrimaryLabel",
+      "ctaSecondaryLabel",
+    ] as const;
+
+    for (const field of stringFields) {
+      if (body[field] !== undefined) {
+        (settings as any)[field] =
+          typeof body[field] === "string"
+            ? body[field].trim()
+            : String(body[field]);
+      }
     }
 
     /*
-     * HERO
+     * Objectives
      */
-    if (heroEyebrow !== undefined) {
-      settings.heroEyebrow =
-        String(heroEyebrow).trim();
-    }
-
-    if (heroTitle !== undefined) {
-      settings.heroTitle =
-        String(heroTitle).trim();
-    }
-
-    if (heroDescription !== undefined) {
-      settings.heroDescription =
-        String(heroDescription).trim();
-    }
-
-    /*
-     * INTRODUCTION
-     */
-    if (image !== undefined) {
-      settings.image =
-        String(image).trim();
-    }
-
-    if (heading !== undefined) {
-      settings.heading =
-        String(heading).trim();
-    }
-
-    if (description !== undefined) {
-      settings.description =
-        String(description).trim();
-    }
-
-    if (
-      secondaryDescription !==
-      undefined
-    ) {
-      settings.secondaryDescription =
-        String(
-          secondaryDescription
-        ).trim();
-    }
-
-    /*
-     * COMMITMENT
-     */
-    if (commitmentTitle !== undefined) {
-      settings.commitmentTitle =
-        String(
-          commitmentTitle
-        ).trim();
-    }
-
-    if (
-      commitmentDescription !==
-      undefined
-    ) {
-      settings.commitmentDescription =
-        String(
-          commitmentDescription
-        ).trim();
-    }
-
-    /*
-     * FOUNDATION
-     */
-    if (
-      foundationEyebrow !== undefined
-    ) {
-      settings.foundationEyebrow =
-        String(
-          foundationEyebrow
-        ).trim();
-    }
-
-    if (
-      foundationTitle !== undefined
-    ) {
-      settings.foundationTitle =
-        String(
-          foundationTitle
-        ).trim();
-    }
-
-    if (
-      foundationDescription !==
-      undefined
-    ) {
-      settings.foundationDescription =
-        String(
-          foundationDescription
-        ).trim();
-    }
-
-    /*
-     * MISSION
-     */
-    if (missionTitle !== undefined) {
-      settings.missionTitle =
-        String(
-          missionTitle
-        ).trim();
-    }
-
-    if (
-      missionDescription !==
-      undefined
-    ) {
-      settings.missionDescription =
-        String(
-          missionDescription
-        ).trim();
-    }
-
-    /*
-     * VISION
-     */
-    if (visionTitle !== undefined) {
-      settings.visionTitle =
-        String(
-          visionTitle
-        ).trim();
-    }
-
-    if (
-      visionDescription !==
-      undefined
-    ) {
-      settings.visionDescription =
-        String(
-          visionDescription
-        ).trim();
-    }
-
-    /*
-     * OBJECTIVES
-     */
-    if (
-      objectivesEyebrow !== undefined
-    ) {
-      settings.objectivesEyebrow =
-        String(
-          objectivesEyebrow
-        ).trim();
-    }
-
-    if (
-      objectivesTitle !== undefined
-    ) {
-      settings.objectivesTitle =
-        String(
-          objectivesTitle
-        ).trim();
-    }
-
-    if (
-      objectivesDescription !==
-      undefined
-    ) {
-      settings.objectivesDescription =
-        String(
-          objectivesDescription
-        ).trim();
-    }
-
-    if (objectives !== undefined) {
-      if (!Array.isArray(objectives)) {
+    if (body.objectives !== undefined) {
+      if (!Array.isArray(body.objectives)) {
         return res.status(400).json({
           success: false,
-          message:
-            "Objectives must be an array.",
+          message: "Objectives must be an array.",
         });
       }
 
-      settings.objectives =
-        objectives.map(
-          (item) => ({
-            title: String(
-              item?.title || ""
-            ).trim(),
+      (settings as any).objectives =
+        body.objectives.map((item: any) => ({
+          title: String(
+            item?.title || ""
+          ).trim(),
 
-            description: String(
-              item?.description || ""
-            ).trim(),
+          description: String(
+            item?.description || ""
+          ).trim(),
 
-            icon: String(
-              item?.icon || ""
-            ).trim(),
-          })
-        );
+          icon: String(
+            item?.icon || ""
+          ).trim(),
+        }));
     }
 
     /*
-     * PRESIDENT
+     * Why Choose Us / Reasons
      */
-    if (presidentName !== undefined) {
-      settings.presidentName =
-        String(
-          presidentName
-        ).trim();
-    }
-
-    if (
-      presidentDesignation !==
-      undefined
-    ) {
-      settings.presidentDesignation =
-        String(
-          presidentDesignation
-        ).trim();
-    }
-
-    if (
-      presidentMessage !==
-      undefined
-    ) {
-      settings.presidentMessage =
-        String(
-          presidentMessage
-        ).trim();
-    }
-
-    if (
-      presidentPhoto !== undefined
-    ) {
-      settings.presidentPhoto =
-        String(
-          presidentPhoto
-        ).trim();
-    }
-
-    /*
-     * WHY CHOOSE US
-     */
-    if (
-      whyChooseUsEyebrow !==
-      undefined
-    ) {
-      settings.whyChooseUsEyebrow =
-        String(
-          whyChooseUsEyebrow
-        ).trim();
-    }
-
-    if (
-      whyChooseUsTitle !==
-      undefined
-    ) {
-      settings.whyChooseUsTitle =
-        String(
-          whyChooseUsTitle
-        ).trim();
-    }
-
-    if (
-      whyChooseUsDescription !==
-      undefined
-    ) {
-      settings.whyChooseUsDescription =
-        String(
-          whyChooseUsDescription
-        ).trim();
-    }
-
-    if (reasons !== undefined) {
-      if (!Array.isArray(reasons)) {
+    if (body.reasons !== undefined) {
+      if (!Array.isArray(body.reasons)) {
         return res.status(400).json({
           success: false,
           message:
@@ -375,62 +141,20 @@ export const updateAboutSettings = async (
         });
       }
 
-      settings.reasons =
-        reasons.map(
-          (item) => ({
-            title: String(
-              item?.title || ""
-            ).trim(),
+      (settings as any).reasons =
+        body.reasons.map((item: any) => ({
+          title: String(
+            item?.title || ""
+          ).trim(),
 
-            description: String(
-              item?.description || ""
-            ).trim(),
+          description: String(
+            item?.description || ""
+          ).trim(),
 
-            icon: String(
-              item?.icon || ""
-            ).trim(),
-          })
-        );
-    }
-
-    /*
-     * CTA
-     */
-    if (ctaTitle !== undefined) {
-      settings.ctaTitle =
-        String(
-          ctaTitle
-        ).trim();
-    }
-
-    if (
-      ctaDescription !==
-      undefined
-    ) {
-      settings.ctaDescription =
-        String(
-          ctaDescription
-        ).trim();
-    }
-
-    if (
-      ctaPrimaryLabel !==
-      undefined
-    ) {
-      settings.ctaPrimaryLabel =
-        String(
-          ctaPrimaryLabel
-        ).trim();
-    }
-
-    if (
-      ctaSecondaryLabel !==
-      undefined
-    ) {
-      settings.ctaSecondaryLabel =
-        String(
-          ctaSecondaryLabel
-        ).trim();
+          icon: String(
+            item?.icon || ""
+          ).trim(),
+        }));
     }
 
     await settings.save();
@@ -458,94 +182,105 @@ export const updateAboutSettings = async (
 /**
  * POST /api/settings/about/upload
  *
- * Upload About page images.
- *
- * Supported multipart fields:
- * - image
- * - presidentPhoto
+ * Supports:
+ *   image
+ *   presidentPhoto
  */
-export const uploadAboutSettingsFiles =
-  async (
-    req: Request,
-    res: Response
-  ) => {
-    try {
-      const files =
-        req.files as
-          | {
-              [fieldname: string]:
-                | Express.Multer.File[]
-                | undefined;
-            }
-          | undefined;
+export const uploadAboutSettingsFiles = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    let settings = await AboutSettings.findOne();
 
-      const image =
-        files?.image?.[0];
+    if (!settings) {
+      settings = new AboutSettings();
+    }
 
-      const presidentPhoto =
-        files?.presidentPhoto?.[0];
+    const files = req.files as
+      | {
+          [fieldname: string]:
+            | Express.Multer.File[]
+            | undefined;
+        }
+      | undefined;
 
-      if (
-        !image &&
-        !presidentPhoto
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "No About image was uploaded.",
-        });
-      }
+    const imageFile =
+      files?.image?.[0];
 
-      let settings =
-        await AboutSettings.findOne();
+    const presidentPhotoFile =
+      files?.presidentPhoto?.[0];
 
-      if (!settings) {
-        settings =
-          new AboutSettings();
-      }
-
-      if (image) {
-        settings.image =
-          image.path ||
-          image.secure_url ||
-          image.url ||
-          "";
-      }
-
-      if (presidentPhoto) {
-        settings.presidentPhoto =
-          presidentPhoto.path ||
-          presidentPhoto.secure_url ||
-          presidentPhoto.url ||
-          "";
-      }
-
-      await settings.save();
-
-      return res.status(200).json({
-        success: true,
-        message:
-          "About image uploaded successfully.",
-        data: settings,
-        url:
-          image?.path ||
-          image?.secure_url ||
-          image?.url ||
-          presidentPhoto?.path ||
-          presidentPhoto?.secure_url ||
-          presidentPhoto?.url ||
-          "",
-      });
-    } catch (error) {
-      console.error(
-        "Failed to upload About settings:",
-        error
-      );
-
-      return res.status(500).json({
+    if (!imageFile && !presidentPhotoFile) {
+      return res.status(400).json({
         success: false,
-        message:
-          "Unable to upload About page image.",
+        message: "No image was uploaded.",
       });
     }
-  };
+
+    /*
+     * Your project uses Multer's standard File type.
+     *
+     * Do NOT access:
+     *   file.url
+     *   file.secure_url
+     *
+     * Those are not part of Express.Multer.File.
+     *
+     * The upload middleware gives us the local
+     * uploaded file path.
+     */
+    const getFileUrl = (
+      file?: Express.Multer.File
+    ): string => {
+      if (!file) {
+        return "";
+      }
+
+      /*
+       * Multer disk storage:
+       * file.path is the actual uploaded file path.
+       */
+      return file.path || "";
+    };
+
+    if (imageFile) {
+      settings.image =
+        getFileUrl(imageFile);
+    }
+
+    if (presidentPhotoFile) {
+      settings.presidentPhoto =
+        getFileUrl(
+          presidentPhotoFile
+        );
+    }
+
+    await settings.save();
+
+    const uploadedUrl =
+      getFileUrl(imageFile) ||
+      getFileUrl(
+        presidentPhotoFile
+      );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "About image uploaded successfully.",
+      data: settings,
+      url: uploadedUrl,
+    });
+  } catch (error) {
+    console.error(
+      "Failed to upload About settings:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Unable to upload About page image.",
+    });
+  }
+};
