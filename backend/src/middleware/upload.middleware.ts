@@ -3,55 +3,129 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import type { Request } from "express";
 import cloudinary from "../config/cloudinary";
 
-const allowedFileExtensions = /\.(jpe?g|png|webp|pdf)$/i;
-const allowedMimeTypes = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "application/pdf",
-]);
+const allowedFileExtensions =
+  /\.(jpe?g|png|webp|pdf)$/i;
 
-const createStorage = (folder: string) =>
+const allowedMimeTypes =
+  new Set([
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+  ]);
+
+const createStorage = (
+  folder: string
+) =>
   new CloudinaryStorage({
     cloudinary,
-    // Cloudinary blocks unsigned public delivery of PDFs uploaded as images on
-    // accounts with the default PDF security setting. Store PDFs as raw assets
-    // instead, so they retain their file type and can be reliably delivered.
-    params: (_req: Request, file: Express.Multer.File) => ({
+
+    params: (
+      _req: Request,
+      file: Express.Multer.File
+    ) => ({
       folder,
-      resource_type: file.mimetype === "application/pdf" ? "raw" : "image",
-      allowed_formats: ["jpg", "jpeg", "png", "webp", "pdf"],
+
+      resource_type:
+        file.mimetype ===
+        "application/pdf"
+          ? "raw"
+          : "image",
+
+      allowed_formats: [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "pdf",
+      ],
     }),
   });
 
-const createUploader = (folder: string) => multer({
-  storage: createStorage(folder),
-  limits: { fileSize: 10 * 1024 * 1024, files: 10 },
-  fileFilter: (_req, file, callback) => {
-    if (allowedMimeTypes.has(file.mimetype) && allowedFileExtensions.test(file.originalname)) {
-      callback(null, true);
-      return;
-    }
-    callback(new Error("Only JPG, PNG, WebP, and PDF files up to 10 MB are allowed."));
-  },
-});
+const createUploader = (
+  folder: string
+) =>
+  multer({
+    storage:
+      createStorage(folder),
 
-export const pressReleaseUpload = createUploader("press-releases");
+    limits: {
+      fileSize:
+        10 * 1024 * 1024,
+      files: 10,
+    },
 
-export const pressConferenceUpload = createUploader("press-conferences");
+    fileFilter: (
+      _req,
+      file,
+      callback
+    ) => {
+      const extensionAllowed =
+        allowedFileExtensions.test(
+          file.originalname
+        );
 
-export const announcementUpload = createUploader("announcements");
+      const mimeAllowed =
+        allowedMimeTypes.has(
+          file.mimetype
+        );
 
-export const eventUpload = createUploader("events");
+      if (
+        extensionAllowed &&
+        mimeAllowed
+      ) {
+        callback(null, true);
+        return;
+      }
 
-export const galleryUpload = createUploader("gallery");
+      callback(
+        new Error(
+          "Only JPG, PNG, WebP, and PDF files up to 10 MB are allowed."
+        )
+      );
+    },
+  });
 
-export const executiveUpload = createUploader("executive-members");
+export const pressReleaseUpload =
+  createUploader(
+    "press-releases"
+  );
 
-export const sponsorUpload = createUploader("sponsors");
+export const pressConferenceUpload =
+  createUploader(
+    "press-conferences"
+  );
 
-export const websiteSettingsUpload = createUploader("website-settings");
+export const announcementUpload =
+  createUploader(
+    "announcements"
+  );
 
-export const aboutSettingsUpload = createUploader("website-settings/about");
+export const eventUpload =
+  createUploader("events");
 
-export const bannerUpload = createUploader("homepage-banners");
+export const galleryUpload =
+  createUploader("gallery");
+
+export const executiveUpload =
+  createUploader(
+    "executive-members"
+  );
+
+export const sponsorUpload =
+  createUploader("sponsors");
+
+export const websiteSettingsUpload =
+  createUploader(
+    "website-settings"
+  );
+
+export const aboutSettingsUpload =
+  createUploader(
+    "website-settings/about"
+  );
+
+export const bannerUpload =
+  createUploader(
+    "homepage-banners"
+  );
