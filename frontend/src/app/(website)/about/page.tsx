@@ -11,7 +11,10 @@ import {
 } from "lucide-react";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "";
+  process.env.NEXT_PUBLIC_API_URL?.replace(
+    /\/+$/,
+    ""
+  );
 
 type Objective = {
   title: string;
@@ -69,121 +72,184 @@ type AboutSettings = {
   ctaSecondaryLabel: string;
 };
 
-const fallbackContent: AboutSettings = {
-  heroEyebrow: "About Greater Noida Press Club",
-  heroTitle: "About Us",
-  heroDescription:
-    "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
+function normalizeContent(
+  data: Partial<AboutSettings>
+): AboutSettings {
+  return {
+    heroEyebrow:
+      data.heroEyebrow ?? "",
+    heroTitle:
+      data.heroTitle ?? "",
+    heroDescription:
+      data.heroDescription ?? "",
 
-  image: "",
-  heading:
-    "Empowering Journalists & Strengthening Independent Media",
-  description:
-    "Greater Noida Press Club is a professional organization dedicated to supporting journalists, promoting ethical journalism, and providing a strong platform for media professionals.",
-  secondaryDescription:
-    "We believe in freedom of expression, responsible reporting, and creating opportunities that help journalists grow, collaborate, and contribute to society.",
+    image: data.image ?? "",
+    heading: data.heading ?? "",
+    description:
+      data.description ?? "",
+    secondaryDescription:
+      data.secondaryDescription ?? "",
 
-  commitmentTitle: "Our Commitment",
-  commitmentDescription:
-    "We are committed to protecting journalistic values, encouraging transparency, and building a stronger media community through education, collaboration, and innovation.",
+    commitmentTitle:
+      data.commitmentTitle ?? "",
+    commitmentDescription:
+      data.commitmentDescription ?? "",
 
-  foundationEyebrow: "Our Foundation",
-  foundationTitle: "Mission & Vision",
-  foundationDescription:
-    "We are committed to ethical journalism, professional excellence, and empowering media professionals through collaboration and innovation.",
+    foundationEyebrow:
+      data.foundationEyebrow ?? "",
+    foundationTitle:
+      data.foundationTitle ?? "",
+    foundationDescription:
+      data.foundationDescription ?? "",
 
-  missionTitle: "Our Mission",
-  missionDescription:
-    "To support journalists with professional development, transparency, ethical reporting, and a strong platform that protects press freedom.",
+    missionTitle:
+      data.missionTitle ?? "",
+    missionDescription:
+      data.missionDescription ?? "",
 
-  visionTitle: "Our Vision",
-  visionDescription:
-    "To build a trusted community where journalists collaborate, innovate, and contribute to an informed and democratic society.",
+    visionTitle:
+      data.visionTitle ?? "",
+    visionDescription:
+      data.visionDescription ?? "",
 
-  objectivesEyebrow: "Our Objectives",
-  objectivesTitle: "What We Aim To Achieve",
-  objectivesDescription:
-    "Our primary objective is to strengthen journalism through education, collaboration, innovation, and ethical reporting.",
-  objectives: [],
+    objectivesEyebrow:
+      data.objectivesEyebrow ?? "",
+    objectivesTitle:
+      data.objectivesTitle ?? "",
+    objectivesDescription:
+      data.objectivesDescription ?? "",
 
-  presidentName: "",
-  presidentDesignation: "",
-  presidentMessage: "",
-  presidentPhoto: "",
+    objectives:
+      Array.isArray(data.objectives)
+        ? data.objectives
+        : [],
 
-  whyChooseUsEyebrow: "Why Choose Us",
-  whyChooseUsTitle:
-    "Why Greater Noida Press Club Matters",
-  whyChooseUsDescription:
-    "We provide a trusted platform for journalists to connect, collaborate, and grow while maintaining the highest standards of journalism.",
-  reasons: [],
+    presidentName:
+      data.presidentName ?? "",
+    presidentDesignation:
+      data.presidentDesignation ?? "",
+    presidentMessage:
+      data.presidentMessage ?? "",
+    presidentPhoto:
+      data.presidentPhoto ?? "",
 
-  ctaTitle:
-    "Become a Part of Our Greater Noida Press Club",
-  ctaDescription:
-    "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.",
-  ctaPrimaryLabel: "Become a Member",
-  ctaSecondaryLabel: "Meet Our Office Bearers",
-};
+    whyChooseUsEyebrow:
+      data.whyChooseUsEyebrow ?? "",
+    whyChooseUsTitle:
+      data.whyChooseUsTitle ?? "",
+    whyChooseUsDescription:
+      data.whyChooseUsDescription ?? "",
+
+    reasons:
+      Array.isArray(data.reasons)
+        ? data.reasons
+        : [],
+
+    ctaTitle:
+      data.ctaTitle ?? "",
+    ctaDescription:
+      data.ctaDescription ?? "",
+    ctaPrimaryLabel:
+      data.ctaPrimaryLabel ?? "",
+    ctaSecondaryLabel:
+      data.ctaSecondaryLabel ?? "",
+  };
+}
+
+function getErrorMessage(
+  error: unknown
+) {
+  if (axios.isAxiosError(error)) {
+    return (
+      error.response?.data?.message ||
+      error.message ||
+      "Unable to load About page content."
+    );
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "Unable to load About page content.";
+}
 
 export default function AboutPage() {
   const [content, setContent] =
-    useState<AboutSettings | null>(null);
+    useState<AboutSettings | null>(
+      null
+    );
 
   const [loading, setLoading] =
     useState(true);
 
-  const loadAboutContent = async () => {
-    try {
-      setLoading(true);
+  const [error, setError] =
+    useState<string | null>(null);
 
-      const response = await axios.get(
-        `${API_URL}/about-settings`
-      );
+  const loadAboutContent =
+    async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const data =
-        response.data?.data ||
-        response.data;
+        if (!API_URL) {
+          throw new Error(
+            "NEXT_PUBLIC_API_URL is not configured."
+          );
+        }
 
-      setContent({
-        ...fallbackContent,
-        ...data,
-        objectives:
-          Array.isArray(data?.objectives)
-            ? data.objectives
-            : [],
-        reasons:
-          Array.isArray(data?.reasons)
-            ? data.reasons
-            : [],
-      });
-    } catch (error) {
-      console.error(
-        "Failed to load About content:",
-        error
-      );
+        const response =
+          await axios.get(
+            `${API_URL}/settings/about`,
+            {
+              timeout: 10000,
+            }
+          );
 
-      /*
-       * Keep the page usable if the CMS/API is
-       * temporarily unavailable.
-       */
-      setContent(fallbackContent);
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (
+          !response.data?.success
+        ) {
+          throw new Error(
+            response.data?.message ||
+              "Unable to load About page content."
+          );
+        }
 
-  useEffect(() => {
-    loadAboutContent();
+        if (
+          !response.data?.data
+        ) {
+          throw new Error(
+            "About API returned no data."
+          );
+        }
 
-    const handleUpdate = () => {
-      loadAboutContent();
+        setContent(
+          normalizeContent(
+            response.data.data
+          )
+        );
+      } catch (error) {
+        console.error(
+          "Failed to load About content:",
+          error
+        );
+
+        setContent(null);
+        setError(
+          getErrorMessage(error)
+        );
+      } finally {
+        setLoading(false);
+      }
     };
 
-    /*
-     * Allows the CMS and public page to refresh
-     * immediately when they are open together.
-     */
+  useEffect(() => {
+    void loadAboutContent();
+
+    const handleUpdate = () => {
+      void loadAboutContent();
+    };
+
     window.addEventListener(
       "about-settings-updated",
       handleUpdate
@@ -224,14 +290,25 @@ export default function AboutPage() {
   if (!content) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center px-6">
-        <div className="text-center">
+        <div className="max-w-lg text-center">
           <h1 className="text-2xl font-bold text-slate-900">
             About page content unavailable
           </h1>
 
-          <p className="mt-2 text-slate-500">
-            Please try again later.
+          <p className="mt-3 text-slate-500">
+            {error ||
+              "We could not load the latest About page content."}
           </p>
+
+          <button
+            type="button"
+            onClick={() =>
+              void loadAboutContent()
+            }
+            className="mt-6 rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          >
+            Try Again
+          </button>
         </div>
       </main>
     );
@@ -294,7 +371,9 @@ export default function AboutPage() {
 
                 {content.commitmentDescription && (
                   <p className="mt-3 leading-7 text-slate-600">
-                    {content.commitmentDescription}
+                    {
+                      content.commitmentDescription
+                    }
                   </p>
                 )}
               </div>
@@ -305,7 +384,10 @@ export default function AboutPage() {
             <div className="overflow-hidden rounded-3xl">
               <img
                 src={content.image}
-                alt={content.heading || "About us"}
+                alt={
+                  content.heading ||
+                  "About us"
+                }
                 className="h-full max-h-[520px] w-full object-cover"
                 loading="lazy"
               />
@@ -324,13 +406,17 @@ export default function AboutPage() {
               </p>
             )}
 
-            <h2 className="mt-3 text-3xl font-black md:text-5xl">
-              {content.foundationTitle}
-            </h2>
+            {content.foundationTitle && (
+              <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                {content.foundationTitle}
+              </h2>
+            )}
 
             {content.foundationDescription && (
               <p className="mt-5 text-lg leading-8 text-slate-600">
-                {content.foundationDescription}
+                {
+                  content.foundationDescription
+                }
               </p>
             )}
           </div>
@@ -374,30 +460,42 @@ export default function AboutPage() {
       </section>
 
       {/* OBJECTIVES */}
-      {content.objectives.length > 0 && (
+      {content.objectives.length >
+        0 && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               {content.objectivesEyebrow && (
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
-                  {content.objectivesEyebrow}
+                  {
+                    content.objectivesEyebrow
+                  }
                 </p>
               )}
 
-              <h2 className="mt-3 text-3xl font-black md:text-5xl">
-                {content.objectivesTitle}
-              </h2>
+              {content.objectivesTitle && (
+                <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                  {
+                    content.objectivesTitle
+                  }
+                </h2>
+              )}
 
               {content.objectivesDescription && (
                 <p className="mt-5 text-lg leading-8 text-slate-600">
-                  {content.objectivesDescription}
+                  {
+                    content.objectivesDescription
+                  }
                 </p>
               )}
             </div>
 
             <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {content.objectives.map(
-                (objective, index) => (
+                (
+                  objective,
+                  index
+                ) => (
                   <article
                     key={`${objective.title}-${index}`}
                     className="rounded-2xl border border-slate-200 p-6 transition hover:-translate-y-1 hover:shadow-lg"
@@ -410,11 +508,15 @@ export default function AboutPage() {
                     </div>
 
                     <h3 className="mt-5 text-xl font-bold">
-                      {objective.title}
+                      {
+                        objective.title
+                      }
                     </h3>
 
                     <p className="mt-3 leading-7 text-slate-600">
-                      {objective.description}
+                      {
+                        objective.description
+                      }
                     </p>
                   </article>
                 )
@@ -431,7 +533,9 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[280px_1fr] lg:items-center">
             {content.presidentPhoto ? (
               <img
-                src={content.presidentPhoto}
+                src={
+                  content.presidentPhoto
+                }
                 alt={
                   content.presidentName ||
                   "President"
@@ -443,7 +547,8 @@ export default function AboutPage() {
               <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-full bg-white/10 text-5xl font-black">
                 {content.presidentName
                   ?.charAt(0)
-                  ?.toUpperCase() || "P"}
+                  ?.toUpperCase() ||
+                  "P"}
               </div>
             )}
 
@@ -454,19 +559,27 @@ export default function AboutPage() {
 
               {content.presidentMessage && (
                 <blockquote className="mt-5 text-xl leading-9 text-slate-200 md:text-2xl">
-                  “{content.presidentMessage}”
+                  “
+                  {
+                    content.presidentMessage
+                  }
+                  ”
                 </blockquote>
               )}
 
               {content.presidentName && (
                 <div className="mt-7">
                   <p className="text-lg font-bold">
-                    {content.presidentName}
+                    {
+                      content.presidentName
+                    }
                   </p>
 
                   {content.presidentDesignation && (
                     <p className="mt-1 text-slate-400">
-                      {content.presidentDesignation}
+                      {
+                        content.presidentDesignation
+                      }
                     </p>
                   )}
                 </div>
@@ -477,23 +590,32 @@ export default function AboutPage() {
       )}
 
       {/* WHY CHOOSE US */}
-      {content.reasons.length > 0 && (
+      {content.reasons.length >
+        0 && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               {content.whyChooseUsEyebrow && (
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
-                  {content.whyChooseUsEyebrow}
+                  {
+                    content.whyChooseUsEyebrow
+                  }
                 </p>
               )}
 
-              <h2 className="mt-3 text-3xl font-black md:text-5xl">
-                {content.whyChooseUsTitle}
-              </h2>
+              {content.whyChooseUsTitle && (
+                <h2 className="mt-3 text-3xl font-black md:text-5xl">
+                  {
+                    content.whyChooseUsTitle
+                  }
+                </h2>
+              )}
 
               {content.whyChooseUsDescription && (
                 <p className="mt-5 text-lg leading-8 text-slate-600">
-                  {content.whyChooseUsDescription}
+                  {
+                    content.whyChooseUsDescription
+                  }
                 </p>
               )}
             </div>
@@ -517,7 +639,9 @@ export default function AboutPage() {
                     </h3>
 
                     <p className="mt-3 leading-7 text-slate-600">
-                      {reason.description}
+                      {
+                        reason.description
+                      }
                     </p>
                   </article>
                 )
@@ -531,13 +655,17 @@ export default function AboutPage() {
       <section className="px-6 pb-20 md:pb-28">
         <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-blue-600 px-7 py-12 text-white md:px-12 md:py-16">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-black md:text-5xl">
-              {content.ctaTitle}
-            </h2>
+            {content.ctaTitle && (
+              <h2 className="text-3xl font-black md:text-5xl">
+                {content.ctaTitle}
+              </h2>
+            )}
 
             {content.ctaDescription && (
               <p className="mt-5 text-lg leading-8 text-blue-50">
-                {content.ctaDescription}
+                {
+                  content.ctaDescription
+                }
               </p>
             )}
 
@@ -547,7 +675,9 @@ export default function AboutPage() {
                   href="/membership"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-bold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue-600"
                 >
-                  {content.ctaPrimaryLabel}
+                  {
+                    content.ctaPrimaryLabel
+                  }
 
                   <ArrowRight
                     size={18}
@@ -561,7 +691,9 @@ export default function AboutPage() {
                   href="/office-bearers"
                   className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 font-bold text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue-600"
                 >
-                  {content.ctaSecondaryLabel}
+                  {
+                    content.ctaSecondaryLabel
+                  }
                 </Link>
               )}
             </div>
