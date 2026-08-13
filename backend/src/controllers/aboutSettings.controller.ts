@@ -41,37 +41,65 @@ const STRING_FIELDS = [
   "ctaSecondaryLabel",
 ] as const;
 
-const normalizeArray = (
+type AboutItem = {
+  title?: unknown;
+  description?: unknown;
+  icon?: unknown;
+};
+
+const normalizeItems = (
   value: unknown,
   fieldName: string
 ) => {
-  if (value === undefined) {
-    return undefined;
-  }
-
   if (!Array.isArray(value)) {
-    throw new Error(`${fieldName} must be an array.`);
+    throw new Error(
+      `${fieldName} must be an array.`
+    );
   }
 
-  return value.map((item: any) => ({
+  return value.map((item: AboutItem) => ({
     title: String(item?.title ?? "").trim(),
-    description: String(item?.description ?? "").trim(),
+    description: String(
+      item?.description ?? ""
+    ).trim(),
     icon: String(item?.icon ?? "").trim(),
   }));
 };
 
+const getUploadedUrl = (
+  file?: Express.Multer.File
+): string => {
+  if (!file) {
+    return "";
+  }
+
+  /*
+   * multer-storage-cloudinary exposes the
+   * Cloudinary delivery URL through `path`.
+   */
+  return String(file.path ?? "").trim();
+};
+
 /**
  * GET /api/settings/about
+ *
+ * Public endpoint.
  */
 export const getAboutSettings = async (
   _req: Request,
   res: Response
 ) => {
   try {
-    let settings = await AboutSettings.findOne();
+    let settings =
+      await AboutSettings.findOne();
 
+    /*
+     * Create the single About settings document
+     * if this is the first request.
+     */
     if (!settings) {
-      settings = await AboutSettings.create({});
+      settings =
+        await AboutSettings.create({});
     }
 
     return res.status(200).json({
@@ -86,7 +114,8 @@ export const getAboutSettings = async (
 
     return res.status(500).json({
       success: false,
-      message: "Unable to fetch About page content.",
+      message:
+        "Unable to fetch About page content.",
     });
   }
 };
@@ -94,41 +123,52 @@ export const getAboutSettings = async (
 /**
  * PUT /api/settings/about
  *
- * JSON only.
- * Media uploads are handled by POST /about/upload.
+ * Updates JSON/text content only.
+ *
+ * Do not send files to this endpoint.
  */
 export const updateAboutSettings = async (
   req: Request,
   res: Response
 ) => {
   try {
-    let settings = await AboutSettings.findOne();
+    let settings =
+      await AboutSettings.findOne();
 
     if (!settings) {
-      settings = new AboutSettings();
+      settings =
+        new AboutSettings();
     }
 
     const body = req.body ?? {};
 
+    /*
+     * Update normal string fields.
+     */
     for (const field of STRING_FIELDS) {
       if (body[field] !== undefined) {
-        const value = body[field];
-
-        if (typeof value !== "string") {
+        if (
+          typeof body[field] !== "string"
+        ) {
           return res.status(400).json({
             success: false,
-            message: `${field} must be a string.`,
+            message:
+              `${field} must be a string.`,
           });
         }
 
-        (settings as any)[field] = value.trim();
+        (settings as any)[field] =
+          body[field].trim();
       }
     }
 
+    /*
+     * Update objectives.
+     */
     if (body.objectives !== undefined) {
       try {
         (settings as any).objectives =
-          normalizeArray(
+          normalizeItems(
             body.objectives,
             "Objectives"
           );
@@ -143,10 +183,13 @@ export const updateAboutSettings = async (
       }
     }
 
+    /*
+     * Update Why Choose Us / reasons.
+     */
     if (body.reasons !== undefined) {
       try {
         (settings as any).reasons =
-          normalizeArray(
+          normalizeItems(
             body.reasons,
             "Why Choose Us items"
           );
@@ -156,7 +199,7 @@ export const updateAboutSettings = async (
           message:
             error instanceof Error
               ? error.message
-              : "Invalid reasons.",
+              : "Invalid Why Choose Us items.",
         });
       }
     }
@@ -177,7 +220,8 @@ export const updateAboutSettings = async (
 
     return res.status(500).json({
       success: false,
-      message: "Unable to update About page content.",
+      message:
+        "Unable to update About page content.",
     });
   }
 };
@@ -185,114 +229,112 @@ export const updateAboutSettings = async (
 /**
  * POST /api/settings/about/upload
  *
- * Multipart/form-data
+ * Multipart/form-data only.
  *
  * Supported fields:
  * - image
  * - presidentPhoto
  */
-export const uploadAboutSettingsFiles = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    let settings = await AboutSettings.findOne();
+export const uploadAboutSettingsFiles =
+  async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      let settings =
+        await AboutSettings.findOne();
 
-    if (!settings) {
-      settings = new AboutSettings();
-    }
+      if (!settings) {
+        settings =
+          new AboutSettings();
+      }
 
-    const files = req.files as
-      | {
-          [fieldname: string]:
-            | Express.Multer.File[]
-            | undefined;
+      const files =
+        req.files as
+          | {
+              [fieldname: string]:
+                | Express.Multer.File[]
+                | undefined;
+            }
+          | undefined;
+
+      const imageFile =
+        files?.image?.[0];
+
+      const presidentPhotoFile =
+        files?.presidentPhoto?.[0];
+
+      if (
+        !imageFile &&
+        !presidentPhotoFile
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "No About image was uploaded.",
+        });
+      }
+
+      /*
+       * Main About image.
+       */
+      if (imageFile) {
+        const imageUrl =
+          getUploadedUrl(imageFile);
+
+        if (!imageUrl) {
+          return res.status(500).json({
+            success: false,
+            message:
+              "About image uploaded but Cloudinary did not return a URL.",
+          });
         }
-      | undefined;
 
-    const imageFile = files?.image?.[0];
-    const presidentPhotoFile =
-      files?.presidentPhoto?.[0];
+        settings.image = imageUrl;
+      }
 
-    if (!imageFile && !presidentPhotoFile) {
-      return res.status(400).json({
+      /*
+       * President photo.
+       */
+      if (presidentPhotoFile) {
+        const presidentPhotoUrl =
+          getUploadedUrl(
+            presidentPhotoFile
+          );
+
+        if (!presidentPhotoUrl) {
+          return res.status(500).json({
+            success: false,
+            message:
+              "President photo uploaded but Cloudinary did not return a URL.",
+          });
+        }
+
+        settings.presidentPhoto =
+          presidentPhotoUrl;
+      }
+
+      await settings.save();
+
+      const freshSettings =
+        await AboutSettings.findOne();
+
+      return res.status(200).json({
+        success: true,
+        message:
+          "About media uploaded successfully.",
+        data: freshSettings,
+      });
+    } catch (error) {
+      console.error(
+        "Failed to upload About media:",
+        error
+      );
+
+      return res.status(500).json({
         success: false,
         message:
-          "No About image was uploaded.",
+          "Unable to upload About page media.",
       });
     }
-
-    const getFileUrl = (
-      file?: Express.Multer.File
-    ) => {
-      if (!file) {
-        return "";
-      }
-
-      const uploadedFile =
-        file as Express.Multer.File & {
-          path?: string;
-          secure_url?: string;
-          url?: string;
-        };
-
-      return String(
-        uploadedFile.secure_url ||
-          uploadedFile.url ||
-          uploadedFile.path ||
-          ""
-      ).trim();
-    };
-
-    if (imageFile) {
-      const imageUrl =
-        getFileUrl(imageFile);
-
-      if (!imageUrl) {
-        return res.status(500).json({
-          success: false,
-          message:
-            "Image uploaded but no Cloudinary URL was returned.",
-        });
-      }
-
-      settings.image = imageUrl;
-    }
-
-    if (presidentPhotoFile) {
-      const presidentPhotoUrl =
-        getFileUrl(presidentPhotoFile);
-
-      if (!presidentPhotoUrl) {
-        return res.status(500).json({
-          success: false,
-          message:
-            "President photo uploaded but no Cloudinary URL was returned.",
-        });
-      }
-
-      settings.presidentPhoto =
-        presidentPhotoUrl;
-    }
-
-    await settings.save();
-
-    return res.status(200).json({
-      success: true,
-      message:
-        "About media uploaded successfully.",
-      data: settings,
-    });
-  } catch (error) {
-    console.error(
-      "Failed to upload About settings files:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Unable to upload About page media.",
-    });
-  }
-};
+  };
