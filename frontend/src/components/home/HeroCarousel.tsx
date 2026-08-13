@@ -28,11 +28,16 @@ export default function HeroCarousel({
   alt,
 }: Props) {
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [startX, setStartX] = useState<number | null>(
-    null
-  );
+  const [startX, setStartX] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+
+  /*
+   * ============================================================
+   * LOAD CMS BANNERS FIRST
+   * ============================================================
+   */
 
   useEffect(() => {
     let mounted = true;
@@ -59,7 +64,12 @@ export default function HeroCarousel({
             "Unable to load hero banners:",
             error
           );
+
           setBanners([]);
+        }
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
         }
       }
     };
@@ -71,12 +81,21 @@ export default function HeroCarousel({
     };
   }, []);
 
+  /*
+   * ============================================================
+   * SLIDES
+   *
+   * IMPORTANT:
+   * fallbackImage is ONLY used AFTER CMS loading finishes.
+   * ============================================================
+   */
+
   const slides = useMemo(() => {
     if (banners.length > 0) {
       return banners;
     }
 
-    if (fallbackImage) {
+    if (!isLoading && fallbackImage) {
       return [
         {
           _id: "fallback",
@@ -89,13 +108,29 @@ export default function HeroCarousel({
     }
 
     return [];
-  }, [banners, fallbackImage]);
+  }, [
+    banners,
+    fallbackImage,
+    isLoading,
+  ]);
+
+  /*
+   * ============================================================
+   * KEEP ACTIVE INDEX VALID
+   * ============================================================
+   */
 
   useEffect(() => {
     if (activeIndex >= slides.length) {
       setActiveIndex(0);
     }
   }, [activeIndex, slides.length]);
+
+  /*
+   * ============================================================
+   * AUTO PLAY
+   * ============================================================
+   */
 
   useEffect(() => {
     if (
@@ -115,7 +150,16 @@ export default function HeroCarousel({
     return () => {
       window.clearInterval(interval);
     };
-  }, [slides.length, isPaused]);
+  }, [
+    slides.length,
+    isPaused,
+  ]);
+
+  /*
+   * ============================================================
+   * NAVIGATION
+   * ============================================================
+   */
 
   const showSlide = (index: number) => {
     if (slides.length < 2) {
@@ -127,6 +171,12 @@ export default function HeroCarousel({
         slides.length
     );
   };
+
+  /*
+   * ============================================================
+   * SWIPE
+   * ============================================================
+   */
 
   const handlePointerDown = (
     event: PointerEvent<HTMLDivElement>
@@ -157,6 +207,55 @@ export default function HeroCarousel({
 
     setStartX(null);
   };
+
+  /*
+   * ============================================================
+   * LOADING STATE
+   *
+   * No fallback image is rendered here.
+   * ============================================================
+   */
+
+  if (isLoading) {
+    return (
+      <div
+        className={[
+          "flex",
+          "h-full",
+          "min-h-[290px]",
+          "items-center",
+          "justify-center",
+          "bg-[#061f35]",
+          "sm:min-h-0",
+        ].join(" ")}
+        aria-label="Loading hero banners"
+      >
+        <div className="flex flex-col items-center gap-3">
+          <div
+            className={[
+              "h-8",
+              "w-8",
+              "animate-spin",
+              "rounded-full",
+              "border-2",
+              "border-white/20",
+              "border-t-white",
+            ].join(" ")}
+          />
+
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+            Loading
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  /*
+   * ============================================================
+   * NO CMS DATA + NO FALLBACK
+   * ============================================================
+   */
 
   if (slides.length === 0) {
     return (
