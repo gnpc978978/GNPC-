@@ -1,26 +1,23 @@
 @import "tailwindcss";
 
 /* =========================================================
-   GNPC DESIGN SYSTEM
-   Greater Noida Press Club
+   GREATER NOIDA PRESS CLUB
+   GLOBAL PUBLIC DESIGN SYSTEM
    ========================================================= */
 
 :root {
   /* =======================================================
-     BRAND COLORS
+     BRAND
      ======================================================= */
 
-  --gnpc-primary: #0f4c81;
-  --gnpc-primary-dark: #0a3a61;
+  --gnpc-primary: #155eef;
+  --gnpc-primary-hover: #1048c7;
+  --gnpc-primary-dark: #0f4c81;
 
-  /*
-   * Editorial red is intentionally used sparingly.
-   * Suitable for:
-   * - breaking/editorial indicators
-   * - important status labels
-   * - active highlights
-   * - alerts
-   */
+  --gnpc-primary-soft: #eef4ff;
+  --gnpc-primary-soft-hover: #e3edff;
+
+  /* Editorial red — use sparingly */
   --gnpc-editorial-red: #c8102e;
 
   /* =======================================================
@@ -29,58 +26,62 @@
 
   --gnpc-background: #ffffff;
   --gnpc-surface: #f8fafc;
-  --gnpc-surface-muted: #f1f5f9;
+  --gnpc-surface-soft: #f5f8fc;
+  --gnpc-surface-blue: #f3f7ff;
 
   /* =======================================================
      TEXT
      ======================================================= */
 
-  --gnpc-text: #0f172a;
-  --gnpc-text-secondary: #334155;
-  --gnpc-text-muted: #64748b;
-  --gnpc-text-subtle: #94a3b8;
+  --gnpc-text: #101828;
+  --gnpc-text-secondary: #344054;
+  --gnpc-text-muted: #667085;
+  --gnpc-text-subtle: #98a2b3;
+
+  --gnpc-text-on-primary: #ffffff;
 
   /* =======================================================
      BORDERS
      ======================================================= */
 
-  --gnpc-border: #e2e8f0;
+  --gnpc-border: #dfe5ee;
   --gnpc-border-strong: #cbd5e1;
 
   /* =======================================================
-     STATUS COLORS
+     STATUS
      ======================================================= */
 
   --gnpc-success: #15803d;
   --gnpc-warning: #b45309;
-  --gnpc-danger: #b91c1c;
+  --gnpc-danger: #c62828;
   --gnpc-info: #0369a1;
 
   /* =======================================================
-     DESIGN RADIUS
+     RADIUS
      ======================================================= */
 
   --gnpc-radius-sm: 0.5rem;
   --gnpc-radius-md: 0.75rem;
-
-  /*
-   * Public cards use rounded-2xl.
-   * Keep this as the single standard public card radius.
-   */
-  --gnpc-radius-2xl: 1rem;
+  --gnpc-radius-lg: 0.875rem;
+  --gnpc-radius-xl: 1rem;
+  --gnpc-radius-2xl: 1.25rem;
+  --gnpc-radius-full: 9999px;
 
   /* =======================================================
      SHADOWS
      ======================================================= */
 
   --gnpc-shadow-sm:
-    0 1px 2px rgba(15, 23, 42, 0.05);
+    0 1px 3px rgba(15, 23, 42, 0.06);
 
   --gnpc-shadow-md:
     0 8px 24px rgba(15, 23, 42, 0.08);
 
   --gnpc-shadow-lg:
     0 18px 44px rgba(15, 23, 42, 0.12);
+
+  --gnpc-shadow-button:
+    0 8px 20px rgba(21, 94, 239, 0.18);
 
   /* =======================================================
      LAYOUT
@@ -98,14 +99,14 @@
      MOTION
      ======================================================= */
 
-  --gnpc-transition-fast: 160ms ease;
-  --gnpc-transition: 240ms ease;
-  --gnpc-transition-slow: 360ms ease;
+  --gnpc-transition-fast: 150ms ease;
+  --gnpc-transition: 220ms ease;
+  --gnpc-transition-slow: 320ms ease;
 }
 
 
 /* =========================================================
-   GLOBAL RESET
+   RESET
    ========================================================= */
 
 * {
@@ -162,7 +163,7 @@ button:disabled {
 
 
 /* =========================================================
-   GLOBAL TYPOGRAPHY
+   TYPOGRAPHY
    ========================================================= */
 
 h1,
@@ -184,7 +185,7 @@ p {
 
 
 /* =========================================================
-   TEXT SELECTION
+   SELECTION
    ========================================================= */
 
 ::selection {
@@ -194,7 +195,7 @@ p {
 
 
 /* =========================================================
-   KEYBOARD FOCUS
+   FOCUS
    ========================================================= */
 
 :focus-visible {
@@ -204,7 +205,7 @@ p {
 
 
 /* =========================================================
-   GNPC PUBLIC CONTAINER
+   CONTAINER
    ========================================================= */
 
 .gnpc-container {
@@ -230,7 +231,7 @@ p {
 
 
 /* =========================================================
-   GNPC PUBLIC SECTIONS
+   SECTIONS
    ========================================================= */
 
 .gnpc-section {
@@ -245,15 +246,13 @@ p {
   background: var(--gnpc-surface);
 }
 
+.gnpc-section-blue {
+  background: var(--gnpc-surface-blue);
+}
+
 
 /* =========================================================
-   GNPC PUBLIC SECTION HEADING
-   Standard structure:
-
-   EYEBROW
-   Heading
-   Description
-   Optional Action
+   SECTION HEADINGS
    ========================================================= */
 
 .gnpc-eyebrow {
@@ -283,7 +282,7 @@ p {
 
   flex: 0 0 auto;
 
-  border-radius: 999px;
+  border-radius: var(--gnpc-radius-full);
 
   background: var(--gnpc-primary);
 }
@@ -326,14 +325,7 @@ p {
 
 
 /* =========================================================
-   GNPC PUBLIC CARDS
-
-   Standard:
-   rounded-2xl
-   border
-   white background
-   subtle shadow
-   hover elevation
+   CARDS
    ========================================================= */
 
 .gnpc-card {
@@ -347,8 +339,8 @@ p {
 
   transition:
     transform var(--gnpc-transition),
-    box-shadow var(--gnpc-transition),
-    border-color var(--gnpc-transition);
+    border-color var(--gnpc-transition),
+    box-shadow var(--gnpc-transition);
 }
 
 .gnpc-card-hover:hover {
@@ -361,13 +353,19 @@ p {
 
 
 /* =========================================================
-   GNPC BUTTON SYSTEM
+   GLOBAL BUTTON SYSTEM
+   =========================================================
 
-   PUBLIC WEBSITE:
-   1. Primary
-   2. Outline
+   PUBLIC WEBSITE BUTTONS:
 
-   Do not introduce additional public button variants.
+   Primary
+   Outline
+   Soft
+   Danger
+   Ghost
+
+   Do not introduce another button color without first
+   adding it to this design system.
    ========================================================= */
 
 .gnpc-btn {
@@ -383,7 +381,12 @@ p {
   border-radius: var(--gnpc-radius-md);
 
   font-weight: 700;
+
   line-height: 1;
+
+  white-space: nowrap;
+
+  user-select: none;
 
   transition:
     background-color var(--gnpc-transition),
@@ -393,24 +396,45 @@ p {
     box-shadow var(--gnpc-transition);
 }
 
+
+/* =========================================================
+   PRIMARY
+   ========================================================= */
+
 .gnpc-btn-primary {
   border: 1px solid var(--gnpc-primary);
 
   background: var(--gnpc-primary);
 
   color: #ffffff;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.08);
 }
 
 .gnpc-btn-primary:hover:not(:disabled) {
-  border-color: var(--gnpc-primary-dark);
+  border-color: var(--gnpc-primary-hover);
 
-  background: var(--gnpc-primary-dark);
+  background: var(--gnpc-primary-hover);
+
+  color: #ffffff;
 
   transform: translateY(-1px);
 
-  box-shadow:
-    0 8px 20px rgba(15, 76, 129, 0.2);
+  box-shadow: var(--gnpc-shadow-button);
 }
+
+.gnpc-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+
+  box-shadow:
+    0 2px 6px rgba(21, 94, 239, 0.14);
+}
+
+
+/* =========================================================
+   OUTLINE
+   ========================================================= */
 
 .gnpc-btn-outline {
   border: 1px solid var(--gnpc-primary);
@@ -418,23 +442,107 @@ p {
   background: #ffffff;
 
   color: var(--gnpc-primary);
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04);
 }
 
 .gnpc-btn-outline:hover:not(:disabled) {
-  background: var(--gnpc-primary);
+  border-color: var(--gnpc-primary);
+
+  background: var(--gnpc-primary-soft);
+
+  color: var(--gnpc-primary);
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 6px 16px rgba(21, 94, 239, 0.1);
+}
+
+.gnpc-btn-outline:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   SOFT
+   ========================================================= */
+
+.gnpc-btn-soft {
+  border: 1px solid transparent;
+
+  background: var(--gnpc-primary-soft);
+
+  color: var(--gnpc-primary);
+}
+
+.gnpc-btn-soft:hover:not(:disabled) {
+  border-color: #d7e4ff;
+
+  background: var(--gnpc-primary-soft-hover);
+
+  color: var(--gnpc-primary-hover);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DANGER
+   ========================================================= */
+
+.gnpc-btn-danger {
+  border: 1px solid var(--gnpc-danger);
+
+  background: var(--gnpc-danger);
+
+  color: #ffffff;
+}
+
+.gnpc-btn-danger:hover:not(:disabled) {
+  border-color: #a91f1f;
+
+  background: #a91f1f;
 
   color: #ffffff;
 
   transform: translateY(-1px);
 
   box-shadow:
-    0 8px 20px rgba(15, 76, 129, 0.14);
+    0 8px 20px rgba(198, 40, 40, 0.18);
 }
 
+
+/* =========================================================
+   GHOST
+   ========================================================= */
+
+.gnpc-btn-ghost {
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  color: var(--gnpc-primary);
+}
+
+.gnpc-btn-ghost:hover:not(:disabled) {
+  background: var(--gnpc-primary-soft);
+
+  color: var(--gnpc-primary-hover);
+}
+
+
+/* =========================================================
+   BUTTON SIZES
+   ========================================================= */
+
 .gnpc-btn-sm {
-  min-height: 2.25rem;
+  min-height: 2.375rem;
 
   padding: 0.625rem 0.875rem;
+
+  border-radius: var(--gnpc-radius-md);
 
   font-size: 0.8125rem;
 }
@@ -444,25 +552,41 @@ p {
 
   padding: 0.75rem 1.125rem;
 
-  font-size: 0.875rem;
-}
-
-.gnpc-btn-lg {
-  min-height: 3.125rem;
-
-  padding: 0.875rem 1.5rem;
+  border-radius: var(--gnpc-radius-md);
 
   font-size: 0.9375rem;
 }
 
-@media (min-width: 640px) {
-  .gnpc-btn-md {
-    font-size: 0.9375rem;
-  }
+.gnpc-btn-lg {
+  min-height: 3.25rem;
 
+  padding: 0.875rem 1.5rem;
+
+  border-radius: var(--gnpc-radius-lg);
+
+  font-size: 1rem;
+}
+
+@media (min-width: 640px) {
   .gnpc-btn-lg {
+    padding-inline: 1.75rem;
+
     font-size: 1rem;
   }
+}
+
+
+/* =========================================================
+   BUTTON ICON
+   ========================================================= */
+
+.gnpc-btn svg {
+  flex: 0 0 auto;
+}
+
+.gnpc-btn svg {
+  transition:
+    transform var(--gnpc-transition);
 }
 
 
@@ -500,7 +624,7 @@ p {
 
 
 /* =========================================================
-   IMAGE WRAPPER
+   IMAGE
    ========================================================= */
 
 .gnpc-image {
@@ -513,12 +637,7 @@ p {
 
 
 /* =========================================================
-   LEGACY COMPATIBILITY UTILITIES
-   =========================================================
-
-   These are retained temporarily so the existing project
-   does not break while the individual public pages are
-   migrated to the new design system.
+   LEGACY UTILITIES
    ========================================================= */
 
 .section-padding {
@@ -544,4 +663,24 @@ p {
   textarea {
     font-size: 16px;
   }
+}
+
+
+/* =========================================================
+   PUBLIC WEBSITE — REMOVE BLACK UI SURFACES
+   =========================================================
+
+   Black should not be used as a normal public UI surface.
+   It remains available for image overlays/lightbox backdrops
+   where technically necessary.
+   ========================================================= */
+
+.gnpc-public {
+  background: #ffffff;
+  color: var(--gnpc-text);
+}
+
+.gnpc-public .gnpc-ui-dark {
+  background: var(--gnpc-primary-dark);
+  color: #ffffff;
 }
