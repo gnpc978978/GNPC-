@@ -538,7 +538,7 @@ export default function Hero() {
                       </p>
 
                       <p className="mt-1.5 text-sm font-bold leading-6 text-white sm:text-base sm:leading-7">
-                        Journalism, media and community — connected through GNPC.
+                       
                       </p>
                     </div>
                   </div>
