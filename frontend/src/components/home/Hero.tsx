@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   CalendarDays,
-  ChevronDown,
   Newspaper,
 } from "lucide-react";
 
@@ -34,164 +33,78 @@ export default function Hero() {
   return (
     <section
       aria-labelledby="gnpc-hero-title"
-      className={[
-        "relative",
-        "isolate",
-        "overflow-hidden",
-
-        "bg-[#0a3a61]",
-
-        "text-white",
-      ].join(" ")}
+      className="relative overflow-hidden border-b border-slate-200 bg-white"
     >
-      {/* ==================================================
-          BACKGROUND
-          ================================================== */}
+      {/* =====================================================
+          SOFT BRAND BACKGROUND
+          ===================================================== */}
 
       <div
         aria-hidden="true"
-        className={[
-          "absolute",
-          "inset-0",
-          "-z-20",
-
-          "bg-[#0a3a61]",
-        ].join(" ")}
-      />
-
-      {/* Subtle GNPC blue atmosphere */}
-      <div
-        aria-hidden="true"
-        className={[
-          "absolute",
-          "-left-40",
-          "-top-40",
-          "-z-10",
-
-          "h-[34rem]",
-          "w-[34rem]",
-
-          "rounded-full",
-
-          "bg-[#0f4c81]/30",
-
-          "blur-3xl",
-        ].join(" ")}
-      />
-
-      <div
-        aria-hidden="true"
-        className={[
-          "absolute",
-          "-bottom-48",
-          "-right-40",
-          "-z-10",
-
-          "h-[32rem]",
-          "w-[32rem]",
-
-          "rounded-full",
-
-          "bg-black/20",
-
-          "blur-3xl",
-        ].join(" ")}
-      />
-
-      {/* Very subtle editorial grid */}
-      <div
-        aria-hidden="true"
-        className={[
-          "pointer-events-none",
-          "absolute",
-          "inset-0",
-          "-z-10",
-
-          "opacity-[0.045]",
-        ].join(" ")}
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-          backgroundSize:
-            "56px 56px",
-        }}
-      />
-
-      {/* ==================================================
-          HERO CONTENT
-          ================================================== */}
-
-      <div
-        className={[
-          "mx-auto",
-          "max-w-7xl",
-
-          "px-4",
-          "py-10",
-
-          "sm:px-6",
-          "sm:py-14",
-
-          "lg:px-8",
-          "lg:py-20",
-
-          "xl:py-24",
-        ].join(" ")}
+        className="pointer-events-none absolute inset-0"
       >
+        <div className="absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-blue-50 blur-3xl" />
+
+        <div className="absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-slate-100 blur-3xl" />
+
         <div
-          className={[
-            "grid",
-            "items-center",
+          className="absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#155eef 1px, transparent 1px), linear-gradient(90deg, #155eef 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+      </div>
 
-            "gap-12",
+      {/* =====================================================
+          HERO CONTAINER
+          ===================================================== */}
 
-            "lg:grid-cols-[0.9fr_1.1fr]",
-            "lg:gap-14",
+      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20 xl:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 xl:gap-20">
 
-            "xl:grid-cols-[0.86fr_1.14fr]",
-            "xl:gap-20",
-          ].join(" ")}
-        >
           {/* =================================================
-              LEFT — EDITORIAL CONTENT
+              LEFT — CONTENT
               ================================================= */}
 
           <motion.div
             initial={{
               opacity: 0,
-              y: 24,
+              y: 20,
             }}
             animate={{
               opacity: 1,
               y: 0,
             }}
             transition={{
-              duration: 0.7,
+              duration: 0.65,
               ease: "easeOut",
             }}
-            className={[
-              "order-2",
-              "lg:order-1",
-            ].join(" ")}
+            className="order-2 lg:order-1"
           >
             {/* Eyebrow */}
+
             <div className="flex items-center gap-3">
               <span
                 aria-hidden="true"
-                className="h-px w-9 bg-white/60"
+                className="h-0.5 w-8 rounded-full bg-[#155eef]"
               />
 
-              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/70 sm:text-sm">
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#155eef] sm:text-sm">
                 Greater Noida Press Club
               </span>
             </div>
 
-            {/* Small organization label */}
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-2 text-xs font-bold text-white/80 backdrop-blur-md">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
+            {/* Organization identity */}
+
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3.5 py-2 text-xs font-bold text-[#155eef]">
+              <span
+                aria-hidden="true"
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef] shadow-sm"
+              >
                 <Newspaper
                   size={13}
-                  aria-hidden="true"
                 />
               </span>
 
@@ -200,7 +113,8 @@ export default function Hero() {
               </span>
             </div>
 
-            {/* Main title */}
+            {/* Main heading */}
+
             <h1
               id="gnpc-hero-title"
               className={[
@@ -208,25 +122,28 @@ export default function Hero() {
 
                 "max-w-3xl",
 
-                "text-4xl",
+                "text-[2.35rem]",
                 "font-black",
 
-                "leading-[1.02]",
+                "leading-[1.08]",
                 "tracking-[-0.035em]",
+
+                "text-[#101828]",
 
                 "sm:text-5xl",
 
-                "md:text-6xl",
+                "md:text-[3.5rem]",
 
-                "lg:text-[4.1rem]",
+                "lg:text-[4rem]",
 
-                "xl:text-[4.7rem]",
+                "xl:text-[4.5rem]",
               ].join(" ")}
             >
               {heroTitle}
             </h1>
 
             {/* Description */}
+
             <p
               className={[
                 "mt-6",
@@ -236,7 +153,7 @@ export default function Hero() {
                 "text-base",
                 "leading-7",
 
-                "text-white/70",
+                "text-slate-600",
 
                 "sm:text-lg",
                 "sm:leading-8",
@@ -245,227 +162,212 @@ export default function Hero() {
               {heroDescription}
             </p>
 
+            {/* =================================================
+                PRIMARY ACTIONS
+                ================================================= */}
+
+            <div
+              className={[
+                "mt-8",
+
+                "flex",
+                "flex-col",
+
+                "gap-3",
+
+                "sm:mt-10",
+                "sm:flex-row",
+                "sm:flex-wrap",
+                "sm:gap-4",
+              ].join(" ")}
+            >
+              {/* Membership */}
+
+              <MembershipFormLink
+                className={[
+                  "gnpc-btn",
+                  "gnpc-btn-primary",
+                  "gnpc-btn-lg",
+
+                  "group",
+
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-[#155eef]",
+                  "focus-visible:ring-offset-2",
+                ].join(" ")}
+                unavailableClassName={[
+                  "gnpc-btn",
+                  "gnpc-btn-soft",
+                  "gnpc-btn-lg",
+
+                  "group",
+
+                  "cursor-not-allowed",
+                  "opacity-60",
+                ].join(" ")}
+              >
+                Become a Member
+
+                <ArrowRight
+                  size={18}
+                  aria-hidden="true"
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </MembershipFormLink>
+
+              {/* Latest Updates */}
+
+              <Link
+                href="/latest-updates"
+                className={[
+                  "gnpc-btn",
+                  "gnpc-btn-outline",
+                  "gnpc-btn-lg",
+
+                  "group",
+
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-[#155eef]",
+                  "focus-visible:ring-offset-2",
+                ].join(" ")}
+              >
+                Latest Updates
+
+                <ArrowRight
+                  size={18}
+                  aria-hidden="true"
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+
+            {/* =================================================
+                QUICK LINKS
+                ================================================= */}
+
+            <div
+              className={[
+                "mt-8",
+
+                "flex",
+                "flex-wrap",
+
+                "gap-x-6",
+                "gap-y-3",
+
+                "border-t",
+                "border-slate-200",
+
+                "pt-6",
+
+                "sm:mt-10",
+              ].join(" ")}
+            >
+              <Link
+                href="/press-releases"
+                className={[
+                  "group",
+
+                  "inline-flex",
+                  "items-center",
+                  "gap-2",
+
+                  "text-sm",
+                  "font-semibold",
+
+                  "text-slate-600",
+
+                  "transition-colors",
+                  "duration-200",
+
+                  "hover:text-[#155eef]",
+                ].join(" ")}
+              >
+                <Newspaper
+                  size={16}
+                  className="text-[#155eef]"
+                  aria-hidden="true"
+                />
+
+                <span>
+                  Press Releases
+                </span>
+
+                <ArrowRight
+                  size={14}
+                  className={[
+                    "opacity-0",
+
+                    "transition-all",
+                    "duration-200",
+
+                    "group-hover:translate-x-1",
+                    "group-hover:opacity-100",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
+              </Link>
+
+              <Link
+                href="/events"
+                className={[
+                  "group",
+
+                  "inline-flex",
+                  "items-center",
+                  "gap-2",
+
+                  "text-sm",
+                  "font-semibold",
+
+                  "text-slate-600",
+
+                  "transition-colors",
+                  "duration-200",
+
+                  "hover:text-[#155eef]",
+                ].join(" ")}
+              >
+                <CalendarDays
+                  size={16}
+                  className="text-[#155eef]"
+                  aria-hidden="true"
+                />
+
+                <span>
+                  Events
+                </span>
+
+                <ArrowRight
+                  size={14}
+                  className={[
+                    "opacity-0",
+
+                    "transition-all",
+                    "duration-200",
+
+                    "group-hover:translate-x-1",
+                    "group-hover:opacity-100",
+
+                    "sm:opacity-0",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
+              </Link>
+            </div>
+          </motion.div>
+
           {/* =================================================
-    PRIMARY ACTIONS
-    ================================================= */}
+              RIGHT — HERO VISUAL
+              ================================================= */}
 
-<div
-  className={[
-    "mt-8",
-    "flex",
-    "flex-col",
-    "gap-3",
-    "sm:mt-10",
-    "sm:flex-row",
-    "sm:flex-wrap",
-    "sm:gap-4",
-  ].join(" ")}
->
-  {/* Become a member */}
-  <MembershipFormLink
-    className={[
-      "group",
-      "inline-flex",
-      "items-center",
-      "justify-center",
-      "gap-2",
-      "rounded-xl",
-      "border",
-      "border-white/20",
-      "bg-white/[0.06]",
-      "px-5",
-      "py-3.5",
-      "text-sm",
-      "font-bold",
-      "text-white",
-      "backdrop-blur-md",
-      "transition-all",
-      "duration-300",
-      "hover:-translate-y-0.5",
-      "hover:border-white/35",
-      "hover:bg-white/10",
-      "focus-visible:outline-none",
-      "focus-visible:ring-2",
-      "focus-visible:ring-white",
-      "focus-visible:ring-offset-2",
-      "focus-visible:ring-offset-[#0a3a61]",
-      "sm:px-6",
-      "sm:text-base",
-    ].join(" ")}
-    unavailableClassName={[
-      "group",
-      "inline-flex",
-      "cursor-not-allowed",
-      "items-center",
-      "justify-center",
-      "gap-2",
-      "rounded-xl",
-      "border",
-      "border-white/20",
-      "bg-white/[0.06]",
-      "px-5",
-      "py-3.5",
-      "text-sm",
-      "font-bold",
-      "text-white",
-      "backdrop-blur-md",
-      "opacity-60",
-      "sm:px-6",
-      "sm:text-base",
-    ].join(" ")}
-  >
-    Become A Member
-
-    <ArrowRight
-      size={18}
-      className="transition-transform duration-300 group-hover:translate-x-1"
-      aria-hidden="true"
-    />
-  </MembershipFormLink>
-
-  {/* Latest updates */}
-  <Link
-    href="/latest-updates"
-    className={[
-      "group",
-      "inline-flex",
-      "items-center",
-      "justify-center",
-      "gap-2",
-      "rounded-xl",
-      "border",
-      "border-white/20",
-      "bg-white/[0.06]",
-      "px-5",
-      "py-3.5",
-      "text-sm",
-      "font-bold",
-      "text-white",
-      "backdrop-blur-md",
-      "transition-all",
-      "duration-300",
-      "hover:-translate-y-0.5",
-      "hover:border-white/35",
-      "hover:bg-white/10",
-      "focus-visible:outline-none",
-      "focus-visible:ring-2",
-      "focus-visible:ring-white",
-      "focus-visible:ring-offset-2",
-      "focus-visible:ring-offset-[#0a3a61]",
-      "sm:px-6",
-      "sm:text-base",
-    ].join(" ")}
-  >
-    Latest Updates
-
-    <ArrowRight
-      size={18}
-      className="transition-transform duration-300 group-hover:translate-x-1"
-      aria-hidden="true"
-    />
-  </Link>
-</div>
-
-{/* =================================================
-    QUICK LINKS
-    ================================================= */}
-
-<div
-  className={[
-    "mt-8",
-    "flex",
-    "flex-wrap",
-    "gap-x-6",
-    "gap-y-3",
-    "border-t",
-    "border-white/10",
-    "pt-6",
-    "sm:mt-10",
-  ].join(" ")}
->
-  <Link
-    href="/press-releases"
-    className={[
-      "group",
-      "inline-flex",
-      "items-center",
-      "gap-2",
-      "text-sm",
-      "font-semibold",
-      "text-white/65",
-      "transition-colors",
-      "duration-200",
-      "hover:text-white",
-    ].join(" ")}
-  >
-    <Newspaper
-      size={16}
-      className="text-white/60"
-      aria-hidden="true"
-    />
-
-    <span>Press Releases</span>
-
-    <ArrowRight
-      size={14}
-      className={[
-        "opacity-0",
-        "transition-all",
-        "duration-200",
-        "group-hover:translate-x-1",
-        "group-hover:opacity-100",
-      ].join(" ")}
-      aria-hidden="true"
-    />
-  </Link>
-
-  <Link
-    href="/events"
-    className={[
-      "group",
-      "inline-flex",
-      "items-center",
-      "gap-2",
-      "text-sm",
-      "font-semibold",
-      "text-white/65",
-      "transition-colors",
-      "duration-200",
-      "hover:text-white",
-    ].join(" ")}
-  >
-    <CalendarDays
-      size={16}
-      className="text-white/60"
-      aria-hidden="true"
-    />
-
-    <span>Events</span>
-
-    <ArrowRight
-      size={14}
-      className={[
-        "opacity-0",
-        "transition-all",
-        "duration-200",
-        "group-hover:translate-x-1",
-        "group-hover:opacity-100",
-      ].join(" ")}
-      aria-hidden="true"
-    />
-  </Link>
-</div>
-
-</motion.div>
-
-{/* =================================================
-    RIGHT — HERO VISUAL
-    ================================================= */}
           <motion.div
             initial={{
               opacity: 0,
-              x: 30,
-              scale: 0.97,
+              x: 24,
+              scale: 0.98,
             }}
             animate={{
               opacity: 1,
@@ -473,17 +375,16 @@ export default function Hero() {
               scale: 1,
             }}
             transition={{
-              duration: 0.8,
+              duration: 0.75,
               delay: 0.1,
               ease: "easeOut",
             }}
-            className={[
-              "order-1",
-              "lg:order-2",
-            ].join(" ")}
+            className="order-1 lg:order-2"
           >
             <div className="relative">
-              {/* Outer frame */}
+
+              {/* Decorative brand frame */}
+
               <div
                 aria-hidden="true"
                 className={[
@@ -493,11 +394,14 @@ export default function Hero() {
                   "rounded-[2rem]",
 
                   "border",
-                  "border-white/[0.06]",
+                  "border-blue-100",
+
+                  "bg-blue-50/50",
                 ].join(" ")}
               />
 
-              {/* Image frame */}
+              {/* Main image card */}
+
               <div
                 className={[
                   "relative",
@@ -507,17 +411,17 @@ export default function Hero() {
                   "rounded-[1.5rem]",
 
                   "border",
-                  "border-white/15",
+                  "border-slate-200",
 
-                  "bg-white/[0.04]",
+                  "bg-white",
 
-                  "p-1.5",
+                  "p-2",
 
-                  "shadow-2xl",
-                  "shadow-black/35",
+                  "shadow-xl",
+                  "shadow-slate-200/70",
 
                   "sm:rounded-[2rem]",
-                  "sm:p-2",
+                  "sm:p-2.5",
                 ].join(" ")}
               >
                 <div
@@ -530,48 +434,48 @@ export default function Hero() {
 
                     "rounded-[1.15rem]",
 
-                    "bg-[#061f35]",
+                    "bg-slate-100",
 
-                    "sm:h-[420px]",
+                    "sm:h-[410px]",
 
                     "sm:rounded-[1.5rem]",
 
-                    "lg:h-[500px]",
+                    "lg:h-[480px]",
 
-                    "xl:h-[550px]",
+                    "xl:h-[530px]",
                   ].join(" ")}
                 >
                   {/* Carousel */}
+
                   <HeroCarousel
-                    fallbackImage={
-                      heroImage
-                    }
-                    alt={
-                      heroTitle
-                    }
+                    fallbackImage={heroImage}
+                    alt={heroTitle}
                   />
 
-                  {/* Editorial readability overlay */}
+                  {/* Light image readability overlay */}
+
                   <div
                     aria-hidden="true"
                     className={[
                       "pointer-events-none",
+
                       "absolute",
                       "inset-0",
 
                       "bg-gradient-to-t",
-                      "from-black/50",
+
+                      "from-[#0f4c81]/65",
                       "via-transparent",
-                      "to-black/10",
+                      "to-white/5",
                     ].join(" ")}
                   />
 
-                  {/* Top editorial label */}
+                  {/* Top label */}
+
                   <div
                     className={[
-                      "pointer-events-none",
-
                       "absolute",
+
                       "left-4",
                       "top-4",
 
@@ -582,9 +486,9 @@ export default function Hero() {
                       "rounded-full",
 
                       "border",
-                      "border-white/15",
+                      "border-white/40",
 
-                      "bg-[#0a3a61]/80",
+                      "bg-white/90",
 
                       "px-3",
                       "py-2",
@@ -592,10 +496,11 @@ export default function Hero() {
                       "text-[10px]",
                       "font-extrabold",
                       "uppercase",
-                      "tracking-[0.18em]",
+                      "tracking-[0.16em]",
 
-                      "text-white",
+                      "text-[#0f4c81]",
 
+                      "shadow-sm",
                       "backdrop-blur-md",
 
                       "sm:left-5",
@@ -606,37 +511,33 @@ export default function Hero() {
                   >
                     <span
                       aria-hidden="true"
-                      className="relative flex h-2 w-2"
-                    >
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-50" />
-
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
-                    </span>
+                      className="h-2 w-2 rounded-full bg-[#155eef]"
+                    />
 
                     GNPC
                   </div>
 
                   {/* Bottom image information */}
+
                   <div
                     className={[
-                      "pointer-events-none",
-
                       "absolute",
+
                       "bottom-0",
                       "left-0",
                       "right-0",
 
                       "p-5",
 
-                      "sm:p-6",
+                      "sm:p-7",
                     ].join(" ")}
                   >
-                    <div className="max-w-md">
-                      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/60">
+                    <div className="max-w-lg">
+                      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/75">
                         {siteName}
                       </p>
 
-                      <p className="mt-1 text-sm font-bold leading-5 text-white sm:text-base">
+                      <p className="mt-1.5 text-sm font-bold leading-6 text-white sm:text-base sm:leading-7">
                         Journalism, media and community — connected through GNPC.
                       </p>
                     </div>
@@ -645,7 +546,7 @@ export default function Hero() {
               </div>
 
               {/* =================================================
-                  FLOATING INFORMATION CARD
+                  FLOATING INFO CARD
                   ================================================= */}
 
               <motion.div
@@ -659,7 +560,7 @@ export default function Hero() {
                 }}
                 transition={{
                   duration: 0.6,
-                  delay: 0.75,
+                  delay: 0.7,
                 }}
                 className={[
                   "absolute",
@@ -669,113 +570,53 @@ export default function Hero() {
 
                   "hidden",
 
-                  "max-w-[270px]",
+                  "max-w-[280px]",
 
                   "rounded-2xl",
 
                   "border",
-                  "border-white/15",
+                  "border-slate-200",
 
-                  "bg-[#061f35]/95",
+                  "bg-white",
 
                   "p-4",
 
-                  "shadow-2xl",
-
-                  "backdrop-blur-xl",
+                  "shadow-lg",
+                  "shadow-slate-200/70",
 
                   "sm:block",
 
-                  "lg:-left-7",
+                  "lg:-left-8",
                 ].join(" ")}
               >
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/50">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#155eef]">
                   Greater Noida
                 </p>
 
-                <p className="mt-1 text-sm font-bold leading-5 text-white">
+                <p className="mt-1 text-sm font-semibold leading-5 text-[#101828]">
                   A professional platform for journalists, media professionals and the community.
                 </p>
-              </motion.div>
-
-              {/* =================================================
-                  SCROLL PROMPT
-                  ================================================= */}
-
-              <motion.div
-                initial={{
-                  opacity: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                }}
-                transition={{
-                  duration: 0.8,
-                  delay: 1.1,
-                }}
-                className={[
-                  "absolute",
-
-                  "-bottom-11",
-                  "right-2",
-
-                  "hidden",
-
-                  "items-center",
-                  "gap-2",
-
-                  "text-[10px]",
-                  "font-bold",
-                  "uppercase",
-                  "tracking-[0.16em]",
-
-                  "text-white/40",
-
-                  "xl:flex",
-                ].join(" ")}
-              >
-                <span>
-                  Explore
-                </span>
-
-                <motion.span
-                  animate={{
-                    y: [0, 4, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <ChevronDown
-                    size={15}
-                    aria-hidden="true"
-                  />
-                </motion.span>
               </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* ==================================================
-          BOTTOM EDGE
-          ================================================== */}
+      {/* =====================================================
+          TRUST / IDENTITY STRIP
+          ===================================================== */}
 
-      <div
-        aria-hidden="true"
-        className={[
-          "absolute",
-          "bottom-0",
-          "left-0",
-          "right-0",
+      <div className="relative border-t border-slate-100 bg-slate-50/70">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+            {siteName}
+          </p>
 
-          "h-px",
-
-          "bg-white/10",
-        ].join(" ")}
-      />
+          <p className="text-sm font-medium text-slate-600">
+            Journalism • Media • Community
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
