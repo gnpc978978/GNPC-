@@ -495,60 +495,73 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* =====================================================
-          PRESIDENT
-          ===================================================== */}
+     {/* =====================================================
+    PRESIDENT'S MESSAGE
+    ===================================================== */}
 
-      {(content.presidentName ||
-        content.presidentMessage) && (
-        <section className="bg-slate-950 px-4 py-14 text-white sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[280px_1fr] lg:items-center lg:gap-12">
+{(content.presidentName || content.presidentMessage) && (
+  <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+    <div className="mx-auto max-w-7xl">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:rounded-3xl">
+        <div className="grid items-center gap-8 p-6 sm:p-8 md:grid-cols-[260px_1fr] md:gap-10 md:p-10 lg:grid-cols-[320px_1fr] lg:gap-16 lg:p-14">
+          
+          {/* PRESIDENT PHOTO */}
+          <div className="flex justify-center md:justify-start">
             {content.presidentPhoto ? (
-              <img
-                src={content.presidentPhoto}
-                alt={
-                  content.presidentName ||
-                  "President"
-                }
-                className="mx-auto h-56 w-56 rounded-full object-cover ring-4 ring-white/10 sm:h-64 sm:w-64"
-                loading="lazy"
-              />
+              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm sm:rounded-3xl">
+                <img
+                  src={content.presidentPhoto}
+                  alt={
+                    content.presidentName ||
+                    "President, Greater Noida Press Club"
+                  }
+                  className="h-64 w-64 object-cover sm:h-72 sm:w-72 lg:h-80 lg:w-80"
+                  loading="lazy"
+                />
+              </div>
             ) : (
-              <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full bg-white/10 text-5xl font-black sm:h-64 sm:w-64">
+              <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-slate-100 text-5xl font-black text-slate-400 sm:h-72 sm:w-72 sm:rounded-3xl lg:h-80 lg:w-80">
                 {content.presidentName
                   ?.charAt(0)
                   ?.toUpperCase() || "P"}
               </div>
             )}
+          </div>
 
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-300 sm:text-sm sm:tracking-[0.2em]">
-                President's Message
-              </p>
+          {/* MESSAGE */}
+          <div className="min-w-0">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 sm:text-sm sm:tracking-[0.2em]">
+              President's Message
+            </p>
 
-              {content.presidentMessage && (
-                <blockquote className="mt-4 break-words text-lg leading-8 text-slate-200 sm:mt-5 sm:text-xl sm:leading-9 md:text-2xl">
-                  “{content.presidentMessage}”
-                </blockquote>
-              )}
+            {content.presidentMessage && (
+              <blockquote className="mt-4 break-words text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9">
+                “{content.presidentMessage}”
+              </blockquote>
+            )}
 
-              {content.presidentName && (
-                <div className="mt-6 sm:mt-7">
-                  <p className="text-base font-bold sm:text-lg">
+            {(content.presidentName ||
+              content.presidentDesignation) && (
+              <div className="mt-6 border-t border-slate-200 pt-5 sm:mt-7 sm:pt-6">
+                {content.presidentName && (
+                  <p className="text-base font-bold text-slate-900 sm:text-lg">
                     {content.presidentName}
                   </p>
+                )}
 
-                  {content.presidentDesignation && (
-                    <p className="mt-1 text-sm text-slate-400 sm:text-base">
-                      {content.presidentDesignation}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
+                {content.presidentDesignation && (
+                  <p className="mt-1 text-sm text-slate-500 sm:text-base">
+                    {content.presidentDesignation}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
 
       {/* =====================================================
           WHY CHOOSE US
