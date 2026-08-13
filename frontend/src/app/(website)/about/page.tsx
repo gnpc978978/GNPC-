@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import {
   CheckCircle2,
@@ -11,7 +11,30 @@ import {
 import PageHero from "@/components/ui/PageHero";
 import AboutCTA from "@/components/about/AboutCTA";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+/*
+ * -------------------------------------------------------
+ * API CONFIGURATION
+ * -------------------------------------------------------
+ *
+ * Expected environment variable:
+ *
+ * NEXT_PUBLIC_API_URL=http://localhost:5000/api
+ *
+ * Production example:
+ *
+ * NEXT_PUBLIC_API_URL=https://your-backend-domain.com/api
+ *
+ * The backend About endpoint is:
+ *
+ * GET /api/settings/about
+ *
+ * Therefore the final request becomes:
+ *
+ * ${NEXT_PUBLIC_API_URL}/settings/about
+ */
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
 
 type Objective = {
   title: string;
@@ -31,6 +54,7 @@ type AboutSettings = {
   heroDescription: string;
 
   image?: string;
+
   heading: string;
   description: string;
   secondaryDescription: string;
@@ -69,52 +93,45 @@ type AboutSettings = {
   ctaSecondaryLabel: string;
 };
 
-const fallbackContent: AboutSettings = {
-  heroEyebrow: "About Greater Noida Press Club",
-  heroTitle: "About Us",
-  heroDescription:
-    "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
+/*
+ * -------------------------------------------------------
+ * EMPTY DEFAULT
+ * -------------------------------------------------------
+ *
+ * This is only used to guarantee safe rendering.
+ *
+ * We DO NOT use hardcoded fallback CMS content when
+ * the API fails. Otherwise a broken CMS looks like it
+ * is working.
+ */
+
+const emptyContent: AboutSettings = {
+  heroEyebrow: "",
+  heroTitle: "",
+  heroDescription: "",
 
   image: "",
 
-  heading:
-    "Empowering Journalists & Strengthening Independent Media",
+  heading: "",
+  description: "",
+  secondaryDescription: "",
 
-  description:
-    "Greater Noida Press Club is a professional organization dedicated to supporting journalists, promoting ethical journalism, and providing a strong platform for media professionals.",
+  commitmentTitle: "",
+  commitmentDescription: "",
 
-  secondaryDescription:
-    "We believe in freedom of expression, responsible reporting, and creating opportunities that help journalists grow, collaborate, and contribute to society.",
+  foundationEyebrow: "",
+  foundationTitle: "",
+  foundationDescription: "",
 
-  commitmentTitle: "Our Commitment",
+  missionTitle: "",
+  missionDescription: "",
 
-  commitmentDescription:
-    "We are committed to protecting journalistic values, encouraging transparency, and building a stronger media community through education, collaboration, and innovation.",
+  visionTitle: "",
+  visionDescription: "",
 
-  foundationEyebrow: "Our Foundation",
-
-  foundationTitle: "Mission & Vision",
-
-  foundationDescription:
-    "We are committed to ethical journalism, professional excellence, and empowering media professionals through collaboration and innovation.",
-
-  missionTitle: "Our Mission",
-
-  missionDescription:
-    "To support journalists with professional development, transparency, ethical reporting, and a strong platform that protects press freedom.",
-
-  visionTitle: "Our Vision",
-
-  visionDescription:
-    "To build a trusted community where journalists collaborate, innovate, and contribute to an informed and democratic society.",
-
-  objectivesEyebrow: "Our Objectives",
-
-  objectivesTitle: "What We Aim To Achieve",
-
-  objectivesDescription:
-    "Our primary objective is to strengthen journalism through education, collaboration, innovation, and ethical reporting.",
-
+  objectivesEyebrow: "",
+  objectivesTitle: "",
+  objectivesDescription: "",
   objectives: [],
 
   presidentName: "",
@@ -122,25 +139,15 @@ const fallbackContent: AboutSettings = {
   presidentMessage: "",
   presidentPhoto: "",
 
-  whyChooseUsEyebrow: "Why Choose Us",
-
-  whyChooseUsTitle:
-    "Why Greater Noida Press Club Matters",
-
-  whyChooseUsDescription:
-    "We provide a trusted platform for journalists to connect, collaborate, and grow while maintaining the highest standards of journalism.",
-
+  whyChooseUsEyebrow: "",
+  whyChooseUsTitle: "",
+  whyChooseUsDescription: "",
   reasons: [],
 
-  ctaTitle:
-    "Become a Part of Our Greater Noida Press Club",
-
-  ctaDescription:
-    "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.",
-
-  ctaPrimaryLabel: "Become a Member",
-
-  ctaSecondaryLabel: "Meet Our Office Bearers",
+  ctaTitle: "",
+  ctaDescription: "",
+  ctaPrimaryLabel: "",
+  ctaSecondaryLabel: "",
 };
 
 export default function AboutPage() {
@@ -150,53 +157,203 @@ export default function AboutPage() {
   const [loading, setLoading] =
     useState(true);
 
-  const loadAboutContent = async () => {
-    try {
-      setLoading(true);
+  const [error, setError] =
+    useState<string | null>(null);
 
-      const response = await axios.get(
-        `${API_URL}/about-settings`
-      );
+  /*
+   * -------------------------------------------------------
+   * LOAD ABOUT CMS DATA
+   * -------------------------------------------------------
+   */
 
-      const data =
-        response.data?.data ??
-        response.data ??
-        {};
+  const loadAboutContent = useCallback(
+    async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      setContent({
-        ...fallbackContent,
-        ...data,
+        /*
+         * Fail clearly if the environment variable
+         * has not been configured.
+         */
+        if (!API_URL) {
+          throw new Error(
+            "NEXT_PUBLIC_API_URL is not configured."
+          );
+        }
 
-        objectives: Array.isArray(data?.objectives)
-          ? data.objectives
-          : [],
+        /*
+         * IMPORTANT:
+         *
+         * Backend:
+         * /api/settings/about
+         *
+         * API_URL should already contain /api.
+         *
+         * Example:
+         * https://api.example.com/api
+         *
+         * Result:
+         * https://api.example.com/api/settings/about
+         */
+        const endpoint =
+          `${API_URL}/settings/about`;
 
-        reasons: Array.isArray(data?.reasons)
-          ? data.reasons
-          : [],
-      });
-    } catch (error) {
-      console.error(
-        "Failed to load About content:",
-        error
-      );
+        console.log(
+          "[About CMS] Fetching:",
+          endpoint
+        );
 
-      /*
-       * Keep the page usable if the CMS/API
-       * is temporarily unavailable.
-       */
-      setContent(fallbackContent);
-    } finally {
-      setLoading(false);
-    }
-  };
+        const response =
+          await axios.get(endpoint, {
+            timeout: 15000,
+            headers: {
+              Accept: "application/json",
+            },
+          });
+
+        /*
+         * Backend response:
+         *
+         * {
+         *   success: true,
+         *   data: {...}
+         * }
+         */
+
+        if (!response.data?.success) {
+          throw new Error(
+            response.data?.message ||
+              "About CMS returned an unsuccessful response."
+          );
+        }
+
+        const data =
+          response.data?.data;
+
+        if (!data) {
+          throw new Error(
+            "About CMS returned no data."
+          );
+        }
+
+        /*
+         * Normalize arrays so the UI never crashes
+         * when the CMS contains missing/null values.
+         */
+        const normalizedContent: AboutSettings = {
+          ...emptyContent,
+          ...data,
+
+          objectives:
+            Array.isArray(data.objectives)
+              ? data.objectives.map(
+                  (item: Objective) => ({
+                    title:
+                      item?.title ?? "",
+                    description:
+                      item?.description ?? "",
+                    icon:
+                      item?.icon ?? "",
+                  })
+                )
+              : [],
+
+          reasons:
+            Array.isArray(data.reasons)
+              ? data.reasons.map(
+                  (item: Reason) => ({
+                    title:
+                      item?.title ?? "",
+                    description:
+                      item?.description ?? "",
+                    icon:
+                      item?.icon ?? "",
+                  })
+                )
+              : [],
+        };
+
+        console.log(
+          "[About CMS] Data loaded successfully:",
+          normalizedContent
+        );
+
+        setContent(
+          normalizedContent
+        );
+      } catch (error) {
+        console.error(
+          "[About CMS] Failed to load content:",
+          error
+        );
+
+        let message =
+          "Unable to load About page content.";
+
+        if (axios.isAxiosError(error)) {
+          if (error.response) {
+            message =
+              error.response.data?.message ||
+              `About API returned ${error.response.status}.`;
+          } else if (error.request) {
+            message =
+              "Unable to connect to the About CMS API.";
+          } else if (error.message) {
+            message = error.message;
+          }
+        } else if (
+          error instanceof Error
+        ) {
+          message = error.message;
+        }
+
+        setError(message);
+
+        /*
+         * IMPORTANT:
+         *
+         * Do not silently display hardcoded CMS content.
+         * Keep content null so we know the CMS actually failed.
+         */
+        setContent(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  /*
+   * -------------------------------------------------------
+   * INITIAL LOAD
+   * -------------------------------------------------------
+   */
 
   useEffect(() => {
     loadAboutContent();
+  }, [loadAboutContent]);
 
-    const handleUpdate = () => {
-      loadAboutContent();
-    };
+  /*
+   * -------------------------------------------------------
+   * CMS UPDATE EVENT
+   * -------------------------------------------------------
+   *
+   * When the admin CMS saves About settings, another
+   * part of the frontend can dispatch:
+   *
+   * window.dispatchEvent(
+   *   new Event("about-settings-updated")
+   * );
+   *
+   * The public About page will then refresh.
+   */
+
+  useEffect(() => {
+    const handleUpdate =
+      () => {
+        loadAboutContent();
+      };
 
     window.addEventListener(
       "about-settings-updated",
@@ -209,7 +366,7 @@ export default function AboutPage() {
         handleUpdate
       );
     };
-  }, []);
+  }, [loadAboutContent]);
 
   /*
    * -------------------------------------------------------
@@ -247,21 +404,30 @@ export default function AboutPage() {
 
   /*
    * -------------------------------------------------------
-   * EMPTY STATE
+   * ERROR STATE
    * -------------------------------------------------------
    */
 
-  if (!content) {
+  if (error || !content) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center bg-white px-6">
-        <div className="text-center">
+        <div className="w-full max-w-xl rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
           <h1 className="text-2xl font-bold text-slate-900">
             About page content unavailable
           </h1>
 
-          <p className="mt-2 text-slate-500">
-            Please try again later.
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            {error ||
+              "The About CMS did not return any content."}
           </p>
+
+          <button
+            type="button"
+            onClick={loadAboutContent}
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          >
+            Try Again
+          </button>
         </div>
       </main>
     );
@@ -271,7 +437,6 @@ export default function AboutPage() {
     <main className="bg-white text-slate-900">
       {/* =====================================================
           PAGE HERO
-          Uses the same PageHero component as other pages.
           ===================================================== */}
 
       <PageHero
@@ -280,7 +445,10 @@ export default function AboutPage() {
           content.heroEyebrow ||
           "About Greater Noida Press Club"
         }
-        title={content.heroTitle || "About Us"}
+        title={
+          content.heroTitle ||
+          "About Us"
+        }
         description={
           content.heroDescription ||
           "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism."
@@ -495,73 +663,76 @@ export default function AboutPage() {
         </section>
       )}
 
-     {/* =====================================================
-    PRESIDENT'S MESSAGE
-    ===================================================== */}
+      {/* =====================================================
+          PRESIDENT'S MESSAGE
+          ===================================================== */}
 
-{(content.presidentName || content.presidentMessage) && (
-  <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-    <div className="mx-auto max-w-7xl">
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:rounded-3xl">
-        <div className="grid items-center gap-8 p-6 sm:p-8 md:grid-cols-[260px_1fr] md:gap-10 md:p-10 lg:grid-cols-[320px_1fr] lg:gap-16 lg:p-14">
-          
-          {/* PRESIDENT PHOTO */}
-          <div className="flex justify-center md:justify-start">
-            {content.presidentPhoto ? (
-              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm sm:rounded-3xl">
-                <img
-                  src={content.presidentPhoto}
-                  alt={
-                    content.presidentName ||
-                    "President, Greater Noida Press Club"
-                  }
-                  className="h-64 w-64 object-cover sm:h-72 sm:w-72 lg:h-80 lg:w-80"
-                  loading="lazy"
-                />
-              </div>
-            ) : (
-              <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-slate-100 text-5xl font-black text-slate-400 sm:h-72 sm:w-72 sm:rounded-3xl lg:h-80 lg:w-80">
-                {content.presidentName
-                  ?.charAt(0)
-                  ?.toUpperCase() || "P"}
-              </div>
-            )}
-          </div>
+      {(content.presidentName ||
+        content.presidentMessage) && (
+        <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:rounded-3xl">
+              <div className="grid items-center gap-8 p-6 sm:p-8 md:grid-cols-[260px_1fr] md:gap-10 md:p-10 lg:grid-cols-[320px_1fr] lg:gap-16 lg:p-14">
+                {/* PRESIDENT PHOTO */}
 
-          {/* MESSAGE */}
-          <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 sm:text-sm sm:tracking-[0.2em]">
-              President's Message
-            </p>
+                <div className="flex justify-center md:justify-start">
+                  {content.presidentPhoto ? (
+                    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm sm:rounded-3xl">
+                      <img
+                        src={content.presidentPhoto}
+                        alt={
+                          content.presidentName ||
+                          "President, Greater Noida Press Club"
+                        }
+                        className="h-64 w-64 object-cover sm:h-72 sm:w-72 lg:h-80 lg:w-80"
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-slate-100 text-5xl font-black text-slate-400 sm:h-72 sm:w-72 sm:rounded-3xl lg:h-80 lg:w-80">
+                      {content.presidentName
+                        ?.charAt(0)
+                        ?.toUpperCase() ||
+                        "P"}
+                    </div>
+                  )}
+                </div>
 
-            {content.presidentMessage && (
-              <blockquote className="mt-4 break-words text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9">
-                “{content.presidentMessage}”
-              </blockquote>
-            )}
+                {/* MESSAGE */}
 
-            {(content.presidentName ||
-              content.presidentDesignation) && (
-              <div className="mt-6 border-t border-slate-200 pt-5 sm:mt-7 sm:pt-6">
-                {content.presidentName && (
-                  <p className="text-base font-bold text-slate-900 sm:text-lg">
-                    {content.presidentName}
+                <div className="min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 sm:text-sm sm:tracking-[0.2em]">
+                    President's Message
                   </p>
-                )}
 
-                {content.presidentDesignation && (
-                  <p className="mt-1 text-sm text-slate-500 sm:text-base">
-                    {content.presidentDesignation}
-                  </p>
-                )}
+                  {content.presidentMessage && (
+                    <blockquote className="mt-4 break-words text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9">
+                      “{content.presidentMessage}”
+                    </blockquote>
+                  )}
+
+                  {(content.presidentName ||
+                    content.presidentDesignation) && (
+                    <div className="mt-6 border-t border-slate-200 pt-5 sm:mt-7 sm:pt-6">
+                      {content.presidentName && (
+                        <p className="text-base font-bold text-slate-900 sm:text-lg">
+                          {content.presidentName}
+                        </p>
+                      )}
+
+                      {content.presidentDesignation && (
+                        <p className="mt-1 text-sm text-slate-500 sm:text-base">
+                          {content.presidentDesignation}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-)}
+        </section>
+      )}
 
       {/* =====================================================
           WHY CHOOSE US
