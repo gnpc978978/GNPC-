@@ -16,25 +16,20 @@ export type WebsiteSettings = {
   phone?: string;
   address?: string;
 
-  /*
-   * CMS-controlled WhatsApp floating button.
-   *
-   * whatsappNumber:
-   * Stores the WhatsApp number, including country code.
-   *
-   * Example:
-   * 919876543210
-   *
-   * whatsappLabel:
-   * Text displayed beside the WhatsApp icon.
-   *
-   * Example:
-   * Chat on WhatsApp
-   */
   whatsappNumber?: string;
   whatsappLabel?: string;
 
   membershipPdf?: string;
+
+  pageContent?: Record<
+    string,
+    {
+      title?: string;
+      description?: string;
+      eyebrow?: string;
+      image?: string;
+    }
+  >;
 
   socialLinks?: Record<string, string | undefined>;
 
