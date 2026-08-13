@@ -15,20 +15,23 @@ import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
+  const [scrolled, setScrolled] =
+    useState(false);
 
   /*
    * -------------------------------------------------------
    * SCROLL STATE
    * -------------------------------------------------------
-   *
-   * Navbar remains fixed.
-   * On scroll we add subtle elevation and backdrop blur.
    */
+
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 12);
+      setScrolled(
+        window.scrollY > 12
+      );
     };
 
     handleScroll();
@@ -36,7 +39,9 @@ export default function Navbar() {
     window.addEventListener(
       "scroll",
       handleScroll,
-      { passive: true }
+      {
+        passive: true,
+      }
     );
 
     return () => {
@@ -48,8 +53,11 @@ export default function Navbar() {
   }, []);
 
   /*
-   * Prevent body scrolling while mobile navigation is open.
+   * -------------------------------------------------------
+   * MOBILE MENU SCROLL LOCK
+   * -------------------------------------------------------
    */
+
   useEffect(() => {
     if (!menuOpen) {
       document.body.style.overflow = "";
@@ -66,9 +74,10 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
+        aria-label="Primary navigation"
         initial={{
           opacity: 0,
-          y: -12,
+          y: -8,
         }}
         animate={{
           opacity: 1,
@@ -78,12 +87,19 @@ export default function Navbar() {
           duration: 0.35,
           ease: "easeOut",
         }}
-        aria-label="Primary navigation"
         className={[
-          "fixed",
-          "inset-x-0",
-          "top-0",
-          "z-[100]",
+          /*
+           * IMPORTANT:
+           *
+           * Do NOT use fixed here.
+           *
+           * WebsiteLayout controls the fixed header.
+           *
+           * This navbar therefore remains in normal flow
+           * directly underneath TopBar.
+           */
+          "relative",
+          "w-full",
 
           "border-b",
 
@@ -107,31 +123,50 @@ export default function Navbar() {
           <div
             className={[
               "flex",
+
               "h-[72px]",
+
               "items-center",
               "justify-between",
+
               "gap-6",
 
               "sm:h-[76px]",
             ].join(" ")}
           >
-            {/* ---------------------------------------------
+            {/* =================================================
                 LOGO
-               --------------------------------------------- */}
+                ================================================= */}
+
             <div className="min-w-0 shrink-0">
               <Logo />
             </div>
 
-            {/* ---------------------------------------------
+            {/* =================================================
                 DESKTOP NAVIGATION
-               --------------------------------------------- */}
-            <div className="hidden min-[1440px]:flex min-w-0 flex-1 justify-center">
+                ================================================= */}
+
+            <div
+              className={[
+                "hidden",
+
+                "min-w-0",
+                "flex-1",
+
+                "justify-center",
+
+                "min-[1440px]:flex",
+              ].join(" ")}
+            >
               <nav
                 aria-label="Desktop navigation"
                 className="flex items-center gap-6 xl:gap-7"
               >
                 {navigation.map(
-                  (item, index) => (
+                  (
+                    item,
+                    index
+                  ) => (
                     <motion.div
                       key={item.name}
                       initial={{
@@ -145,11 +180,14 @@ export default function Navbar() {
                       transition={{
                         duration: 0.25,
                         delay:
-                          index * 0.035,
+                          index *
+                          0.035,
                       }}
                     >
                       <NavLink
-                        href={item.href}
+                        href={
+                          item.href
+                        }
                       >
                         {item.name}
                       </NavLink>
@@ -159,10 +197,18 @@ export default function Navbar() {
               </nav>
             </div>
 
-            {/* ---------------------------------------------
-                DESKTOP ADMIN LOGIN
-               --------------------------------------------- */}
-            <div className="hidden shrink-0 min-[1440px]:block">
+            {/* =================================================
+                ADMIN LOGIN
+                ================================================= */}
+
+            <div
+              className={[
+                "hidden",
+                "shrink-0",
+
+                "min-[1440px]:block",
+              ].join(" ")}
+            >
               <Link
                 href="/admin/login"
                 className="inline-flex"
@@ -176,21 +222,26 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* ---------------------------------------------
+            {/* =================================================
                 MOBILE MENU BUTTON
-               --------------------------------------------- */}
+                ================================================= */}
+
             <button
               type="button"
               onClick={() =>
                 setMenuOpen(true)
               }
               aria-label="Open navigation menu"
-              aria-expanded={menuOpen}
+              aria-expanded={
+                menuOpen
+              }
               aria-controls="mobile-navigation"
               className={[
                 "flex",
+
                 "h-11",
                 "w-11",
+
                 "items-center",
                 "justify-center",
 
@@ -225,6 +276,10 @@ export default function Navbar() {
           </div>
         </Container>
       </motion.nav>
+
+      {/* ===================================================
+          MOBILE NAVIGATION
+          =================================================== */}
 
       <MobileMenu
         open={menuOpen}
