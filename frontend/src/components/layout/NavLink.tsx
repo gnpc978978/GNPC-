@@ -3,29 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type Props = {
+interface NavLinkProps {
   href: string;
   children: React.ReactNode;
-};
+}
 
 export default function NavLink({
   href,
   children,
-}: Props) {
+}: NavLinkProps) {
   const pathname = usePathname();
 
-  /*
-   * -------------------------------------------------------
-   * ACTIVE ROUTE
-   * -------------------------------------------------------
-   *
-   * Home requires exact matching.
-   *
-   * Other routes also consider nested pages active:
-   *
-   * /events
-   * /events/example-event
-   */
   const active =
     href === "/"
       ? pathname === "/"
@@ -41,20 +29,15 @@ export default function NavLink({
       className={[
         "group",
         "relative",
-
         "inline-flex",
+        "h-[76px]",
         "items-center",
-
-        "py-2",
-
         "whitespace-nowrap",
-
-        "text-sm",
-        "font-bold",
-
+        "text-[14px]",
+        "font-semibold",
+        "tracking-[-0.01em]",
         "transition-colors",
         "duration-200",
-
         "focus-visible:outline-none",
         "focus-visible:ring-2",
         "focus-visible:ring-[#0f4c81]",
@@ -65,7 +48,6 @@ export default function NavLink({
         className={[
           "transition-colors",
           "duration-200",
-
           active
             ? "text-[#0f4c81]"
             : [
@@ -77,25 +59,19 @@ export default function NavLink({
         {children}
       </span>
 
-      {/*
-       * GNPC Navy active indicator.
-       */}
+      {/* Active indicator */}
+
       <span
         aria-hidden="true"
         className={[
           "absolute",
-          "bottom-0",
+          "bottom-[18px]",
           "left-0",
-
-          "h-0.5",
-
+          "h-[2px]",
           "rounded-full",
-
           "bg-[#0f4c81]",
-
           "transition-all",
           "duration-200",
-
           active
             ? "w-full"
             : "w-0 group-hover:w-full",
