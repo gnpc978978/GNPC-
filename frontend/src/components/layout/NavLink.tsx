@@ -14,29 +14,92 @@ export default function NavLink({
 }: Props) {
   const pathname = usePathname();
 
-  const active = pathname === href;
+  /*
+   * -------------------------------------------------------
+   * ACTIVE ROUTE
+   * -------------------------------------------------------
+   *
+   * Home requires exact matching.
+   *
+   * Other routes also consider nested pages active:
+   *
+   * /events
+   * /events/example-event
+   */
+  const active =
+    href === "/"
+      ? pathname === "/"
+      : pathname === href ||
+        pathname.startsWith(`${href}/`);
 
   return (
     <Link
       href={href}
-      className="group relative py-2 text-base font-semibold whitespace-nowrap transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+      aria-current={
+        active ? "page" : undefined
+      }
+      className={[
+        "group",
+        "relative",
+
+        "inline-flex",
+        "items-center",
+
+        "py-2",
+
+        "whitespace-nowrap",
+
+        "text-sm",
+        "font-bold",
+
+        "transition-colors",
+        "duration-200",
+
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-[#0f4c81]",
+        "focus-visible:ring-offset-4",
+      ].join(" ")}
     >
       <span
-        className={`transition-colors duration-300 ${
+        className={[
+          "transition-colors",
+          "duration-200",
+
           active
-            ? "text-blue-700"
-            : "text-slate-700 group-hover:text-blue-700"
-        }`}
+            ? "text-[#0f4c81]"
+            : [
+                "text-slate-700",
+                "group-hover:text-[#0f4c81]",
+              ].join(" "),
+        ].join(" ")}
       >
         {children}
       </span>
 
+      {/*
+       * GNPC Navy active indicator.
+       */}
       <span
-        className={`absolute bottom-0 left-0 h-0.5 rounded-full bg-blue-700 transition-all duration-300 ${
+        aria-hidden="true"
+        className={[
+          "absolute",
+          "bottom-0",
+          "left-0",
+
+          "h-0.5",
+
+          "rounded-full",
+
+          "bg-[#0f4c81]",
+
+          "transition-all",
+          "duration-200",
+
           active
             ? "w-full"
-            : "w-0 group-hover:w-full"
-        }`}
+            : "w-0 group-hover:w-full",
+        ].join(" ")}
       />
     </Link>
   );
