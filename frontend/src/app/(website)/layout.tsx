@@ -21,11 +21,8 @@ export default function WebsiteLayout({
    * -------------------------------------------------------
    * WEBSITE TRAFFIC TRACKING
    * -------------------------------------------------------
-   *
-   * Keeps the existing traffic heartbeat functionality.
-   * It is intentionally kept inside the website layout so
-   * all public pages are tracked consistently.
    */
+
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -73,8 +70,7 @@ export default function WebsiteLayout({
         );
       } catch (error) {
         /*
-         * Traffic analytics must never break the public
-         * website if the analytics API is unavailable.
+         * Analytics must never break the public website.
          */
         console.error(
           "Traffic heartbeat error:",
@@ -99,51 +95,109 @@ export default function WebsiteLayout({
    * -------------------------------------------------------
    * CONTACT PAGE
    * -------------------------------------------------------
-   *
-   * The floating "Get in touch" button appears everywhere
-   * except the Contact page.
    */
+
   const isContactPage =
     pathname === "/contact" ||
     pathname.startsWith("/contact/");
 
   return (
-    <div className="gnpc-public min-h-screen bg-white text-slate-900">
-      {/*
-       * ---------------------------------------------------
-       * GLOBAL PUBLIC HEADER
-       * ---------------------------------------------------
-       *
-       * TopBar is part of the global website header.
-       * Navbar is the primary navigation.
-       */}
-      <header>
-        <TopBar />
-        <Navbar />
+    <div
+      className={[
+        "gnpc-public",
+        "min-h-screen",
+        "bg-white",
+        "text-slate-900",
+      ].join(" ")}
+    >
+      {/* ===================================================
+          GLOBAL WEBSITE HEADER
+          ===================================================
+
+          The TopBar and Navbar are now treated as ONE
+          fixed header system.
+
+          This prevents the Navbar from covering the
+          TopBar and prevents page content from hiding
+          underneath the combined header.
+          =================================================== */}
+
+      <header
+        className={[
+          "fixed",
+          "inset-x-0",
+          "top-0",
+          "z-[100]",
+        ].join(" ")}
+      >
+        {/* -----------------------------------------------
+            TOP BAR
+            ----------------------------------------------- */}
+
+        <div className="relative z-[110]">
+          <TopBar />
+        </div>
+
+        {/* -----------------------------------------------
+            MAIN NAVIGATION
+            ----------------------------------------------- */}
+
+        <div className="relative z-[100]">
+          <Navbar />
+        </div>
       </header>
 
-      {/*
-       * ---------------------------------------------------
-       * MAIN CONTENT
-       * ---------------------------------------------------
-       *
-       * Navbar is fixed, therefore public content gets
-       * enough top spacing from Navbar itself.
-       */}
+      {/* ===================================================
+          HEADER SPACER
+          ===================================================
+
+          The complete header consists of:
+
+          TopBar
+          +
+          Navbar
+
+          Current TopBar:
+          approximately 40px on desktop
+
+          Current Navbar:
+          72px / 76px
+
+          We reserve the combined space here so the Hero
+          and every other public page begins below the
+          complete header.
+
+          The extra responsive spacing accounts for the
+          TopBar wrapping on smaller screens.
+          =================================================== */}
+
+      <div
+        aria-hidden="true"
+        className={[
+          "h-[116px]",
+
+          "sm:h-[116px]",
+
+          "lg:h-[116px]",
+        ].join(" ")}
+      />
+
+      {/* ===================================================
+          MAIN CONTENT
+          =================================================== */}
+
       <main>{children}</main>
 
-      {/*
-       * ---------------------------------------------------
-       * GLOBAL FOOTER
-       * ---------------------------------------------------
-       */}
+      {/* ===================================================
+          GLOBAL FOOTER
+          =================================================== */}
+
       <Footer />
 
-      {/*
-       * ---------------------------------------------------
-       * FLOATING CONTACT ACTION
-       * ---------------------------------------------------
-       */}
+      {/* ===================================================
+          FLOATING CONTACT ACTION
+          =================================================== */}
+
       {!isContactPage && (
         <FloatingContactButton />
       )}
