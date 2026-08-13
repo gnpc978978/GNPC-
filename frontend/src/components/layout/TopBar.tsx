@@ -5,67 +5,53 @@ import { useEffect, useState } from "react";
 import {
   FaFacebookF,
   FaInstagram,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
 
 import { FaXTwitter } from "react-icons/fa6";
 
 import {
-  FaMapMarkerAlt,
-} from "react-icons/fa";
-
-import {
-  HiClock,
   HiCalendarDays,
+  HiClock,
 } from "react-icons/hi2";
 
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
 export default function TopBar() {
-  const { settings } =
-    useWebsiteSettings();
+  const { settings } = useWebsiteSettings();
 
-  const [time, setTime] =
-    useState("");
-
-  const [date, setDate] =
-    useState("");
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
 
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
 
       setTime(
-        now.toLocaleTimeString(
-          "en-IN",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-          }
-        )
+        now.toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
       );
 
       setDate(
-        now.toLocaleDateString(
-          "en-IN",
-          {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          }
-        )
+        now.toLocaleDateString("en-IN", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
       );
     };
 
     updateDateTime();
 
-    const timer =
-      window.setInterval(
-        updateDateTime,
-        1000
-      );
+    const timer = window.setInterval(
+      updateDateTime,
+      1000
+    );
 
     return () => {
       window.clearInterval(timer);
@@ -75,102 +61,105 @@ export default function TopBar() {
   const socialLinks = [
     {
       label: "Facebook",
-      href:
-        settings.socialLinks
-          ?.facebook || "",
+      href: settings.socialLinks?.facebook || "",
       icon: FaFacebookF,
     },
     {
       label: "Instagram",
-      href:
-        settings.socialLinks
-          ?.instagram || "",
+      href: settings.socialLinks?.instagram || "",
       icon: FaInstagram,
     },
     {
       label: "X",
-      href:
-        settings.socialLinks
-          ?.twitter || "",
+      href: settings.socialLinks?.twitter || "",
       icon: FaXTwitter,
     },
-  ].filter(
-    (item) => Boolean(item.href)
-  );
+  ].filter((item) => Boolean(item.href));
 
   return (
-    <div
-      className={[
-        "border-b",
-        "border-white/10",
-
-        "bg-[#0a3a61]",
-
-        "text-white",
-      ].join(" ")}
-    >
+    <div className="w-full bg-[#0f4c81] text-white">
       <div
         className={[
           "mx-auto",
           "flex",
-          "min-h-10",
+          "min-h-[42px]",
           "max-w-7xl",
-
-          "flex-wrap",
           "items-center",
           "justify-between",
-
-          "gap-x-6",
-          "gap-y-1",
-
+          "gap-4",
           "px-4",
-          "py-2",
-
           "sm:px-6",
           "lg:px-8",
         ].join(" ")}
       >
-        {/* ---------------------------------------------
-            LEFT INFORMATION
-           --------------------------------------------- */}
+        {/* =====================================================
+            LEFT SIDE
+            ===================================================== */}
+
         <div
           className={[
             "flex",
-            "flex-wrap",
+            "min-w-0",
             "items-center",
-
-            "gap-x-5",
-            "gap-y-1",
-
-            "text-[11px]",
-            "font-medium",
-
-            "sm:text-xs",
+            "gap-4",
+            "sm:gap-5",
           ].join(" ")}
         >
-          <div className="flex items-center gap-2">
+          {/* Location */}
+
+          <div className="flex shrink-0 items-center gap-2">
             <FaMapMarkerAlt
               size={12}
-              className="text-white/70"
+              className="text-white/75"
               aria-hidden="true"
             />
 
-            <span>
+            <span className="text-[11px] font-medium sm:text-xs">
               Greater Noida
             </span>
           </div>
 
-          <div className="hidden items-center gap-2 sm:flex">
+          {/* Established message */}
+
+          <div
+            className={[
+              "hidden",
+              "items-center",
+              "border-l",
+              "border-white/20",
+              "pl-4",
+              "text-[11px]",
+              "font-medium",
+              "tracking-wide",
+              "text-white/90",
+              "sm:flex",
+              "sm:pl-5",
+            ].join(" ")}
+          >
+            Est. 2003 – 23 Years of Truthful Journalism
+          </div>
+        </div>
+
+        {/* =====================================================
+            RIGHT SIDE
+            ===================================================== */}
+
+        <div className="flex shrink-0 items-center gap-4">
+          {/* Date */}
+
+          <div className="hidden items-center gap-2 lg:flex">
             <HiCalendarDays
               size={14}
               className="text-white/70"
               aria-hidden="true"
             />
 
-            <span>
+            <span className="text-xs font-medium text-white/90">
               {date}
             </span>
           </div>
+
+          {/* Time */}
 
           <div className="hidden items-center gap-2 md:flex">
             <HiClock
@@ -179,62 +168,56 @@ export default function TopBar() {
               aria-hidden="true"
             />
 
-            <span>
+            <span className="text-xs font-medium text-white/90">
               {time}
             </span>
           </div>
+
+          {/* Social links */}
+
+          {socialLinks.length > 0 && (
+            <div className="hidden items-center gap-1 sm:flex">
+              {socialLinks.map(
+                ({
+                  label,
+                  href,
+                  icon: Icon,
+                }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className={[
+                      "flex",
+                      "h-7",
+                      "w-7",
+                      "items-center",
+                      "justify-center",
+                      "rounded-full",
+                      "text-white/75",
+                      "transition-colors",
+                      "duration-200",
+                      "hover:bg-white/10",
+                      "hover:text-white",
+                      "focus-visible:outline-none",
+                      "focus-visible:ring-2",
+                      "focus-visible:ring-white",
+                      "focus-visible:ring-offset-2",
+                      "focus-visible:ring-offset-[#0f4c81]",
+                    ].join(" ")}
+                  >
+                    <Icon
+                      size={12}
+                      aria-hidden="true"
+                    />
+                  </a>
+                )
+              )}
+            </div>
+          )}
         </div>
-
-        {/* ---------------------------------------------
-            SOCIAL LINKS
-           --------------------------------------------- */}
-        {socialLinks.length > 0 && (
-          <div className="hidden items-center gap-2 sm:flex">
-            {socialLinks.map(
-              ({
-                label,
-                href,
-                icon: Icon,
-              }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className={[
-                    "flex",
-                    "h-7",
-                    "w-7",
-                    "items-center",
-                    "justify-center",
-
-                    "rounded-lg",
-
-                    "text-white/70",
-
-                    "transition-colors",
-                    "duration-200",
-
-                    "hover:bg-white/10",
-                    "hover:text-white",
-
-                    "focus-visible:outline-none",
-                    "focus-visible:ring-2",
-                    "focus-visible:ring-white",
-                    "focus-visible:ring-offset-1",
-                    "focus-visible:ring-offset-[#0a3a61]",
-                  ].join(" ")}
-                >
-                  <Icon
-                    size={12}
-                    aria-hidden="true"
-                  />
-                </a>
-              )
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
