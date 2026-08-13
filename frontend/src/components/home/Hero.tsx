@@ -264,150 +264,139 @@ export default function Hero() {
               ].join(" ")}
             >
               {/* Become a member */}
-              <MembershipFormLink
-                className={[
-                  "group",
+<MembershipFormLink
+  className={[
+    "group",
 
-                  "inline-flex",
-                  "items-center",
-                  "justify-center",
-                  "gap-2",
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "gap-2",
 
-                  "rounded-xl",
+    "rounded-xl",
 
-                  "border",
-                  "border-white",
+    "border",
+    "border-white/20",
 
-                  "bg-white",
+    "bg-white/[0.06]",
 
-                  "px-5",
-                  "py-3.5",
+    "px-5",
+    "py-3.5",
 
-                  "text-sm",
-                  "font-extrabold",
+    "text-sm",
+    "font-bold",
 
-                  "text-[#0a3a61]",
+    "text-white",
 
-                  "shadow-xl",
-                  "shadow-black/10",
+    "backdrop-blur-md",
 
-                  "transition-all",
-                  "duration-300",
+    "transition-all",
+    "duration-300",
 
-                  "hover:-translate-y-0.5",
-                  "hover:bg-slate-50",
-                  "hover:shadow-2xl",
+    "hover:-translate-y-0.5",
+    "hover:border-white/35",
+    "hover:bg-white/10",
 
-                  "focus-visible:outline-none",
-                  "focus-visible:ring-2",
-                  "focus-visible:ring-white",
-                  "focus-visible:ring-offset-2",
-                  "focus-visible:ring-offset-[#0a3a61]",
+    "focus-visible:outline-none",
+    "focus-visible:ring-2",
+    "focus-visible:ring-white",
+    "focus-visible:ring-offset-2",
+    "focus-visible:ring-offset-[#0a3a61]",
 
-                  "sm:px-6",
-                  "sm:text-base",
-                ].join(" ")}
-                unavailableClassName={[
-                  "inline-flex",
-                  "cursor-not-allowed",
-                  "items-center",
-                  "justify-center",
+    "sm:px-6",
+    "sm:text-base",
+  ].join(" ")}
+  unavailableClassName={[
+    "group",
 
-                  "rounded-xl",
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "gap-2",
 
-                  "border",
-                  "border-white/20",
+    "rounded-xl",
 
-                  "bg-white/50",
+    "border",
+    "border-white/20",
 
-                  "px-5",
-                  "py-3.5",
+    "bg-white/[0.06]",
 
-                  "text-sm",
-                  "font-extrabold",
+    "px-5",
+    "py-3.5",
 
-                  "text-[#0a3a61]",
+    "text-sm",
+    "font-bold",
 
-                  "opacity-60",
+    "text-white",
 
-                  "sm:px-6",
-                  "sm:text-base",
-                ].join(" ")}
-              >
-                Become A Member
+    "backdrop-blur-md",
 
-                <ArrowRight
-                  size={18}
-                  className={[
-                    "transition-transform",
-                    "duration-300",
+    "opacity-60",
 
-                    "group-hover:translate-x-1",
-                  ].join(" ")}
-                  aria-hidden="true"
-                />
-              </MembershipFormLink>
+    "cursor-not-allowed",
 
-              {/* Latest updates */}
-              <Link
-                href="/latest-updates"
-                className={[
-                  "group",
+    "sm:px-6",
+    "sm:text-base",
+  ].join(" ")}
+>
+  Become A Member
 
-                  "inline-flex",
-                  "items-center",
-                  "justify-center",
-                  "gap-2",
+  <ArrowRight
+    size={18}
+    className={[
+      "transition-transform",
+      "duration-300",
+      "group-hover:translate-x-1",
+    ].join(" ")}
+    aria-hidden="true"
+  />
+</MembershipFormLink>
 
-                  "rounded-xl",
+{/* Latest updates */}
+<Link
+  href="/latest-updates"
+  className={[
+    "group",
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "gap-2",
+    "rounded-xl",
+    "border",
+    "border-white/20",
+    "bg-white/[0.06]",
+    "px-5",
+    "py-3.5",
+    "text-sm",
+    "font-bold",
+    "text-white",
+    "backdrop-blur-md",
+    "transition-all",
+    "duration-300",
+    "hover:-translate-y-0.5",
+    "hover:border-white/35",
+    "hover:bg-white/10",
+    "focus-visible:outline-none",
+    "focus-visible:ring-2",
+    "focus-visible:ring-white",
+    "focus-visible:ring-offset-2",
+    "focus-visible:ring-offset-[#0a3a61]",
+    "sm:px-6",
+    "sm:text-base",
+  ].join(" ")}
+>
+  Latest Updates
 
-                  "border",
-                  "border-white/20",
-
-                  "bg-white/[0.06]",
-
-                  "px-5",
-                  "py-3.5",
-
-                  "text-sm",
-                  "font-bold",
-
-                  "text-white",
-
-                  "backdrop-blur-md",
-
-                  "transition-all",
-                  "duration-300",
-
-                  "hover:-translate-y-0.5",
-                  "hover:border-white/35",
-                  "hover:bg-white/10",
-
-                  "focus-visible:outline-none",
-                  "focus-visible:ring-2",
-                  "focus-visible:ring-white",
-                  "focus-visible:ring-offset-2",
-                  "focus-visible:ring-offset-[#0a3a61]",
-
-                  "sm:px-6",
-                  "sm:text-base",
-                ].join(" ")}
-              >
-                Latest Updates
-
-                <ArrowRight
-                  size={18}
-                  className={[
-                    "transition-transform",
-                    "duration-300",
-
-                    "group-hover:translate-x-1",
-                  ].join(" ")}
-                  aria-hidden="true"
-                />
-              </Link>
-            </div>
-
+  <ArrowRight
+    size={18}
+    className={[
+      "transition-transform",
+      "duration-300",
+      "group-hover:translate-x-1",
+    ].join(" ")}
+    aria-hidden="true"
+  />
+</Link>
             {/* =================================================
                 QUICK LINKS
                 ================================================= */}
