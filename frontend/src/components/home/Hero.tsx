@@ -245,129 +245,218 @@ export default function Hero() {
               {heroDescription}
             </p>
 
-            {/* =================================================
-                PRIMARY ACTIONS
-                ================================================= */}
+           {/* =================================================
+    PRIMARY ACTIONS
+    ================================================= */}
 
-            <div
-              className={[
-                "mt-8",
+<div
+  className={[
+    "mt-8",
+    "flex",
+    "flex-col",
+    "gap-3",
+    "sm:mt-10",
+    "sm:flex-row",
+    "sm:flex-wrap",
+    "sm:gap-4",
+  ].join(" ")}
+>
+  {/* Hero CTA buttons */}
+  <div className="flex flex-wrap items-center gap-3">
+    {/* Become a member */}
+    <MembershipFormLink
+      className={[
+        "group",
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "gap-2",
+        "rounded-xl",
+        "border",
+        "border-white/20",
+        "bg-white/[0.06]",
+        "px-5",
+        "py-3.5",
+        "text-sm",
+        "font-bold",
+        "text-white",
+        "backdrop-blur-md",
+        "transition-all",
+        "duration-300",
+        "hover:-translate-y-0.5",
+        "hover:border-white/35",
+        "hover:bg-white/10",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white",
+        "focus-visible:ring-offset-2",
+        "focus-visible:ring-offset-[#0a3a61]",
+        "sm:px-6",
+        "sm:text-base",
+      ].join(" ")}
+      unavailableClassName={[
+        "group",
+        "inline-flex",
+        "cursor-not-allowed",
+        "items-center",
+        "justify-center",
+        "gap-2",
+        "rounded-xl",
+        "border",
+        "border-white/20",
+        "bg-white/[0.06]",
+        "px-5",
+        "py-3.5",
+        "text-sm",
+        "font-bold",
+        "text-white",
+        "backdrop-blur-md",
+        "opacity-60",
+        "sm:px-6",
+        "sm:text-base",
+      ].join(" ")}
+    >
+      Become A Member
 
-                "flex",
-                "flex-col",
-                "gap-3",
+      <ArrowRight
+        size={18}
+        className="transition-transform duration-300 group-hover:translate-x-1"
+        aria-hidden="true"
+      />
+    </MembershipFormLink>
 
-                "sm:mt-10",
-                "sm:flex-row",
-                "sm:flex-wrap",
-                "sm:gap-4",
-              ].join(" ")}
-            >
-            {/* Hero CTA buttons */}
-<div className="flex flex-wrap items-center gap-3">
-  {/* Become a member */}
-  <MembershipFormLink
+    {/* Latest updates */}
+    <Link
+      href="/latest-updates"
+      className={[
+        "group",
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "gap-2",
+        "rounded-xl",
+        "border",
+        "border-white/20",
+        "bg-white/[0.06]",
+        "px-5",
+        "py-3.5",
+        "text-sm",
+        "font-bold",
+        "text-white",
+        "backdrop-blur-md",
+        "transition-all",
+        "duration-300",
+        "hover:-translate-y-0.5",
+        "hover:border-white/35",
+        "hover:bg-white/10",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white",
+        "focus-visible:ring-offset-2",
+        "focus-visible:ring-offset-[#0a3a61]",
+        "sm:px-6",
+        "sm:text-base",
+      ].join(" ")}
+    >
+      Latest Updates
+
+      <ArrowRight
+        size={18}
+        className="transition-transform duration-300 group-hover:translate-x-1"
+        aria-hidden="true"
+      />
+    </Link>
+  </div>
+
+  {/* =================================================
+      QUICK LINKS
+      ================================================= */}
+
+  <div
     className={[
-      "group",
-      "inline-flex",
-      "items-center",
-      "justify-center",
-      "gap-2",
-      "rounded-xl",
-      "border",
-      "border-white/20",
-      "bg-white/[0.06]",
-      "px-5",
-      "py-3.5",
-      "text-sm",
-      "font-bold",
-      "text-white",
-      "backdrop-blur-md",
-      "transition-all",
-      "duration-300",
-      "hover:-translate-y-0.5",
-      "hover:border-white/35",
-      "hover:bg-white/10",
-      "focus-visible:outline-none",
-      "focus-visible:ring-2",
-      "focus-visible:ring-white",
-      "focus-visible:ring-offset-2",
-      "focus-visible:ring-offset-[#0a3a61]",
-      "sm:px-6",
-      "sm:text-base",
-    ].join(" ")}
-    unavailableClassName={[
-      "group",
-      "inline-flex",
-      "cursor-not-allowed",
-      "items-center",
-      "justify-center",
-      "gap-2",
-      "rounded-xl",
-      "border",
-      "border-white/20",
-      "bg-white/[0.06]",
-      "px-5",
-      "py-3.5",
-      "text-sm",
-      "font-bold",
-      "text-white",
-      "backdrop-blur-md",
-      "opacity-60",
-      "sm:px-6",
-      "sm:text-base",
+      "mt-8",
+      "flex",
+      "flex-wrap",
+      "gap-x-6",
+      "gap-y-3",
+      "border-t",
+      "border-white/10",
+      "pt-6",
+      "sm:mt-10",
     ].join(" ")}
   >
-    Become A Member
+    <Link
+      href="/press-releases"
+      className={[
+        "group",
+        "inline-flex",
+        "items-center",
+        "gap-2",
+        "text-sm",
+        "font-semibold",
+        "text-white/65",
+        "transition-colors",
+        "duration-200",
+        "hover:text-white",
+      ].join(" ")}
+    >
+      <Newspaper
+        size={16}
+        className="text-white/60"
+        aria-hidden="true"
+      />
 
-    <ArrowRight
-      size={18}
-      className="transition-transform duration-300 group-hover:translate-x-1"
-      aria-hidden="true"
-    />
-  </MembershipFormLink>
+      <span>Press Releases</span>
 
-  {/* Latest updates */}
-  <Link
-    href="/latest-updates"
-    className={[
-      "group",
-      "inline-flex",
-      "items-center",
-      "justify-center",
-      "gap-2",
-      "rounded-xl",
-      "border",
-      "border-white/20",
-      "bg-white/[0.06]",
-      "px-5",
-      "py-3.5",
-      "text-sm",
-      "font-bold",
-      "text-white",
-      "backdrop-blur-md",
-      "transition-all",
-      "duration-300",
-      "hover:-translate-y-0.5",
-      "hover:border-white/35",
-      "hover:bg-white/10",
-      "focus-visible:outline-none",
-      "focus-visible:ring-2",
-      "focus-visible:ring-white",
-      "focus-visible:ring-offset-2",
-      "focus-visible:ring-offset-[#0a3a61]",
-      "sm:px-6",
-      "sm:text-base",
-    ].join(" ")}
-  >
-    Latest Updates
+      <ArrowRight
+        size={14}
+        className={[
+          "opacity-0",
+          "transition-all",
+          "duration-200",
+          "group-hover:translate-x-1",
+          "group-hover:opacity-100",
+        ].join(" ")}
+        aria-hidden="true"
+      />
+    </Link>
 
-    <ArrowRight
-      size={18}
-      className="transition-transform duration-300 group-hover:translate-x-1"
-      aria-hidden="true"
-    />
-  </Link>
+    <Link
+      href="/events"
+      className={[
+        "group",
+        "inline-flex",
+        "items-center",
+        "gap-2",
+        "text-sm",
+        "font-semibold",
+        "text-white/65",
+        "transition-colors",
+        "duration-200",
+        "hover:text-white",
+      ].join(" ")}
+    >
+      <CalendarDays
+        size={16}
+        className="text-white/60"
+        aria-hidden="true"
+      />
+
+      <span>Events</span>
+
+      <ArrowRight
+        size={14}
+        className={[
+          "opacity-0",
+          "transition-all",
+          "duration-200",
+          "group-hover:translate-x-1",
+          "group-hover:opacity-100",
+        ].join(" ")}
+        aria-hidden="true"
+      />
+    </Link>
+  </div>
 </div>
             {/* =================================================
                 QUICK LINKS
