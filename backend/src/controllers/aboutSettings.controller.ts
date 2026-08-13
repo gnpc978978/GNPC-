@@ -2,25 +2,21 @@ import { Request, Response } from "express";
 import AboutSettings from "../models/AboutSettings";
 
 /**
- * Get About page CMS content.
+ * GET /api/settings/about
  *
- * Used by both:
- * - Public About page
- * - Admin CMS
+ * Public + CMS endpoint.
  */
 export const getAboutSettings = async (
   _req: Request,
   res: Response
 ) => {
   try {
-    let settings = await AboutSettings.findOne();
+    let settings =
+      await AboutSettings.findOne();
 
-    /*
-     * Create the document automatically if this is
-     * the first time the About page is accessed.
-     */
     if (!settings) {
-      settings = await AboutSettings.create({});
+      settings =
+        await AboutSettings.create({});
     }
 
     return res.status(200).json({
@@ -35,17 +31,16 @@ export const getAboutSettings = async (
 
     return res.status(500).json({
       success: false,
-      message: "Unable to fetch About page content.",
+      message:
+        "Unable to fetch About page content.",
     });
   }
 };
 
 /**
- * Update About page CMS content.
+ * PUT /api/settings/about
  *
- * Only known About fields are accepted.
- * This prevents arbitrary request properties from
- * being written to MongoDB.
+ * Update About page text/content.
  */
 export const updateAboutSettings = async (
   req: Request,
@@ -96,53 +91,54 @@ export const updateAboutSettings = async (
       ctaSecondaryLabel,
     } = req.body;
 
-    let settings = await AboutSettings.findOne();
+    let settings =
+      await AboutSettings.findOne();
 
     if (!settings) {
-      settings = new AboutSettings();
+      settings =
+        new AboutSettings();
     }
 
     /*
-     * Hero
+     * HERO
      */
     if (heroEyebrow !== undefined) {
-      settings.heroEyebrow = String(
-        heroEyebrow
-      ).trim();
+      settings.heroEyebrow =
+        String(heroEyebrow).trim();
     }
 
     if (heroTitle !== undefined) {
-      settings.heroTitle = String(
-        heroTitle
-      ).trim();
+      settings.heroTitle =
+        String(heroTitle).trim();
     }
 
     if (heroDescription !== undefined) {
-      settings.heroDescription = String(
-        heroDescription
-      ).trim();
+      settings.heroDescription =
+        String(heroDescription).trim();
     }
 
     /*
-     * Introduction
+     * INTRODUCTION
      */
     if (image !== undefined) {
-      settings.image = String(image).trim();
+      settings.image =
+        String(image).trim();
     }
 
     if (heading !== undefined) {
-      settings.heading = String(
-        heading
-      ).trim();
+      settings.heading =
+        String(heading).trim();
     }
 
     if (description !== undefined) {
-      settings.description = String(
-        description
-      ).trim();
+      settings.description =
+        String(description).trim();
     }
 
-    if (secondaryDescription !== undefined) {
+    if (
+      secondaryDescription !==
+      undefined
+    ) {
       settings.secondaryDescription =
         String(
           secondaryDescription
@@ -150,72 +146,125 @@ export const updateAboutSettings = async (
     }
 
     /*
-     * Commitment
+     * COMMITMENT
      */
     if (commitmentTitle !== undefined) {
       settings.commitmentTitle =
-        String(commitmentTitle).trim();
+        String(
+          commitmentTitle
+        ).trim();
     }
 
-    if (commitmentDescription !== undefined) {
+    if (
+      commitmentDescription !==
+      undefined
+    ) {
       settings.commitmentDescription =
-        String(commitmentDescription).trim();
+        String(
+          commitmentDescription
+        ).trim();
     }
 
     /*
-     * Mission / Vision
+     * FOUNDATION
      */
-    if (foundationEyebrow !== undefined) {
+    if (
+      foundationEyebrow !== undefined
+    ) {
       settings.foundationEyebrow =
-        String(foundationEyebrow).trim();
+        String(
+          foundationEyebrow
+        ).trim();
     }
 
-    if (foundationTitle !== undefined) {
+    if (
+      foundationTitle !== undefined
+    ) {
       settings.foundationTitle =
-        String(foundationTitle).trim();
+        String(
+          foundationTitle
+        ).trim();
     }
 
-    if (foundationDescription !== undefined) {
+    if (
+      foundationDescription !==
+      undefined
+    ) {
       settings.foundationDescription =
-        String(foundationDescription).trim();
+        String(
+          foundationDescription
+        ).trim();
     }
 
+    /*
+     * MISSION
+     */
     if (missionTitle !== undefined) {
       settings.missionTitle =
-        String(missionTitle).trim();
+        String(
+          missionTitle
+        ).trim();
     }
 
-    if (missionDescription !== undefined) {
+    if (
+      missionDescription !==
+      undefined
+    ) {
       settings.missionDescription =
-        String(missionDescription).trim();
-    }
-
-    if (visionTitle !== undefined) {
-      settings.visionTitle =
-        String(visionTitle).trim();
-    }
-
-    if (visionDescription !== undefined) {
-      settings.visionDescription =
-        String(visionDescription).trim();
+        String(
+          missionDescription
+        ).trim();
     }
 
     /*
-     * Objectives
+     * VISION
      */
-    if (objectivesEyebrow !== undefined) {
+    if (visionTitle !== undefined) {
+      settings.visionTitle =
+        String(
+          visionTitle
+        ).trim();
+    }
+
+    if (
+      visionDescription !==
+      undefined
+    ) {
+      settings.visionDescription =
+        String(
+          visionDescription
+        ).trim();
+    }
+
+    /*
+     * OBJECTIVES
+     */
+    if (
+      objectivesEyebrow !== undefined
+    ) {
       settings.objectivesEyebrow =
-        String(objectivesEyebrow).trim();
+        String(
+          objectivesEyebrow
+        ).trim();
     }
 
-    if (objectivesTitle !== undefined) {
+    if (
+      objectivesTitle !== undefined
+    ) {
       settings.objectivesTitle =
-        String(objectivesTitle).trim();
+        String(
+          objectivesTitle
+        ).trim();
     }
 
-    if (objectivesDescription !== undefined) {
+    if (
+      objectivesDescription !==
+      undefined
+    ) {
       settings.objectivesDescription =
-        String(objectivesDescription).trim();
+        String(
+          objectivesDescription
+        ).trim();
     }
 
     if (objectives !== undefined) {
@@ -227,33 +276,37 @@ export const updateAboutSettings = async (
         });
       }
 
-      settings.objectives = objectives.map(
-        (item) => ({
-          title: String(
-            item?.title || ""
-          ).trim(),
+      settings.objectives =
+        objectives.map(
+          (item) => ({
+            title: String(
+              item?.title || ""
+            ).trim(),
 
-          description: String(
-            item?.description || ""
-          ).trim(),
+            description: String(
+              item?.description || ""
+            ).trim(),
 
-          icon: String(
-            item?.icon || ""
-          ).trim(),
-        })
-      );
+            icon: String(
+              item?.icon || ""
+            ).trim(),
+          })
+        );
     }
 
     /*
-     * President message
+     * PRESIDENT
      */
     if (presidentName !== undefined) {
       settings.presidentName =
-        String(presidentName).trim();
+        String(
+          presidentName
+        ).trim();
     }
 
     if (
-      presidentDesignation !== undefined
+      presidentDesignation !==
+      undefined
     ) {
       settings.presidentDesignation =
         String(
@@ -261,14 +314,19 @@ export const updateAboutSettings = async (
         ).trim();
     }
 
-    if (presidentMessage !== undefined) {
+    if (
+      presidentMessage !==
+      undefined
+    ) {
       settings.presidentMessage =
         String(
           presidentMessage
         ).trim();
     }
 
-    if (presidentPhoto !== undefined) {
+    if (
+      presidentPhoto !== undefined
+    ) {
       settings.presidentPhoto =
         String(
           presidentPhoto
@@ -276,16 +334,22 @@ export const updateAboutSettings = async (
     }
 
     /*
-     * Why Choose Us
+     * WHY CHOOSE US
      */
-    if (whyChooseUsEyebrow !== undefined) {
+    if (
+      whyChooseUsEyebrow !==
+      undefined
+    ) {
       settings.whyChooseUsEyebrow =
         String(
           whyChooseUsEyebrow
         ).trim();
     }
 
-    if (whyChooseUsTitle !== undefined) {
+    if (
+      whyChooseUsTitle !==
+      undefined
+    ) {
       settings.whyChooseUsTitle =
         String(
           whyChooseUsTitle
@@ -293,7 +357,8 @@ export const updateAboutSettings = async (
     }
 
     if (
-      whyChooseUsDescription !== undefined
+      whyChooseUsDescription !==
+      undefined
     ) {
       settings.whyChooseUsDescription =
         String(
@@ -310,21 +375,22 @@ export const updateAboutSettings = async (
         });
       }
 
-      settings.reasons = reasons.map(
-        (item) => ({
-          title: String(
-            item?.title || ""
-          ).trim(),
+      settings.reasons =
+        reasons.map(
+          (item) => ({
+            title: String(
+              item?.title || ""
+            ).trim(),
 
-          description: String(
-            item?.description || ""
-          ).trim(),
+            description: String(
+              item?.description || ""
+            ).trim(),
 
-          icon: String(
-            item?.icon || ""
-          ).trim(),
-        })
-      );
+            icon: String(
+              item?.icon || ""
+            ).trim(),
+          })
+        );
     }
 
     /*
@@ -332,24 +398,35 @@ export const updateAboutSettings = async (
      */
     if (ctaTitle !== undefined) {
       settings.ctaTitle =
-        String(ctaTitle).trim();
+        String(
+          ctaTitle
+        ).trim();
     }
 
-    if (ctaDescription !== undefined) {
+    if (
+      ctaDescription !==
+      undefined
+    ) {
       settings.ctaDescription =
         String(
           ctaDescription
         ).trim();
     }
 
-    if (ctaPrimaryLabel !== undefined) {
+    if (
+      ctaPrimaryLabel !==
+      undefined
+    ) {
       settings.ctaPrimaryLabel =
         String(
           ctaPrimaryLabel
         ).trim();
     }
 
-    if (ctaSecondaryLabel !== undefined) {
+    if (
+      ctaSecondaryLabel !==
+      undefined
+    ) {
       settings.ctaSecondaryLabel =
         String(
           ctaSecondaryLabel
@@ -377,3 +454,98 @@ export const updateAboutSettings = async (
     });
   }
 };
+
+/**
+ * POST /api/settings/about/upload
+ *
+ * Upload About page images.
+ *
+ * Supported multipart fields:
+ * - image
+ * - presidentPhoto
+ */
+export const uploadAboutSettingsFiles =
+  async (
+    req: Request,
+    res: Response
+  ) => {
+    try {
+      const files =
+        req.files as
+          | {
+              [fieldname: string]:
+                | Express.Multer.File[]
+                | undefined;
+            }
+          | undefined;
+
+      const image =
+        files?.image?.[0];
+
+      const presidentPhoto =
+        files?.presidentPhoto?.[0];
+
+      if (
+        !image &&
+        !presidentPhoto
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "No About image was uploaded.",
+        });
+      }
+
+      let settings =
+        await AboutSettings.findOne();
+
+      if (!settings) {
+        settings =
+          new AboutSettings();
+      }
+
+      if (image) {
+        settings.image =
+          image.path ||
+          image.secure_url ||
+          image.url ||
+          "";
+      }
+
+      if (presidentPhoto) {
+        settings.presidentPhoto =
+          presidentPhoto.path ||
+          presidentPhoto.secure_url ||
+          presidentPhoto.url ||
+          "";
+      }
+
+      await settings.save();
+
+      return res.status(200).json({
+        success: true,
+        message:
+          "About image uploaded successfully.",
+        data: settings,
+        url:
+          image?.path ||
+          image?.secure_url ||
+          image?.url ||
+          presidentPhoto?.path ||
+          presidentPhoto?.secure_url ||
+          presidentPhoto?.url ||
+          "",
+      });
+    } catch (error) {
+      console.error(
+        "Failed to upload About settings:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Unable to upload About page image.",
+      });
+    }
+  };
