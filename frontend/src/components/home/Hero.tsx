@@ -17,7 +17,7 @@ export default function Hero() {
   const { settings } = useWebsiteSettings();
 
   const siteName =
-    settings.siteName || "Greater Noida Press Club's Official Website";
+    settings.siteName;
 
   const heroTitle =
     settings.heroTitle;
