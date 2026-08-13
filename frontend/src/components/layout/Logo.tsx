@@ -5,7 +5,13 @@ import Link from "next/link";
 
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
-export default function Logo() {
+type LogoProps = {
+  variant?: "light" | "dark";
+};
+
+export default function Logo({
+  variant = "dark",
+}: LogoProps) {
   const { settings } =
     useWebsiteSettings();
 
@@ -16,6 +22,9 @@ export default function Logo() {
   const logo =
     settings.logo ||
     "/Logo.png";
+
+  const isDark =
+    variant === "dark";
 
   return (
     <Link
@@ -35,20 +44,22 @@ export default function Logo() {
         "focus-visible:ring-offset-4",
       ].join(" ")}
     >
-      {/* Logo image */}
       <span
         className={[
           "flex",
           "h-11",
           "w-11",
           "shrink-0",
+
           "items-center",
           "justify-center",
 
           "overflow-hidden",
           "rounded-xl",
 
-          "bg-white",
+          isDark
+            ? "bg-white"
+            : "bg-white/10",
         ].join(" ")}
       >
         <Image
@@ -57,26 +68,15 @@ export default function Logo() {
           width={44}
           height={44}
           priority
-          className={[
-            "h-11",
-            "w-11",
-            "object-contain",
-
-            "transition-transform",
-            "duration-200",
-
-            "group-hover:scale-[1.03]",
-          ].join(" ")}
+          className="h-11 w-11 object-contain"
         />
       </span>
 
-      {/* Website name */}
       <span className="hidden min-w-0 sm:block">
         <span
           className={[
             "block",
             "max-w-[220px]",
-
             "truncate",
 
             "text-[15px]",
@@ -85,18 +85,32 @@ export default function Logo() {
 
             "tracking-[-0.01em]",
 
-            "text-slate-900",
+            isDark
+              ? "text-slate-900 group-hover:text-[#0f4c81]"
+              : "text-white",
 
             "transition-colors",
             "duration-200",
-
-            "group-hover:text-[#0f4c81]",
           ].join(" ")}
         >
           {siteName}
         </span>
 
-        <span className="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.13em] text-slate-400">
+        <span
+          className={[
+            "mt-0.5",
+            "block",
+
+            "text-[10px]",
+            "font-semibold",
+            "uppercase",
+            "tracking-[0.13em]",
+
+            isDark
+              ? "text-slate-400"
+              : "text-white/55",
+          ].join(" ")}
+        >
           Greater Noida
         </span>
       </span>
