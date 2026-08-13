@@ -263,140 +263,112 @@ export default function Hero() {
                 "sm:gap-4",
               ].join(" ")}
             >
-              {/* Become a member */}
-<MembershipFormLink
-  className={[
-    "group",
-
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "gap-2",
-
-    "rounded-xl",
-
-    "border",
-    "border-white/20",
-
-    "bg-white/[0.06]",
-
-    "px-5",
-    "py-3.5",
-
-    "text-sm",
-    "font-bold",
-
-    "text-white",
-
-    "backdrop-blur-md",
-
-    "transition-all",
-    "duration-300",
-
-    "hover:-translate-y-0.5",
-    "hover:border-white/35",
-    "hover:bg-white/10",
-
-    "focus-visible:outline-none",
-    "focus-visible:ring-2",
-    "focus-visible:ring-white",
-    "focus-visible:ring-offset-2",
-    "focus-visible:ring-offset-[#0a3a61]",
-
-    "sm:px-6",
-    "sm:text-base",
-  ].join(" ")}
-  unavailableClassName={[
-    "group",
-
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "gap-2",
-
-    "rounded-xl",
-
-    "border",
-    "border-white/20",
-
-    "bg-white/[0.06]",
-
-    "px-5",
-    "py-3.5",
-
-    "text-sm",
-    "font-bold",
-
-    "text-white",
-
-    "backdrop-blur-md",
-
-    "opacity-60",
-
-    "cursor-not-allowed",
-
-    "sm:px-6",
-    "sm:text-base",
-  ].join(" ")}
->
-  Become A Member
-
-  <ArrowRight
-    size={18}
+            {/* Hero CTA buttons */}
+<div className="flex flex-wrap items-center gap-3">
+  {/* Become a member */}
+  <MembershipFormLink
     className={[
-      "transition-transform",
+      "group",
+      "inline-flex",
+      "items-center",
+      "justify-center",
+      "gap-2",
+      "rounded-xl",
+      "border",
+      "border-white/20",
+      "bg-white/[0.06]",
+      "px-5",
+      "py-3.5",
+      "text-sm",
+      "font-bold",
+      "text-white",
+      "backdrop-blur-md",
+      "transition-all",
       "duration-300",
-      "group-hover:translate-x-1",
+      "hover:-translate-y-0.5",
+      "hover:border-white/35",
+      "hover:bg-white/10",
+      "focus-visible:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-white",
+      "focus-visible:ring-offset-2",
+      "focus-visible:ring-offset-[#0a3a61]",
+      "sm:px-6",
+      "sm:text-base",
     ].join(" ")}
-    aria-hidden="true"
-  />
-</MembershipFormLink>
+    unavailableClassName={[
+      "group",
+      "inline-flex",
+      "cursor-not-allowed",
+      "items-center",
+      "justify-center",
+      "gap-2",
+      "rounded-xl",
+      "border",
+      "border-white/20",
+      "bg-white/[0.06]",
+      "px-5",
+      "py-3.5",
+      "text-sm",
+      "font-bold",
+      "text-white",
+      "backdrop-blur-md",
+      "opacity-60",
+      "sm:px-6",
+      "sm:text-base",
+    ].join(" ")}
+  >
+    Become A Member
 
-{/* Latest updates */}
-<Link
-  href="/latest-updates"
-  className={[
-    "group",
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "gap-2",
-    "rounded-xl",
-    "border",
-    "border-white/20",
-    "bg-white/[0.06]",
-    "px-5",
-    "py-3.5",
-    "text-sm",
-    "font-bold",
-    "text-white",
-    "backdrop-blur-md",
-    "transition-all",
-    "duration-300",
-    "hover:-translate-y-0.5",
-    "hover:border-white/35",
-    "hover:bg-white/10",
-    "focus-visible:outline-none",
-    "focus-visible:ring-2",
-    "focus-visible:ring-white",
-    "focus-visible:ring-offset-2",
-    "focus-visible:ring-offset-[#0a3a61]",
-    "sm:px-6",
-    "sm:text-base",
-  ].join(" ")}
->
-  Latest Updates
+    <ArrowRight
+      size={18}
+      className="transition-transform duration-300 group-hover:translate-x-1"
+      aria-hidden="true"
+    />
+  </MembershipFormLink>
 
-  <ArrowRight
-    size={18}
+  {/* Latest updates */}
+  <Link
+    href="/latest-updates"
     className={[
-      "transition-transform",
+      "group",
+      "inline-flex",
+      "items-center",
+      "justify-center",
+      "gap-2",
+      "rounded-xl",
+      "border",
+      "border-white/20",
+      "bg-white/[0.06]",
+      "px-5",
+      "py-3.5",
+      "text-sm",
+      "font-bold",
+      "text-white",
+      "backdrop-blur-md",
+      "transition-all",
       "duration-300",
-      "group-hover:translate-x-1",
+      "hover:-translate-y-0.5",
+      "hover:border-white/35",
+      "hover:bg-white/10",
+      "focus-visible:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-white",
+      "focus-visible:ring-offset-2",
+      "focus-visible:ring-offset-[#0a3a61]",
+      "sm:px-6",
+      "sm:text-base",
     ].join(" ")}
-    aria-hidden="true"
-  />
-</Link>
+  >
+    Latest Updates
+
+    <ArrowRight
+      size={18}
+      className="transition-transform duration-300 group-hover:translate-x-1"
+      aria-hidden="true"
+    />
+  </Link>
+</div>
             {/* =================================================
                 QUICK LINKS
                 ================================================= */}
