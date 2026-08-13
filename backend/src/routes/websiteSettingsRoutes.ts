@@ -9,7 +9,6 @@ import {
 import {
   getAboutSettings,
   updateAboutSettings,
-  uploadAboutSettingsFiles,
 } from "../controllers/aboutSettings.controller";
 
 import {
@@ -28,12 +27,12 @@ const router = express.Router();
 
 /*
  * =========================================================
- * ABOUT
+ * ABOUT SETTINGS
  * =========================================================
  */
 
 /*
- * GET /api/settings/about
+ * Get About page content.
  */
 router.get(
   "/about",
@@ -41,23 +40,14 @@ router.get(
 );
 
 /*
- * PUT /api/settings/about
+ * Update About page content + optional media.
+ *
+ * IMPORTANT:
+ * Multer must run BEFORE updateAboutSettings
+ * so req.body and req.files are both available.
  */
 router.put(
   "/about",
-  authMiddleware,
-  requireRole(
-    "ADMIN",
-    "SUPER_ADMIN"
-  ),
-  updateAboutSettings
-);
-
-/*
- * POST /api/settings/about/upload
- */
-router.post(
-  "/about/upload",
   authMiddleware,
   requireRole(
     "ADMIN",
@@ -73,17 +63,17 @@ router.post(
       maxCount: 1,
     },
   ]),
-  uploadAboutSettingsFiles
+  updateAboutSettings
 );
 
 /*
  * =========================================================
- * GENERAL WEBSITE SETTINGS
+ * WEBSITE SETTINGS
  * =========================================================
  */
 
 /*
- * GET /api/settings
+ * Get website settings.
  */
 router.get(
   "/",
@@ -91,7 +81,7 @@ router.get(
 );
 
 /*
- * GET /api/settings/membership-form
+ * Membership form.
  */
 router.get(
   "/membership-form",
@@ -99,7 +89,7 @@ router.get(
 );
 
 /*
- * PUT /api/settings
+ * Update website settings.
  */
 router.put(
   "/",
@@ -112,7 +102,7 @@ router.put(
 );
 
 /*
- * PUT /api/settings/upload
+ * Upload website setting files.
  */
 router.put(
   "/upload",
