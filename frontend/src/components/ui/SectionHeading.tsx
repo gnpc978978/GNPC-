@@ -1,12 +1,39 @@
 import type { ReactNode } from "react";
 
 type SectionHeadingProps = {
+  /*
+   * Small uppercase label above the main heading.
+   */
   badge?: string;
+
+  /*
+   * Main section heading.
+   */
   title: string;
+
+  /*
+   * Supporting copy.
+   */
   description?: string;
-  align?: "center" | "left";
+
+  /*
+   * Standard alignment.
+   */
+  align?: "left" | "center";
+
+  /*
+   * Standard heading sizes.
+   */
   size?: "sm" | "md" | "lg";
+
+  /*
+   * Optional action:
+   *
+   * Example:
+   * <Button>View All</Button>
+   */
   action?: ReactNode;
+
   className?: string;
 };
 
@@ -19,80 +46,126 @@ export default function SectionHeading({
   action,
   className = "",
 }: SectionHeadingProps) {
-  const headingSize = {
-    sm: "text-2xl sm:text-3xl",
-    md: "text-3xl sm:text-4xl lg:text-5xl",
-    lg: "text-3xl sm:text-4xl lg:text-5xl xl:text-6xl",
-  };
+  const isCentered = align === "center";
 
-  const centered = align === "center";
+  const headingSize =
+    size === "sm"
+      ? "text-2xl sm:text-3xl"
+      : size === "lg"
+        ? "text-3xl sm:text-4xl lg:text-5xl xl:text-6xl"
+        : "text-3xl sm:text-4xl lg:text-5xl";
 
   return (
-    <div
-      className={`
-        ${centered ? "mx-auto text-center" : "text-left"}
-        ${className}
-      `}
+    <header
+      className={[
+        "w-full",
+        isCentered ? "text-center" : "text-left",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
-      <div
-        className={`
-          ${
-            centered
-              ? "flex flex-col items-center"
-              : "flex flex-col"
+      {/*
+       * EYEBROW
+       *
+       * Standard:
+       * small uppercase label
+       * GNPC Navy
+       * horizontal accent line
+       */}
+      {badge ? (
+        <div
+          className={
+            isCentered
+              ? "flex justify-center"
+              : "flex justify-start"
           }
-        `}
-      >
-        {badge && (
+        >
           <span className="gnpc-eyebrow">
             {badge}
           </span>
-        )}
-
-        <div
-          className={`
-            mt-3
-            ${
-              action
-                ? "flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
-                : ""
-            }
-          `}
-        >
-          <div>
-            <h2
-              className={`
-                gnpc-section-title
-                ${headingSize[size]}
-                ${centered ? "text-center" : ""}
-              `}
-            >
-              {title}
-            </h2>
-
-            {description && (
-              <p
-                className={`
-                  gnpc-section-description
-                  ${
-                    centered
-                      ? "mx-auto text-center"
-                      : ""
-                  }
-                `}
-              >
-                {description}
-              </p>
-            )}
-          </div>
-
-          {action && (
-            <div className="shrink-0">
-              {action}
-            </div>
-          )}
         </div>
+      ) : null}
+
+      {/*
+       * Main heading + optional action.
+       */}
+      <div
+        className={[
+          "mt-3",
+
+          action
+            ? [
+                "flex",
+                "flex-col",
+                "gap-5",
+                "sm:flex-row",
+                "sm:items-end",
+                "sm:justify-between",
+              ].join(" ")
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <div
+          className={[
+            isCentered ? "mx-auto" : "",
+            "min-w-0",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <h2
+            className={[
+              "gnpc-section-title",
+              headingSize,
+              isCentered ? "text-center" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {title}
+          </h2>
+
+          {description ? (
+            <p
+              className={[
+                "gnpc-section-description",
+                isCentered ? "mx-auto text-center" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {description}
+            </p>
+          ) : null}
+        </div>
+
+        {/*
+         * Optional section action.
+         *
+         * Example:
+         * View All
+         * Explore Gallery
+         * See All Events
+         */}
+        {action ? (
+          <div
+            className={[
+              "shrink-0",
+
+              isCentered
+                ? "sm:flex sm:justify-center"
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {action}
+          </div>
+        ) : null}
       </div>
-    </div>
+    </header>
   );
 }
