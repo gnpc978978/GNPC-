@@ -54,7 +54,7 @@ export default function TopBar() {
 
           <div className="flex items-center gap-2">
             <FaMapMarkerAlt className="text-red-500" />
-            <span>{settings.address || "Address coming soon"}</span>
+            <span>Greater Noida</span>
           </div>
 
           <div className="hidden items-center gap-2 sm:flex">
