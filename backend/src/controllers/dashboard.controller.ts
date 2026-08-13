@@ -8,8 +8,8 @@ const getTrafficCollections = () => {
     throw new Error("MongoDB connection is not ready");
   }
 
-  const sessions = db.collection<any>("traffic_sessions");
-  const stats = db.collection<any>("traffic_stats");
+  const sessions = db.collection("traffic_sessions");
+  const stats = db.collection("traffic_stats");
 
   return {
     sessions,
@@ -18,10 +18,11 @@ const getTrafficCollections = () => {
 };
 
 /**
- * Public dashboard statistics.
+ * Public statistics.
  *
- * Safe, aggregate information intended for the
- * public website.
+ * Keep this endpoint intentionally lightweight.
+ * The public website must continue working even if
+ * traffic collections are unavailable.
  */
 export const getPublicStats = async (
   req: Request,
@@ -31,25 +32,27 @@ export const getPublicStats = async (
     const db = mongoose.connection.db;
 
     if (!db) {
-      throw new Error("MongoDB connection is not ready");
+      return res.status(503).json({
+        success: false,
+        message: "Database connection is not ready.",
+      });
     }
 
-    const [
-      members,
-      events,
-      notices,
-    ] = await Promise.all([
-      db.collection("members").countDocuments(),
-      db.collection("events").countDocuments(),
-      db.collection("notices").countDocuments(),
-    ]);
+    const { stats } = getTrafficCollections();
+
+    const latest = await stats
+      .find({})
+      .sort({ date: -1 })
+      .limit(1)
+      .toArray();
+
+    const latestStats = latest[0] || {};
 
     return res.status(200).json({
       success: true,
       data: {
-        members,
-        events,
-        notices,
+        visitors: latestStats.visitors ?? 0,
+        visits: latestStats.visits ?? 0,
       },
     });
   } catch (error) {
@@ -58,18 +61,20 @@ export const getPublicStats = async (
       error
     );
 
-    return res.status(500).json({
-      success: false,
-      message: "Unable to fetch public statistics.",
+    return res.status(200).json({
+      success: true,
+      data: {
+        visitors: 0,
+        visits: 0,
+      },
     });
   }
 };
 
 /**
- * Track public website traffic.
+ * Public traffic heartbeat.
  *
- * This endpoint intentionally does not require
- * authentication.
+ * This route is intentionally unauthenticated.
  */
 export const trackTraffic = async (
   req: Request,
@@ -81,46 +86,36 @@ export const trackTraffic = async (
 
     const now = new Date();
 
-    const ip =
-      req.headers["x-forwarded-for"]
-        ?.toString()
-        .split(",")[0]
-        .trim() ||
-      req.socket.remoteAddress ||
-      "";
-
-    const userAgent =
-      req.headers["user-agent"] || "";
-
     const path =
       typeof req.body?.path === "string"
         ? req.body.path
         : "/";
 
+    const userAgent =
+      typeof req.headers["user-agent"] === "string"
+        ? req.headers["user-agent"]
+        : "";
+
     await sessions.insertOne({
       path,
       userAgent,
-      ip,
       createdAt: now,
     });
 
-    const day = now.toISOString().slice(0, 10);
+    const date = now.toISOString().slice(0, 10);
 
     await stats.updateOne(
-      {
-        date: day,
-      },
+      { date },
       {
         $inc: {
           visits: 1,
+          visitors: 1,
         },
         $set: {
           updatedAt: now,
         },
       },
-      {
-        upsert: true,
-      }
+      { upsert: true }
     );
 
     return res.status(200).json({
@@ -128,13 +123,13 @@ export const trackTraffic = async (
     });
   } catch (error) {
     console.error(
-      "Failed to track traffic:",
+      "Traffic tracking failed:",
       error
     );
 
     /*
-     * Traffic tracking should never break the
-     * public website experience.
+     * Never make the public website fail because
+     * analytics tracking failed.
      */
     return res.status(200).json({
       success: false,
@@ -143,44 +138,33 @@ export const trackTraffic = async (
 };
 
 /**
- * Dashboard overview statistics.
- *
- * Protected by authMiddleware in dashboard.routes.ts.
+ * Protected dashboard statistics.
  */
 export const getDashboardStats = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const db = mongoose.connection.db;
-
-    if (!db) {
-      throw new Error("MongoDB connection is not ready");
-    }
-
-    const [
-      members,
-      events,
-      notices,
-    ] = await Promise.all([
-      db.collection("members").countDocuments(),
-      db.collection("events").countDocuments(),
-      db.collection("notices").countDocuments(),
-    ]);
-
-    const { sessions } =
+    const { sessions, stats } =
       getTrafficCollections();
 
     const totalVisitors =
       await sessions.countDocuments();
 
+    const latestStats = await stats
+      .find({})
+      .sort({ date: -1 })
+      .limit(1)
+      .toArray();
+
+    const latest = latestStats[0] || {};
+
     return res.status(200).json({
       success: true,
       data: {
-        members,
-        events,
-        notices,
         visitors: totalVisitors,
+        visits: latest.visits ?? 0,
+        today: latest,
       },
     });
   } catch (error) {
@@ -198,9 +182,7 @@ export const getDashboardStats = async (
 };
 
 /**
- * Dashboard chart data.
- *
- * Returns the most recent 30 days of traffic.
+ * Protected dashboard chart data.
  */
 export const getDashboardCharts = async (
   req: Request,
@@ -210,19 +192,17 @@ export const getDashboardCharts = async (
     const { stats } =
       getTrafficCollections();
 
-    const chartData = await stats
+    const data = await stats
       .find({})
-      .sort({
-        date: -1,
-      })
+      .sort({ date: -1 })
       .limit(30)
       .toArray();
 
-    chartData.reverse();
+    data.reverse();
 
     return res.status(200).json({
       success: true,
-      data: chartData,
+      data,
     });
   } catch (error) {
     console.error(
@@ -239,10 +219,7 @@ export const getDashboardCharts = async (
 };
 
 /**
- * Detailed traffic analytics.
- *
- * Returns recent traffic sessions and
- * aggregated daily statistics.
+ * Protected traffic analytics.
  */
 export const getTrafficAnalytics = async (
   req: Request,
@@ -256,17 +233,13 @@ export const getTrafficAnalytics = async (
       await Promise.all([
         stats
           .find({})
-          .sort({
-            date: -1,
-          })
+          .sort({ date: -1 })
           .limit(30)
           .toArray(),
 
         sessions
           .find({})
-          .sort({
-            createdAt: -1,
-          })
+          .sort({ createdAt: -1 })
           .limit(100)
           .toArray(),
       ]);
@@ -274,7 +247,7 @@ export const getTrafficAnalytics = async (
     return res.status(200).json({
       success: true,
       data: {
-        dailyStats,
+        dailyStats: dailyStats.reverse(),
         recentSessions,
       },
     });
