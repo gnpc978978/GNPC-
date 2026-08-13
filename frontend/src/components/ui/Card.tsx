@@ -2,9 +2,16 @@ import type { ReactNode } from "react";
 
 type CardProps = {
   children: ReactNode;
+
   className?: string;
+
   padding?: "none" | "sm" | "md" | "lg";
+
+  /*
+   * Public cards use hover elevation by default.
+   */
   hover?: boolean;
+
   onClick?: () => void;
 };
 
@@ -15,37 +22,53 @@ export default function Card({
   hover = true,
   onClick,
 }: CardProps) {
-  const paddingStyles = {
-    none: "",
-    sm: "p-4",
-    md: "p-5 sm:p-6",
-    lg: "p-6 sm:p-8",
-  };
+  const paddingClass =
+    padding === "none"
+      ? ""
+      : padding === "sm"
+        ? "p-4"
+        : padding === "lg"
+          ? "p-6 sm:p-8"
+          : "p-5 sm:p-6";
 
   return (
     <div
       onClick={onClick}
-      className={`
-        rounded-2xl
-        border
-        border-slate-200
-        bg-white
-        shadow-sm
-        ${paddingStyles[padding]}
-        ${
-          hover
-            ? `
-              transition-all
-              duration-200
-              hover:-translate-y-0.5
-              hover:border-slate-300
-              hover:shadow-md
-            `
-            : ""
-        }
-        ${onClick ? "cursor-pointer" : ""}
-        ${className}
-      `}
+      className={[
+        /*
+         * GNPC standard card.
+         *
+         * rounded-2xl
+         * border
+         * white
+         * subtle shadow
+         */
+        "gnpc-card",
+
+        /*
+         * Controlled hover elevation.
+         */
+        hover ? "gnpc-card-hover" : "",
+
+        /*
+         * Standard internal spacing.
+         */
+        paddingClass,
+
+        /*
+         * Clickable cards.
+         */
+        onClick ? "cursor-pointer" : "",
+
+        /*
+         * Page-specific layout classes are still allowed
+         * through className, but the visual foundation
+         * remains GNPC-standardized.
+         */
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       {children}
     </div>
