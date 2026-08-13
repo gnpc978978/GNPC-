@@ -29,27 +29,13 @@ export interface IWebsiteSettings extends Document {
   phone?: string;
   address?: string;
 
-  /*
-   * CMS-controlled WhatsApp floating button.
-   *
-   * whatsappNumber:
-   * Stores digits only, including the country code.
-   *
-   * Example:
-   * 919876543210
-   *
-   * whatsappLabel:
-   * Text displayed beside the WhatsApp icon.
-   *
-   * Example:
-   * Chat on WhatsApp
-   */
   whatsappNumber?: string;
   whatsappLabel?: string;
 
   logo?: string;
   favicon?: string;
   heroImage?: string;
+  aboutImage?: string;
   membershipPdf?: string;
 
   socialLinks?: ISocialLinks;
@@ -66,31 +52,26 @@ const SocialLinksSchema = new Schema<ISocialLinks>(
       trim: true,
       default: "",
     },
-
     twitter: {
       type: String,
       trim: true,
       default: "",
     },
-
     instagram: {
       type: String,
       trim: true,
       default: "",
     },
-
     linkedin: {
       type: String,
       trim: true,
       default: "",
     },
-
     youtube: {
       type: String,
       trim: true,
       default: "",
     },
-
     whatsapp: {
       type: String,
       trim: true,
@@ -109,13 +90,11 @@ const SeoSchema = new Schema<ISeoSettings>(
       trim: true,
       default: "",
     },
-
     description: {
       type: String,
       trim: true,
       default: "",
     },
-
     keywords: {
       type: [String],
       default: [],
@@ -165,21 +144,12 @@ const WebsiteSettingsSchema =
         default: "",
       },
 
-      /*
-       * WhatsApp number used by the public floating button.
-       *
-       * The controller sanitizes this value before saving it,
-       * but trim is retained here as an additional safeguard.
-       */
       whatsappNumber: {
         type: String,
         trim: true,
         default: "",
       },
 
-      /*
-       * WhatsApp floating button label.
-       */
       whatsappLabel: {
         type: String,
         trim: true,
@@ -200,6 +170,12 @@ const WebsiteSettingsSchema =
       },
 
       heroImage: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+
+      aboutImage: {
         type: String,
         trim: true,
         default: "",
