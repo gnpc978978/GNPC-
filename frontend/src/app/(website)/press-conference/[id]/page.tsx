@@ -4,118 +4,133 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+import {
+  apiFetch,
+  responseJson,
+} from "@/services/api";
+
 type Conference = {
+  _id: string;
   title: string;
   venue?: string;
   date?: string;
   description?: string;
   content?: string;
   featuredImage?: string;
-  image?: string;
+  pdfFile?: string;
   createdAt?: string;
 };
 
 export default function PressConferenceDetailsPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } =
+    useParams<{ id: string }>();
 
   const [item, setItem] =
-    useState<Conference | null>(null);
+    useState<Conference | null>(
+      null
+    );
 
-  const [error, setError] = useState(false);
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     const load = async () => {
+      if (!id) {
+        return;
+      }
+
       try {
-        /*
-         * First use the proper Press Conference API.
-         */
-        const conferenceResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/press-conferences/${id}`
-        );
+        setLoading(true);
+        setError(false);
 
-        if (conferenceResponse.ok) {
-          const conferenceData =
-            await conferenceResponse.json();
+        const response =
+          await apiFetch(
+            `/press-conferences/${encodeURIComponent(
+              id
+            )}`
+          );
 
-          if (conferenceData.success) {
-            setItem(conferenceData.data);
-            return;
-          }
+        const payload =
+          await responseJson<{
+            success: boolean;
+            data: Conference;
+          }>(response);
+
+        if (!cancelled) {
+          setItem(
+            payload.data
+          );
         }
-
-        /*
-         * Backward compatibility:
-         * old Press Release records can still
-         * be opened through Press Conference URLs.
-         */
-        const releaseResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/press-releases/${id}`
-        );
-
-        if (!releaseResponse.ok) {
-          throw new Error();
-        }
-
-        const releaseData =
-          await releaseResponse.json();
-
-        if (!releaseData.success) {
-          throw new Error();
-        }
-
-        setItem({
-          title: releaseData.data.title,
-          content: releaseData.data.content,
-          description:
-            releaseData.data.description,
-          image: releaseData.data.image,
-          createdAt: releaseData.data.createdAt,
-          venue: "Greater Noida Press Club",
-          date: releaseData.data.createdAt,
-        });
       } catch (error) {
         console.error(
           "Failed to load press conference:",
           error
         );
 
-        setError(true);
+        if (!cancelled) {
+          setError(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
     void load();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
-  if (error) {
+  if (loading) {
+    return (
+      <main className="mx-auto max-w-4xl px-6 py-24">
+        <div className="animate-pulse">
+          <div className="h-5 w-40 rounded bg-slate-200" />
+          <div className="mt-8 h-12 w-3/4 rounded bg-slate-200" />
+          <div className="mt-5 h-5 w-1/3 rounded bg-slate-200" />
+          <div className="mt-8 aspect-video rounded-2xl bg-slate-200" />
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !item) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <h1 className="text-3xl font-bold">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
+          Press Conference
+        </p>
+
+        <h1 className="mt-3 text-3xl font-bold text-slate-900">
           Press Conference Not Found
         </h1>
+
+        <p className="mt-4 text-slate-500">
+          The requested press conference could
+          not be found or is no longer available.
+        </p>
 
         <Link
           href="/press-conference"
           className="mt-6 inline-block text-blue-700"
         >
-          Back to Press Conferences
+          ← Back to Press Conferences
         </Link>
       </main>
     );
   }
 
-  if (!item) {
-    return (
-      <main className="py-24 text-center text-slate-500">
-        Loading press conference...
-      </main>
-    );
-  }
-
-  const image =
-    item.featuredImage || item.image;
-
   const date =
-    item.date || item.createdAt;
+    item.date ||
+    item.createdAt;
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-16 sm:py-24">
@@ -130,13 +145,15 @@ export default function PressConferenceDetailsPage() {
         PRESS CONFERENCE
       </p>
 
-      <h1 className="mt-3 text-4xl font-extrabold text-slate-900">
+      <h1 className="mt-3 text-4xl font-extrabold text-slate-900 sm:text-5xl">
         {item.title}
       </h1>
 
       {date && (
         <p className="mt-4 text-slate-500">
-          {new Date(date).toLocaleDateString(
+          {new Date(
+            date
+          ).toLocaleDateString(
             "en-IN",
             {
               day: "numeric",
@@ -153,11 +170,11 @@ export default function PressConferenceDetailsPage() {
         </p>
       )}
 
-      {image && (
+      {item.featuredImage && (
         <img
-          src={image}
+          src={item.featuredImage}
           alt={item.title}
-          className="mt-8 max-h-[500px] w-full rounded-2xl object-cover"
+          className="mt-8 max-h-[600px] w-full rounded-2xl object-cover"
         />
       )}
 
@@ -167,9 +184,22 @@ export default function PressConferenceDetailsPage() {
         </p>
       )}
 
-      <article className="mt-8 whitespace-pre-line leading-8 text-slate-700">
-        {item.content}
-      </article>
+      {item.content && (
+        <article className="mt-8 whitespace-pre-line leading-8 text-slate-700">
+          {item.content}
+        </article>
+      )}
+
+      {item.pdfFile && (
+        <a
+          href={item.pdfFile}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-flex rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800"
+        >
+          View Press Conference PDF
+        </a>
+      )}
     </main>
   );
 }
