@@ -170,7 +170,7 @@ export default function AboutSettingsForm() {
       setLoading(true);
 
       const response = await axios.get(
-        `${API_URL}/about-settings`
+       `${API_URL}/settings/about`
       );
 
       const data =
@@ -393,7 +393,7 @@ export default function AboutSettingsForm() {
 
       const response =
         await axios.put(
-          `${API_URL}/about-settings`,
+          `${API_URL}/settings/about`,
           updatedForm,
           {
             headers: headers(),
