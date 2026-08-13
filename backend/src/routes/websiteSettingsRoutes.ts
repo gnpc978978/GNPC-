@@ -24,18 +24,15 @@ import {
 import authMiddleware from "../middleware/auth.middleware";
 import requireRole from "../middleware/role.middleware";
 
-const router =
-  express.Router();
+const router = express.Router();
 
 /*
  * =========================================================
- * ABOUT PAGE
+ * ABOUT
  * =========================================================
  */
 
 /*
- * Public/Admin read endpoint.
- *
  * GET /api/settings/about
  */
 router.get(
@@ -44,8 +41,6 @@ router.get(
 );
 
 /*
- * Save About text/content.
- *
  * PUT /api/settings/about
  */
 router.put(
@@ -59,8 +54,6 @@ router.put(
 );
 
 /*
- * Upload About images.
- *
  * POST /api/settings/about/upload
  */
 router.post(
@@ -90,8 +83,6 @@ router.post(
  */
 
 /*
- * GET SETTINGS
- *
  * GET /api/settings
  */
 router.get(
@@ -100,8 +91,6 @@ router.get(
 );
 
 /*
- * MEMBERSHIP FORM
- *
  * GET /api/settings/membership-form
  */
 router.get(
@@ -110,8 +99,6 @@ router.get(
 );
 
 /*
- * UPDATE SETTINGS DATA
- *
  * PUT /api/settings
  */
 router.put(
@@ -125,8 +112,6 @@ router.put(
 );
 
 /*
- * UPLOAD GENERAL SETTINGS FILES
- *
  * PUT /api/settings/upload
  */
 router.put(
