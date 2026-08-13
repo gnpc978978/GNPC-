@@ -41,7 +41,7 @@ export default function AboutCTA({
 
             <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-blue-100 md:text-lg md:leading-8">
               {description ||
-                "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists."}
+                "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence."}
             </p>
 
             <div className="mt-10 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
