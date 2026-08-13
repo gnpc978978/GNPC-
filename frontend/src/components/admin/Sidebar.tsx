@@ -6,14 +6,15 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSidebar } from "@/hooks/useSidebar";
 import {
+  ChevronDown,
+  LogOut,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+
+import {
   adminNavigation,
   type AdminNavItem,
 } from "@/data/adminNavigation";
-import {
-  ChevronDown,
-  LogOut,
-} from "@/data/adminNavigation";
-import { useEffect, useState } from "react";
 
 function SidebarLabel({
   children,
@@ -166,7 +167,7 @@ function SidebarGroup({
           />
         </button>
 
-        <div className="pointer-events-none absolute left-[calc(100%+10px)] top-0 z-50 hidden w-52 rounded-xl border border-slate-700 bg-slate-900 p-2 shadow-2xl group-hover:pointer-events-auto group-hover:block">
+        <div className="pointer-events-none absolute left-[calc(100%+10px)] top-0 z-50 hidden w-56 rounded-xl border border-slate-700 bg-slate-900 p-2 shadow-2xl group-hover:pointer-events-auto group-hover:block">
           <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
             {item.name}
           </p>
