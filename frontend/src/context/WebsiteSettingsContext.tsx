@@ -1,6 +1,16 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  apiFetch,
+  responseJson,
+} from "@/services/api";
 
 export type WebsiteSettings = {
   siteName?: string;
@@ -31,7 +41,10 @@ export type WebsiteSettings = {
     }
   >;
 
-  socialLinks?: Record<string, string | undefined>;
+  socialLinks?: Record<
+    string,
+    string | undefined
+  >;
 
   seo?: {
     title?: string;
@@ -48,32 +61,58 @@ type WebsiteSettingsContextValue = {
 };
 
 const WebsiteSettingsContext =
-  createContext<WebsiteSettingsContextValue | null>(null);
+  createContext<WebsiteSettingsContextValue | null>(
+    null
+  );
 
 export function WebsiteSettingsProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [settings, setSettings] = useState<WebsiteSettings>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [settings, setSettings] =
+    useState<WebsiteSettings>({});
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState(false);
 
   const refresh = async () => {
+    setLoading(true);
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/settings`
-      );
+      const response =
+        await apiFetch("/settings");
 
-      const payload = await response.json();
+      const payload =
+        await responseJson<{
+          success?: boolean;
+          data?: WebsiteSettings;
+          message?: string;
+        }>(response);
 
-      if (!response.ok || !payload.success) {
-        throw new Error("Unable to load website settings");
+      if (
+        payload.success === false
+      ) {
+        throw new Error(
+          payload.message ||
+            "Unable to load website settings."
+        );
       }
 
-      setSettings(payload.data || {});
+      setSettings(
+        payload.data || {}
+      );
+
       setError(false);
-    } catch {
+    } catch (error) {
+      console.error(
+        "Failed to load website settings:",
+        error
+      );
+
       setError(true);
     } finally {
       setLoading(false);
@@ -83,9 +122,10 @@ export function WebsiteSettingsProvider({
   useEffect(() => {
     void refresh();
 
-    const handleSettingsUpdated = () => {
-      void refresh();
-    };
+    const handleSettingsUpdated =
+      () => {
+        void refresh();
+      };
 
     window.addEventListener(
       "website-settings-updated",
@@ -100,21 +140,31 @@ export function WebsiteSettingsProvider({
   }, []);
 
   useEffect(() => {
-    if (!settings.seo?.title) return;
+    if (!settings.seo?.title) {
+      return;
+    }
 
-    document.title = settings.seo.title;
+    document.title =
+      settings.seo.title;
 
-    const description = document.querySelector(
-      'meta[name="description"]'
-    );
+    const description =
+      document.querySelector(
+        'meta[name="description"]'
+      );
 
-    if (description && settings.seo.description) {
+    if (
+      description &&
+      settings.seo.description
+    ) {
       description.setAttribute(
         "content",
         settings.seo.description
       );
     }
-  }, [settings.seo?.description, settings.seo?.title]);
+  }, [
+    settings.seo?.title,
+    settings.seo?.description,
+  ]);
 
   return (
     <WebsiteSettingsContext.Provider
@@ -131,7 +181,10 @@ export function WebsiteSettingsProvider({
 }
 
 export function useWebsiteSettings() {
-  const context = useContext(WebsiteSettingsContext);
+  const context =
+    useContext(
+      WebsiteSettingsContext
+    );
 
   if (!context) {
     throw new Error(
