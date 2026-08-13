@@ -10,7 +10,7 @@ export default function Logo() {
     <Link href="/" className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
       <Image
         src={settings.logo || "/Logo.png"}
-        alt={settings.siteName || ""}
+        alt={settings.siteName || "Greater Noida Press Club"}
         width={44}
         height={44}
         priority
@@ -19,11 +19,10 @@ export default function Logo() {
 
       <div className="hidden sm:block">
         <h2 className="text-[15px] font-bold leading-tight text-slate-900">
-          {settings.siteName || ""}
+          {settings.siteName || "Greater Noida Press Club"}
         </h2>
 
         <p className="text-xs text-slate-500">
-          Press Club
         </p>
       </div>
     </Link>
