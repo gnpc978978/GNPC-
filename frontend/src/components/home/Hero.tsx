@@ -545,63 +545,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* =================================================
-                  FLOATING INFO CARD
-                  ================================================= */}
-
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 12,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.7,
-                }}
-                className={[
-                  "absolute",
-
-                  "-bottom-5",
-                  "left-4",
-
-                  "hidden",
-
-                  "max-w-[280px]",
-
-                  "rounded-2xl",
-
-                  "border",
-                  "border-slate-200",
-
-                  "bg-white",
-
-                  "p-4",
-
-                  "shadow-lg",
-                  "shadow-slate-200/70",
-
-                  "sm:block",
-
-                  "lg:-left-8",
-                ].join(" ")}
-              >
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#155eef]">
-                  Greater Noida
-                </p>
-
-                <p className="mt-1 text-sm font-semibold leading-5 text-[#101828]">
-                  A professional platform for journalists, media professionals and the community.
-                </p>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
+             
       {/* =====================================================
           TRUST / IDENTITY STRIP
           ===================================================== */}
