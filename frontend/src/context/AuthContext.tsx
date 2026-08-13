@@ -3,19 +3,29 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
   ReactNode,
 } from "react";
 
 import { useRouter } from "next/navigation";
 
+import {
+  apiFetch,
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
+
 interface User {
   _id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "SUPER_ADMIN";
-  status?: "ACTIVE" | "INACTIVE";
+  role:
+    | "ADMIN"
+    | "SUPER_ADMIN";
+  status?:
+    | "ACTIVE"
+    | "INACTIVE";
 }
 
 interface AuthContextType {
@@ -48,7 +58,9 @@ export function AuthProvider({
 
   useEffect(() => {
     const storedToken =
-      localStorage.getItem("token");
+      localStorage.getItem(
+        "token"
+      );
 
     if (!storedToken) {
       return;
@@ -56,55 +68,54 @@ export function AuthProvider({
 
     setToken(storedToken);
 
-    // Always verify the user against
-    // the database instead of trusting
-    // cached localStorage role data.
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/me`,
-      {
-        credentials: "include",
-        headers: {
-          Authorization:
-            `Bearer ${storedToken}`,
-        },
-      }
-    )
-      .then(async (response) => {
-        const data =
-          await response.json();
+    const verifySession =
+      async () => {
+        try {
+          const response =
+            await authenticatedApiFetch(
+              "/auth/me"
+            );
 
-        if (
-          !response.ok ||
-          !data.success ||
-          !data.data
-        ) {
-          throw new Error(
-            "Session expired"
+          const payload =
+            await responseJson<{
+              success: boolean;
+              data: User;
+            }>(response);
+
+          if (
+            !payload.success ||
+            !payload.data
+          ) {
+            throw new Error(
+              "Session expired"
+            );
+          }
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify(
+              payload.data
+            )
           );
+
+          setUser(
+            payload.data
+          );
+        } catch {
+          localStorage.removeItem(
+            "token"
+          );
+
+          localStorage.removeItem(
+            "user"
+          );
+
+          setToken("");
+          setUser(null);
         }
+      };
 
-        return data.data;
-      })
-      .then((freshUser) => {
-        localStorage.setItem(
-          "user",
-          JSON.stringify(freshUser)
-        );
-
-        setUser(freshUser);
-      })
-      .catch(() => {
-        localStorage.removeItem(
-          "token"
-        );
-
-        localStorage.removeItem(
-          "user"
-        );
-
-        setToken("");
-        setUser(null);
-      });
+    void verifySession();
   }, []);
 
   const login = async (
@@ -112,28 +123,32 @@ export function AuthProvider({
     password: string
   ) => {
     try {
-      const res =
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      const response =
+        await apiFetch(
+          "/auth/login",
           {
             method: "POST",
             headers: {
               "Content-Type":
                 "application/json",
             },
-            credentials: "include",
             body: JSON.stringify({
               email:
-                email.trim().toLowerCase(),
+                email
+                  .trim()
+                  .toLowerCase(),
               password,
             }),
           }
         );
 
       const data =
-        await res.json();
+        await response.json();
 
-      if (!res.ok) {
+      if (
+        !response.ok ||
+        !data.success
+      ) {
         throw new Error(
           data.message ||
             "Login failed"
@@ -153,7 +168,9 @@ export function AuthProvider({
 
       localStorage.setItem(
         "user",
-        JSON.stringify(data.user)
+        JSON.stringify(
+          data.user
+        )
       );
 
       setToken(data.token);
@@ -166,7 +183,7 @@ export function AuthProvider({
       return true;
     } catch (error) {
       console.error(
-        "Login Error:",
+        "Login error:",
         error
       );
 
@@ -175,11 +192,10 @@ export function AuthProvider({
   };
 
   const logout = () => {
-    void fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+    void apiFetch(
+      "/auth/logout",
       {
         method: "POST",
-        credentials: "include",
       }
     );
 
