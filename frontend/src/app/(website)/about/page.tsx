@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Link from "next/link";
 import {
-  ArrowRight,
   CheckCircle2,
   Eye,
   Target,
 } from "lucide-react";
+
+import AboutCTA from "@/components/about/AboutCTA";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(
@@ -34,6 +34,7 @@ type AboutSettings = {
   heroDescription: string;
 
   image?: string;
+
   heading: string;
   description: string;
   secondaryDescription: string;
@@ -72,9 +73,9 @@ type AboutSettings = {
   ctaSecondaryLabel: string;
 };
 
-function normalizeContent(
+const normalizeContent = (
   data: Partial<AboutSettings>
-): AboutSettings {
+): AboutSettings => {
   return {
     heroEyebrow:
       data.heroEyebrow ?? "",
@@ -84,7 +85,9 @@ function normalizeContent(
       data.heroDescription ?? "",
 
     image: data.image ?? "",
-    heading: data.heading ?? "",
+
+    heading:
+      data.heading ?? "",
     description:
       data.description ?? "",
     secondaryDescription:
@@ -154,11 +157,11 @@ function normalizeContent(
     ctaSecondaryLabel:
       data.ctaSecondaryLabel ?? "",
   };
-}
+};
 
-function getErrorMessage(
+const getErrorMessage = (
   error: unknown
-) {
+): string => {
   if (axios.isAxiosError(error)) {
     return (
       error.response?.data?.message ||
@@ -172,13 +175,11 @@ function getErrorMessage(
   }
 
   return "Unable to load About page content.";
-}
+};
 
 export default function AboutPage() {
   const [content, setContent] =
-    useState<AboutSettings | null>(
-      null
-    );
+    useState<AboutSettings | null>(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -186,66 +187,82 @@ export default function AboutPage() {
   const [error, setError] =
     useState<string | null>(null);
 
-  const loadAboutContent =
-    async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const loadAboutContent = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
-        }
-
-        const response =
-          await axios.get(
-            `${API_URL}/settings/about`,
-            {
-              timeout: 10000,
-            }
-          );
-
-        if (
-          !response.data?.success
-        ) {
-          throw new Error(
-            response.data?.message ||
-              "Unable to load About page content."
-          );
-        }
-
-        if (
-          !response.data?.data
-        ) {
-          throw new Error(
-            "About API returned no data."
-          );
-        }
-
-        setContent(
-          normalizeContent(
-            response.data.data
-          )
+      if (!API_URL) {
+        throw new Error(
+          "NEXT_PUBLIC_API_URL is not configured."
         );
-      } catch (error) {
-        console.error(
-          "Failed to load About content:",
-          error
-        );
-
-        setContent(null);
-        setError(
-          getErrorMessage(error)
-        );
-      } finally {
-        setLoading(false);
       }
-    };
+
+      /*
+       * Correct CMS endpoint:
+       *
+       * GET /api/settings/about
+       *
+       * NEXT_PUBLIC_API_URL should normally contain:
+       * http://localhost:5000/api
+       *
+       * or the production API base ending in /api.
+       */
+      const response = await axios.get(
+        `${API_URL}/settings/about`,
+        {
+          timeout: 10000,
+        }
+      );
+
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message ||
+            "Unable to load About page content."
+        );
+      }
+
+      if (!response.data?.data) {
+        throw new Error(
+          "About API returned no data."
+        );
+      }
+
+      /*
+       * Only use CMS data.
+       *
+       * Do NOT silently merge fallback content here.
+       * Otherwise a broken CMS/API can look like
+       * successfully loaded content.
+       */
+      setContent(
+        normalizeContent(
+          response.data.data
+        )
+      );
+    } catch (error) {
+      console.error(
+        "Failed to load About content:",
+        error
+      );
+
+      setContent(null);
+      setError(
+        getErrorMessage(error)
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     void loadAboutContent();
 
+    /*
+     * Refresh the public page if the admin CMS
+     * updates About settings while both pages
+     * are open.
+     */
     const handleUpdate = () => {
       void loadAboutContent();
     };
@@ -263,6 +280,9 @@ export default function AboutPage() {
     };
   }, []);
 
+  /*
+   * Loading state
+   */
   if (loading) {
     return (
       <main className="min-h-screen bg-white">
@@ -287,6 +307,9 @@ export default function AboutPage() {
     );
   }
 
+  /*
+   * API/CMS failure state
+   */
   if (!content) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center px-6">
@@ -316,7 +339,9 @@ export default function AboutPage() {
 
   return (
     <main className="bg-white text-slate-900">
-      {/* HERO */}
+      {/* =====================================================
+          HERO
+      ====================================================== */}
       <section className="relative overflow-hidden bg-slate-950 px-6 py-24 text-white md:py-32">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.22),transparent_40%)]" />
 
@@ -341,7 +366,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* INTRO */}
+      {/* =====================================================
+          INTRO
+      ====================================================== */}
       <section className="px-6 py-20 md:py-28">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
           <div>
@@ -396,7 +423,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* FOUNDATION */}
+      {/* =====================================================
+          FOUNDATION
+      ====================================================== */}
       <section className="bg-slate-50 px-6 py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -430,13 +459,19 @@ export default function AboutPage() {
                 />
               </div>
 
-              <h3 className="mt-6 text-2xl font-bold">
-                {content.missionTitle}
-              </h3>
+              {content.missionTitle && (
+                <h3 className="mt-6 text-2xl font-bold">
+                  {content.missionTitle}
+                </h3>
+              )}
 
-              <p className="mt-4 leading-7 text-slate-600">
-                {content.missionDescription}
-              </p>
+              {content.missionDescription && (
+                <p className="mt-4 leading-7 text-slate-600">
+                  {
+                    content.missionDescription
+                  }
+                </p>
+              )}
             </div>
 
             <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
@@ -447,37 +482,40 @@ export default function AboutPage() {
                 />
               </div>
 
-              <h3 className="mt-6 text-2xl font-bold">
-                {content.visionTitle}
-              </h3>
+              {content.visionTitle && (
+                <h3 className="mt-6 text-2xl font-bold">
+                  {content.visionTitle}
+                </h3>
+              )}
 
-              <p className="mt-4 leading-7 text-slate-600">
-                {content.visionDescription}
-              </p>
+              {content.visionDescription && (
+                <p className="mt-4 leading-7 text-slate-600">
+                  {
+                    content.visionDescription
+                  }
+                </p>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* OBJECTIVES */}
-      {content.objectives.length >
-        0 && (
+      {/* =====================================================
+          OBJECTIVES
+      ====================================================== */}
+      {content.objectives.length > 0 && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               {content.objectivesEyebrow && (
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
-                  {
-                    content.objectivesEyebrow
-                  }
+                  {content.objectivesEyebrow}
                 </p>
               )}
 
               {content.objectivesTitle && (
                 <h2 className="mt-3 text-3xl font-black md:text-5xl">
-                  {
-                    content.objectivesTitle
-                  }
+                  {content.objectivesTitle}
                 </h2>
               )}
 
@@ -526,7 +564,9 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* PRESIDENT */}
+      {/* =====================================================
+          PRESIDENT
+      ====================================================== */}
       {(content.presidentName ||
         content.presidentMessage) && (
         <section className="bg-slate-950 px-6 py-20 text-white md:py-28">
@@ -589,9 +629,10 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* WHY CHOOSE US */}
-      {content.reasons.length >
-        0 && (
+      {/* =====================================================
+          WHY CHOOSE US
+      ====================================================== */}
+      {content.reasons.length > 0 && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
@@ -639,9 +680,7 @@ export default function AboutPage() {
                     </h3>
 
                     <p className="mt-3 leading-7 text-slate-600">
-                      {
-                        reason.description
-                      }
+                      {reason.description}
                     </p>
                   </article>
                 )
@@ -651,55 +690,20 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* CTA */}
-      <section className="px-6 pb-20 md:pb-28">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-blue-600 px-7 py-12 text-white md:px-12 md:py-16">
-          <div className="max-w-3xl">
-            {content.ctaTitle && (
-              <h2 className="text-3xl font-black md:text-5xl">
-                {content.ctaTitle}
-              </h2>
-            )}
+      {/* =====================================================
+          CTA
+          
+          IMPORTANT:
+          The old inline CTA used:
 
-            {content.ctaDescription && (
-              <p className="mt-5 text-lg leading-8 text-blue-50">
-                {
-                  content.ctaDescription
-                }
-              </p>
-            )}
+              href="/membership"
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {content.ctaPrimaryLabel && (
-                <Link
-                  href="/membership"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-bold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue-600"
-                >
-                  {
-                    content.ctaPrimaryLabel
-                  }
+          That route does not exist.
 
-                  <ArrowRight
-                    size={18}
-                    aria-hidden="true"
-                  />
-                </Link>
-              )}
-
-              {content.ctaSecondaryLabel && (
-                <Link
-                  href="/office-bearers"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 font-bold text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue-600"
-                >
-                  {
-                    content.ctaSecondaryLabel
-                  }
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+          AboutCTA already uses MembershipFormLink,
+          which connects to the CMS membership form.
+      ====================================================== */}
+      <AboutCTA />
     </main>
   );
 }
