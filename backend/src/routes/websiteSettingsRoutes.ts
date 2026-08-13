@@ -5,7 +5,12 @@ import {
   updateSettings,
   downloadMembershipForm,
 } from "../controllers/websiteSettingsController";
-import { getAboutSettings, updateAboutSettings } from "../controllers/aboutSettings.controller";
+
+import {
+  getAboutSettings,
+  updateAboutSettings,
+  uploadAboutSettingsFiles,
+} from "../controllers/aboutSettings.controller";
 
 import {
   uploadSettingsFiles,
@@ -15,38 +20,122 @@ import {
   websiteSettingsUpload,
   aboutSettingsUpload,
 } from "../middleware/upload.middleware";
+
 import authMiddleware from "../middleware/auth.middleware";
 import requireRole from "../middleware/role.middleware";
 
-const router = express.Router();
+const router =
+  express.Router();
 
-router.get("/about", getAboutSettings);
-router.put("/about", authMiddleware, requireRole("ADMIN", "SUPER_ADMIN"), aboutSettingsUpload.fields([{ name: "image", maxCount: 1 }, { name: "presidentPhoto", maxCount: 1 }]), updateAboutSettings);
+/*
+ * =========================================================
+ * ABOUT PAGE
+ * =========================================================
+ */
 
+/*
+ * Public/Admin read endpoint.
+ *
+ * GET /api/settings/about
+ */
+router.get(
+  "/about",
+  getAboutSettings
+);
 
-// GET SETTINGS
+/*
+ * Save About text/content.
+ *
+ * PUT /api/settings/about
+ */
+router.put(
+  "/about",
+  authMiddleware,
+  requireRole(
+    "ADMIN",
+    "SUPER_ADMIN"
+  ),
+  updateAboutSettings
+);
+
+/*
+ * Upload About images.
+ *
+ * POST /api/settings/about/upload
+ */
+router.post(
+  "/about/upload",
+  authMiddleware,
+  requireRole(
+    "ADMIN",
+    "SUPER_ADMIN"
+  ),
+  aboutSettingsUpload.fields([
+    {
+      name: "image",
+      maxCount: 1,
+    },
+    {
+      name: "presidentPhoto",
+      maxCount: 1,
+    },
+  ]),
+  uploadAboutSettingsFiles
+);
+
+/*
+ * =========================================================
+ * GENERAL WEBSITE SETTINGS
+ * =========================================================
+ */
+
+/*
+ * GET SETTINGS
+ *
+ * GET /api/settings
+ */
 router.get(
   "/",
   getSettings
 );
 
-router.get("/membership-form", downloadMembershipForm);
+/*
+ * MEMBERSHIP FORM
+ *
+ * GET /api/settings/membership-form
+ */
+router.get(
+  "/membership-form",
+  downloadMembershipForm
+);
 
-
-// UPDATE SETTINGS DATA
+/*
+ * UPDATE SETTINGS DATA
+ *
+ * PUT /api/settings
+ */
 router.put(
   "/",
   authMiddleware,
-  requireRole("ADMIN", "SUPER_ADMIN"),
+  requireRole(
+    "ADMIN",
+    "SUPER_ADMIN"
+  ),
   updateSettings
 );
 
-
-// UPLOAD SETTINGS FILES
+/*
+ * UPLOAD GENERAL SETTINGS FILES
+ *
+ * PUT /api/settings/upload
+ */
 router.put(
   "/upload",
   authMiddleware,
-  requireRole("ADMIN", "SUPER_ADMIN"),
+  requireRole(
+    "ADMIN",
+    "SUPER_ADMIN"
+  ),
   websiteSettingsUpload.fields([
     {
       name: "logo",
