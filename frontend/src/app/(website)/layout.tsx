@@ -17,6 +17,15 @@ export default function WebsiteLayout({
 }: WebsiteLayoutProps) {
   const pathname = usePathname();
 
+  /*
+   * -------------------------------------------------------
+   * WEBSITE TRAFFIC TRACKING
+   * -------------------------------------------------------
+   *
+   * Keeps the existing traffic heartbeat functionality.
+   * It is intentionally kept inside the website layout so
+   * all public pages are tracked consistently.
+   */
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -63,6 +72,10 @@ export default function WebsiteLayout({
           }
         );
       } catch (error) {
+        /*
+         * Traffic analytics must never break the public
+         * website if the analytics API is unavailable.
+         */
         console.error(
           "Traffic heartbeat error:",
           error
@@ -82,22 +95,55 @@ export default function WebsiteLayout({
     };
   }, []);
 
+  /*
+   * -------------------------------------------------------
+   * CONTACT PAGE
+   * -------------------------------------------------------
+   *
+   * The floating "Get in touch" button appears everywhere
+   * except the Contact page.
+   */
   const isContactPage =
     pathname === "/contact" ||
     pathname.startsWith("/contact/");
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <Navbar />
-
-      <div className="pt-16 sm:pt-[76px]">
+    <div className="gnpc-public min-h-screen bg-white text-slate-900">
+      {/*
+       * ---------------------------------------------------
+       * GLOBAL PUBLIC HEADER
+       * ---------------------------------------------------
+       *
+       * TopBar is part of the global website header.
+       * Navbar is the primary navigation.
+       */}
+      <header>
         <TopBar />
+        <Navbar />
+      </header>
 
-        <main>{children}</main>
-      </div>
+      {/*
+       * ---------------------------------------------------
+       * MAIN CONTENT
+       * ---------------------------------------------------
+       *
+       * Navbar is fixed, therefore public content gets
+       * enough top spacing from Navbar itself.
+       */}
+      <main>{children}</main>
 
+      {/*
+       * ---------------------------------------------------
+       * GLOBAL FOOTER
+       * ---------------------------------------------------
+       */}
       <Footer />
 
+      {/*
+       * ---------------------------------------------------
+       * FLOATING CONTACT ACTION
+       * ---------------------------------------------------
+       */}
       {!isContactPage && (
         <FloatingContactButton />
       )}
