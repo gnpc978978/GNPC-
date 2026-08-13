@@ -35,31 +35,31 @@ export default function Logo({
         "inline-flex",
         "items-center",
         "gap-3",
-
-        "rounded-xl",
-
+        "rounded-lg",
         "focus-visible:outline-none",
         "focus-visible:ring-2",
         "focus-visible:ring-[#0f4c81]",
-        "focus-visible:ring-offset-4",
+        "focus-visible:ring-offset-2",
       ].join(" ")}
     >
+      {/* Logo */}
+
       <span
         className={[
           "flex",
           "h-11",
           "w-11",
           "shrink-0",
-
           "items-center",
           "justify-center",
-
           "overflow-hidden",
-          "rounded-xl",
-
+          "rounded-full",
+          "border",
+          "border-slate-200",
+          "bg-white",
           isDark
-            ? "bg-white"
-            : "bg-white/10",
+            ? ""
+            : "border-white/20",
         ].join(" ")}
       >
         <Image
@@ -72,23 +72,21 @@ export default function Logo({
         />
       </span>
 
+      {/* Brand text */}
+
       <span className="hidden min-w-0 sm:block">
         <span
           className={[
             "block",
-            "max-w-[220px]",
+            "max-w-[230px]",
             "truncate",
-
-            "text-[15px]",
+            "text-[16px]",
             "font-extrabold",
             "leading-tight",
-
-            "tracking-[-0.01em]",
-
+            "tracking-[-0.02em]",
             isDark
               ? "text-slate-900 group-hover:text-[#0f4c81]"
               : "text-white",
-
             "transition-colors",
             "duration-200",
           ].join(" ")}
@@ -98,17 +96,15 @@ export default function Logo({
 
         <span
           className={[
-            "mt-0.5",
+            "mt-1",
             "block",
-
             "text-[10px]",
-            "font-semibold",
+            "font-bold",
             "uppercase",
-            "tracking-[0.13em]",
-
+            "tracking-[0.16em]",
             isDark
               ? "text-slate-400"
-              : "text-white/55",
+              : "text-white/60",
           ].join(" ")}
         >
           Greater Noida
