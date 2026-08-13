@@ -10,16 +10,15 @@ import {
 import { toast } from "sonner";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(
-    /\/+$/,
-    ""
-  ) || "";
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "";
 
 type ListItem = {
   title: string;
   description: string;
   icon: string;
 };
+
+type ListField = "objectives" | "reasons";
 
 type AboutSettings = {
   heroEyebrow: string;
@@ -73,11 +72,9 @@ const emptyItem = (): ListItem => ({
 });
 
 const defaultForm: AboutSettings = {
-  heroEyebrow:
-    "About Greater Noida Press Club",
+  heroEyebrow: "About Greater Noida Press Club",
 
-  heroTitle:
-    "About Us",
+  heroTitle: "About Us",
 
   heroDescription:
     "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
@@ -93,38 +90,31 @@ const defaultForm: AboutSettings = {
   secondaryDescription:
     "We believe in freedom of expression, responsible reporting, and creating opportunities that help journalists grow, collaborate, and contribute to society.",
 
-  commitmentTitle:
-    "Our Commitment",
+  commitmentTitle: "Our Commitment",
 
   commitmentDescription:
     "We are committed to protecting journalistic values, encouraging transparency, and building a stronger media community through education, collaboration, and innovation.",
 
-  foundationEyebrow:
-    "Our Foundation",
+  foundationEyebrow: "Our Foundation",
 
-  foundationTitle:
-    "Mission & Vision",
+  foundationTitle: "Mission & Vision",
 
   foundationDescription:
     "We are committed to ethical journalism, professional excellence, and empowering media professionals through collaboration and innovation.",
 
-  missionTitle:
-    "Our Mission",
+  missionTitle: "Our Mission",
 
   missionDescription:
     "To support journalists with professional development, transparency, ethical reporting, and a strong platform that protects press freedom.",
 
-  visionTitle:
-    "Our Vision",
+  visionTitle: "Our Vision",
 
   visionDescription:
     "To build a trusted community where journalists collaborate, innovate, and contribute to an informed and democratic society.",
 
-  objectivesEyebrow:
-    "Our Objectives",
+  objectivesEyebrow: "Our Objectives",
 
-  objectivesTitle:
-    "What We Aim To Achieve",
+  objectivesTitle: "What We Aim To Achieve",
 
   objectivesDescription:
     "Our primary objective is to strengthen journalism through education, collaboration, innovation, and ethical reporting.",
@@ -136,8 +126,7 @@ const defaultForm: AboutSettings = {
   presidentMessage: "",
   presidentPhoto: "",
 
-  whyChooseUsEyebrow:
-    "Why Choose Us",
+  whyChooseUsEyebrow: "Why Choose Us",
 
   whyChooseUsTitle:
     "Why Greater Noida Press Club Matters",
@@ -147,22 +136,15 @@ const defaultForm: AboutSettings = {
 
   reasons: [],
 
-  /*
-   * =========================================================
-   * CTA
-   * =========================================================
-   */
   ctaTitle:
     "Become a Part of Our Greater Noida Press Club",
 
   ctaDescription:
     "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.",
 
-  ctaPrimaryLabel:
-    "Become a Member",
+  ctaPrimaryLabel: "Become a Member",
 
-  ctaSecondaryLabel:
-    "Meet Our Office Bearers",
+  ctaSecondaryLabel: "Meet Our Office Bearers",
 };
 
 const getAuthHeaders = () => ({
@@ -175,89 +157,69 @@ const getAuthHeaders = () => ({
 
 export default function AboutSectionForm() {
   const [form, setForm] =
-    useState<AboutSettings>(
-      defaultForm
-    );
+    useState<AboutSettings>(defaultForm);
 
-  const [loading, setLoading] =
-    useState(true);
-
-  const [saving, setSaving] =
-    useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] =
     useState(false);
-
   const [uploadingPresident, setUploadingPresident] =
     useState(false);
 
-  const loadSettings =
-    async () => {
-      try {
-        setLoading(true);
+  const loadSettings = async () => {
+    try {
+      setLoading(true);
 
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
-        }
-
-        const response =
-          await axios.get(
-            `${API_URL}/settings/about`,
-            {
-              timeout: 10000,
-            }
-          );
-
-        const data =
-          response.data?.data ||
-          {};
-
-        setForm({
-          ...defaultForm,
-          ...data,
-
-          objectives:
-            Array.isArray(
-              data.objectives
-            )
-              ? data.objectives
-              : [],
-
-          reasons:
-            Array.isArray(
-              data.reasons
-            )
-              ? data.reasons
-              : [],
-        });
-      } catch (error) {
-        console.error(
-          "Failed to load About settings:",
-          error
+      if (!API_URL) {
+        throw new Error(
+          "NEXT_PUBLIC_API_URL is not configured."
         );
-
-        toast.error(
-          axios.isAxiosError(error)
-            ? error.response?.data
-                ?.message ||
-                "Unable to load About settings."
-            : "Unable to load About settings."
-        );
-      } finally {
-        setLoading(false);
       }
-    };
+
+      const response = await axios.get(
+        `${API_URL}/settings/about`,
+        {
+          timeout: 10000,
+        }
+      );
+
+      const data = response.data?.data || {};
+
+      setForm({
+        ...defaultForm,
+        ...data,
+
+        objectives: Array.isArray(data.objectives)
+          ? data.objectives
+          : [],
+
+        reasons: Array.isArray(data.reasons)
+          ? data.reasons
+          : [],
+      });
+    } catch (error) {
+      console.error(
+        "Failed to load About settings:",
+        error
+      );
+
+      toast.error(
+        axios.isAxiosError(error)
+          ? error.response?.data?.message ||
+              "Unable to load About settings."
+          : "Unable to load About settings."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     void loadSettings();
   }, []);
 
   const updateField =
-    (
-      field: keyof AboutSettings
-    ) =>
+    (field: keyof AboutSettings) =>
     (
       event: ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement
@@ -265,24 +227,31 @@ export default function AboutSectionForm() {
     ) => {
       setForm((current) => ({
         ...current,
-        [field]:
-          event.target.value,
+        [field]: event.target.value,
       }));
     };
 
+  /*
+   * IMPORTANT:
+   *
+   * ListEditor expects:
+   *
+   * onUpdate(property)(event)
+   *
+   * Therefore updateListItem must return a function
+   * that receives the property first, and then returns
+   * the actual input change handler.
+   */
   const updateListItem =
-    (
-      field:
-        | "objectives"
-        | "reasons",
-      index: number,
-      property: keyof ListItem
-    ) =>
+    (field: ListField, index: number) =>
+    (property: keyof ListItem) =>
     (
       event: ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement
       >
     ) => {
+      const value = event.target.value;
+
       setForm((current) => ({
         ...current,
         [field]: current[field].map(
@@ -290,294 +259,233 @@ export default function AboutSectionForm() {
             itemIndex === index
               ? {
                   ...item,
-                  [property]:
-                    event.target.value,
+                  [property]: value,
                 }
               : item
         ),
       }));
     };
 
-  const addItem =
-    (
-      field:
-        | "objectives"
-        | "reasons"
-    ) => {
-      setForm((current) => ({
-        ...current,
-        [field]: [
-          ...current[field],
-          emptyItem(),
-        ],
-      }));
-    };
+  const addItem = (field: ListField) => {
+    setForm((current) => ({
+      ...current,
+      [field]: [
+        ...current[field],
+        emptyItem(),
+      ],
+    }));
+  };
 
-  const removeItem =
-    (
-      field:
-        | "objectives"
-        | "reasons",
-      index: number
-    ) => {
-      setForm((current) => ({
-        ...current,
-        [field]: current[field].filter(
-          (_, itemIndex) =>
-            itemIndex !== index
+  const removeItem = (
+    field: ListField,
+    index: number
+  ) => {
+    setForm((current) => ({
+      ...current,
+      [field]: current[field].filter(
+        (_, itemIndex) => itemIndex !== index
+      ),
+    }));
+  };
+
+  const saveSettings = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    try {
+      setSaving(true);
+
+      if (!API_URL) {
+        throw new Error(
+          "NEXT_PUBLIC_API_URL is not configured."
+        );
+      }
+
+      const payload = {
+        ...form,
+
+        objectives: form.objectives.map(
+          (item) => ({
+            title: item.title.trim(),
+            description:
+              item.description.trim(),
+            icon: item.icon.trim(),
+          })
         ),
-      }));
-    };
 
-  const saveSettings =
-    async (
-      event: FormEvent
-    ) => {
-      event.preventDefault();
+        reasons: form.reasons.map(
+          (item) => ({
+            title: item.title.trim(),
+            description:
+              item.description.trim(),
+            icon: item.icon.trim(),
+          })
+        ),
+      };
 
-      try {
-        setSaving(true);
-
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
+      const response = await axios.put(
+        `${API_URL}/settings/about`,
+        payload,
+        {
+          headers: {
+            ...getAuthHeaders(),
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+          timeout: 15000,
         }
+      );
 
-        const payload = {
-          ...form,
+      if (response.data?.success === false) {
+        throw new Error(
+          response.data?.message ||
+            "Unable to save About settings."
+        );
+      }
+
+      const savedData = response.data?.data;
+
+      if (savedData) {
+        setForm({
+          ...defaultForm,
+          ...savedData,
 
           objectives:
-            form.objectives.map(
-              (item) => ({
-                title:
-                  item.title.trim(),
-                description:
-                  item.description.trim(),
-                icon:
-                  item.icon.trim(),
-              })
-            ),
+            Array.isArray(
+              savedData.objectives
+            )
+              ? savedData.objectives
+              : [],
 
           reasons:
-            form.reasons.map(
-              (item) => ({
-                title:
-                  item.title.trim(),
-                description:
-                  item.description.trim(),
-                icon:
-                  item.icon.trim(),
-              })
-            ),
-        };
+            Array.isArray(savedData.reasons)
+              ? savedData.reasons
+              : [],
+        });
+      }
 
-        const response =
-          await axios.put(
-            `${API_URL}/settings/about`,
-            payload,
-            {
-              headers: {
-                ...getAuthHeaders(),
-                "Content-Type":
-                  "application/json",
-              },
-              withCredentials: true,
-              timeout: 15000,
-            }
-          );
+      window.dispatchEvent(
+        new Event("about-settings-updated")
+      );
 
-        if (
-          response.data?.success ===
-          false
-        ) {
-          throw new Error(
-            response.data?.message ||
+      toast.success(
+        "About page saved successfully."
+      );
+    } catch (error) {
+      console.error(
+        "Failed to save About settings:",
+        error
+      );
+
+      toast.error(
+        axios.isAxiosError(error)
+          ? error.response?.data?.message ||
               "Unable to save About settings."
-          );
-        }
+          : error instanceof Error
+            ? error.message
+            : "Unable to save About settings."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
 
-        const savedData =
-          response.data?.data;
-
-        if (savedData) {
-          setForm({
-            ...defaultForm,
-            ...savedData,
-
-            objectives:
-              Array.isArray(
-                savedData.objectives
-              )
-                ? savedData.objectives
-                : [],
-
-            reasons:
-              Array.isArray(
-                savedData.reasons
-              )
-                ? savedData.reasons
-                : [],
-          });
-        }
-
-        /*
-         * Refresh public About page when
-         * CMS and website are open in the
-         * same browser.
-         */
-        window.dispatchEvent(
-          new Event(
-            "about-settings-updated"
-          )
+  const uploadImage = async (
+    field: "image" | "presidentPhoto",
+    file: File
+  ) => {
+    try {
+      if (!API_URL) {
+        throw new Error(
+          "NEXT_PUBLIC_API_URL is not configured."
         );
-
-        toast.success(
-          "About page saved successfully."
-        );
-      } catch (error) {
-        console.error(
-          "Failed to save About settings:",
-          error
-        );
-
-        toast.error(
-          axios.isAxiosError(error)
-            ? error.response?.data
-                ?.message ||
-                "Unable to save About settings."
-            : error instanceof Error
-              ? error.message
-              : "Unable to save About settings."
-        );
-      } finally {
-        setSaving(false);
       }
-    };
 
-  const uploadImage =
-    async (
-      field:
-        | "image"
-        | "presidentPhoto",
-      file: File
-    ) => {
-      try {
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
-        }
-
-        if (
-          !file.type.startsWith(
-            "image/"
-          )
-        ) {
-          toast.error(
-            "Please select an image file."
-          );
-          return;
-        }
-
-        if (
-          file.size >
-          10 * 1024 * 1024
-        ) {
-          toast.error(
-            "Image must be smaller than 10 MB."
-          );
-          return;
-        }
-
-        if (field === "image") {
-          setUploadingImage(true);
-        } else {
-          setUploadingPresident(true);
-        }
-
-        const payload =
-          new FormData();
-
-        payload.append(
-          field,
-          file
+      if (!file.type.startsWith("image/")) {
+        toast.error(
+          "Please select an image file."
         );
+        return;
+      }
 
-        /*
-         * The backend upload endpoint is
-         * POST /settings/about/upload.
-         */
-        const response =
-          await axios.post(
-            `${API_URL}/settings/about/upload`,
-            payload,
-            {
-              headers: {
-                ...getAuthHeaders(),
-              },
-              withCredentials: true,
-              timeout: 30000,
-            }
-          );
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(
+          "Image must be smaller than 10 MB."
+        );
+        return;
+      }
 
-        if (
-          response.data?.success ===
-          false
-        ) {
-          throw new Error(
-            response.data?.message ||
+      if (field === "image") {
+        setUploadingImage(true);
+      } else {
+        setUploadingPresident(true);
+      }
+
+      const payload = new FormData();
+
+      payload.append(field, file);
+
+      const response = await axios.post(
+        `${API_URL}/settings/about/upload`,
+        payload,
+        {
+          headers: {
+            ...getAuthHeaders(),
+          },
+          withCredentials: true,
+          timeout: 30000,
+        }
+      );
+
+      if (response.data?.success === false) {
+        throw new Error(
+          response.data?.message ||
+            "Unable to upload image."
+        );
+      }
+
+      const updated = response.data?.data;
+
+      if (updated) {
+        setForm((current) => ({
+          ...current,
+          ...updated,
+        }));
+      }
+
+      window.dispatchEvent(
+        new Event("about-settings-updated")
+      );
+
+      toast.success(
+        field === "image"
+          ? "About image uploaded."
+          : "President photo uploaded."
+      );
+    } catch (error) {
+      console.error(
+        "About image upload failed:",
+        error
+      );
+
+      toast.error(
+        axios.isAxiosError(error)
+          ? error.response?.data?.message ||
               "Unable to upload image."
-          );
-        }
-
-        const updated =
-          response.data?.data;
-
-        if (updated) {
-          setForm((current) => ({
-            ...current,
-            ...updated,
-          }));
-        }
-
-        window.dispatchEvent(
-          new Event(
-            "about-settings-updated"
-          )
-        );
-
-        toast.success(
-          field === "image"
-            ? "About image uploaded."
-            : "President photo uploaded."
-        );
-      } catch (error) {
-        console.error(
-          "About image upload failed:",
-          error
-        );
-
-        toast.error(
-          axios.isAxiosError(error)
-            ? error.response?.data
-                ?.message ||
-                "Unable to upload image."
-            : error instanceof Error
-              ? error.message
-              : "Unable to upload image."
-        );
-      } finally {
-        setUploadingImage(false);
-        setUploadingPresident(false);
-      }
-    };
+          : error instanceof Error
+            ? error.message
+            : "Unable to upload image."
+      );
+    } finally {
+      setUploadingImage(false);
+      setUploadingPresident(false);
+    }
+  };
 
   const handleImageChange =
     (
-      field:
-        | "image"
-        | "presidentPhoto"
+      field: "image" | "presidentPhoto"
     ) =>
     (
       event: ChangeEvent<HTMLInputElement>
@@ -589,10 +497,7 @@ export default function AboutSectionForm() {
         return;
       }
 
-      void uploadImage(
-        field,
-        file
-      );
+      void uploadImage(field, file);
 
       event.target.value = "";
     };
@@ -838,9 +743,7 @@ export default function AboutSectionForm() {
           <button
             type="button"
             onClick={() =>
-              addItem(
-                "objectives"
-              )
+              addItem("objectives")
             }
             className="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white hover:bg-slate-800"
           >
@@ -1245,6 +1148,7 @@ function ListEditor({
 }: {
   index: number;
   item: ListItem;
+
   onUpdate: (
     property: keyof ListItem
   ) => (
@@ -1252,6 +1156,7 @@ function ListEditor({
       HTMLInputElement | HTMLTextAreaElement
     >
   ) => void;
+
   onRemove: () => void;
 }) {
   return (
@@ -1278,9 +1183,7 @@ function ListEditor({
 
           <input
             value={item.icon}
-            onChange={onUpdate(
-              "icon"
-            )}
+            onChange={onUpdate("icon")}
             placeholder="Target"
             className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3"
           />
@@ -1293,9 +1196,7 @@ function ListEditor({
 
           <input
             value={item.title}
-            onChange={onUpdate(
-              "title"
-            )}
+            onChange={onUpdate("title")}
             placeholder="Objective title"
             className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3"
           />
@@ -1308,9 +1209,7 @@ function ListEditor({
 
           <textarea
             value={item.description}
-            onChange={onUpdate(
-              "description"
-            )}
+            onChange={onUpdate("description")}
             rows={4}
             placeholder="Objective description"
             className="mt-2 w-full resize-y rounded-lg border border-slate-300 bg-white px-4 py-3"
