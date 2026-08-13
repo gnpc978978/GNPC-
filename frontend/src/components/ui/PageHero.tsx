@@ -3,27 +3,26 @@
 import Link from "next/link";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
 export type PageHeroBreadcrumb = {
   label: string;
   href?: string;
 };
 
-type PageHeroProps = {
+export type PageHeroProps = {
+  contentKey?: string;
   eyebrow?: string;
   title: string;
   description?: string;
-
   breadcrumbs?: PageHeroBreadcrumb[];
-
   actions?: React.ReactNode;
-
   align?: "left" | "center";
-
   className?: string;
 };
 
 export default function PageHero({
+  contentKey,
   eyebrow,
   title,
   description,
@@ -32,7 +31,22 @@ export default function PageHero({
   align = "left",
   className = "",
 }: PageHeroProps) {
-  const isCentered = align === "center";
+  const { settings } = useWebsiteSettings();
+
+  const cmsContent = contentKey
+    ? settings.pageContent?.[contentKey]
+    : undefined;
+
+  const resolvedEyebrow =
+    cmsContent?.eyebrow?.trim() || eyebrow;
+
+  const resolvedTitle =
+    cmsContent?.title?.trim() || title;
+
+  const resolvedDescription =
+    cmsContent?.description?.trim() || description;
+
+  const centered = align === "center";
 
   return (
     <section
@@ -46,20 +60,42 @@ export default function PageHero({
         className,
       ].join(" ")}
     >
-      {/* =====================================================
-          BACKGROUND
-          ===================================================== */}
-
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-blue-50 blur-3xl" />
-
-        <div className="absolute -bottom-40 -right-40 h-[26rem] w-[26rem] rounded-full bg-slate-100 blur-3xl" />
+        <div
+          className="
+            absolute
+            -left-40
+            -top-40
+            h-[28rem]
+            w-[28rem]
+            rounded-full
+            bg-blue-50
+            blur-3xl
+          "
+        />
 
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="
+            absolute
+            -bottom-40
+            -right-40
+            h-[26rem]
+            w-[26rem]
+            rounded-full
+            bg-slate-100
+            blur-3xl
+          "
+        />
+
+        <div
+          className="
+            absolute
+            inset-0
+            opacity-[0.03]
+          "
           style={{
             backgroundImage:
               "linear-gradient(#155eef 1px, transparent 1px), linear-gradient(90deg, #155eef 1px, transparent 1px)",
@@ -67,10 +103,6 @@ export default function PageHero({
           }}
         />
       </div>
-
-      {/* =====================================================
-          CONTENT
-          ===================================================== */}
 
       <div
         className={[
@@ -84,15 +116,9 @@ export default function PageHero({
           "lg:px-8",
           "lg:py-16",
           "xl:py-20",
-          isCentered
-            ? "text-center"
-            : "text-left",
+          centered ? "text-center" : "text-left",
         ].join(" ")}
       >
-        {/* ===================================================
-            BREADCRUMBS
-            =================================================== */}
-
         {breadcrumbs.length > 0 && (
           <nav
             aria-label="Breadcrumb"
@@ -103,96 +129,100 @@ export default function PageHero({
               "items-center",
               "gap-1.5",
               "text-sm",
-              isCentered
+              centered
                 ? "justify-center"
                 : "justify-start",
             ].join(" ")}
           >
-            {breadcrumbs.map(
-              (breadcrumb, index) => {
-                const isLast =
-                  index ===
-                  breadcrumbs.length - 1;
+            {breadcrumbs.map((breadcrumb, index) => {
+              const last =
+                index === breadcrumbs.length - 1;
 
-                return (
-                  <div
-                    key={`${breadcrumb.label}-${index}`}
-                    className="flex items-center gap-1.5"
-                  >
-                    {index > 0 && (
-                      <ChevronRight
-                        size={15}
-                        aria-hidden="true"
-                        className="text-slate-400"
-                      />
-                    )}
+              return (
+                <div
+                  key={`${breadcrumb.label}-${index}`}
+                  className="flex items-center gap-1.5"
+                >
+                  {index > 0 && (
+                    <ChevronRight
+                      size={15}
+                      aria-hidden="true"
+                      className="text-slate-400"
+                    />
+                  )}
 
-                    {breadcrumb.href &&
-                    !isLast ? (
-                      <Link
-                        href={breadcrumb.href}
-                        className={[
-                          "font-medium",
-                          "text-slate-500",
-                          "transition-colors",
-                          "hover:text-[#155eef]",
-                        ].join(" ")}
-                      >
-                        {breadcrumb.label}
-                      </Link>
-                    ) : (
-                      <span
-                        aria-current={
-                          isLast
-                            ? "page"
-                            : undefined
-                        }
-                        className={[
-                          "font-semibold",
-                          isLast
-                            ? "text-[#101828]"
-                            : "text-slate-500",
-                        ].join(" ")}
-                      >
-                        {breadcrumb.label}
-                      </span>
-                    )}
-                  </div>
-                );
-              }
-            )}
+                  {breadcrumb.href && !last ? (
+                    <Link
+                      href={breadcrumb.href}
+                      className="
+                        font-medium
+                        text-slate-500
+                        transition-colors
+                        hover:text-[#155eef]
+                        focus-visible:outline-none
+                        focus-visible:ring-2
+                        focus-visible:ring-[#155eef]
+                        focus-visible:ring-offset-2
+                      "
+                    >
+                      {breadcrumb.label}
+                    </Link>
+                  ) : (
+                    <span
+                      aria-current={
+                        last ? "page" : undefined
+                      }
+                      className={[
+                        "font-semibold",
+                        last
+                          ? "text-[#101828]"
+                          : "text-slate-500",
+                      ].join(" ")}
+                    >
+                      {breadcrumb.label}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </nav>
         )}
 
-        {/* ===================================================
-            EYEBROW
-            =================================================== */}
-
-        {eyebrow && (
+        {resolvedEyebrow && (
           <div
             className={[
               "flex",
               "items-center",
               "gap-3",
-              isCentered
+              centered
                 ? "justify-center"
                 : "justify-start",
             ].join(" ")}
           >
             <span
               aria-hidden="true"
-              className="h-0.5 w-8 rounded-full bg-[#155eef]"
+              className="
+                h-0.5
+                w-8
+                rounded-full
+                bg-[#155eef]
+              "
             />
 
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#155eef] sm:text-sm">
-              {eyebrow}
+            <span
+              className="
+                text-xs
+                font-extrabold
+                uppercase
+                tracking-[0.18em]
+                text-[#155eef]
+                sm:text-sm
+              "
+            >
+              {resolvedEyebrow}
             </span>
           </div>
         )}
-
-        {/* ===================================================
-            TITLE
-            =================================================== */}
 
         <motion.h1
           id="page-hero-title"
@@ -209,37 +239,25 @@ export default function PageHero({
             ease: "easeOut",
           }}
           className={[
-            eyebrow
+            resolvedEyebrow
               ? "mt-4"
               : "mt-0",
-
             "max-w-4xl",
-
             "text-[2.15rem]",
             "font-black",
-
             "leading-[1.08]",
             "tracking-[-0.035em]",
-
             "text-[#101828]",
-
             "sm:text-4xl",
             "md:text-5xl",
             "lg:text-[3.5rem]",
-
-            isCentered
-              ? "mx-auto"
-              : "",
+            centered ? "mx-auto" : "",
           ].join(" ")}
         >
-          {title}
+          {resolvedTitle}
         </motion.h1>
 
-        {/* ===================================================
-            DESCRIPTION
-            =================================================== */}
-
-        {description && (
+        {resolvedDescription && (
           <motion.p
             initial={{
               opacity: 0,
@@ -262,18 +280,12 @@ export default function PageHero({
               "text-slate-600",
               "sm:text-lg",
               "sm:leading-8",
-              isCentered
-                ? "mx-auto"
-                : "",
+              centered ? "mx-auto" : "",
             ].join(" ")}
           >
-            {description}
+            {resolvedDescription}
           </motion.p>
         )}
-
-        {/* ===================================================
-            ACTIONS
-            =================================================== */}
 
         {actions && (
           <div
@@ -282,7 +294,7 @@ export default function PageHero({
               "flex",
               "flex-wrap",
               "gap-3",
-              isCentered
+              centered
                 ? "justify-center"
                 : "justify-start",
             ].join(" ")}
@@ -291,24 +303,27 @@ export default function PageHero({
           </div>
         )}
 
-        {/* ===================================================
-            BACK LINK
-            =================================================== */}
-
         {breadcrumbs.length === 0 && (
           <Link
             href="/"
-            className={[
-              "mt-7",
-              "inline-flex",
-              "items-center",
-              "gap-2",
-              "text-sm",
-              "font-semibold",
-              "text-slate-500",
-              "transition-colors",
-              "hover:text-[#155eef]",
-            ].join(" ")}
+            className="
+              mt-7
+              inline-flex
+              min-h-11
+              items-center
+              gap-2
+              rounded-lg
+              px-2
+              text-sm
+              font-semibold
+              text-slate-500
+              transition-colors
+              hover:text-[#155eef]
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[#155eef]
+              focus-visible:ring-offset-2
+            "
           >
             <ArrowLeft
               size={16}
