@@ -10,27 +10,107 @@ import CTA from "@/components/home/CTA";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="w-full overflow-x-hidden bg-white">
+      {/* =================================================
+          HERO
+          ================================================= */}
+
       <Hero />
 
-      <About />
+      {/* =================================================
+          ABOUT GNPC
+          ================================================= */}
 
-      <Objectives />
+      <section
+        id="about"
+        className="bg-white"
+      >
+        <About />
+      </section>
 
-      <Gallery />
+      {/* =================================================
+          OBJECTIVES
+          ================================================= */}
 
-      <LatestUpdates />
+      <section
+        id="objectives"
+        className="bg-slate-50"
+      >
+        <Objectives />
+      </section>
 
-      <PressConference />
+      {/* =================================================
+          LATEST UPDATES
+          
+          Press Releases
+          Announcements
+          Events
+          ================================================= */}
 
-      <ExecutiveCommitteeSection
-        limit={4}
-        showViewAll
-      />
+      <section
+        id="latest-updates"
+        className="bg-white"
+      >
+        <LatestUpdates />
+      </section>
 
-      <OfficeBearersSection />
+      {/* =================================================
+          GALLERY
+          ================================================= */}
 
-      <CTA />
-    </>
+      <section
+        id="gallery"
+        className="bg-slate-50"
+      >
+        <Gallery />
+      </section>
+
+      {/* =================================================
+          PRESS CONFERENCES
+          ================================================= */}
+
+      <section
+        id="press-conferences"
+        className="bg-white"
+      >
+        <PressConference />
+      </section>
+
+      {/* =================================================
+          EXECUTIVE COMMITTEE
+          ================================================= */}
+
+      <section
+        id="executive-committee"
+        className="bg-slate-50"
+      >
+        <ExecutiveCommitteeSection
+          limit={4}
+          showViewAll
+        />
+      </section>
+
+      {/* =================================================
+          OFFICE BEARERS
+          ================================================= */}
+
+      <section
+        id="office-bearers"
+        className="bg-white"
+      >
+        <OfficeBearersSection />
+      </section>
+
+      {/* =================================================
+          MEMBERSHIP / CONTACT CTA
+          ================================================= */}
+
+      <section
+        id="membership"
+        className="bg-slate-50"
+      >
+        <CTA />
+      </section>
+    </div>
   );
 }
