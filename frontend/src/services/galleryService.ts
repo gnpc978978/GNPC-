@@ -2,269 +2,177 @@ import {
   Gallery,
   GalleryFormData,
 } from "@/types/gallery";
-import { responseJson } from "@/services/api";
 
+import {
+  apiFetch,
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL;
-
-type GalleryMutationResponse = { success: boolean; message?: string };
-
-const authOptions = () => ({
-  credentials: "include" as RequestCredentials,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-  },
-});
-
-
-
-// GET ALL GALLERY
-
-export const getGallery = async (): Promise<Gallery[]> => {
-
-  const res = await fetch(
-    `${API_URL}/gallery`
-  );
-
-
-  const data = await responseJson<{ gallery: Gallery[] }>(res);
-
-
-  return data.gallery;
-
+type GalleryMutationResponse = {
+  success: boolean;
+  message?: string;
+  gallery?: Gallery;
 };
 
+export const getGallery =
+  async (): Promise<Gallery[]> => {
+    const response =
+      await apiFetch("/gallery");
 
+    const result =
+      await responseJson<{
+        gallery: Gallery[];
+      }>(response);
 
-
-// CREATE GALLERY
+    return result.gallery || [];
+  };
 
 export const createGallery = async (
   galleryData: GalleryFormData
 ): Promise<GalleryMutationResponse> => {
-
-
-  const formData = new FormData();
-
-
+  const formData =
+    new FormData();
 
   formData.append(
     "title",
     galleryData.title
   );
 
-
   formData.append(
     "category",
     galleryData.category
   );
-
 
   formData.append(
     "description",
     galleryData.description
   );
 
-
   formData.append(
     "status",
     galleryData.status
   );
 
-
-
-
-  // Cover Image
-
-  if(galleryData.coverImage) {
-
+  if (galleryData.coverImage) {
     formData.append(
       "coverImage",
       galleryData.coverImage
     );
-
   }
-
-
-
-
-
-  // Multiple Images
 
   galleryData.images.forEach(
     (image) => {
-
       formData.append(
         "images",
         image
       );
-
     }
   );
 
+  const response =
+    await authenticatedApiFetch(
+      "/gallery",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
-
-
-
-  const res = await fetch(
-    `${API_URL}/gallery`,
-    {
-      method:"POST",
-      ...authOptions(),
-      body:formData,
-    }
+  return responseJson<GalleryMutationResponse>(
+    response
   );
-
-
-
-  return responseJson<GalleryMutationResponse>(res);
-
 };
 
-
-
-
-
-
-// UPDATE GALLERY
-
 export const updateGallery = async (
-
-  id:string,
-
-  galleryData:Partial<GalleryFormData>
-
+  id: string,
+  galleryData: Partial<GalleryFormData>
 ): Promise<GalleryMutationResponse> => {
+  const formData =
+    new FormData();
 
-
-
-  const formData = new FormData();
-
-
-
-
-  if(galleryData.title) {
-
+  if (
+    galleryData.title !==
+    undefined
+  ) {
     formData.append(
       "title",
       galleryData.title
     );
-
   }
 
-
-
-
-  if(galleryData.category) {
-
+  if (
+    galleryData.category !==
+    undefined
+  ) {
     formData.append(
       "category",
       galleryData.category
     );
-
   }
 
-
-
-
-  if(galleryData.description) {
-
+  if (
+    galleryData.description !==
+    undefined
+  ) {
     formData.append(
       "description",
       galleryData.description
     );
-
   }
 
-
-
-
-  if(galleryData.status) {
-
+  if (
+    galleryData.status !==
+    undefined
+  ) {
     formData.append(
       "status",
       galleryData.status
     );
-
   }
 
-
-
-
-  if(galleryData.coverImage) {
-
+  if (galleryData.coverImage) {
     formData.append(
       "coverImage",
       galleryData.coverImage
     );
-
   }
 
-
-
-
-
   galleryData.images?.forEach(
-    (image)=>{
-
+    (image) => {
       formData.append(
         "images",
         image
       );
-
     }
   );
 
+  const response =
+    await authenticatedApiFetch(
+      `/gallery/${id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
 
-
-
-
-  const res = await fetch(
-
-    `${API_URL}/gallery/${id}`,
-
-    {
-      method:"PUT",
-      ...authOptions(),
-      body:formData,
-    }
-
+  return responseJson<GalleryMutationResponse>(
+    response
   );
-
-
-
-  return responseJson<GalleryMutationResponse>(res);
-
 };
 
-
-
-
-
-
-// DELETE GALLERY
-
 export const deleteGallery = async (
-
-  id:string
-
+  id: string
 ): Promise<GalleryMutationResponse> => {
+  const response =
+    await authenticatedApiFetch(
+      `/gallery/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-
-  const res = await fetch(
-
-    `${API_URL}/gallery/${id}`,
-
-    {
-      method:"DELETE",
-      ...authOptions(),
-    }
-
+  return responseJson<GalleryMutationResponse>(
+    response
   );
-
-
-
-  return responseJson<GalleryMutationResponse>(res);
-
 };
