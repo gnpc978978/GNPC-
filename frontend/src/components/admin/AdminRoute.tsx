@@ -3,74 +3,140 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import {
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
+
 interface Props {
   children: React.ReactNode;
 }
 
-export default function AdminRoute({ children }: Props) {
-  const router = useRouter();
+type AuthResponse = {
+  success: boolean;
+  data?: {
+    id?: string;
+    _id?: string;
+    name?: string;
+    email?: string;
+    role?: string;
+  };
+};
 
-  const [checking, setChecking] = useState(true);
+export default function AdminRoute({
+  children,
+}: Props) {
+  const router = useRouter();
+  const [checking, setChecking] =
+    useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     const checkAuth = async () => {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token")
+          : null;
+
+      if (!token) {
+        router.replace("/admin/login");
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
-
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[auth] requesting /auth/me", {
-            hasToken: Boolean(token),
-          });
+        if (
+          process.env.NODE_ENV !==
+          "production"
+        ) {
+          console.debug(
+            "[auth] requesting /auth/me",
+            {
+              hasToken: Boolean(token),
+            }
+          );
         }
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/me`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: token
-              ? {
-                  Authorization: `Bearer ${token}`,
-                }
-              : {},
-          }
-        );
+        const response =
+          await authenticatedApiFetch(
+            "/auth/me",
+            {
+              method: "GET",
+              headers: {
+                Accept:
+                  "application/json",
+              },
+            }
+          );
 
-        const payload = await response.json();
+        const payload =
+          await responseJson<AuthResponse>(
+            response
+          );
 
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[auth] /auth/me completed", {
-            status: response.status,
-            success: payload.success,
-          });
-        }
-
-        if (!response.ok || !payload.success || !payload.data) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          router.replace("/admin/login");
+        if (
+          cancelled
+        ) {
           return;
         }
 
-        // Keep localStorage in sync
+        if (
+          !payload.success ||
+          !payload.data
+        ) {
+          localStorage.removeItem(
+            "token"
+          );
+          localStorage.removeItem(
+            "user"
+          );
+
+          router.replace(
+            "/admin/login"
+          );
+
+          return;
+        }
+
         localStorage.setItem(
           "user",
-          JSON.stringify(payload.data)
+          JSON.stringify(
+            payload.data
+          )
         );
 
         setChecking(false);
       } catch (error) {
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[auth] /auth/me failed", error);
+        if (
+          process.env.NODE_ENV !==
+          "production"
+        ) {
+          console.debug(
+            "[auth] /auth/me failed",
+            error
+          );
         }
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        router.replace("/admin/login");
+        if (!cancelled) {
+          localStorage.removeItem(
+            "token"
+          );
+          localStorage.removeItem(
+            "user"
+          );
+
+          router.replace(
+            "/admin/login"
+          );
+        }
       }
     };
 
-    checkAuth();
+    void checkAuth();
+
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   if (checking) {
