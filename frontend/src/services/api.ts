@@ -12,7 +12,9 @@ const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
 
 export const API_BASE_URL = rawApiUrl
   ? rawApiUrl.replace(/\/+$/, "")
-  : "";
+  : process.env.NODE_ENV === "development"
+    ? "http://localhost:5001/api"
+    : "";
 
 export const apiUrl = (path = ""): string => {
   if (!API_BASE_URL) {

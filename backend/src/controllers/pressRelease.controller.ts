@@ -77,7 +77,7 @@ res:Response
 try{
 
 const pressReleases = await PressRelease
-.find()
+.find(req.user ? {} : { status: "PUBLISHED", isActive: { $ne: false } })
 .populate("createdBy","name email")
 .sort({
 createdAt:-1
@@ -122,7 +122,7 @@ const pressRelease = await PressRelease.findOne(
 );
 
 
-if(!pressRelease){
+if(!pressRelease || (!req.user && (pressRelease.status !== "PUBLISHED" || pressRelease.isActive === false))){
 
 return res.status(404).json({
 success:false,

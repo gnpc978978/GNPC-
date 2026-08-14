@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import User from "../models/User";
 
-const authMiddleware = (
+const authMiddleware = async (
   req: any,
   res: Response,
   next: NextFunction
@@ -39,7 +40,19 @@ const authMiddleware = (
     );
 
 
-    req.user = decoded;
+    if (!decoded?.id) {
+      return res.status(401).json({ success: false, message: "Invalid token." });
+    }
+
+    // Tokens are short-lived credentials, not a replacement for the current
+    // account state. This prevents an inactive/deleted administrator from
+    // continuing to mutate CMS data until an old JWT expires.
+    const user = await User.findById(decoded.id).select("role status").lean();
+    if (!user || user.status !== "ACTIVE") {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    req.user = { id: user._id.toString(), role: user.role };
 
     if (process.env.NODE_ENV !== "production") {
       console.debug("[auth] token verified", { userId: decoded.id });
@@ -63,3 +76,26 @@ const authMiddleware = (
 };
 
 export default authMiddleware;
+
+// Public feeds use this to show draft content only to an authenticated CMS
+// user, while keeping the same public URL for existing consumers.
+export const optionalAuthMiddleware = async (
+  req: any,
+  _res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization?.startsWith("Bearer ")
+    ? req.headers.authorization.slice(7)
+    : req.cookies?.token;
+  if (!token) return next();
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id?: string };
+    if (!decoded.id) return next();
+    const user = await User.findById(decoded.id).select("role status").lean();
+    if (user?.status === "ACTIVE") req.user = { id: user._id.toString(), role: user.role };
+  } catch {
+    // An invalid optional credential must not expose unpublished records.
+  }
+  return next();
+};

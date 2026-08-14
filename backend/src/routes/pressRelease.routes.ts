@@ -8,7 +8,7 @@ import {
   deletePressRelease,
 } from "../controllers/pressRelease.controller";
 
-import authMiddleware from "../middleware/auth.middleware";
+import authMiddleware, { optionalAuthMiddleware } from "../middleware/auth.middleware";
 import { pressReleaseUpload } from "../middleware/upload.middleware";
 
 const router = express.Router();
@@ -22,11 +22,13 @@ router.post(
 
 router.get(
   "/",
+  optionalAuthMiddleware,
   getPressReleases
 );
 
 router.get(
   "/:id",
+  optionalAuthMiddleware,
   getSinglePressRelease
 );
 

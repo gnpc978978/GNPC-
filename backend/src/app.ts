@@ -42,6 +42,10 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
 
+app.get("/health", (_req, res) => {
+  res.status(200).json({ success: true, status: "ok" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/dashboard", dashboardRoutes);

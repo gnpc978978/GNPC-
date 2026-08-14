@@ -54,8 +54,13 @@ export const getAnnouncements = async (
       };
     }
 
-    if (status) {
+    if (status && req.user) {
       filter.status = status;
+    }
+
+    if (!req.user) {
+      filter.status = "Published";
+      filter.isActive = { $ne: false };
     }
 
     const announcements = await Announcement.find(filter).sort({
@@ -89,7 +94,7 @@ export const getAnnouncement = async (
         : { slug: req.params.id }
     );
 
-    if (!announcement) {
+    if (!announcement || (!req.user && (announcement.status !== "Published" || announcement.isActive === false))) {
       res.status(404).json({
         success: false,
         message: "Announcement not found",

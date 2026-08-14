@@ -120,8 +120,12 @@ export const getPublicMembers =
 
     return {
       data: payload.data,
-      pagination:
-        payload.pagination,
+      pagination: payload.pagination ?? {
+        page,
+        limit,
+        total: payload.data.length,
+        pages: 1,
+      },
       stats: payload.stats,
     };
   };
@@ -159,8 +163,12 @@ export const getMembers =
 
     return {
       data: payload.data,
-      pagination:
-        payload.pagination,
+      pagination: payload.pagination ?? {
+        page,
+        limit,
+        total: payload.data.length,
+        pages: 1,
+      },
       stats: payload.stats,
     };
   };

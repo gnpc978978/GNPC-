@@ -41,6 +41,7 @@ useState<"ACTIVE" | "INACTIVE">("ACTIVE");
 
 const [loading,setLoading] =
 useState(false);
+const [error, setError] = useState("");
 
 
 
@@ -75,9 +76,10 @@ e:React.FormEvent
 
 
 e.preventDefault();
+setError("");
 
-if (!name.trim() || !email.trim() || (!edit && (password.length < 8 || password !== confirmPassword))) {
-  window.alert(edit ? "Name and email are required." : "Use matching passwords with at least 8 characters.");
+if (!name.trim() || !email.trim() || (!edit && (password.length < 8 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password) || password !== confirmPassword))) {
+  setError(edit ? "Name and email are required." : "Use matching passwords with at least 8 characters, an uppercase letter, a lowercase letter, and a number.");
   return;
 }
 
@@ -133,7 +135,7 @@ router.push(
 }
 catch(error){
 
-console.log(error);
+setError(error instanceof Error ? error.message : "Unable to save this administrator.");
 
 }
 finally{
@@ -165,6 +167,7 @@ Name
 
 <input
 className="border p-3 rounded w-full"
+required
 value={name}
 onChange={(e)=>setName(e.target.value)}
 />
@@ -187,13 +190,14 @@ Email
 <input
 type="email"
 className="border p-3 rounded w-full"
+required
 value={email}
 onChange={(e)=>setEmail(e.target.value)}
 />
 
 </div>
 
-{!edit && <div><label className="block mb-2">Confirm Password</label><input type="password" className="border p-3 rounded w-full" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} /></div>}
+{!edit && <div><label className="block mb-2">Confirm Password</label><input type="password" required className="border p-3 rounded w-full" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} /></div>}
 
 
 
@@ -208,6 +212,8 @@ Password
 
 <input
 type="password"
+required
+minLength={8}
 className="border p-3 rounded w-full"
 value={password}
 onChange={(e)=>setPassword(e.target.value)}
@@ -217,6 +223,7 @@ onChange={(e)=>setPassword(e.target.value)}
 
 }
 
+{error && <p role="alert" className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>}
 
 
 

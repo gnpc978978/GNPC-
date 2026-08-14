@@ -120,12 +120,6 @@ export default function HeroCarousel({
    * ============================================================
    */
 
-  useEffect(() => {
-    if (activeIndex >= slides.length) {
-      setActiveIndex(0);
-    }
-  }, [activeIndex, slides.length]);
-
   /*
    * ============================================================
    * AUTO PLAY
@@ -277,8 +271,8 @@ export default function HeroCarousel({
     );
   }
 
-  const activeSlide =
-    slides[activeIndex] ?? slides[0];
+  const safeActiveIndex = activeIndex % slides.length;
+  const activeSlide = slides[safeActiveIndex] ?? slides[0];
 
   return (
     <div
@@ -320,7 +314,7 @@ export default function HeroCarousel({
             src={activeSlide.image}
             alt={alt}
             fill
-            priority={activeIndex === 0}
+            priority={safeActiveIndex === 0}
             sizes="(min-width: 1280px) 55vw, (min-width: 1024px) 50vw, 100vw"
             className="object-cover"
           />
@@ -381,13 +375,13 @@ export default function HeroCarousel({
                       index + 1
                     }`}
                     aria-current={
-                      index === activeIndex
+                      index === safeActiveIndex
                     }
                     className="group/dot flex h-5 items-center"
                   >
                     <span
                       className={`block h-1.5 rounded-full transition-all duration-300 ${
-                        index === activeIndex
+                        index === safeActiveIndex
                           ? "w-8 bg-white"
                           : "w-2.5 bg-white/50 group-hover/dot:bg-white/80"
                       }`}

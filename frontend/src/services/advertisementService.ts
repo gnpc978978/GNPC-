@@ -41,6 +41,12 @@ export const getAdvertisements =
     return payload.data || [];
   };
 
+export const getAdvertisement = async (id: string): Promise<Advertisement> => {
+  const response = await authenticatedApiFetch(`/advertisements/${id}`);
+  const payload = await responseJson<{ data: Advertisement }>(response);
+  return payload.data;
+};
+
 export const createAdvertisement =
   async (
     formData: FormData

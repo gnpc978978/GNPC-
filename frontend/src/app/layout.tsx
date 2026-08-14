@@ -5,6 +5,10 @@ import { Toaster } from "sonner";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { WebsiteSettingsProvider } from "@/context/WebsiteSettingsContext";
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ||
+      "http://localhost:3000"
+  ),
   title: {
     default: "Greater Noida Press Club | Official Website",
     template: "%s | Greater Noida Press Club",

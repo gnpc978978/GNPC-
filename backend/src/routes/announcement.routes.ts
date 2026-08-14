@@ -8,18 +8,20 @@ import {
   deleteAnnouncement,
 } from "../controllers/announcement.controller";
 
-import authMiddleware from "../middleware/auth.middleware";
+import authMiddleware, { optionalAuthMiddleware } from "../middleware/auth.middleware";
 import { announcementUpload } from "../middleware/upload.middleware";
 
 const router = express.Router();
 
 router.get(
   "/",
+  optionalAuthMiddleware,
   getAnnouncements
 );
 
 router.get(
   "/:id",
+  optionalAuthMiddleware,
   getAnnouncement
 );
 
