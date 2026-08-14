@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 
 import Container from "@/components/ui/Container";
 import PageHero from "@/components/ui/PageHero";
+import { apiFetch, responseJson } from "@/services/api";
 
 type UpdateType =
   | "press-releases"
@@ -44,10 +45,6 @@ type Props = {
   type: UpdateType;
   label: string;
 };
-
-const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL || ""
-).replace(/\/+$/, "");
 
 const formatDate = (
   value?: string
@@ -198,17 +195,6 @@ export default function UpdateDetailsPage({
           return;
         }
 
-        if (!API_URL) {
-          if (!cancelled) {
-            setLoading(false);
-            setError(
-              "NEXT_PUBLIC_API_URL is not configured."
-            );
-          }
-
-          return;
-        }
-
         try {
           setLoading(true);
           setError(null);
@@ -219,45 +205,33 @@ export default function UpdateDetailsPage({
               slug
             );
 
-          const endpoint =
-            `${API_URL}/${type}/${encodedSlug}`;
+          const response = await apiFetch(
+            `/${type}/${encodedSlug}`,
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+              },
+              cache: "no-store",
+            }
+          );
 
-          const response =
-            await fetch(
-              endpoint,
-              {
-                method: "GET",
-                headers: {
-                  Accept:
-                    "application/json",
-                },
-                cache: "no-store",
-              }
-            );
-
-          const payload =
-            (await response
-              .json()
-              .catch(
-                () =>
-                  ({
-                    success: false,
-                  }) as ApiResponse
-              )) as ApiResponse;
-
-          if (
-            !response.ok
-          ) {
+          let payload: ApiResponse;
+          try {
+            payload = await responseJson<ApiResponse>(response);
+          } catch (requestError) {
             throw new Error(
-              getErrorMessage(
-                response.status
-              )
+              response.status === 404
+                ? getErrorMessage(404)
+                : response.status >= 500
+                  ? getErrorMessage(500)
+                  : requestError instanceof Error
+                    ? requestError.message
+                    : getErrorMessage(0)
             );
           }
 
-          if (
-            !payload.data
-          ) {
+          if (!payload.data) {
             throw new Error(
               payload.message ||
                 "The requested content was not returned by the server."
