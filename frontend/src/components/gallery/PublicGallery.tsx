@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import Image from "next/image";
+import { apiFetch, responseJson } from "@/services/api";
 import {
   ChevronLeft,
   ChevronRight,
@@ -55,18 +56,6 @@ export default function PublicGallery() {
 
   /*
    * -------------------------------------------------------
-   * API
-   * -------------------------------------------------------
-   */
-
-  const API_URL =
-    process.env.NEXT_PUBLIC_API_URL?.replace(
-      /\/+$/,
-      ""
-    );
-
-  /*
-   * -------------------------------------------------------
    * FETCH GALLERY
    * -------------------------------------------------------
    */
@@ -77,31 +66,13 @@ export default function PublicGallery() {
         setLoading(true);
         setError(null);
 
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
-        }
+        const response = await apiFetch("/gallery", {
+          method: "GET",
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+        });
 
-        const response = await fetch(
-          `${API_URL}/gallery`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-            },
-            cache: "no-store",
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            `Gallery API returned ${response.status}.`
-          );
-        }
-
-        const data =
-          await response.json();
+        const data = await responseJson<any>(response);
 
         const galleryData =
           Array.isArray(data?.gallery)
