@@ -1,9 +1,114 @@
-import { responseJson } from "@/services/api";
+import {
+  apiUrl,
+  responseJson,
+} from "@/services/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
-const request = async <T = { success: boolean; data?: any; message?: string }>(url: string, token: string, init: RequestInit = {}) =>
-  responseJson<T>(await fetch(url, { ...init, headers: { Authorization: `Bearer ${token}`, ...init.headers } }));
-export const getAnnouncements = (token: string, search = "", status = "") => { const query = new URLSearchParams(); if (search) query.set("search", search); if (status) query.set("status", status); return request(`${API}/announcements?${query}`, token); };
-export const createAnnouncement = (data: FormData, token: string) => request(`${API}/announcements`, token, { method: "POST", body: data });
-export const updateAnnouncement = (id: string, data: FormData, token: string) => request(`${API}/announcements/${id}`, token, { method: "PUT", body: data });
-export const deleteAnnouncement = (id: string, token: string) => request(`${API}/announcements/${id}`, token, { method: "DELETE" });
+type AnnouncementResponse = {
+  success: boolean;
+  data?: unknown;
+  message?: string;
+};
+
+const request = async <
+  T = AnnouncementResponse
+>(
+  path: string,
+  token: string,
+  init: RequestInit = {}
+): Promise<T> => {
+  const headers = new Headers(
+    init.headers
+  );
+
+  const effectiveToken =
+    token ||
+    (typeof window !== "undefined"
+      ? localStorage.getItem("token") || ""
+      : "");
+
+  if (effectiveToken) {
+    headers.set(
+      "Authorization",
+      `Bearer ${effectiveToken}`
+    );
+  }
+
+  const response = await fetch(
+    apiUrl(path),
+    {
+      ...init,
+      credentials: "include",
+      headers,
+    }
+  );
+
+  return responseJson<T>(response);
+};
+
+export const getAnnouncements = (
+  token: string,
+  search = "",
+  status = ""
+) => {
+  const query =
+    new URLSearchParams();
+
+  if (search) {
+    query.set("search", search);
+  }
+
+  if (status) {
+    query.set("status", status);
+  }
+
+  const queryString =
+    query.toString();
+
+  return request(
+    `/announcements${
+      queryString
+        ? `?${queryString}`
+        : ""
+    }`,
+    token
+  );
+};
+
+export const createAnnouncement = (
+  data: FormData,
+  token: string
+) =>
+  request(
+    "/announcements",
+    token,
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+
+export const updateAnnouncement = (
+  id: string,
+  data: FormData,
+  token: string
+) =>
+  request(
+    `/announcements/${id}`,
+    token,
+    {
+      method: "PUT",
+      body: data,
+    }
+  );
+
+export const deleteAnnouncement = (
+  id: string,
+  token: string
+) =>
+  request(
+    `/announcements/${id}`,
+    token,
+    {
+      method: "DELETE",
+    }
+  );
