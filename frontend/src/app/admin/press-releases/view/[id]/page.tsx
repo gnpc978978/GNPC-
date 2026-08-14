@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { authenticatedApiFetch, responseJson } from "@/services/api";
-import { useEffect, useState } from "react";
+import {
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
+import {
+  useEffect,
+  useState,
+} from "react";
 import { useParams } from "next/navigation";
 import {
   FaArrowLeft,
@@ -25,12 +31,21 @@ type PressRelease = {
   };
 };
 
+type PressReleaseResponse = {
+  data?: PressRelease;
+  message?: string;
+};
+
 export default function ViewPressReleasePage() {
   const { id } =
     useParams<{ id: string }>();
 
-  const [pressRelease, setPressRelease] =
-    useState<PressRelease | null>(null);
+  const [
+    pressRelease,
+    setPressRelease,
+  ] = useState<PressRelease | null>(
+    null
+  );
 
   const [loading, setLoading] =
     useState(true);
@@ -39,24 +54,55 @@ export default function ViewPressReleasePage() {
     useState(false);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setLoading(false);
+      setError(true);
+      return;
+    }
 
-    authenticatedApiFetch(
-      `/press-releases/${encodeURIComponent(id)}`,
-      { method: "GET" }
-    )
-      .then((response) =>
-        responseJson<{ data?: PressRelease; message?: string }>(response)
-      )
-      .then((data) => {
-        setPressRelease(data.data);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const loadPressRelease =
+      async () => {
+        try {
+          setLoading(true);
+          setError(false);
+
+          const response =
+            await authenticatedApiFetch(
+              `/press-releases/${encodeURIComponent(
+                id
+              )}`,
+              {
+                method: "GET",
+              }
+            );
+
+          const data =
+            await responseJson<PressReleaseResponse>(
+              response
+            );
+
+          if (data.data) {
+            setPressRelease(
+              data.data
+            );
+          } else {
+            setPressRelease(null);
+            setError(true);
+          }
+        } catch (requestError) {
+          console.error(
+            "Failed to load press release:",
+            requestError
+          );
+
+          setPressRelease(null);
+          setError(true);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+    void loadPressRelease();
   }, [id]);
 
   if (loading) {
@@ -70,7 +116,6 @@ export default function ViewPressReleasePage() {
   if (error || !pressRelease) {
     return (
       <div className="rounded-xl bg-white p-8 shadow">
-
         <h1 className="text-xl font-bold">
           Press Release Not Found
         </h1>
@@ -81,16 +126,13 @@ export default function ViewPressReleasePage() {
         >
           ← Back to Press Releases
         </Link>
-
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-
-      <div className="flex items-center justify-between">
-
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
             View Press Release
@@ -101,13 +143,14 @@ export default function ViewPressReleasePage() {
           </p>
         </div>
 
-        <div className="flex gap-3">
-
+        <div className="flex flex-wrap gap-3">
           <Link
             href="/admin/press-releases"
             className="flex items-center gap-2 rounded-lg border px-5 py-3 hover:bg-gray-100"
           >
-            <FaArrowLeft />
+            <FaArrowLeft
+              aria-hidden="true"
+            />
             Back
           </Link>
 
@@ -115,16 +158,15 @@ export default function ViewPressReleasePage() {
             href={`/admin/press-releases/edit/${pressRelease._id}`}
             className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
           >
-            <FaEdit />
+            <FaEdit
+              aria-hidden="true"
+            />
             Edit
           </Link>
-
         </div>
-
       </div>
 
-      <div className="rounded-xl bg-white p-8 shadow">
-
+      <div className="rounded-xl bg-white p-5 shadow sm:p-8">
         {pressRelease.image && (
           <img
             src={pressRelease.image}
@@ -138,7 +180,6 @@ export default function ViewPressReleasePage() {
         </h2>
 
         <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-600">
-
           <span>
             Category:{" "}
             {pressRelease.category}
@@ -155,20 +196,22 @@ export default function ViewPressReleasePage() {
               Date:{" "}
               {new Date(
                 pressRelease.createdAt
-              ).toLocaleDateString("en-IN")}
+              ).toLocaleDateString(
+                "en-IN"
+              )}
             </span>
           )}
 
           <StatusBadge
-            status={pressRelease.status}
+            status={
+              pressRelease.status
+            }
           />
-
         </div>
 
         <hr className="my-6" />
 
         <div>
-
           <h3 className="mb-3 text-lg font-semibold">
             Content
           </h3>
@@ -176,11 +219,8 @@ export default function ViewPressReleasePage() {
           <div className="whitespace-pre-line leading-7 text-gray-700">
             {pressRelease.content}
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }
