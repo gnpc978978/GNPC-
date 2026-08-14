@@ -7,6 +7,7 @@ import TopBar from "@/components/layout/TopBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingContactButton from "@/components/layout/FloatingContactButton";
+import { apiFetch } from "@/services/api";
 
 interface WebsiteLayoutProps {
   children: React.ReactNode;
@@ -24,17 +25,6 @@ export default function WebsiteLayout({
    */
 
   useEffect(() => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL;
-
-    if (!apiUrl) {
-      console.error(
-        "NEXT_PUBLIC_API_URL is not configured."
-      );
-
-      return;
-    }
-
     let sessionId =
       localStorage.getItem(
         "gnpc_traffic_session"
@@ -59,9 +49,7 @@ export default function WebsiteLayout({
     const sendHeartbeat =
       async () => {
         try {
-          await fetch(
-            `${apiUrl}/dashboard/traffic`,
-            {
+          await apiFetch("/dashboard/traffic", {
               method: "POST",
               headers: {
                 "Content-Type":
