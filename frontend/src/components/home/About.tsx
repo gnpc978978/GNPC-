@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
@@ -8,6 +7,7 @@ import { Check, ImageOff } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+import { apiFetch, responseJson } from "@/services/api";
 
 type AboutSettings = { image?: string; heading: string; description: string; features: string[] };
 type PublicStats = { members: number; pressReleases: number; events: number };
@@ -47,13 +47,17 @@ export default function About() {
   useEffect(() => {
     let cancelled = false;
     Promise.allSettled([
-      axios.get<{ data: AboutSettings }>(`${process.env.NEXT_PUBLIC_API_URL}/settings/about`),
-      axios.get<PublicStats>(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/public-stats`),
+      apiFetch("/settings/about", { cache: "no-store" }).then((response) =>
+        responseJson<{ data?: AboutSettings }>(response)
+      ),
+      apiFetch("/dashboard/public-stats", { cache: "no-store" }).then((response) =>
+        responseJson<PublicStats>(response)
+      ),
     ]).then(([aboutResult, statsResult]) => {
       if (cancelled) return;
-      if (aboutResult.status === "fulfilled") setAbout({ ...emptyAbout, ...aboutResult.value.data.data, image: aboutResult.value.data.data.image || settings.aboutImage, features: aboutResult.value.data.data.features || [] });
+      if (aboutResult.status === "fulfilled") setAbout({ ...emptyAbout, ...aboutResult.value.data || {}, image: aboutResult.value.data || {}.image || settings.aboutImage, features: aboutResult.value.data || {}.features || [] });
       else if (settings.aboutImage) setAbout({ ...emptyAbout, image: settings.aboutImage });
-      if (statsResult.status === "fulfilled") setStats({ ...emptyStats, ...statsResult.value.data });
+      if (statsResult.status === "fulfilled") setStats({ ...emptyStats, ...statsResult.value });
     }).finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [settings.aboutImage]);
