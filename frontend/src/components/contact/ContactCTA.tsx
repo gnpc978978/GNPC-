@@ -1,26 +1,20 @@
-import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export default function ContactCTA() {
   return (
-    <section className="bg-blue-700 py-20">
-      <div className="mx-auto max-w-5xl px-6 text-center">
-        <h2 className="text-4xl font-bold text-white">
+    <section className="bg-blue-700 py-14 sm:py-16">
+      <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
+        <h2 className="text-3xl font-bold text-white sm:text-4xl">
           Ready to Connect With Us?
         </h2>
 
-        <p className="mx-auto mt-5 max-w-2xl text-lg text-blue-100">
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-blue-50 sm:text-lg">
           Whether you're a journalist, media organization, or interested in
           becoming a member, we'd love to hear from you.
         </p>
 
-        <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-
-          <Link
-            href="/"
-            className="rounded-lg border border-white px-8 py-3 font-semibold text-white transition hover:bg-white hover:text-blue-700"
-          >
-            Back to Home
-          </Link>
+        <div className="mt-7 flex justify-center">
+          <Button href="/" variant="inverse" size="lg">Back to Home</Button>
         </div>
       </div>
     </section>

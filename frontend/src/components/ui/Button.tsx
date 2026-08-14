@@ -11,6 +11,7 @@ type ButtonVariant =
   | "primary"
   | "outline"
   | "soft"
+  | "inverse"
   | "danger"
   | "ghost";
 
@@ -79,6 +80,8 @@ const variantClasses: Record<
   soft: [
     "gnpc-btn-soft",
   ].join(" "),
+
+  inverse: "gnpc-btn-inverse",
 
   danger: [
     "gnpc-btn-danger",

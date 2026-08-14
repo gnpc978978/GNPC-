@@ -20,6 +20,7 @@ import {
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
 import Logo from "./Logo";
+import Button from "@/components/ui/Button";
 
 export default function Footer() {
   const { settings } =
@@ -172,14 +173,14 @@ export default function Footer() {
               <Logo />
             </Link>
 
-            <p className="mt-5 max-w-md text-sm leading-7 text-white/65">
+            <p className="mt-5 max-w-md text-sm leading-7 text-white/80">
               {description}
             </p>
 
             {/* Contact information */}
             <div className="mt-6 space-y-3">
               {address && (
-                <div className="flex items-start gap-3 text-sm text-white/65">
+                <div className="flex items-start gap-3 text-sm text-white/80">
                   <MapPin
                     size={17}
                     className="mt-0.5 shrink-0 text-white/75"
@@ -195,7 +196,7 @@ export default function Footer() {
               {phone && (
                 <a
                   href={`tel:${phone}`}
-                  className="flex items-center gap-3 text-sm text-white/65 transition-colors duration-200 hover:text-white"
+                  className="flex items-center gap-3 text-sm text-white/80 transition-colors duration-200 hover:text-white"
                 >
                   <Phone
                     size={17}
@@ -212,7 +213,7 @@ export default function Footer() {
               {email && (
                 <a
                   href={`mailto:${email}`}
-                  className="flex items-center gap-3 break-all text-sm text-white/65 transition-colors duration-200 hover:text-white"
+                  className="flex items-center gap-3 break-all text-sm text-white/80 transition-colors duration-200 hover:text-white"
                 >
                   <Mail
                     size={17}
@@ -248,7 +249,7 @@ export default function Footer() {
                       href={
                         link.href
                       }
-                      className="group inline-flex items-center gap-2 text-sm text-white/60 transition-colors duration-200 hover:text-white"
+                      className="group inline-flex items-center gap-2 text-sm text-white/80 transition-colors duration-200 hover:text-white"
                     >
                       <span>
                         {link.label}
@@ -286,7 +287,7 @@ export default function Footer() {
                       href={
                         link.href
                       }
-                      className="group inline-flex items-center gap-2 text-sm text-white/60 transition-colors duration-200 hover:text-white"
+                      className="group inline-flex items-center gap-2 text-sm text-white/80 transition-colors duration-200 hover:text-white"
                     >
                       <span>
                         {link.label}
@@ -312,7 +313,7 @@ export default function Footer() {
               Connect With Us
             </h3>
 
-            <p className="mt-5 text-sm leading-7 text-white/60">
+            <p className="mt-5 text-sm leading-7 text-white/80">
               Stay connected with GNPC for the latest
               announcements, press activities and updates.
             </p>
@@ -373,50 +374,7 @@ export default function Footer() {
               </div>
             )}
 
-            <Link
-              href="/contact"
-              className={[
-                "group",
-                "mt-6",
-                "inline-flex",
-                "items-center",
-                "gap-2",
-
-                "rounded-xl",
-
-                "border",
-                "border-white/20",
-
-                "bg-white/5",
-
-                "px-4",
-                "py-3",
-
-                "text-sm",
-                "font-bold",
-                "text-white",
-
-                "transition-all",
-                "duration-200",
-
-                "hover:border-white/30",
-                "hover:bg-white/10",
-
-                "focus-visible:outline-none",
-                "focus-visible:ring-2",
-                "focus-visible:ring-white",
-                "focus-visible:ring-offset-2",
-                "focus-visible:ring-offset-[#0a3a61]",
-              ].join(" ")}
-            >
-              Get in touch
-
-              <ArrowUpRight
-                size={16}
-                className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
+            <Button href="/contact" variant="inverse" className="mt-6 focus-visible:ring-white focus-visible:ring-offset-[#0a3a61]">Get in touch <ArrowUpRight size={16} aria-hidden="true" /></Button>
           </div>
         </div>
       </div>
@@ -446,7 +404,7 @@ export default function Footer() {
             "lg:px-8",
           ].join(" ")}
         >
-          <p className="text-xs leading-5 text-white/45 sm:text-sm">
+          <p className="text-xs leading-5 text-white/75 sm:text-sm">
             ©{" "}
             {new Date().getFullYear()}{" "}
             {siteName}. All rights reserved.
@@ -455,19 +413,19 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm">
             <Link
               href="/privacy-policy"
-              className="text-white/45 transition-colors duration-200 hover:text-white"
+              className="text-white/75 transition-colors duration-200 hover:text-white"
             >
               Privacy Policy
             </Link>
 
             <Link
               href="/terms"
-              className="text-white/45 transition-colors duration-200 hover:text-white"
+              className="text-white/75 transition-colors duration-200 hover:text-white"
             >
               Terms & Conditions
             </Link>
 
-            <span className="text-white/35">
+            <span className="text-white/70">
               Designed & Developed by Ayzent Solutions
             </span>
           </div>
