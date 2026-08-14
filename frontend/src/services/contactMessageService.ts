@@ -1,175 +1,114 @@
-import { ContactMessage } from "@/types/contactMessage";
-import { responseJson } from "@/services/api";
+import {
+  apiFetch,
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
 
+import {
+  ContactMessage,
+} from "@/types/contactMessage";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL;
+type ContactMessageApi = {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: ContactMessage["status"];
+  createdAt: string;
+  updatedAt?: string;
+};
 
-const authOptions = () => ({
-  credentials: "include" as RequestCredentials,
-  headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` },
+const mapContactMessage = (
+  item: ContactMessageApi
+): ContactMessage => ({
+  id: item._id,
+  name: item.name,
+  email: item.email,
+  phone: item.phone,
+  subject: item.subject,
+  message: item.message,
+  status: item.status,
+  createdAt: item.createdAt,
+  updatedAt: item.updatedAt,
 });
 
-
-
-
 export const getContactMessages =
-async (): Promise<ContactMessage[]> => {
+  async (): Promise<
+    ContactMessage[]
+  > => {
+    const response =
+      await authenticatedApiFetch(
+        "/contact-messages"
+      );
 
+    const result =
+      await responseJson<{
+        data: ContactMessageApi[];
+      }>(response);
 
-  const res = await fetch(
-    `${API_URL}/contact-messages`,
-    authOptions()
-  );
-
-
-  const data = await responseJson<{ data: any[] }>(res);
-
-
-
-  return data.data.map((item:any)=>({
-
-    id: item._id,
-
-    name: item.name,
-
-    email: item.email,
-
-    phone: item.phone,
-
-    subject: item.subject,
-
-    message: item.message,
-
-    status: item.status,
-
-    createdAt: item.createdAt,
-
-    updatedAt: item.updatedAt,
-
-  }));
-
-};
-
-
-
-
-
-
-export const getContactMessageById =
-async (
-  id:string
-): Promise<ContactMessage> => {
-
-
-  const res = await fetch(
-    `${API_URL}/contact-messages/${id}`,
-    authOptions()
-  );
-
-
-  const data = await responseJson<{ data: any }>(res);
-
-
-
-  const item = data.data;
-
-
-
-  return {
-
-    id: item._id,
-
-    name: item.name,
-
-    email: item.email,
-
-    phone: item.phone,
-
-    subject: item.subject,
-
-    message: item.message,
-
-    status: item.status,
-
-    createdAt: item.createdAt,
-
-    updatedAt: item.updatedAt,
-
+    return result.data.map(
+      mapContactMessage
+    );
   };
 
+export const getContactMessageById =
+  async (
+    id: string
+  ): Promise<ContactMessage> => {
+    const response =
+      await authenticatedApiFetch(
+        `/contact-messages/${id}`
+      );
 
-};
+    const result =
+      await responseJson<{
+        data: ContactMessageApi;
+      }>(response);
 
-
-
-
-
+    return mapContactMessage(
+      result.data
+    );
+  };
 
 export const updateContactMessageStatus =
-async (
-  id:string,
-  status:
-  | "UNREAD"
-  | "READ"
-  | "REPLIED"
-) => {
+  async (
+    id: string,
+    status:
+      | "UNREAD"
+      | "READ"
+      | "REPLIED"
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/contact-messages/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            status,
+          }),
+        }
+      );
 
-
-  const res = await fetch(
-
-    `${API_URL}/contact-messages/${id}/status`,
-
-    {
-
-      method:"PUT",
-
-      headers:{
-        "Content-Type":
-        "application/json",
-        ...authOptions().headers,
-      },
-
-      credentials: "include",
-
-      body:JSON.stringify({
-        status,
-      }),
-
-    }
-
-  );
-
-
-  return responseJson(res);
-
-};
-
-
-
-
-
+    return responseJson(response);
+  };
 
 export const deleteContactMessage =
-async (
-  id:string
-) => {
+  async (
+    id: string
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/contact-messages/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-
-  const res = await fetch(
-
-    `${API_URL}/contact-messages/${id}`,
-
-    {
-
-      method:"DELETE",
-      ...authOptions(),
-
-    }
-
-  );
-
-
-  return responseJson(res);
-
-};
+    return responseJson(response);
+  };
