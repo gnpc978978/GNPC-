@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  authenticatedFetch,
+  authenticatedApiFetch,
   responseJson,
 } from "@/services/api";
 
@@ -90,8 +90,8 @@ export default function RecentActivities() {
     const fetchActivities = async () => {
       try {
         const response =
-          await authenticatedFetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/admin/activities`,
+          await authenticatedApiFetch(
+            "/admin/activities",
             {
               method: "GET",
             }
