@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaEdit, FaTrash } from "react-icons/fa";
+
 import { GalleryImage } from "@/types/gallery";
 
 interface GalleryCardProps {
@@ -21,6 +22,7 @@ export default function GalleryCard({
           src={image.image}
           alt={image.title}
           fill
+          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
           className="object-cover"
         />
       </div>
@@ -52,17 +54,22 @@ export default function GalleryCard({
 
         <div className="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">
           <Link
-            href={`/admin/gallery/edit/${image.id}`}
-            className="rounded-lg bg-yellow-500 p-2 text-white transition hover:bg-yellow-600"
+            href={`/admin/gallery/images/edit/${image.id}`}
+            aria-label={`Edit ${image.title}`}
+            title="Edit image"
+            className="rounded-lg bg-yellow-500 p-2 text-white transition hover:bg-yellow-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
           >
-            <FaEdit />
+            <FaEdit aria-hidden="true" />
           </Link>
 
           <button
+            type="button"
             onClick={() => onDelete?.(image.id)}
-            className="rounded-lg bg-red-500 p-2 text-white transition hover:bg-red-600"
+            aria-label={`Delete ${image.title}`}
+            title="Delete image"
+            className="rounded-lg bg-red-500 p-2 text-white transition hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
           >
-            <FaTrash />
+            <FaTrash aria-hidden="true" />
           </button>
         </div>
       </div>
