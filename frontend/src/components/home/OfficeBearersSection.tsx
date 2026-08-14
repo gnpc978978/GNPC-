@@ -6,6 +6,8 @@ import { useRef, useState } from "react";
 import { usePublicMembers } from "@/hooks/useMembers";
 import OfficeBearerCard from "@/components/office-bearers/OfficeBearerCard";
 import OfficeBearersSkeleton from "@/components/office-bearers/OfficeBearersSkeleton";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 
 export default function OfficeBearersSection() {
   const { data, isLoading, isError } = usePublicMembers(1, 8);
@@ -29,21 +31,14 @@ export default function OfficeBearersSection() {
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-end justify-between gap-5">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-700">Our people</p>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Office Bearers</h2>
-            <p className="mt-3 max-w-2xl text-slate-600">Meet the people leading Greater Noida Press Club.</p>
-          </div>
-          <div className="flex items-center gap-2" aria-label="Office bearers carousel controls">
+        <SectionHeading badge="Our people" title="Office Bearers" description="Meet the people leading Greater Noida Press Club." action={<div className="flex items-center gap-2" aria-label="Office bearers carousel controls">
             <button type="button" onClick={() => move(-1)} disabled={!canGoBack} aria-label="Previous office bearers" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-40">
               <ChevronLeft size={20} aria-hidden="true" />
             </button>
             <button type="button" onClick={() => move(1)} disabled={!canGoForward} aria-label="Next office bearers" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-40">
               <ChevronRight size={20} aria-hidden="true" />
             </button>
-          </div>
-        </div>
+          </div>} />
 
         <div className="mt-9">
           {isLoading ? <OfficeBearersSkeleton count={4} /> : isError ? (
@@ -57,7 +52,7 @@ export default function OfficeBearersSection() {
           )}
         </div>
 
-        <div className="mt-8 text-center"><Link href="/office-bearers" className="inline-flex rounded-xl bg-blue-700 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">View all office bearers</Link></div>
+        <div className="mt-8"><Button href="/office-bearers" size="lg">View all office bearers</Button></div>
       </div>
     </section>
   );

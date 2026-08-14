@@ -18,6 +18,8 @@ import {
 import type {
   ExecutiveCommittee,
 } from "@/types/executiveCommittee";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 
 type Props = {
   limit?: number;
@@ -158,15 +160,7 @@ export default function ExecutiveCommitteeSection({
       <div className="mx-auto max-w-7xl px-6">
         {/* Only show this heading for limited/embedded sections */}
         {!isDirectory && (
-          <div className="mb-10 text-center">
-            <p className="gnpc-eyebrow justify-center">
-              Our Strength
-            </p>
-
-            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl">
-              {title}
-            </h2>
-          </div>
+          <div className="mb-10"><SectionHeading badge="Our Strength" title={title} /></div>
         )}
 
         {/* Directory filters */}
@@ -373,12 +367,7 @@ export default function ExecutiveCommitteeSection({
         {/* View all */}
         {showViewAll && (
           <div className="mt-10 text-center">
-            <Link
-              href="/committee"
-              className="inline-flex rounded-xl bg-blue-700 px-6 py-3 font-semibold text-white transition hover:bg-blue-800"
-            >
-              View All Executive Committee
-            </Link>
+            <Button href="/committee" size="lg">View All Executive Committee</Button>
           </div>
         )}
       </div>

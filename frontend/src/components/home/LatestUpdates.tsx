@@ -16,6 +16,8 @@ import {
   apiFetch,
   responseJson,
 } from "@/services/api";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 
 type LatestUpdate = {
   _id: string;
@@ -206,22 +208,7 @@ export default function LatestUpdates() {
   return (
     <section className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="text-center">
-          <p className="gnpc-eyebrow justify-center">
-            LATEST UPDATES
-          </p>
-
-          <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl">
-            News from Greater Noida
-            Press Club
-          </h2>
-
-          <p className="gnpc-section-description mx-auto text-center">
-            Stay updated with the latest
-            announcements, events, press
-            releases and press conferences.
-          </p>
-        </div>
+        <SectionHeading align="left" badge="Latest Updates" title="News from Greater Noida Press Club" description="Stay updated with the latest announcements, events, press releases and press conferences." />
 
         {loading && (
           <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
@@ -368,18 +355,7 @@ export default function LatestUpdates() {
             </div>
           )}
 
-        <div className="mt-10 text-center">
-          <Link
-            href="/latest-updates"
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
-          >
-            View All Updates
-
-            <ArrowRight
-              size={18}
-            />
-          </Link>
-        </div>
+        <div className="mt-10"><Button href="/latest-updates" size="lg">View All Updates <ArrowRight size={18} /></Button></div>
       </div>
     </section>
   );

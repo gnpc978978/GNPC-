@@ -12,6 +12,7 @@ import Container from "@/components/ui/Container";
 import { apiFetch, responseJson } from "@/services/api";
 import Card from "@/components/ui/Card";
 import PageHero from "@/components/ui/PageHero";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 type PressConference = {
   _id: string;
@@ -117,19 +118,7 @@ export default function PressConferenceList({
         <Container>
           {/* Homepage / latest-only heading */}
           {latestOnly && (
-            <div className="mb-10">
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">
-                Media & Journalism
-              </p>
-
-              <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-                {title}
-              </h2>
-
-              <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
-                {description}
-              </p>
-            </div>
+            <div className="mb-10"><SectionHeading badge="Media & Journalism" title={title} description={description} /></div>
           )}
 
           {/* Loading */}

@@ -16,6 +16,8 @@ import {
   apiFetch,
   responseJson,
 } from "@/services/api";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 
 type GalleryItem = {
   _id?: string;
@@ -103,34 +105,7 @@ export default function Gallery() {
   return (
     <section className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-          <div>
-            <p className="gnpc-eyebrow">
-              GALLERY
-            </p>
-
-            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl">
-              Moments from GNPC
-            </h2>
-
-            <p className="gnpc-section-description">
-              Explore recent events,
-              press activities and
-              memorable moments.
-            </p>
-          </div>
-
-          <Link
-            href="/gallery"
-            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-blue-700 px-5 py-3 text-sm font-bold text-blue-700 transition hover:bg-blue-700 hover:text-white"
-          >
-            View Gallery
-
-            <ArrowRight
-              size={17}
-            />
-          </Link>
-        </div>
+        <SectionHeading badge="Gallery" title="Moments from GNPC" description="Explore recent events, press activities and memorable moments." action={<Button href="/gallery" variant="outline" size="lg">View Gallery <ArrowRight size={17} /></Button>} />
 
         {loading ? (
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
