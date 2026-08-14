@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 
 
 export default function SponsorForm(){
@@ -90,15 +91,12 @@ const saveSponsor = async (
 
   try {
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/sponsors`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const res = await authenticatedApiFetch("/sponsors", {
+      method: "POST",
+      body: formData,
+    });
 
-    const data = await res.json();
+    const data = await responseJson<{ success?: boolean; message?: string }>(res);
 
     if (!data.success) {
 
