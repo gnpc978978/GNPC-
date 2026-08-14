@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import {
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
+
 type AuthenticatedUser = {
   id?: string;
   _id?: string;
@@ -10,14 +15,24 @@ type AuthenticatedUser = {
   role?: string;
 };
 
+type AuthResponse = {
+  success: boolean;
+  data?: AuthenticatedUser;
+};
+
 function AccessDenied() {
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="rounded-lg border bg-white p-8 text-center shadow">
-        <h1 className="mb-2 text-2xl font-bold">Access Denied</h1>
+    <div className="flex h-screen items-center justify-center px-4">
+      <div className="w-full max-w-lg rounded-lg border bg-white p-8 text-center shadow">
+        <h1 className="mb-2 text-2xl font-bold">
+          Access Denied
+        </h1>
+
         <p className="text-gray-600">
-          Admin Management is available only to Super Admin accounts.
-          Please contact a Super Admin if you need access.
+          Admin Management is available only
+          to Super Admin accounts. Please
+          contact a Super Admin if you need
+          access.
         </p>
       </div>
     </div>
@@ -31,69 +46,124 @@ export default function SuperAdminRoute({
 }) {
   const router = useRouter();
 
-  const [checking, setChecking] = useState(true);
-  const [allowed, setAllowed] = useState(false);
+  const [checking, setChecking] =
+    useState(true);
+
+  const [allowed, setAllowed] =
+    useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     const checkRole = async () => {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token")
+          : null;
+
+      if (!token) {
+        router.replace("/admin/login");
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
-
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[auth] requesting /auth/me for role check", {
-            hasToken: Boolean(token),
-          });
+        if (
+          process.env.NODE_ENV !==
+          "production"
+        ) {
+          console.debug(
+            "[auth] requesting /auth/me for role check",
+            {
+              hasToken: Boolean(token),
+            }
+          );
         }
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/me`,
-          {
-            credentials: "include",
-            headers: token
-              ? {
-                  Authorization: `Bearer ${token}`,
-                }
-              : {},
-          }
-        );
+        const response =
+          await authenticatedApiFetch(
+            "/auth/me",
+            {
+              method: "GET",
+              headers: {
+                Accept:
+                  "application/json",
+              },
+            }
+          );
 
-        const payload = await response.json();
+        const payload =
+          await responseJson<AuthResponse>(
+            response
+          );
 
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[auth] role check completed", {
-            status: response.status,
-            success: payload.success,
-          });
-        }
-
-        if (!response.ok || !payload.success || !payload.data) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          router.replace("/admin/login");
+        if (
+          cancelled
+        ) {
           return;
         }
 
-        const user = payload.data;
+        if (
+          !payload.success ||
+          !payload.data
+        ) {
+          localStorage.removeItem(
+            "token"
+          );
+          localStorage.removeItem(
+            "user"
+          );
+
+          router.replace(
+            "/admin/login"
+          );
+
+          return;
+        }
 
         localStorage.setItem(
           "user",
-          JSON.stringify(user)
+          JSON.stringify(
+            payload.data
+          )
         );
 
-        setAllowed(user.role === "SUPER_ADMIN");
+        setAllowed(
+          payload.data.role ===
+            "SUPER_ADMIN"
+        );
+
         setChecking(false);
       } catch (error) {
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("[auth] role check failed", error);
+        if (
+          process.env.NODE_ENV !==
+          "production"
+        ) {
+          console.debug(
+            "[auth] role check failed",
+            error
+          );
         }
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        router.replace("/admin/login");
+        if (!cancelled) {
+          localStorage.removeItem(
+            "token"
+          );
+          localStorage.removeItem(
+            "user"
+          );
+
+          router.replace(
+            "/admin/login"
+          );
+        }
       }
     };
 
-    checkRole();
+    void checkRole();
+
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   if (checking) {
@@ -104,5 +174,9 @@ export default function SuperAdminRoute({
     );
   }
 
-  return allowed ? <>{children}</> : <AccessDenied />;
+  return allowed ? (
+    <>{children}</>
+  ) : (
+    <AccessDenied />
+  );
 }
