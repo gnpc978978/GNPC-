@@ -10,79 +10,60 @@ import CTA from "@/components/home/CTA";
 
 export default function HomePage() {
   return (
-    <div className="w-full overflow-x-hidden bg-white">
-      {/* =================================================
-          HERO
-          ================================================= */}
-
+    <main className="home-page w-full overflow-x-hidden bg-white">
+      {/* HERO */}
       <Hero />
 
-      {/* =================================================
-          ABOUT GNPC
-          ================================================= */}
-
+      {/* ABOUT */}
       <section
         id="about"
-        className="bg-white"
+        data-home-section
+        className="home-section bg-white"
       >
         <About />
       </section>
 
-      {/* =================================================
-          OBJECTIVES
-          ================================================= */}
-
+      {/* OBJECTIVES */}
       <section
         id="objectives"
-        className="bg-slate-50"
+        data-home-section
+        className="home-section bg-slate-50"
       >
         <Objectives />
       </section>
 
-      {/* =================================================
-          LATEST UPDATES
-          
-          Press Releases
-          Announcements
-          Events
-          ================================================= */}
-
+      {/* LATEST UPDATES */}
       <section
         id="latest-updates"
-        className="bg-white"
+        data-home-section
+        className="home-section bg-white"
       >
         <LatestUpdates />
       </section>
 
-      {/* =================================================
-          GALLERY
-          ================================================= */}
-
+      {/* GALLERY */}
       <section
         id="gallery"
-        className="bg-slate-50"
+        data-home-section
+        className="home-section bg-slate-50"
       >
         <Gallery />
       </section>
 
-      {/* =================================================
-          PRESS CONFERENCES
-          ================================================= */}
-
+      {/* PRESS CONFERENCES */}
       <section
         id="press-conferences"
-        className="bg-white"
+        data-home-section
+        className="home-section bg-white"
       >
         <PressConference />
       </section>
 
-      {/* =================================================
-          EXECUTIVE COMMITTEE
-          ================================================= */}
-
+      {/* EXECUTIVE COMMITTEE */}
       <section
         id="executive-committee"
-        className="bg-slate-50"
+        data-home-section
+        className="home-section bg-slate-50"
       >
         <ExecutiveCommitteeSection
           limit={4}
@@ -90,27 +71,148 @@ export default function HomePage() {
         />
       </section>
 
-      {/* =================================================
-          OFFICE BEARERS
-          ================================================= */}
-
+      {/* OFFICE BEARERS */}
       <section
         id="office-bearers"
-        className="bg-white"
+        data-home-section
+        className="home-section bg-white"
       >
         <OfficeBearersSection />
       </section>
 
-      {/* =================================================
-          MEMBERSHIP / CONTACT CTA
-          ================================================= */}
-
+      {/* JOIN / CONTACT CTA */}
       <section
         id="membership"
-        className="bg-slate-50"
+        data-home-section
+        className="home-section bg-slate-50"
       >
         <CTA />
       </section>
-    </div>
-  );
-}
+
+      <style jsx global>{`
+        /* =========================================================
+           GNPC HOMEPAGE SECTION SYSTEM
+           ========================================================= */
+
+        .home-page {
+          --gnpc-blue: #1769ff;
+          --gnpc-heading: #0f172a;
+          --gnpc-muted: #64748b;
+        }
+
+        /* Consistent section spacing */
+        .home-page .home-section {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+
+        /* =========================================================
+           SECTION HEADINGS
+           Center the main heading area across homepage sections.
+           ========================================================= */
+
+        .home-page
+          .home-section
+          > div
+          > h2:first-of-type,
+        .home-page
+          .home-section
+          > div
+          > div:first-child
+          > h2:first-of-type,
+        .home-page
+          .home-section
+          > div
+          > div:first-child
+          > div:first-child
+          > h2:first-of-type {
+          margin-left: auto !important;
+          margin-right: auto !important;
+          text-align: center !important;
+        }
+
+        /* Main section descriptions */
+        .home-page
+          .home-section
+          > div
+          > h2:first-of-type
+          + p,
+        .home-page
+          .home-section
+          > div
+          > div:first-child
+          > h2:first-of-type
+          + p,
+        .home-page
+          .home-section
+          > div
+          > div:first-child
+          > div:first-child
+          > h2:first-of-type
+          + p {
+          margin-left: auto !important;
+          margin-right: auto !important;
+          text-align: center !important;
+        }
+
+        /* Section eyebrow / label immediately before heading */
+        .home-page
+          .home-section
+          > div
+          > p:has(+ h2),
+        .home-page
+          .home-section
+          > div
+          > div:first-child
+          > p:has(+ h2),
+        .home-page
+          .home-section
+          > div
+          > div:first-child
+          > div:first-child
+          > p:has(+ h2) {
+          justify-content: center !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          text-align: center !important;
+        }
+
+        /* Center the small blue heading line + label */
+        .home-page
+          .home-section
+          p:has(+ h2) {
+          text-align: center !important;
+        }
+
+        /* =========================================================
+           BLUE EYEBROW / LABEL
+           ========================================================= */
+
+        .home-page
+          .home-section
+          p:has(+ h2)::before {
+          content: "";
+          display: inline-block;
+          width: 38px;
+          height: 3px;
+          margin-right: 14px;
+          vertical-align: middle;
+          border-radius: 999px;
+          background: var(--gnpc-blue);
+        }
+
+        /* Avoid creating a second line where the component already
+           provides its own decorative line */
+        .home-page
+          .home-section
+          p[class*="uppercase"]:has(+ h2)::before {
+          display: inline-block;
+        }
+
+        /* =========================================================
+           MAIN HEADING TYPOGRAPHY
+           ========================================================= */
+
+        .home-page
+          .home
