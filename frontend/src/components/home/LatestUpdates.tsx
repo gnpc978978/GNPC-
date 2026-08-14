@@ -208,8 +208,11 @@ export default function LatestUpdates() {
   return (
     <section className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <SectionHeading align="left" badge="Latest Updates" title="News from Greater Noida Press Club" description="Stay updated with the latest announcements, events, press releases and press conferences." />
-
+        <SectionHeading
+  badge="Latest Updates"
+  title="News from Greater Noida Press Club"
+  description="Stay updated with the latest announcements, events, press releases and press conferences."
+/>
         {loading && (
           <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
             {[1, 2, 3].map(
