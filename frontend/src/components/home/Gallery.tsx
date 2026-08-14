@@ -1,183 +1,228 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-import Container from "@/components/ui/Container";
-import SectionHeading from "@/components/ui/SectionHeading";
-import Card from "@/components/ui/Card";
+import {
+  ArrowRight,
+  ImageOff,
+} from "lucide-react";
+
+import {
+  apiFetch,
+  responseJson,
+} from "@/services/api";
 
 type GalleryItem = {
-  _id: string;
-  title: string;
-  category: string;
-  coverImage: string;
-  images?: string[];
-  status: string;
+  _id?: string;
+  id?: string;
+  title?: string;
+  name?: string;
+  image?: string;
+  imageUrl?: string;
+  url?: string;
+  category?: string;
+  description?: string;
+};
+
+type GalleryResponse = {
+  success?: boolean;
+  data?: GalleryItem[];
 };
 
 export default function Gallery() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const [
+    items,
+    setItems,
+  ] = useState<GalleryItem[]>(
+    []
+  );
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
   useEffect(() => {
-    const loadGallery = async () => {
+    let cancelled = false;
+
+    const load = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gallery`);
-        const data = await response.json();
-        if (response.ok && Array.isArray(data.gallery)) {
-          setGalleryItems(data.gallery.filter((item: GalleryItem) => item.status !== "inactive").slice(0, 6));
+        const response =
+          await apiFetch(
+            "/gallery"
+          );
+
+        const payload =
+          await responseJson<GalleryResponse>(
+            response
+          );
+
+        if (
+          cancelled
+        ) {
+          return;
         }
+
+        setItems(
+          Array.isArray(
+            payload.data
+          )
+            ? payload.data.slice(
+                0,
+                6
+              )
+            : []
+        );
       } catch {
-        setGalleryItems([]);
+        if (
+          !cancelled
+        ) {
+          setItems([]);
+        }
+      } finally {
+        if (
+          !cancelled
+        ) {
+          setLoading(false);
+        }
       }
     };
 
-    loadGallery();
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
-    <section id="gallery" className="bg-white py-14 sm:py-20">
-      <Container>
-        <SectionHeading
-          badge="Media Gallery"
-          title="Capturing Every Important Moment"
-          description="Explore memorable moments from press conferences, media events, workshops, and community activities."
-        />
+    <section className="bg-white py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-semibold text-blue-700">
+              GALLERY
+            </p>
 
-        <div className="mt-9 grid gap-4 sm:mt-12 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {galleryItems.map((item) => {
-            const image = item.coverImage || item.images?.[0];
+            <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+              Moments from GNPC
+            </h2>
 
-            return image ? (
-            <Card
-              key={item._id}
-              className="
-                group
-                cursor-pointer
-                overflow-hidden
-                border-0
-                shadow-md
-                transition-all
-                duration-300
-                hover:-translate-y-2
-                hover:shadow-2xl
-              "
-              onClick={() => setSelectedImage(image)}
-            >
-              <div className="relative h-56 overflow-hidden sm:h-72">
-
-                <Image
-                  src={image}
-                  alt={item.title}
-                  fill
-                  className="
-                    object-cover
-                    transition-transform
-                    duration-500
-                    group-hover:scale-110
-                  "
-                />
-
-                <div
-                  className="
-                    absolute
-                    inset-0
-                    flex
-                    items-end
-                    bg-gradient-to-t
-                    from-black/70
-                    via-black/20
-                    to-transparent
-                    opacity-100
-                    transition-opacity
-                    duration-300
-                    sm:opacity-0
-                    sm:group-hover:opacity-100
-                  "
-                >
-                  <div className="p-4 text-white sm:p-5">
-                    <p className="text-sm text-gray-200">
-                      {item.category}
-                    </p>
-
-                    <h3 className="text-xl font-bold">
-                      {item.title}
-                    </h3>
-                  </div>
-                </div>
-
-              </div>
-            </Card>
-            ) : null;
-          })}
-        </div>
-
-        <div className="mt-10 text-center"><Link href="/gallery" className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 px-7 py-3 font-semibold text-white shadow-lg shadow-blue-700/20 transition duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200">Explore the Gallery <span className="ml-2 transition-transform group-hover:translate-x-1">→</span></Link></div>
-
-      </Container>
-
-
-      {/* Lightbox Modal */}
-
-      {selectedImage && (
-        <div
-          className="
-            fixed
-            inset-0
-            z-50
-            flex
-            items-center
-            justify-center
-            bg-black/80
-            backdrop-blur-sm
-            p-4
-          "
-          onClick={() => setSelectedImage(null)}
-        >
-
-          <button
-            className="
-              absolute
-              right-6
-              top-6
-              text-4xl
-              font-bold
-              text-white
-              hover:text-gray-300
-            "
-            onClick={() => setSelectedImage(null)}
-          >
-            &times;
-          </button>
-
-
-          <div
-            className="
-              relative
-              h-[85vh]
-              w-full
-              max-w-5xl
-            "
-            onClick={(e) => e.stopPropagation()}
-          >
-
-            <Image
-              src={selectedImage}
-              alt="Selected Gallery Image"
-              fill
-              className="
-                rounded-xl
-                object-contain
-              "
-            />
-
+            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+              Explore recent events,
+              press activities and
+              memorable moments.
+            </p>
           </div>
 
-        </div>
-      )}
+          <Link
+            href="/gallery"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-blue-700 px-5 py-3 text-sm font-bold text-blue-700 transition hover:bg-blue-700 hover:text-white"
+          >
+            View Gallery
 
+            <ArrowRight
+              size={17}
+            />
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="aspect-[4/3] animate-pulse rounded-2xl bg-slate-200"
+                />
+              )
+            )}
+          </div>
+        ) : items.length ===
+          0 ? (
+          <div className="mt-10 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center">
+            <ImageOff
+              className="mx-auto text-slate-400"
+              size={38}
+            />
+
+            <p className="mt-4 font-semibold text-slate-700">
+              No gallery images available
+            </p>
+          </div>
+        ) : (
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {items.map(
+              (item, index) => {
+                const src =
+                  item.image ||
+                  item.imageUrl ||
+                  item.url;
+
+                if (!src) {
+                  return (
+                    <div
+                      key={
+                        item._id ||
+                        item.id ||
+                        index
+                      }
+                      className="flex aspect-[4/3] items-center justify-center rounded-2xl bg-slate-100"
+                    >
+                      <ImageOff
+                        className="text-slate-400"
+                        size={32}
+                      />
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={
+                      item._id ||
+                      item.id ||
+                      index
+                    }
+                    href="/gallery"
+                    className="group relative min-w-0 overflow-hidden rounded-2xl bg-slate-100"
+                  >
+                    <div className="relative aspect-[4/3]">
+                      <Image
+                        src={src}
+                        alt={
+                          item.title ||
+                          item.name ||
+                          "GNPC Gallery"
+                        }
+                        fill
+                        sizes="(min-width: 640px) 33vw, 50vw"
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                      />
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
+
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <p className="line-clamp-2 text-sm font-semibold text-white sm:text-base">
+                          {item.title ||
+                            item.name ||
+                            item.category ||
+                            "GNPC Gallery"}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              }
+            )}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
