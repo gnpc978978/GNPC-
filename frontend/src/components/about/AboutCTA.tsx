@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 
 import MembershipFormLink from "@/components/membership/MembershipFormLink";
@@ -56,7 +57,6 @@ export default function AboutCTA({
             lg:px-20
           "
         >
-          {/* Decorative background */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl"
@@ -73,7 +73,6 @@ export default function AboutCTA({
           />
 
           <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
-            {/* CMS CTA Title */}
             <h2
               className="
                 !m-0
@@ -91,7 +90,6 @@ export default function AboutCTA({
               {finalTitle}
             </h2>
 
-            {/* CMS CTA Description */}
             {finalDescription && (
               <p
                 className="
@@ -111,7 +109,6 @@ export default function AboutCTA({
               </p>
             )}
 
-            {/* CTA Buttons */}
             <div
               className="
                 mt-9
@@ -126,16 +123,20 @@ export default function AboutCTA({
                 sm:items-center
               "
             >
-              {/* 
-               * MembershipFormLink uses the CMS membership PDF.
-               *
-               * IMPORTANT:
-               * We deliberately give BOTH available and unavailable
-               * states explicit colors. This prevents the global
-               * .gnpc-btn styles from making the text invisible.
-               */}
+              {/* =================================================
+                  MEMBERSHIP CTA
+
+                  Destination remains:
+                  GET /api/settings/membership-form
+
+                  MembershipFormLink resolves the API URL through
+                  the centralized API service.
+                  ================================================= */}
+
               <MembershipFormLink
-                unavailableLabel={finalPrimaryLabel}
+                unavailableLabel={
+                  finalPrimaryLabel
+                }
                 className="
                   inline-flex
                   min-h-14
@@ -190,12 +191,14 @@ export default function AboutCTA({
                 />
               </MembershipFormLink>
 
-              {/* 
-               * Keep the destination stable.
-               *
-               * The label itself comes from CMS.
-               */}
-              <a
+              {/* =================================================
+                  OFFICE BEARERS
+
+                  This is an internal Next.js route, so use Link
+                  rather than a raw anchor.
+                  ================================================= */}
+
+              <Link
                 href="/office-bearers"
                 className="
                   inline-flex
@@ -234,7 +237,7 @@ export default function AboutCTA({
                   size={17}
                   aria-hidden="true"
                 />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
