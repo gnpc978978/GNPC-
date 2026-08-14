@@ -1,11 +1,9 @@
 "use client";
 
-import axios from "axios";
+import { apiUrl, authenticatedApiFetch, responseJson } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 type Section =
   | "site"
@@ -55,16 +53,11 @@ type WebsiteSettings = {
   seo?: Seo;
 };
 
-const getAuthHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-});
-
-const getSettings = async () =>
-  (
-    await axios.get<{ data: WebsiteSettings }>(
-      `${apiUrl}/settings`
-    )
-  ).data.data;
+const getSettings = async () => {
+  const response = await authenticatedApiFetch("/settings", { method: "GET" });
+  const payload = await responseJson<{ data: WebsiteSettings }>(response);
+  return payload.data;
+};
 
 const labels: Record<Section, string> = {
   site: "Site Details",
@@ -155,14 +148,12 @@ export default function SettingsSectionEditor({
       }
 
       if (Object.keys(changes).length > 0) {
-        await axios.put(
-          `${apiUrl}/settings`,
-          changes,
-          {
-            headers: getAuthHeaders(),
-            withCredentials: true,
-          }
-        );
+        const response = await authenticatedApiFetch("/settings", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(changes),
+        });
+        await responseJson(response);
       }
 
       if (Object.values(files).some(Boolean)) {
@@ -174,14 +165,11 @@ export default function SettingsSectionEditor({
           }
         });
 
-        await axios.put(
-          `${apiUrl}/settings/upload`,
-          payload,
-          {
-            headers: getAuthHeaders(),
-            withCredentials: true,
-          }
-        );
+        const response = await authenticatedApiFetch("/settings/upload", {
+          method: "PUT",
+          body: payload,
+        });
+        await responseJson(response);
       }
     },
 
@@ -208,9 +196,8 @@ export default function SettingsSectionEditor({
 
     onError: (error) => {
       toast.error(
-        axios.isAxiosError(error)
-          ? error.response?.data?.message ||
-              "Unable to save settings."
+        error instanceof Error
+          ? error.message
           : "Unable to save settings."
       );
     },
@@ -600,7 +587,7 @@ export default function SettingsSectionEditor({
           {form.membershipPdf &&
             !files.membershipPdf && (
               <a
-                href={`${apiUrl}/settings/membership-form`}
+                href={apiUrl("/settings/membership-form")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 inline-block text-sm text-blue-600 underline"
