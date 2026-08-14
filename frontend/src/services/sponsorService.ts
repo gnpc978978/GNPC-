@@ -1,132 +1,100 @@
 import { Sponsor } from "@/types/sponsor";
-import { responseJson } from "@/services/api";
+import {
+  authenticatedApiFetch,
+  apiFetch,
+  responseJson,
+} from "@/services/api";
 
-const API =
-  process.env.NEXT_PUBLIC_API_URL +
-  "/sponsors";
+// GET ALL SPONSORS
+export const getSponsors = async (): Promise<Sponsor[]> => {
+  const response = await apiFetch("/sponsors");
 
-const authOptions = () => ({
-  credentials: "include" as RequestCredentials,
-  headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` },
-});
-
-
-// GET ALL
-export const getSponsors = async (): Promise<
-  Sponsor[]
-> => {
-
-  const res = await fetch(API);
-
-  const data = await responseJson<{ data: Sponsor[] }>(res);
+  const data = await responseJson<{
+    success: boolean;
+    data: Sponsor[];
+  }>(response);
 
   return data.data;
-
 };
 
-
-
-// GET ONE
+// GET SINGLE SPONSOR
 export const getSponsor = async (
   id: string
 ): Promise<Sponsor> => {
+  const response = await apiFetch(`/sponsors/${id}`);
 
-  const res = await fetch(`${API}/${id}`);
-
-  const data = await responseJson<{ data: Sponsor }>(res);
+  const data = await responseJson<{
+    success: boolean;
+    data: Sponsor;
+  }>(response);
 
   return data.data;
-
 };
 
-
-
-// CREATE
+// CREATE SPONSOR
 export const createSponsor = async (
   formData: FormData
 ) => {
+  const response = await authenticatedApiFetch(
+    "/sponsors",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
-  const res = await fetch(API, {
-
-    method: "POST",
-    ...authOptions(),
-    body: formData,
-
-  });
-
-
-  return responseJson(res);
-
+  return responseJson(response);
 };
 
-
-
-// UPDATE
+// UPDATE SPONSOR
 export const updateSponsor = async (
   id: string,
   formData: FormData
 ) => {
+  const response = await authenticatedApiFetch(
+    `/sponsors/${id}`,
+    {
+      method: "PUT",
+      body: formData,
+    }
+  );
 
-  const res = await fetch(`${API}/${id}`, {
-
-    method: "PUT",
-    ...authOptions(),
-    body: formData,
-
-  });
-
-
-  return responseJson(res);
-
+  return responseJson(response);
 };
 
-
-
-// UPDATE STATUS
+// UPDATE SPONSOR STATUS
 export const updateSponsorStatus = async (
   id: string,
-  status: string
+  status: Sponsor["status"]
 ) => {
+  const response =
+    await authenticatedApiFetch(
+      `/sponsors/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status,
+        }),
+      }
+    );
 
-  const res = await fetch(`${API}/${id}`, {
-
-    method: "PUT",
-
-    headers: {
-      "Content-Type": "application/json",
-      ...authOptions().headers,
-    },
-
-    credentials: "include",
-
-    body: JSON.stringify({
-
-      status,
-
-    }),
-
-  });
-
-
-  return responseJson(res);
-
+  return responseJson(response);
 };
 
-
-
-// DELETE
+// DELETE SPONSOR
 export const deleteSponsor = async (
   id: string
 ) => {
+  const response =
+    await authenticatedApiFetch(
+      `/sponsors/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-  const res = await fetch(`${API}/${id}`, {
-
-    method: "DELETE",
-    ...authOptions(),
-
-  });
-
-
-  return responseJson(res);
-
+  return responseJson(response);
 };
