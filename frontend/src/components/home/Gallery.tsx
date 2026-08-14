@@ -105,15 +105,15 @@ export default function Gallery() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="font-semibold text-blue-700">
+            <p className="gnpc-eyebrow">
               GALLERY
             </p>
 
-            <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl">
               Moments from GNPC
             </h2>
 
-            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+            <p className="gnpc-section-description">
               Explore recent events,
               press activities and
               memorable moments.

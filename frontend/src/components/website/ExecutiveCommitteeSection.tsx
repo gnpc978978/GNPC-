@@ -159,13 +159,13 @@ export default function ExecutiveCommitteeSection({
         {/* Only show this heading for limited/embedded sections */}
         {!isDirectory && (
           <div className="mb-10 text-center">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-blue-700">
+            <p className="gnpc-eyebrow justify-center">
               Our Strength
             </p>
 
-            <h1 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl">
               {title}
-            </h1>
+            </h2>
           </div>
         )}
 
@@ -264,7 +264,7 @@ export default function ExecutiveCommitteeSection({
 
         {/* Loading */}
         {loading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-4">
             {Array.from(
               {
                 length:
@@ -294,7 +294,7 @@ export default function ExecutiveCommitteeSection({
           </div>
         ) : (
           /* Members */
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-4">
             {members.map((member) => (
               <article
                 key={member._id}
@@ -306,7 +306,7 @@ export default function ExecutiveCommitteeSection({
                       src={member.photo}
                       alt={member.name}
                       fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 50vw"
                       className="object-cover"
                     />
                   ) : (
@@ -318,28 +318,28 @@ export default function ExecutiveCommitteeSection({
                   )}
                 </div>
 
-                <div className="p-5">
-                  <h2 className="text-lg font-bold text-slate-900">
+                <div className="p-3 sm:p-5">
+                  <h2 className="line-clamp-1 text-sm font-bold text-slate-900 sm:text-lg">
                     {member.name}
                   </h2>
 
-                  <p className="mt-1 text-sm font-semibold text-blue-700">
+                  <p className="mt-1 line-clamp-1 text-xs font-semibold text-blue-700 sm:text-sm">
                     {member.designation}
                   </p>
 
                   {member.organization && (
-                    <p className="mt-1 text-sm text-slate-600">
+                    <p className="mt-1 line-clamp-1 text-xs text-slate-600 sm:text-sm">
                       {member.organization}
                     </p>
                   )}
 
                   {member.state && (
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 line-clamp-1 text-xs text-slate-500 sm:text-sm">
                       {member.state}
                     </p>
                   )}
 
-                  <div className="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm text-slate-600">
+                  <div className="mt-3 hidden space-y-2 border-t border-slate-100 pt-3 text-sm text-slate-600 sm:block">
                     {member.email && (
                       <a
                         href={`mailto:${member.email}`}

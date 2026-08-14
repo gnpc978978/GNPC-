@@ -82,11 +82,11 @@ export default function TopBar() {
         className={[
           "mx-auto",
           "flex",
-          "min-h-[42px]",
+          "min-h-[48px]",
           "max-w-7xl",
           "items-center",
           "justify-between",
-          "gap-4",
+          "gap-2",
           "px-4",
           "sm:px-6",
           "lg:px-8",
@@ -101,20 +101,20 @@ export default function TopBar() {
             "flex",
             "min-w-0",
             "items-center",
-            "gap-4",
+            "gap-2",
             "sm:gap-5",
           ].join(" ")}
         >
           {/* Location */}
 
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <FaMapMarkerAlt
-              size={12}
+              size={11}
               className="text-white/75"
               aria-hidden="true"
             />
 
-            <span className="text-[11px] font-medium sm:text-xs">
+            <span className="whitespace-nowrap text-[9px] font-medium sm:text-xs">
               Greater Noida
             </span>
           </div>
@@ -123,16 +123,18 @@ export default function TopBar() {
 
           <div
             className={[
-              "hidden",
+              "flex",
               "items-center",
               "border-l",
               "border-white/20",
-              "pl-4",
-              "text-[11px]",
+              "pl-2",
+              "text-[8px]",
               "font-medium",
-              "tracking-wide",
+              "tracking-normal",
               "text-white/90",
-              "sm:flex",
+              "whitespace-nowrap",
+              "sm:text-[11px]",
+              "sm:tracking-wide",
               "sm:pl-5",
             ].join(" ")}
           >
@@ -144,12 +146,12 @@ export default function TopBar() {
             RIGHT SIDE
             ===================================================== */}
 
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           {/* Date */}
 
           <div className="hidden items-center gap-2 lg:flex">
             <HiCalendarDays
-              size={14}
+              size={11}
               className="text-white/70"
               aria-hidden="true"
             />
@@ -161,14 +163,14 @@ export default function TopBar() {
 
           {/* Time */}
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="flex items-center gap-1 sm:gap-2">
             <HiClock
               size={14}
               className="text-white/70"
               aria-hidden="true"
             />
 
-            <span className="text-xs font-medium text-white/90">
+            <span className="whitespace-nowrap text-[9px] font-medium text-white/90 sm:text-xs">
               {time}
             </span>
           </div>

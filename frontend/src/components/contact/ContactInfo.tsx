@@ -12,22 +12,22 @@ export default function ContactInfo() {
   ];
   return (
     <section className="bg-white py-16">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-8 md:grid-cols-3">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3">
           {contactInfo.map((item) => (
             <div
               key={item.title}
-              className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+              className="rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-6"
             >
-              <div className="mb-5 flex justify-center">
+              <div className="mb-3 flex justify-center sm:mb-5">
                 {item.icon}
               </div>
 
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-sm font-bold text-slate-900 sm:text-lg">
                 {item.title}
               </h3>
 
-              <p className="mt-3 text-slate-600">
+              <p className="mt-2 break-words text-xs text-slate-600 sm:mt-3 sm:text-sm">
                 {item.value}
               </p>
             </div>

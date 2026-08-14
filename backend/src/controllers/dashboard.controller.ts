@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import Member from "../models/Member";
+import PressRelease from "../models/pressRelease.model";
+import Event from "../models/event.model";
 
 /**
  * Get MongoDB database.
@@ -94,34 +97,22 @@ export const getPublicStats = async (
   res: Response
 ) => {
   try {
-    const [
-      pressReleases,
-      events,
-      gallery,
-    ] = await Promise.all([
-      countCollection([
-        "press_releases",
-        "pressReleases",
-        "pressreleases",
-      ]),
-
-      countCollection([
-        "events",
-      ]),
-
-      countCollection([
-        "gallery",
-        "galleries",
-      ]),
+    // Use the actual Mongoose models rather than guessed collection names.
+    // This keeps homepage figures aligned with the same public CMS records
+    // visitors can read and includes the office-bearer collection.
+    const [members, pressReleases, events] = await Promise.all([
+      Member.countDocuments(),
+      PressRelease.countDocuments({ status: "PUBLISHED", isActive: { $ne: false } }),
+      Event.countDocuments({ status: "published", isActive: { $ne: false } }),
     ]);
 
     return res.status(200).json({
       success: true,
 
       data: {
+        members,
         pressReleases,
         events,
-        gallery,
       },
     });
   } catch (error) {

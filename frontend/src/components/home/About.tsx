@@ -150,6 +150,9 @@ export default function About() {
   const [loading, setLoading] =
     useState(true);
 
+  const [statsUnavailable, setStatsUnavailable] =
+    useState(false);
+
   const [imageLoaded, setImageLoaded] =
     useState(false);
 
@@ -168,7 +171,10 @@ export default function About() {
       apiFetch("/dashboard/public-stats", {
         cache: "no-store",
       }).then((response) =>
-        responseJson<PublicStats>(response)
+        responseJson<{
+          success: boolean;
+          data: PublicStats;
+        }>(response)
       ),
     ])
       .then(
@@ -221,10 +227,13 @@ export default function About() {
             statsResult.status ===
             "fulfilled"
           ) {
+            setStatsUnavailable(false);
             setStats({
               ...emptyStats,
-              ...statsResult.value,
+              ...statsResult.value.data,
             });
+          } else {
+            setStatsUnavailable(true);
           }
         }
       )
@@ -261,13 +270,11 @@ export default function About() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-9 text-center sm:mb-14">
-          <span className="rounded-full bg-blue-100 px-3 py-1.5 text-xs font-semibold text-blue-700 sm:px-4 sm:py-2 sm:text-sm">
+          <span className="gnpc-eyebrow">
             About Us
           </span>
 
-          <br />
-
-          <h2 className="mt-4 text-3xl font-extrabold text-slate-900 sm:mt-5 sm:text-4xl md:text-5xl">
+          <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl lg:text-5xl">
             {settings.siteName ||
               "Press Club"}
           </h2>
@@ -392,6 +399,10 @@ export default function About() {
 
                       <div className="mx-auto mt-3 h-5 w-24 animate-pulse rounded bg-slate-200" />
                     </>
+                  ) : statsUnavailable ? (
+                    <p className="pt-2 text-xs font-medium text-slate-500 sm:text-sm">
+                      Statistics unavailable
+                    </p>
                   ) : (
                     <>
                       <h3 className="text-2xl font-bold text-blue-600 sm:text-4xl">

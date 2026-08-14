@@ -60,21 +60,21 @@ export default function Objectives() {
           description="Greater Noida Press Club works towards promoting ethical journalism, professional growth and stronger media collaboration."
         />
 
-        <div className="grid gap-5 sm:gap-6 md:grid-cols-2 lg:gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 lg:gap-8 lg:grid-cols-3">
           {objectives.map((objective) => {
             const Icon = objective.icon;
 
             return (
-              <Card key={objective.title}>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 sm:h-16 sm:w-16">
-                  <Icon className="text-2xl text-blue-600 sm:text-3xl" />
+              <Card key={objective.title} padding="sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 sm:h-16 sm:w-16 sm:rounded-2xl">
+                  <Icon className="text-lg text-blue-600 sm:text-3xl" />
                 </div>
 
-                <h3 className="mt-5 text-xl font-bold text-slate-900 sm:mt-6 sm:text-2xl">
+                <h3 className="mt-3 text-sm font-bold leading-tight text-slate-900 sm:mt-6 sm:text-2xl">
                   {objective.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-6 text-slate-600 sm:mt-4 sm:text-base sm:leading-7">
+                <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-600 sm:mt-4 sm:text-base sm:leading-7">
                   {objective.description}
                 </p>
               </Card>

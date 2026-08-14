@@ -74,16 +74,18 @@ export default function Logo({
 
       {/* Brand text */}
 
-      <span className="hidden min-w-0 sm:block">
+      <span className="block min-w-0">
         <span
           className={[
             "block",
-            "max-w-[230px]",
+            "max-w-[165px]",
             "truncate",
-            "text-[16px]",
+            "text-[13px]",
             "font-extrabold",
             "leading-tight",
             "tracking-[-0.02em]",
+            "sm:max-w-[230px]",
+            "sm:text-[16px]",
             isDark
               ? "text-slate-900 group-hover:text-[#0f4c81]"
               : "text-white",
@@ -98,7 +100,7 @@ export default function Logo({
           className={[
             "mt-1",
             "block",
-            "text-[10px]",
+            "text-[9px]",
             "font-bold",
             "uppercase",
             "tracking-[0.16em]",
@@ -107,7 +109,7 @@ export default function Logo({
               : "text-white/60",
           ].join(" ")}
         >
-          Greater Noida
+          GNPC · Greater Noida
         </span>
       </span>
     </Link>

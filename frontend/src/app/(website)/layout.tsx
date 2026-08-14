@@ -129,13 +129,13 @@ export default function WebsiteLayout({
           =====================================================
 
           TopBar:
-          42px
+          48px
 
           Navbar:
           74px
 
           Total:
-          116px
+          122px
 
           This value is kept synchronized with the actual
           desktop header dimensions.
@@ -143,7 +143,7 @@ export default function WebsiteLayout({
 
       <div
         aria-hidden="true"
-        className="h-[116px]"
+        className="h-[122px]"
       />
 
       {/* =====================================================

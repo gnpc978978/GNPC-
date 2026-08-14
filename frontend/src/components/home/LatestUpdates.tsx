@@ -207,16 +207,16 @@ export default function LatestUpdates() {
     <section className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="text-center">
-          <p className="font-semibold text-blue-700">
+          <p className="gnpc-eyebrow justify-center">
             LATEST UPDATES
           </p>
 
-          <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+          <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl">
             News from Greater Noida
             Press Club
           </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
+          <p className="gnpc-section-description mx-auto text-center">
             Stay updated with the latest
             announcements, events, press
             releases and press conferences.
@@ -224,7 +224,7 @@ export default function LatestUpdates() {
         </div>
 
         {loading && (
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
             {[1, 2, 3].map(
               (item) => (
                 <div
@@ -233,7 +233,7 @@ export default function LatestUpdates() {
                 >
                   <div className="aspect-[16/9] animate-pulse bg-slate-200" />
 
-                  <div className="space-y-3 p-6">
+                  <div className="space-y-3 p-3 sm:p-6">
                     <div className="h-4 w-1/3 animate-pulse rounded bg-slate-200" />
                     <div className="h-6 animate-pulse rounded bg-slate-200" />
                     <div className="h-4 animate-pulse rounded bg-slate-200" />
@@ -278,7 +278,7 @@ export default function LatestUpdates() {
         {!loading &&
           !error &&
           items.length > 0 && (
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
               {items.map(
                 (item) => {
                   const image =
@@ -316,8 +316,8 @@ export default function LatestUpdates() {
                         </div>
                       )}
 
-                      <div className="flex flex-1 flex-col p-6">
-                        <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wide text-blue-700">
+                      <div className="flex flex-1 flex-col p-3 sm:p-6">
+                        <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-blue-700 sm:text-xs">
                           <span>
                             {item.type ||
                               item.category ||
@@ -337,11 +337,11 @@ export default function LatestUpdates() {
                           )}
                         </div>
 
-                        <h3 className="mt-3 line-clamp-2 text-xl font-bold leading-tight text-slate-900">
+                        <h3 className="mt-2 line-clamp-2 text-sm font-bold leading-tight text-slate-900 sm:mt-3 sm:text-xl">
                           {item.title}
                         </h3>
 
-                        <p className="mt-3 line-clamp-3 flex-1 text-sm leading-6 text-slate-600">
+                        <p className="mt-2 line-clamp-3 flex-1 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">
                           {item.excerpt ||
                             item.description ||
                             "Read the latest update from Greater Noida Press Club."}
@@ -351,7 +351,7 @@ export default function LatestUpdates() {
                           href={getDetailHref(
                             item
                           )}
-                          className="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-blue-700 transition hover:text-blue-900"
+                          className="mt-3 inline-flex min-h-8 items-center gap-1 text-xs font-semibold text-blue-700 transition hover:text-blue-900 sm:mt-6 sm:min-h-11 sm:gap-2 sm:text-base"
                         >
                           Read More
 
