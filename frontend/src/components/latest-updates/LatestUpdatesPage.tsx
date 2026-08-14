@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -16,6 +15,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
 import Container from "@/components/ui/Container";
+import { apiFetch, responseJson } from "@/services/api";
 
 /* =========================================================
    TYPES
@@ -88,9 +88,11 @@ type PressConference = {
 };
 
 type FeedResponse = {
+  success?: boolean;
   pressReleases?: Update[];
   announcements?: Update[];
-  events?: Update[];
+  events?: Event[];
+  pressConferences?: PressConference[];
 };
 
 type CalendarItem = {
@@ -107,8 +109,6 @@ type CalendarItem = {
 /* =========================================================
    CONSTANTS
 ========================================================= */
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const tabs: {
   value: Tab;
@@ -859,40 +859,12 @@ export default function LatestUpdatesPage() {
     setError(null);
 
     try {
-      if (!API_URL) {
-        throw new Error(
-          "NEXT_PUBLIC_API_URL is not configured."
-        );
-      }
+      const latest = await apiFetch("/latest-updates", { cache: "no-store" }).then((response) =>
+        responseJson<FeedResponse>(response)
+      );
 
-      const [
-        latestResponse,
-        eventsResponse,
-        conferencesResponse,
-      ] = await Promise.all([
-        axios.get<FeedResponse>(
-          `${API_URL}/latest-updates`
-        ),
-
-        axios.get(
-          `${API_URL}/events`
-        ),
-
-        axios.get(
-          `${API_URL}/press-conferences`
-        ),
-      ]);
-
-      const latest =
-        latestResponse.data || {};
-
-      const eventData =
-        eventsResponse.data?.data ||
-        [];
-
-      const conferenceData =
-        conferencesResponse.data?.data ||
-        [];
+      const eventData = latest.events || [];
+      const conferenceData = latest.pressConferences || [];
 
       setFeed({
         pressReleases:
@@ -935,44 +907,16 @@ export default function LatestUpdatesPage() {
 
     const load = async () => {
       try {
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
-        }
-
-        const [
-          latestResponse,
-          eventsResponse,
-          conferencesResponse,
-        ] = await Promise.all([
-          axios.get<FeedResponse>(
-            `${API_URL}/latest-updates`
-          ),
-
-          axios.get(
-            `${API_URL}/events`
-          ),
-
-          axios.get(
-            `${API_URL}/press-conferences`
-          ),
-        ]);
+        const latest = await apiFetch("/latest-updates", { cache: "no-store" }).then((response) =>
+          responseJson<FeedResponse>(response)
+        );
 
         if (cancelled) {
           return;
         }
 
-        const latest =
-          latestResponse.data || {};
-
-        const eventData =
-          eventsResponse.data?.data ||
-          [];
-
-        const conferenceData =
-          conferencesResponse.data?.data ||
-          [];
+        const eventData = latest.events || [];
+        const conferenceData = latest.pressConferences || [];
 
         setFeed({
           pressReleases:
