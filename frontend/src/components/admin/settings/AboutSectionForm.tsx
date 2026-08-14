@@ -1,16 +1,19 @@
 "use client";
 
-import axios from "axios";
 import {
   ChangeEvent,
   FormEvent,
   useEffect,
   useState,
 } from "react";
+
 import { toast } from "sonner";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "";
+import {
+  authenticatedApiFetch,
+  apiFetch,
+  responseJson,
+} from "@/services/api";
 
 type ListItem = {
   title: string;
@@ -18,7 +21,9 @@ type ListItem = {
   icon: string;
 };
 
-type ListField = "objectives" | "reasons";
+type ListField =
+  | "objectives"
+  | "reasons";
 
 type AboutSettings = {
   heroEyebrow: string;
@@ -65,427 +70,660 @@ type AboutSettings = {
   ctaSecondaryLabel: string;
 };
 
-const emptyItem = (): ListItem => ({
-  title: "",
-  description: "",
-  icon: "",
-});
-
-const defaultForm: AboutSettings = {
-  heroEyebrow: "About Greater Noida Press Club",
-
-  heroTitle: "About Us",
-
-  heroDescription:
-    "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
-
-  image: "",
-
-  heading:
-    "Empowering Journalists & Strengthening Independent Media",
-
-  description:
-    "Greater Noida Press Club is a professional organization dedicated to supporting journalists, promoting ethical journalism, and providing a strong platform for media professionals.",
-
-  secondaryDescription:
-    "We believe in freedom of expression, responsible reporting, and creating opportunities that help journalists grow, collaborate, and contribute to society.",
-
-  commitmentTitle: "Our Commitment",
-
-  commitmentDescription:
-    "We are committed to protecting journalistic values, encouraging transparency, and building a stronger media community through education, collaboration, and innovation.",
-
-  foundationEyebrow: "Our Foundation",
-
-  foundationTitle: "Mission & Vision",
-
-  foundationDescription:
-    "We are committed to ethical journalism, professional excellence, and empowering media professionals through collaboration and innovation.",
-
-  missionTitle: "Our Mission",
-
-  missionDescription:
-    "To support journalists with professional development, transparency, ethical reporting, and a strong platform that protects press freedom.",
-
-  visionTitle: "Our Vision",
-
-  visionDescription:
-    "To build a trusted community where journalists collaborate, innovate, and contribute to an informed and democratic society.",
-
-  objectivesEyebrow: "Our Objectives",
-
-  objectivesTitle: "What We Aim To Achieve",
-
-  objectivesDescription:
-    "Our primary objective is to strengthen journalism through education, collaboration, innovation, and ethical reporting.",
-
-  objectives: [],
-
-  presidentName: "",
-  presidentDesignation: "",
-  presidentMessage: "",
-  presidentPhoto: "",
-
-  whyChooseUsEyebrow: "Why Choose Us",
-
-  whyChooseUsTitle:
-    "Why Greater Noida Press Club Matters",
-
-  whyChooseUsDescription:
-    "We provide a trusted platform for journalists to connect, collaborate, and grow while maintaining the highest standards of journalism.",
-
-  reasons: [],
-
-  ctaTitle:
-    "Become a Part of Our Greater Noida Press Club",
-
-  ctaDescription:
-    "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.",
-
-  ctaPrimaryLabel: "Become a Member",
-
-  ctaSecondaryLabel: "Meet Our Office Bearers",
+type AboutResponse = {
+  success?: boolean;
+  message?: string;
+  data?: Partial<AboutSettings>;
 };
 
-const getAuthHeaders = () => ({
-  Authorization: `Bearer ${
-    typeof window !== "undefined"
-      ? localStorage.getItem("token") || ""
-      : ""
-  }`,
-});
+const emptyItem =
+  (): ListItem => ({
+    title: "",
+    description: "",
+    icon: "",
+  });
+
+const defaultForm: AboutSettings =
+  {
+    heroEyebrow:
+      "About Greater Noida Press Club",
+
+    heroTitle: "About Us",
+
+    heroDescription:
+      "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
+
+    image: "",
+
+    heading:
+      "Empowering Journalists & Strengthening Independent Media",
+
+    description:
+      "Greater Noida Press Club is a professional organization dedicated to supporting journalists, promoting ethical journalism, and providing a strong platform for media professionals.",
+
+    secondaryDescription:
+      "We believe in freedom of expression, responsible reporting, and creating opportunities that help journalists grow, collaborate, and contribute to society.",
+
+    commitmentTitle:
+      "Our Commitment",
+
+    commitmentDescription:
+      "We are committed to protecting journalistic values, encouraging transparency, and building a stronger media community through education, collaboration, and innovation.",
+
+    foundationEyebrow:
+      "Our Foundation",
+
+    foundationTitle:
+      "Mission & Vision",
+
+    foundationDescription:
+      "We are committed to ethical journalism, professional excellence, and empowering media professionals through collaboration and innovation.",
+
+    missionTitle:
+      "Our Mission",
+
+    missionDescription:
+      "To support journalists with professional development, transparency, ethical reporting, and a strong platform that protects press freedom.",
+
+    visionTitle:
+      "Our Vision",
+
+    visionDescription:
+      "To build a trusted community where journalists collaborate, innovate, and contribute to an informed and democratic society.",
+
+    objectivesEyebrow:
+      "Our Objectives",
+
+    objectivesTitle:
+      "What We Aim To Achieve",
+
+    objectivesDescription:
+      "Our primary objective is to strengthen journalism through education, collaboration, innovation, and ethical reporting.",
+
+    objectives: [],
+
+    presidentName: "",
+    presidentDesignation: "",
+    presidentMessage: "",
+    presidentPhoto: "",
+
+    whyChooseUsEyebrow:
+      "Why Choose Us",
+
+    whyChooseUsTitle:
+      "Why Greater Noida Press Club Matters",
+
+    whyChooseUsDescription:
+      "We provide a trusted platform for journalists to connect, collaborate, and grow while maintaining the highest standards of journalism.",
+
+    reasons: [],
+
+    ctaTitle:
+      "Become a Part of Our Greater Noida Press Club",
+
+    ctaDescription:
+      "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.",
+
+    ctaPrimaryLabel:
+      "Become a Member",
+
+    ctaSecondaryLabel:
+      "Meet Our Office Bearers",
+  };
+
+function normalizeForm(
+  data?: Partial<AboutSettings>
+): AboutSettings {
+  return {
+    ...defaultForm,
+    ...(data || {}),
+
+    objectives:
+      Array.isArray(
+        data?.objectives
+      )
+        ? data.objectives.map(
+            (item) => ({
+              title:
+                item?.title || "",
+              description:
+                item?.description ||
+                "",
+              icon:
+                item?.icon || "",
+            })
+          )
+        : [],
+
+    reasons:
+      Array.isArray(
+        data?.reasons
+      )
+        ? data.reasons.map(
+            (item) => ({
+              title:
+                item?.title || "",
+              description:
+                item?.description ||
+                "",
+              icon:
+                item?.icon || "",
+            })
+          )
+        : [],
+  };
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (
+    event: ChangeEvent<HTMLInputElement>
+  ) => void;
+  placeholder?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-sm font-semibold text-slate-700">
+        {label}
+      </span>
+
+      <input
+        type="text"
+        value={value}
+        onChange={onChange}
+        placeholder={
+          placeholder
+        }
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+      />
+    </label>
+  );
+}
+
+function TextArea({
+  label,
+  value,
+  onChange,
+  rows = 5,
+}: {
+  label: string;
+  value: string;
+  onChange: (
+    event: ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  rows?: number;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-sm font-semibold text-slate-700">
+        {label}
+      </span>
+
+      <textarea
+        value={value}
+        onChange={onChange}
+        rows={rows}
+        className="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+      />
+    </label>
+  );
+}
+
+function ListEditor({
+  item,
+  index,
+  onUpdate,
+  onRemove,
+}: {
+  item: ListItem;
+  index: number;
+  onUpdate: (
+    property: keyof ListItem
+  ) => (
+    event: ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement
+    >
+  ) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <h3 className="font-bold text-slate-900">
+          Item {index + 1}
+        </h3>
+
+        <button
+          type="button"
+          onClick={onRemove}
+          className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+        >
+          Remove
+        </button>
+      </div>
+
+      <div className="grid gap-5">
+        <Field
+          label="Title"
+          value={item.title}
+          onChange={onUpdate(
+            "title"
+          )}
+        />
+
+        <TextArea
+          label="Description"
+          value={
+            item.description
+          }
+          onChange={onUpdate(
+            "description"
+          )}
+          rows={4}
+        />
+
+        <Field
+          label="Icon Name"
+          value={item.icon}
+          onChange={onUpdate(
+            "icon"
+          )}
+          placeholder="Example: Target"
+        />
+      </div>
+    </div>
+  );
+}
+
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
+          {title}
+        </h2>
+
+        {description && (
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            {description}
+          </p>
+        )}
+      </div>
+
+      {children}
+    </section>
+  );
+}
 
 export default function AboutSectionForm() {
-  const [form, setForm] =
-    useState<AboutSettings>(defaultForm);
+  const [
+    form,
+    setForm,
+  ] = useState<AboutSettings>(
+    defaultForm
+  );
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploadingImage, setUploadingImage] =
-    useState(false);
-  const [uploadingPresident, setUploadingPresident] =
-    useState(false);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const loadSettings = async () => {
-    try {
-      setLoading(true);
+  const [
+    saving,
+    setSaving,
+  ] = useState(false);
 
-      if (!API_URL) {
-        throw new Error(
-          "NEXT_PUBLIC_API_URL is not configured."
+  const [
+    uploadingImage,
+    setUploadingImage,
+  ] = useState(false);
+
+  const [
+    uploadingPresident,
+    setUploadingPresident,
+  ] = useState(false);
+
+  const loadSettings =
+    async () => {
+      try {
+        setLoading(true);
+
+        const response =
+          await apiFetch(
+            "/settings/about"
+          );
+
+        const payload =
+          await responseJson<AboutResponse>(
+            response
+          );
+
+        setForm(
+          normalizeForm(
+            payload.data
+          )
         );
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Unable to load About settings."
+        );
+      } finally {
+        setLoading(false);
       }
-
-      const response = await axios.get(
-        `${API_URL}/settings/about`,
-        {
-          timeout: 10000,
-        }
-      );
-
-      const data = response.data?.data || {};
-
-      setForm({
-        ...defaultForm,
-        ...data,
-
-        objectives: Array.isArray(data.objectives)
-          ? data.objectives
-          : [],
-
-        reasons: Array.isArray(data.reasons)
-          ? data.reasons
-          : [],
-      });
-    } catch (error) {
-      console.error(
-        "Failed to load About settings:",
-        error
-      );
-
-      toast.error(
-        axios.isAxiosError(error)
-          ? error.response?.data?.message ||
-              "Unable to load About settings."
-          : "Unable to load About settings."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   useEffect(() => {
     void loadSettings();
   }, []);
 
   const updateField =
-    (field: keyof AboutSettings) =>
+    (
+      field: keyof AboutSettings
+    ) =>
     (
       event: ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement
       >
     ) => {
-      setForm((current) => ({
-        ...current,
-        [field]: event.target.value,
-      }));
+      setForm(
+        (current) => ({
+          ...current,
+          [field]:
+            event.target.value,
+        })
+      );
     };
 
-  /*
-   * IMPORTANT:
-   *
-   * ListEditor expects:
-   *
-   * onUpdate(property)(event)
-   *
-   * Therefore updateListItem must return a function
-   * that receives the property first, and then returns
-   * the actual input change handler.
-   */
   const updateListItem =
-    (field: ListField, index: number) =>
-    (property: keyof ListItem) =>
+    (
+      field: ListField,
+      index: number
+    ) =>
+    (
+      property: keyof ListItem
+    ) =>
     (
       event: ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement
       >
     ) => {
-      const value = event.target.value;
+      const value =
+        event.target.value;
 
-      setForm((current) => ({
-        ...current,
-        [field]: current[field].map(
-          (item, itemIndex) =>
-            itemIndex === index
-              ? {
-                  ...item,
-                  [property]: value,
-                }
-              : item
-        ),
-      }));
+      setForm(
+        (current) => ({
+          ...current,
+
+          [field]:
+            current[field].map(
+              (
+                item,
+                itemIndex
+              ) =>
+                itemIndex ===
+                index
+                  ? {
+                      ...item,
+                      [property]:
+                        value,
+                    }
+                  : item
+            ),
+        })
+      );
     };
 
-  const addItem = (field: ListField) => {
-    setForm((current) => ({
-      ...current,
-      [field]: [
-        ...current[field],
-        emptyItem(),
-      ],
-    }));
+  const addItem = (
+    field: ListField
+  ) => {
+    setForm(
+      (current) => ({
+        ...current,
+
+        [field]: [
+          ...current[field],
+          emptyItem(),
+        ],
+      })
+    );
   };
 
   const removeItem = (
     field: ListField,
     index: number
   ) => {
-    setForm((current) => ({
-      ...current,
-      [field]: current[field].filter(
-        (_, itemIndex) => itemIndex !== index
-      ),
-    }));
+    setForm(
+      (current) => ({
+        ...current,
+
+        [field]:
+          current[field].filter(
+            (
+              _,
+              itemIndex
+            ) =>
+              itemIndex !==
+              index
+          ),
+      })
+    );
   };
 
-  const saveSettings = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
+  const saveSettings =
+    async (
+      event: FormEvent<HTMLFormElement>
+    ) => {
+      event.preventDefault();
 
-    try {
-      setSaving(true);
+      try {
+        setSaving(true);
 
-      if (!API_URL) {
-        throw new Error(
-          "NEXT_PUBLIC_API_URL is not configured."
-        );
-      }
-
-      const payload = {
-        ...form,
-
-        objectives: form.objectives.map(
-          (item) => ({
-            title: item.title.trim(),
-            description:
-              item.description.trim(),
-            icon: item.icon.trim(),
-          })
-        ),
-
-        reasons: form.reasons.map(
-          (item) => ({
-            title: item.title.trim(),
-            description:
-              item.description.trim(),
-            icon: item.icon.trim(),
-          })
-        ),
-      };
-
-      const response = await axios.put(
-        `${API_URL}/settings/about`,
-        payload,
-        {
-          headers: {
-            ...getAuthHeaders(),
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-          timeout: 15000,
-        }
-      );
-
-      if (response.data?.success === false) {
-        throw new Error(
-          response.data?.message ||
-            "Unable to save About settings."
-        );
-      }
-
-      const savedData = response.data?.data;
-
-      if (savedData) {
-        setForm({
-          ...defaultForm,
-          ...savedData,
+        const payload = {
+          ...form,
 
           objectives:
-            Array.isArray(
-              savedData.objectives
-            )
-              ? savedData.objectives
-              : [],
+            form.objectives.map(
+              (item) => ({
+                title:
+                  item.title.trim(),
+                description:
+                  item.description.trim(),
+                icon:
+                  item.icon.trim(),
+              })
+            ),
 
           reasons:
-            Array.isArray(savedData.reasons)
-              ? savedData.reasons
-              : [],
-        });
-      }
+            form.reasons.map(
+              (item) => ({
+                title:
+                  item.title.trim(),
+                description:
+                  item.description.trim(),
+                icon:
+                  item.icon.trim(),
+              })
+            ),
+        };
 
-      window.dispatchEvent(
-        new Event("about-settings-updated")
-      );
+        const response =
+          await authenticatedApiFetch(
+            "/settings/about",
+            {
+              method: "PUT",
 
-      toast.success(
-        "About page saved successfully."
-      );
-    } catch (error) {
-      console.error(
-        "Failed to save About settings:",
-        error
-      );
+              headers: {
+                "Content-Type":
+                  "application/json",
 
-      toast.error(
-        axios.isAxiosError(error)
-          ? error.response?.data?.message ||
-              "Unable to save About settings."
-          : error instanceof Error
+                Accept:
+                  "application/json",
+              },
+
+              body: JSON.stringify(
+                payload
+              ),
+            }
+          );
+
+        const result =
+          await responseJson<AboutResponse>(
+            response
+          );
+
+        setForm(
+          normalizeForm(
+            result.data
+          )
+        );
+
+        window.dispatchEvent(
+          new Event(
+            "about-settings-updated"
+          )
+        );
+
+        toast.success(
+          result.message ||
+            "About page saved successfully."
+        );
+      } catch (error) {
+        toast.error(
+          error instanceof Error
             ? error.message
             : "Unable to save About settings."
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const uploadImage = async (
-    field: "image" | "presidentPhoto",
-    file: File
-  ) => {
-    try {
-      if (!API_URL) {
-        throw new Error(
-          "NEXT_PUBLIC_API_URL is not configured."
         );
+      } finally {
+        setSaving(false);
       }
+    };
 
-      if (!file.type.startsWith("image/")) {
+  const uploadImage =
+    async (
+      field:
+        | "image"
+        | "presidentPhoto",
+      file: File
+    ) => {
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
         toast.error(
           "Please select an image file."
         );
+
         return;
       }
 
-      if (file.size > 10 * 1024 * 1024) {
+      if (
+        file.size >
+        10 * 1024 * 1024
+      ) {
         toast.error(
           "Image must be smaller than 10 MB."
         );
+
         return;
       }
 
-      if (field === "image") {
-        setUploadingImage(true);
-      } else {
-        setUploadingPresident(true);
-      }
-
-      const payload = new FormData();
-
-      payload.append(field, file);
-
-      const response = await axios.post(
-        `${API_URL}/settings/about/upload`,
-        payload,
-        {
-          headers: {
-            ...getAuthHeaders(),
-          },
-          withCredentials: true,
-          timeout: 30000,
+      try {
+        if (
+          field ===
+          "image"
+        ) {
+          setUploadingImage(
+            true
+          );
+        } else {
+          setUploadingPresident(
+            true
+          );
         }
-      );
 
-      if (response.data?.success === false) {
-        throw new Error(
-          response.data?.message ||
-            "Unable to upload image."
+        const body =
+          new FormData();
+
+        body.append(
+          field,
+          file
         );
-      }
 
-      const updated = response.data?.data;
+        const response =
+          await authenticatedApiFetch(
+            "/settings/about/upload",
+            {
+              method: "POST",
+              body,
+            }
+          );
 
-      if (updated) {
-        setForm((current) => ({
-          ...current,
-          ...updated,
-        }));
-      }
+        const result =
+          await responseJson<AboutResponse>(
+            response
+          );
 
-      window.dispatchEvent(
-        new Event("about-settings-updated")
-      );
+        if (
+          result.data
+        ) {
+          setForm(
+            normalizeForm(
+              result.data
+            )
+          );
+        }
 
-      toast.success(
-        field === "image"
-          ? "About image uploaded."
-          : "President photo uploaded."
-      );
-    } catch (error) {
-      console.error(
-        "About image upload failed:",
-        error
-      );
+        window.dispatchEvent(
+          new Event(
+            "about-settings-updated"
+          )
+        );
 
-      toast.error(
-        axios.isAxiosError(error)
-          ? error.response?.data?.message ||
-              "Unable to upload image."
-          : error instanceof Error
+        toast.success(
+          field ===
+            "image"
+            ? "About image uploaded successfully."
+            : "President photo uploaded successfully."
+        );
+      } catch (error) {
+        toast.error(
+          error instanceof Error
             ? error.message
             : "Unable to upload image."
-      );
-    } finally {
-      setUploadingImage(false);
-      setUploadingPresident(false);
-    }
-  };
+        );
+      } finally {
+        setUploadingImage(
+          false
+        );
+
+        setUploadingPresident(
+          false
+        );
+      }
+    };
 
   const handleImageChange =
     (
-      field: "image" | "presidentPhoto"
+      field:
+        | "image"
+        | "presidentPhoto"
     ) =>
     (
       event: ChangeEvent<HTMLInputElement>
@@ -493,46 +731,49 @@ export default function AboutSectionForm() {
       const file =
         event.target.files?.[0];
 
+      event.target.value = "";
+
       if (!file) {
         return;
       }
 
-      void uploadImage(field, file);
-
-      event.target.value = "";
+      void uploadImage(
+        field,
+        file
+      );
     };
 
   if (loading) {
     return (
-      <div className="space-y-5 rounded-xl bg-white p-6 shadow">
-        <div className="h-8 w-1/3 animate-pulse rounded bg-slate-200" />
-
-        <div className="h-12 animate-pulse rounded bg-slate-200" />
-
-        <div className="h-28 animate-pulse rounded bg-slate-200" />
-
-        <div className="h-28 animate-pulse rounded bg-slate-200" />
+      <div className="space-y-5">
+        {Array.from(
+          { length: 5 }
+        ).map(
+          (_, index) => (
+            <div
+              key={index}
+              className="h-32 animate-pulse rounded-2xl bg-slate-200"
+            />
+          )
+        )}
       </div>
     );
   }
 
   return (
     <form
-      onSubmit={saveSettings}
-      className="space-y-8"
+      onSubmit={
+        saveSettings
+      }
+      className="space-y-6"
     >
-      {/* =====================================================
-          HERO
-      ====================================================== */}
-      <section className="rounded-2xl bg-white p-6 shadow">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Hero Section
-        </h2>
-
-        <div className="mt-6 grid gap-5">
+      <Section title="Hero Section">
+        <div className="grid gap-5">
           <Field
             label="Eyebrow"
-            value={form.heroEyebrow}
+            value={
+              form.heroEyebrow
+            }
             onChange={updateField(
               "heroEyebrow"
             )}
@@ -540,7 +781,9 @@ export default function AboutSectionForm() {
 
           <Field
             label="Title"
-            value={form.heroTitle}
+            value={
+              form.heroTitle
+            }
             onChange={updateField(
               "heroTitle"
             )}
@@ -556,20 +799,15 @@ export default function AboutSectionForm() {
             )}
           />
         </div>
-      </section>
+      </Section>
 
-      {/* =====================================================
-          INTRO
-      ====================================================== */}
-      <section className="rounded-2xl bg-white p-6 shadow">
-        <h2 className="text-2xl font-bold">
-          About Introduction
-        </h2>
-
-        <div className="mt-6 grid gap-5">
+      <Section title="About Introduction">
+        <div className="grid gap-5">
           <Field
             label="Heading"
-            value={form.heading}
+            value={
+              form.heading
+            }
             onChange={updateField(
               "heading"
             )}
@@ -577,7 +815,9 @@ export default function AboutSectionForm() {
 
           <TextArea
             label="Description"
-            value={form.description}
+            value={
+              form.description
+            }
             onChange={updateField(
               "description"
             )}
@@ -612,47 +852,24 @@ export default function AboutSectionForm() {
               "commitmentDescription"
             )}
           />
-        </div>
 
-        <div className="mt-6 rounded-xl border border-slate-200 p-5">
-          <h3 className="font-semibold">
-            About Image
-          </h3>
-
-          {form.image && (
-            <img
-              src={form.image}
-              alt="Current About"
-              className="mt-4 h-40 w-full rounded-lg object-cover"
-            />
-          )}
-
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
+          <MediaUpload
+            title="About Image"
+            value={
+              form.image
+            }
+            loading={
+              uploadingImage
+            }
             onChange={handleImageChange(
               "image"
             )}
-            className="mt-4 block w-full rounded-lg border p-3"
           />
-
-          {uploadingImage && (
-            <p className="mt-2 text-sm text-blue-600">
-              Uploading image...
-            </p>
-          )}
         </div>
-      </section>
+      </Section>
 
-      {/* =====================================================
-          MISSION / VISION
-      ====================================================== */}
-      <section className="rounded-2xl bg-white p-6 shadow">
-        <h2 className="text-2xl font-bold">
-          Mission & Vision
-        </h2>
-
-        <div className="mt-6 grid gap-5">
+      <Section title="Mission & Vision">
+        <div className="grid gap-5">
           <Field
             label="Foundation Eyebrow"
             value={
@@ -723,35 +940,13 @@ export default function AboutSectionForm() {
             )}
           />
         </div>
-      </section>
+      </Section>
 
-      {/* =====================================================
-          OBJECTIVES
-      ====================================================== */}
-      <section className="rounded-2xl bg-white p-6 shadow">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-2xl font-bold">
-              Objectives
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              These values appear on the public About page.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              addItem("objectives")
-            }
-            className="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white hover:bg-slate-800"
-          >
-            Add Objective
-          </button>
-        </div>
-
-        <div className="mt-6 grid gap-5">
+      <Section
+        title="Objectives"
+        description="Manage the objective cards displayed on the About page."
+      >
+        <div className="grid gap-5">
           <Field
             label="Eyebrow"
             value={
@@ -785,11 +980,14 @@ export default function AboutSectionForm() {
 
         <div className="mt-6 space-y-5">
           {form.objectives.map(
-            (item, index) => (
+            (
+              item,
+              index
+            ) => (
               <ListEditor
                 key={index}
-                index={index}
                 item={item}
+                index={index}
                 onUpdate={updateListItem(
                   "objectives",
                   index
@@ -804,19 +1002,24 @@ export default function AboutSectionForm() {
             )
           )}
         </div>
-      </section>
 
-      {/* =====================================================
-          PRESIDENT
-      ====================================================== */}
-      <section className="rounded-2xl bg-white p-6 shadow">
-        <h2 className="text-2xl font-bold">
-          President
-        </h2>
+        <button
+          type="button"
+          onClick={() =>
+            addItem(
+              "objectives"
+            )
+          }
+          className="mt-5 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-slate-800"
+        >
+          Add Objective
+        </button>
+      </Section>
 
-        <div className="mt-6 grid gap-5">
+      <Section title="President Message">
+        <div className="grid gap-5">
           <Field
-            label="Name"
+            label="President Name"
             value={
               form.presidentName
             }
@@ -843,71 +1046,30 @@ export default function AboutSectionForm() {
             onChange={updateField(
               "presidentMessage"
             )}
+            rows={8}
           />
-        </div>
 
-        <div className="mt-6 rounded-xl border border-slate-200 p-5">
-          <h3 className="font-semibold">
-            President Photo
-          </h3>
-
-          {form.presidentPhoto && (
-            <img
-              src={
-                form.presidentPhoto
-              }
-              alt={
-                form.presidentName ||
-                "President"
-              }
-              className="mt-4 h-40 w-40 rounded-full object-cover"
-            />
-          )}
-
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
+          <MediaUpload
+            title="President Photo"
+            value={
+              form.presidentPhoto
+            }
+            loading={
+              uploadingPresident
+            }
+            circular
             onChange={handleImageChange(
               "presidentPhoto"
             )}
-            className="mt-4 block w-full rounded-lg border p-3"
           />
-
-          {uploadingPresident && (
-            <p className="mt-2 text-sm text-blue-600">
-              Uploading president photo...
-            </p>
-          )}
         </div>
-      </section>
+      </Section>
 
-      {/* =====================================================
-          WHY CHOOSE US
-      ====================================================== */}
-      <section className="rounded-2xl bg-white p-6 shadow">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-2xl font-bold">
-              Why Choose Us
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              These values appear on the public About page.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              addItem("reasons")
-            }
-            className="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white hover:bg-slate-800"
-          >
-            Add Reason
-          </button>
-        </div>
-
-        <div className="mt-6 grid gap-5">
+      <Section
+        title="Why Choose Us"
+        description="Manage the reasons displayed on the About page."
+      >
+        <div className="grid gap-5">
           <Field
             label="Eyebrow"
             value={
@@ -941,11 +1103,14 @@ export default function AboutSectionForm() {
 
         <div className="mt-6 space-y-5">
           {form.reasons.map(
-            (item, index) => (
+            (
+              item,
+              index
+            ) => (
               <ListEditor
                 key={index}
-                index={index}
                 item={item}
+                index={index}
                 onUpdate={updateListItem(
                   "reasons",
                   index
@@ -960,35 +1125,31 @@ export default function AboutSectionForm() {
             )
           )}
         </div>
-      </section>
 
-      {/* =====================================================
-          CTA
-      ====================================================== */}
-      <section className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-6 shadow">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-wider text-blue-600">
-            Public About Page
-          </p>
+        <button
+          type="button"
+          onClick={() =>
+            addItem("reasons")
+          }
+          className="mt-5 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-slate-800"
+        >
+          Add Reason
+        </button>
+      </Section>
 
-          <h2 className="mt-1 text-2xl font-bold text-slate-900">
-            Call To Action
-          </h2>
-
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Every field below is rendered directly
-            in the public About page CTA.
-          </p>
-        </div>
-
-        <div className="mt-6 grid gap-5">
+      <Section
+        title="About CTA"
+        description="The labels are CMS-controlled. The actual destinations remain controlled by the application so an editor cannot accidentally create a broken route."
+      >
+        <div className="grid gap-5">
           <Field
             label="CTA Title"
-            value={form.ctaTitle}
+            value={
+              form.ctaTitle
+            }
             onChange={updateField(
               "ctaTitle"
             )}
-            placeholder="Become a Part of Our Greater Noida Press Club"
           />
 
           <TextArea
@@ -999,7 +1160,6 @@ export default function AboutSectionForm() {
             onChange={updateField(
               "ctaDescription"
             )}
-            placeholder="CTA description shown on the public About page"
           />
 
           <Field
@@ -1010,7 +1170,6 @@ export default function AboutSectionForm() {
             onChange={updateField(
               "ctaPrimaryLabel"
             )}
-            placeholder="Become a Member"
           />
 
           <Field
@@ -1021,44 +1180,15 @@ export default function AboutSectionForm() {
             onChange={updateField(
               "ctaSecondaryLabel"
             )}
-            placeholder="Meet Our Office Bearers"
           />
         </div>
+      </Section>
 
-        <div className="mt-6 rounded-xl bg-white p-5 ring-1 ring-blue-100">
-          <p className="text-sm font-semibold text-slate-900">
-            Button routing
-          </p>
-
-          <div className="mt-3 space-y-2 text-sm text-slate-600">
-            <p>
-              Primary button → CMS membership
-              form endpoint.
-            </p>
-
-            <p>
-              Secondary button →{" "}
-              <span className="font-semibold text-slate-900">
-                /office-bearers
-              </span>
-            </p>
-
-            <p>
-              Button labels themselves are
-              controlled by the CMS fields above.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          SAVE
-      ====================================================== */}
-      <div className="sticky bottom-4 z-20 flex justify-end">
+      <div className="sticky bottom-4 z-20 flex justify-end rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur">
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-blue-700 px-8 py-3.5 font-bold text-white shadow-xl transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className="min-w-44 rounded-xl bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {saving
             ? "Saving..."
@@ -1069,151 +1199,68 @@ export default function AboutSectionForm() {
   );
 }
 
-/* =========================================================
-   REUSABLE FIELD
-========================================================= */
-
-function Field({
-  label,
+function MediaUpload({
+  title,
   value,
+  loading,
+  circular = false,
   onChange,
-  placeholder,
 }: {
-  label: string;
+  title: string;
   value: string;
+  loading: boolean;
+  circular?: boolean;
   onChange: (
     event: ChangeEvent<HTMLInputElement>
   ) => void;
-  placeholder?: string;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-semibold text-slate-800">
-        {label}
-      </label>
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+        {value ? (
+          <img
+            src={value}
+            alt={title}
+            className={`h-32 w-32 shrink-0 object-cover ${
+              circular
+                ? "rounded-full"
+                : "rounded-2xl"
+            }`}
+          />
+        ) : (
+          <div
+            className={`flex h-32 w-32 shrink-0 items-center justify-center bg-slate-200 text-center text-xs text-slate-500 ${
+              circular
+                ? "rounded-full"
+                : "rounded-2xl"
+            }`}
+          >
+            No image
+          </div>
+        )}
 
-      <input
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
-      />
-    </div>
-  );
-}
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-slate-900">
+            {title}
+          </h3>
 
-/* =========================================================
-   REUSABLE TEXTAREA
-========================================================= */
-
-function TextArea({
-  label,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (
-    event: ChangeEvent<HTMLTextAreaElement>
-  ) => void;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-semibold text-slate-800">
-        {label}
-      </label>
-
-      <textarea
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        rows={5}
-        className="mt-2 w-full resize-y rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
-      />
-    </div>
-  );
-}
-
-/* =========================================================
-   OBJECTIVE / REASON EDITOR
-========================================================= */
-
-function ListEditor({
-  index,
-  item,
-  onUpdate,
-  onRemove,
-}: {
-  index: number;
-  item: ListItem;
-
-  onUpdate: (
-    property: keyof ListItem
-  ) => (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
-    >
-  ) => void;
-
-  onRemove: () => void;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-      <div className="flex items-center justify-between gap-4">
-        <h3 className="font-bold text-slate-900">
-          Item {index + 1}
-        </h3>
-
-        <button
-          type="button"
-          onClick={onRemove}
-          className="rounded-lg px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
-        >
-          Remove
-        </button>
-      </div>
-
-      <div className="mt-4 grid gap-4">
-        <div>
-          <label className="block text-sm font-semibold">
-            Icon Name
-          </label>
+          <p className="mt-1 text-sm text-slate-500">
+            JPG, PNG or WebP. Maximum 10 MB.
+          </p>
 
           <input
-            value={item.icon}
-            onChange={onUpdate("icon")}
-            placeholder="Target"
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={onChange}
+            disabled={loading}
+            className="mt-4 block w-full rounded-xl border border-slate-300 bg-white p-3 text-sm"
           />
-        </div>
 
-        <div>
-          <label className="block text-sm font-semibold">
-            Title
-          </label>
-
-          <input
-            value={item.title}
-            onChange={onUpdate("title")}
-            placeholder="Objective title"
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold">
-            Description
-          </label>
-
-          <textarea
-            value={item.description}
-            onChange={onUpdate("description")}
-            rows={4}
-            placeholder="Objective description"
-            className="mt-2 w-full resize-y rounded-lg border border-slate-300 bg-white px-4 py-3"
-          />
+          {loading && (
+            <p className="mt-2 text-sm font-medium text-blue-700">
+              Uploading...
+            </p>
+          )}
         </div>
       </div>
     </div>
