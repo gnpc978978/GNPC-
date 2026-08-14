@@ -50,7 +50,9 @@ const toFormData = (
 
   formData.append(
     "displayOrder",
-    String(data.displayOrder)
+    String(
+      data.displayOrder
+    )
   );
 
   formData.append(
@@ -70,53 +72,31 @@ const toFormData = (
   return formData;
 };
 
-const request = async <T>(
-  path: string,
-  options: RequestInit = {}
-): Promise<T> => {
-  const response =
-    await authenticatedApiFetch(
-      path,
-      options
-    );
+const queryString = (
+  params: URLSearchParams
+) => {
+  const value =
+    params.toString();
 
-  const payload =
-    await responseJson<{
-      success: boolean;
-      data: T;
-      message?: string;
-    }>(response);
-
-  return payload.data;
+  return value
+    ? `?${value}`
+    : "";
 };
 
 export const getExecutiveCommittee =
   async (
     params = new URLSearchParams()
   ): Promise<PaginatedMembers> => {
-    const query =
-      params.toString();
-
     const response =
-      await apiFetch(
-        `/executive-committee${
-          query ? `?${query}` : ""
-        }`
+      await authenticatedApiFetch(
+        `/executive-committee${queryString(
+          params
+        )}`
       );
 
-    const payload =
-      await responseJson<{
-        success: boolean;
-        data: ExecutiveCommittee[];
-        pagination: PaginatedMembers["pagination"];
-        message?: string;
-      }>(response);
-
-    return {
-      data: payload.data,
-      pagination:
-        payload.pagination,
-    };
+    return responseJson<PaginatedMembers>(
+      response
+    );
   };
 
 export const getPublicExecutiveCommittee =
@@ -125,21 +105,16 @@ export const getPublicExecutiveCommittee =
   ): Promise<
     ExecutiveCommittee[]
   > => {
-    const query =
-      params.toString();
-
     const response =
       await apiFetch(
-        `/executive${
-          query ? `?${query}` : ""
-        }`
+        `/executive${queryString(
+          params
+        )}`
       );
 
     const payload =
       await responseJson<{
-        success: boolean;
         data: ExecutiveCommittee[];
-        message?: string;
       }>(response);
 
     return payload.data;
@@ -148,57 +123,103 @@ export const getPublicExecutiveCommittee =
 export const getExecutiveCommitteeMember =
   async (
     id: string
-  ): Promise<ExecutiveCommittee> =>
-    request<ExecutiveCommittee>(
-      `/executive-committee/${id}`
-    );
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/executive-committee/${id}`
+      );
+
+    const payload =
+      await responseJson<{
+        data: ExecutiveCommittee;
+      }>(response);
+
+    return payload.data;
+  };
 
 export const getExecutiveCommitteeStats =
-  async (): Promise<ExecutiveCommitteeStats> =>
-    request<ExecutiveCommitteeStats>(
-      "/executive-committee/stats"
-    );
+  async () => {
+    const response =
+      await authenticatedApiFetch(
+        "/executive-committee/stats"
+      );
+
+    const payload =
+      await responseJson<{
+        data: ExecutiveCommitteeStats;
+      }>(response);
+
+    return payload.data;
+  };
 
 export const createExecutiveCommittee =
   async (
     data: ExecutiveCommitteeFormData
-  ): Promise<ExecutiveCommittee> =>
-    request<ExecutiveCommittee>(
-      "/executive-committee",
-      {
-        method: "POST",
-        body: toFormData(data),
-      }
-    );
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        "/executive-committee",
+        {
+          method: "POST",
+          body: toFormData(
+            data
+          ),
+        }
+      );
+
+    const payload =
+      await responseJson<{
+        data: ExecutiveCommittee;
+      }>(response);
+
+    return payload.data;
+  };
 
 export const updateExecutiveCommittee =
   async (
     id: string,
     data: ExecutiveCommitteeFormData
-  ): Promise<ExecutiveCommittee> =>
-    request<ExecutiveCommittee>(
-      `/executive-committee/${id}`,
-      {
-        method: "PUT",
-        body: toFormData(data),
-      }
-    );
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/executive-committee/${id}`,
+        {
+          method: "PUT",
+          body: toFormData(
+            data
+          ),
+        }
+      );
+
+    const payload =
+      await responseJson<{
+        data: ExecutiveCommittee;
+      }>(response);
+
+    return payload.data;
+  };
 
 export const deleteExecutiveCommittee =
   async (
     id: string
-  ) =>
-    request<unknown>(
-      `/executive-committee/${id}`,
-      {
-        method: "DELETE",
-      }
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/executive-committee/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+    return responseJson<unknown>(
+      response
     );
+  };
 
 export const importExecutiveCommittee =
   async (
     file: File
-  ): Promise<ImportSummary> => {
+  ) => {
     const formData =
       new FormData();
 
@@ -207,49 +228,60 @@ export const importExecutiveCommittee =
       file
     );
 
-    return request<ImportSummary>(
-      "/executive-committee/import",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response =
+      await authenticatedApiFetch(
+        "/executive/import",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+    const payload =
+      await responseJson<{
+        data: ImportSummary;
+      }>(response);
+
+    return payload.data;
   };
 
 export const exportExecutiveCommittee =
   async (
     filters = new URLSearchParams()
   ) => {
-    const query =
-      filters.toString();
-
     const response =
       await authenticatedApiFetch(
-        `/executive-committee/export${
-          query ? `?${query}` : ""
-        }`
+        `/executive-committee/export${queryString(
+          filters
+        )}`
       );
 
     if (!response.ok) {
-      await responseJson(response);
+      await responseJson(
+        response
+      );
     }
 
     const blob =
       await response.blob();
 
     const url =
-      URL.createObjectURL(blob);
+      URL.createObjectURL(
+        blob
+      );
 
     const link =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
     link.href = url;
     link.download =
       "executive-committee.xlsx";
 
-    document.body.appendChild(link);
     link.click();
-    link.remove();
 
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(
+      url
+    );
   };
