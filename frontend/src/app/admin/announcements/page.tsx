@@ -26,24 +26,16 @@ import {
 } from "@/services/announcementService";
 
 export default function AnnouncementsPage() {
-  const {
-    token: contextToken,
-  } = useAuth();
+  const { token: contextToken } = useAuth();
 
   const token =
     contextToken ||
     (typeof window !== "undefined"
-      ? localStorage.getItem(
-          "token"
-        ) || ""
+      ? localStorage.getItem("token") || ""
       : "");
 
-  const [
-    announcements,
-    setAnnouncements,
-  ] = useState<Announcement[]>(
-    []
-  );
+  const [announcements, setAnnouncements] =
+    useState<Announcement[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -61,9 +53,7 @@ export default function AnnouncementsPage() {
     useState(false);
 
   const [editData, setEditData] =
-    useState<Announcement | null>(
-      null
-    );
+    useState<Announcement | null>(null);
 
   const loadAnnouncements =
     useCallback(async () => {
@@ -84,11 +74,11 @@ export default function AnnouncementsPage() {
           );
 
         if (res.success) {
+          const data = res.data;
+
           setAnnouncements(
-            Array.isArray(
-              res.data
-            )
-              ? res.data
+            Array.isArray(data)
+              ? (data as Announcement[])
               : []
           );
         } else {
@@ -112,9 +102,7 @@ export default function AnnouncementsPage() {
 
   useEffect(() => {
     void loadAnnouncements();
-  }, [
-    loadAnnouncements,
-  ]);
+  }, [loadAnnouncements]);
 
   const handleSubmit =
     async (
@@ -252,8 +240,6 @@ export default function AnnouncementsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">
@@ -273,13 +259,13 @@ export default function AnnouncementsPage() {
           }}
           className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
         >
-          <FaPlus aria-hidden="true" />
+          <FaPlus
+            aria-hidden="true"
+          />
 
           Add Announcement
         </button>
       </div>
-
-      {/* Form */}
 
       {showForm && (
         <AnnouncementForm
@@ -311,17 +297,13 @@ export default function AnnouncementsPage() {
                 }
               : undefined
           }
-          onSubmit={
-            handleSubmit
-          }
+          onSubmit={handleSubmit}
           onCancel={() => {
             setShowForm(false);
             setEditData(null);
           }}
         />
       )}
-
-      {/* Filters */}
 
       <AnnouncementFilters
         search={search}
@@ -337,12 +319,8 @@ export default function AnnouncementsPage() {
         }}
       />
 
-      {/* Table */}
-
       <AnnouncementTable
-        announcements={
-          announcements
-        }
+        announcements={announcements}
         loading={loading}
         onView={(item) => {
           alert(item.title);
@@ -351,9 +329,7 @@ export default function AnnouncementsPage() {
           setEditData(item);
           setShowForm(true);
         }}
-        onDelete={
-          handleDelete
-        }
+        onDelete={handleDelete}
       />
     </div>
   );
