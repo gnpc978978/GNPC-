@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import Container from "@/components/ui/Container";
+import { apiFetch, responseJson } from "@/services/api";
 import Card from "@/components/ui/Card";
 import PageHero from "@/components/ui/PageHero";
 
@@ -23,7 +24,6 @@ type PressConference = {
   createdAt?: string;
 };
 
-const API = process.env.NEXT_PUBLIC_API_URL;
 
 function formatDate(value?: string) {
   if (!value) {
@@ -54,13 +54,12 @@ export default function PressConferenceList({
   useEffect(() => {
     const load = async () => {
       try {
-        const response = await fetch(
-          `${API}/press-conferences`
-        );
+        const response = await apiFetch("/press-conferences", {
+          method: "GET",
+          cache: "no-store",
+        });
 
-        const data = await response
-          .json()
-          .catch(() => ({ data: [] }));
+        const data = await responseJson<{ data?: PressConference[] }>(response);
 
         setItems(
           Array.isArray(data.data)
