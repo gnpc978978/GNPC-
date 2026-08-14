@@ -1,48 +1,29 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
+import Link from "next/link";
+
 import {
   CheckCircle2,
   Eye,
+  RefreshCw,
   Target,
 } from "lucide-react";
 
 import PageHero from "@/components/ui/PageHero";
 import AboutCTA from "@/components/about/AboutCTA";
 
-/*
- * -------------------------------------------------------
- * API CONFIGURATION
- * -------------------------------------------------------
- *
- * Expected environment variable:
- *
- * NEXT_PUBLIC_API_URL=http://localhost:5000/api
- *
- * Production example:
- *
- * NEXT_PUBLIC_API_URL=https://your-backend-domain.com/api
- *
- * The backend About endpoint is:
- *
- * GET /api/settings/about
- *
- * Therefore the final request becomes:
- *
- * ${NEXT_PUBLIC_API_URL}/settings/about
- */
+import {
+  apiFetch,
+  responseJson,
+} from "@/services/api";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
-
-type Objective = {
-  title: string;
-  description: string;
-  icon?: string;
-};
-
-type Reason = {
+type AboutItem = {
   title: string;
   description: string;
   icon?: string;
@@ -53,7 +34,7 @@ type AboutSettings = {
   heroTitle: string;
   heroDescription: string;
 
-  image?: string;
+  image: string;
 
   heading: string;
   description: string;
@@ -75,17 +56,17 @@ type AboutSettings = {
   objectivesEyebrow: string;
   objectivesTitle: string;
   objectivesDescription: string;
-  objectives: Objective[];
+  objectives: AboutItem[];
 
   presidentName: string;
   presidentDesignation: string;
   presidentMessage: string;
-  presidentPhoto?: string;
+  presidentPhoto: string;
 
   whyChooseUsEyebrow: string;
   whyChooseUsTitle: string;
   whyChooseUsDescription: string;
-  reasons: Reason[];
+  reasons: AboutItem[];
 
   ctaTitle: string;
   ctaDescription: string;
@@ -93,19 +74,13 @@ type AboutSettings = {
   ctaSecondaryLabel: string;
 };
 
-/*
- * -------------------------------------------------------
- * EMPTY DEFAULT
- * -------------------------------------------------------
- *
- * This is only used to guarantee safe rendering.
- *
- * We DO NOT use hardcoded fallback CMS content when
- * the API fails. Otherwise a broken CMS looks like it
- * is working.
- */
+type AboutResponse = {
+  success?: boolean;
+  message?: string;
+  data?: Partial<AboutSettings>;
+};
 
-const emptyContent: AboutSettings = {
+const EMPTY_ABOUT: AboutSettings = {
   heroEyebrow: "",
   heroTitle: "",
   heroDescription: "",
@@ -150,209 +125,305 @@ const emptyContent: AboutSettings = {
   ctaSecondaryLabel: "",
 };
 
+function normalizeItems(
+  value: unknown
+): AboutItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map(
+    (item) => ({
+      title:
+        typeof item?.title ===
+        "string"
+          ? item.title
+          : "",
+
+      description:
+        typeof item?.description ===
+        "string"
+          ? item.description
+          : "",
+
+      icon:
+        typeof item?.icon ===
+        "string"
+          ? item.icon
+          : "",
+    })
+  );
+}
+
+function normalizeAbout(
+  data?: Partial<AboutSettings>
+): AboutSettings {
+  return {
+    ...EMPTY_ABOUT,
+    ...(data || {}),
+
+    objectives:
+      normalizeItems(
+        data?.objectives
+      ),
+
+    reasons:
+      normalizeItems(
+        data?.reasons
+      ),
+
+    image:
+      typeof data?.image ===
+      "string"
+        ? data.image
+        : "",
+
+    presidentPhoto:
+      typeof data?.presidentPhoto ===
+      "string"
+        ? data.presidentPhoto
+        : "",
+  };
+}
+
+function PageSkeleton() {
+  return (
+    <main className="min-h-screen bg-white">
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+          <div className="animate-pulse">
+            <div className="h-4 w-56 rounded bg-slate-200" />
+
+            <div className="mt-5 h-12 max-w-2xl rounded bg-slate-200" />
+
+            <div className="mt-5 h-6 max-w-3xl rounded bg-slate-100" />
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <div className="mx-auto max-w-7xl animate-pulse">
+          <div className="h-10 max-w-2xl rounded bg-slate-200" />
+
+          <div className="mt-6 h-5 max-w-3xl rounded bg-slate-100" />
+
+          <div className="mt-3 h-5 max-w-2xl rounded bg-slate-100" />
+
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            <div className="h-64 rounded-3xl bg-slate-100" />
+            <div className="h-64 rounded-3xl bg-slate-100" />
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function ErrorState({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry: () => void;
+}) {
+  return (
+    <main className="flex min-h-[60vh] items-center justify-center bg-white px-4 py-16 sm:px-6">
+      <div className="w-full max-w-xl rounded-3xl border border-red-200 bg-red-50 p-6 text-center sm:p-8">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-red-600 shadow-sm">
+          <RefreshCw
+            size={24}
+            aria-hidden="true"
+          />
+        </div>
+
+        <h1 className="mt-5 text-2xl font-bold text-slate-900">
+          About page content unavailable
+        </h1>
+
+        <p className="mt-3 text-sm leading-6 text-slate-600">
+          {message}
+        </p>
+
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+        >
+          <RefreshCw
+            size={16}
+            aria-hidden="true"
+          />
+
+          Try Again
+        </button>
+      </div>
+    </main>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="max-w-3xl">
+      {eyebrow && (
+        <p className="gnpc-eyebrow">
+          {eyebrow}
+        </p>
+      )}
+
+      <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+        {title}
+      </h2>
+
+      {description && (
+        <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+          {description}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function ItemCard({
+  item,
+  index,
+}: {
+  item: AboutItem;
+  index: number;
+}) {
+  return (
+    <article
+      key={`${item.title}-${index}`}
+      className="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:shadow-lg sm:rounded-3xl sm:p-6"
+    >
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+        <CheckCircle2
+          size={22}
+          aria-hidden="true"
+        />
+      </div>
+
+      {item.title && (
+        <h3 className="mt-5 break-words text-lg font-bold text-slate-900 sm:text-xl">
+          {item.title}
+        </h3>
+      )}
+
+      {item.description && (
+        <p className="mt-3 break-words text-sm leading-7 text-slate-600 sm:text-base">
+          {item.description}
+        </p>
+      )}
+    </article>
+  );
+}
+
 export default function AboutPage() {
   const [content, setContent] =
-    useState<AboutSettings | null>(null);
+    useState<AboutSettings | null>(
+      null
+    );
 
   const [loading, setLoading] =
     useState(true);
 
   const [error, setError] =
-    useState<string | null>(null);
+    useState<string | null>(
+      null
+    );
 
-  /*
-   * -------------------------------------------------------
-   * LOAD ABOUT CMS DATA
-   * -------------------------------------------------------
-   */
+  const loadAboutContent =
+    useCallback(
+      async () => {
+        try {
+          setLoading(true);
+          setError(null);
 
-  const loadAboutContent = useCallback(
-    async () => {
-      try {
-        setLoading(true);
-        setError(null);
+          /*
+           * Centralized API service.
+           *
+           * This resolves:
+           *
+           * /api/settings/about
+           *
+           * through api.ts instead of
+           * constructing the URL locally.
+           */
+          const response =
+            await apiFetch(
+              "/settings/about"
+            );
 
-        /*
-         * Fail clearly if the environment variable
-         * has not been configured.
-         */
-        if (!API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL is not configured."
-          );
-        }
+          const payload =
+            await responseJson<AboutResponse>(
+              response
+            );
 
-        /*
-         * IMPORTANT:
-         *
-         * Backend:
-         * /api/settings/about
-         *
-         * API_URL should already contain /api.
-         *
-         * Example:
-         * https://api.example.com/api
-         *
-         * Result:
-         * https://api.example.com/api/settings/about
-         */
-        const endpoint =
-          `${API_URL}/settings/about`;
-
-        console.log(
-          "[About CMS] Fetching:",
-          endpoint
-        );
-
-        const response =
-          await axios.get(endpoint, {
-            timeout: 15000,
-            headers: {
-              Accept: "application/json",
-            },
-          });
-
-        /*
-         * Backend response:
-         *
-         * {
-         *   success: true,
-         *   data: {...}
-         * }
-         */
-
-        if (!response.data?.success) {
-          throw new Error(
-            response.data?.message ||
-              "About CMS returned an unsuccessful response."
-          );
-        }
-
-        const data =
-          response.data?.data;
-
-        if (!data) {
-          throw new Error(
-            "About CMS returned no data."
-          );
-        }
-
-        /*
-         * Normalize arrays so the UI never crashes
-         * when the CMS contains missing/null values.
-         */
-        const normalizedContent: AboutSettings = {
-          ...emptyContent,
-          ...data,
-
-          objectives:
-            Array.isArray(data.objectives)
-              ? data.objectives.map(
-                  (item: Objective) => ({
-                    title:
-                      item?.title ?? "",
-                    description:
-                      item?.description ?? "",
-                    icon:
-                      item?.icon ?? "",
-                  })
-                )
-              : [],
-
-          reasons:
-            Array.isArray(data.reasons)
-              ? data.reasons.map(
-                  (item: Reason) => ({
-                    title:
-                      item?.title ?? "",
-                    description:
-                      item?.description ?? "",
-                    icon:
-                      item?.icon ?? "",
-                  })
-                )
-              : [],
-        };
-
-        console.log(
-          "[About CMS] Data loaded successfully:",
-          normalizedContent
-        );
-
-        setContent(
-          normalizedContent
-        );
-      } catch (error) {
-        console.error(
-          "[About CMS] Failed to load content:",
-          error
-        );
-
-        let message =
-          "Unable to load About page content.";
-
-        if (axios.isAxiosError(error)) {
-          if (error.response) {
-            message =
-              error.response.data?.message ||
-              `About API returned ${error.response.status}.`;
-          } else if (error.request) {
-            message =
-              "Unable to connect to the About CMS API.";
-          } else if (error.message) {
-            message = error.message;
+          if (
+            payload.success ===
+            false
+          ) {
+            throw new Error(
+              payload.message ||
+                "About CMS returned an unsuccessful response."
+            );
           }
-        } else if (
-          error instanceof Error
-        ) {
-          message = error.message;
+
+          if (
+            !payload.data
+          ) {
+            throw new Error(
+              "About CMS returned no content."
+            );
+          }
+
+          setContent(
+            normalizeAbout(
+              payload.data
+            )
+          );
+        } catch (requestError) {
+          console.error(
+            "[About CMS] Failed to load content:",
+            requestError
+          );
+
+          setContent(null);
+
+          setError(
+            requestError instanceof
+              Error
+              ? requestError.message
+              : "Unable to load About page content."
+          );
+        } finally {
+          setLoading(false);
         }
-
-        setError(message);
-
-        /*
-         * IMPORTANT:
-         *
-         * Do not silently display hardcoded CMS content.
-         * Keep content null so we know the CMS actually failed.
-         */
-        setContent(null);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
-
-  /*
-   * -------------------------------------------------------
-   * INITIAL LOAD
-   * -------------------------------------------------------
-   */
+      },
+      []
+    );
 
   useEffect(() => {
-    loadAboutContent();
-  }, [loadAboutContent]);
+    void loadAboutContent();
+  }, [
+    loadAboutContent,
+  ]);
 
   /*
-   * -------------------------------------------------------
-   * CMS UPDATE EVENT
-   * -------------------------------------------------------
-   *
-   * When the admin CMS saves About settings, another
-   * part of the frontend can dispatch:
-   *
-   * window.dispatchEvent(
-   *   new Event("about-settings-updated")
-   * );
-   *
-   * The public About page will then refresh.
+   * This allows the CMS editor to notify
+   * another open page in the same browser tab.
    */
-
   useEffect(() => {
     const handleUpdate =
       () => {
-        loadAboutContent();
+        void loadAboutContent();
       };
 
     window.addEventListener(
@@ -366,77 +437,35 @@ export default function AboutPage() {
         handleUpdate
       );
     };
-  }, [loadAboutContent]);
-
-  /*
-   * -------------------------------------------------------
-   * LOADING
-   * -------------------------------------------------------
-   */
+  }, [
+    loadAboutContent,
+  ]);
 
   if (loading) {
-    return (
-      <main className="min-h-screen bg-white">
-        <section className="border-b border-slate-200 bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-            <div className="animate-pulse">
-              <div className="h-4 w-56 rounded bg-slate-200" />
-
-              <div className="mt-5 h-12 max-w-2xl rounded bg-slate-200" />
-
-              <div className="mt-5 h-6 max-w-3xl rounded bg-slate-100" />
-            </div>
-          </div>
-        </section>
-
-        <section className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl animate-pulse">
-            <div className="h-10 max-w-2xl rounded bg-slate-200" />
-
-            <div className="mt-6 h-5 max-w-3xl rounded bg-slate-100" />
-
-            <div className="mt-3 h-5 max-w-2xl rounded bg-slate-100" />
-          </div>
-        </section>
-      </main>
-    );
+    return <PageSkeleton />;
   }
 
-  /*
-   * -------------------------------------------------------
-   * ERROR STATE
-   * -------------------------------------------------------
-   */
-
-  if (error || !content) {
+  if (
+    error ||
+    !content
+  ) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-white px-6">
-        <div className="w-full max-w-xl rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-          <h1 className="text-2xl font-bold text-slate-900">
-            About page content unavailable
-          </h1>
-
-          <p className="mt-3 text-sm leading-6 text-slate-600">
-            {error ||
-              "The About CMS did not return any content."}
-          </p>
-
-          <button
-            type="button"
-            onClick={loadAboutContent}
-            className="mt-6 inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-          >
-            Try Again
-          </button>
-        </div>
-      </main>
+      <ErrorState
+        message={
+          error ||
+          "The About CMS did not return any content."
+        }
+        onRetry={() => {
+          void loadAboutContent();
+        }}
+      />
     );
   }
 
   return (
     <main className="bg-white text-slate-900">
       {/* =====================================================
-          PAGE HERO
+          HERO
           ===================================================== */}
 
       <PageHero
@@ -471,8 +500,6 @@ export default function AboutPage() {
       <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            {/* TEXT */}
-
             <div className="min-w-0">
               {content.heading && (
                 <h2 className="text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
@@ -488,89 +515,88 @@ export default function AboutPage() {
 
               {content.secondaryDescription && (
                 <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">
-                  {content.secondaryDescription}
+                  {
+                    content.secondaryDescription
+                  }
                 </p>
               )}
 
               {content.commitmentTitle && (
                 <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:mt-8 sm:p-6">
                   <h3 className="text-xl font-bold text-slate-900">
-                    {content.commitmentTitle}
+                    {
+                      content.commitmentTitle
+                    }
                   </h3>
 
                   {content.commitmentDescription && (
                     <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
-                      {content.commitmentDescription}
+                      {
+                        content.commitmentDescription
+                      }
                     </p>
                   )}
                 </div>
               )}
             </div>
 
-            {/* IMAGE */}
-
-            {content.image ? (
-              <div className="relative overflow-hidden rounded-2xl bg-slate-100 shadow-sm sm:rounded-3xl">
-                <div className="aspect-[6/5]">
-                  <img
-                    src={content.image}
-                    alt={
-                      content.heading ||
-                      "Greater Noida Press Club"
-                    }
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="flex aspect-[6/5] items-center justify-center rounded-2xl bg-slate-50 sm:rounded-3xl">
-                <div className="px-6 text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                    <Target
-                      size={26}
-                      aria-hidden="true"
+            <div className="min-w-0">
+              {content.image ? (
+                <div className="relative overflow-hidden rounded-2xl bg-slate-100 shadow-sm sm:rounded-3xl">
+                  <div className="aspect-[6/5]">
+                    <img
+                      src={content.image}
+                      alt={
+                        content.heading ||
+                        "Greater Noida Press Club"
+                      }
+                      className="h-full w-full object-cover"
+                      loading="lazy"
                     />
                   </div>
-
-                  <p className="mt-4 text-sm font-semibold text-slate-500">
-                    About image coming soon
-                  </p>
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="flex aspect-[6/5] items-center justify-center rounded-2xl bg-slate-50 sm:rounded-3xl">
+                  <div className="px-6 text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                      <Target
+                        size={26}
+                        aria-hidden="true"
+                      />
+                    </div>
+
+                    <p className="mt-4 text-sm font-semibold text-slate-500">
+                      About image coming soon
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          FOUNDATION
+          MISSION / VISION
           ===================================================== */}
 
       <section className="bg-slate-50 px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            {content.foundationEyebrow && (
-              <p className="gnpc-eyebrow">
-                {content.foundationEyebrow}
-              </p>
-            )}
-
-            <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              {content.foundationTitle}
-            </h2>
-
-            {content.foundationDescription && (
-              <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
-                {content.foundationDescription}
-              </p>
-            )}
-          </div>
+          <SectionHeading
+            eyebrow={
+              content.foundationEyebrow
+            }
+            title={
+              content.foundationTitle ||
+              "Mission & Vision"
+            }
+            description={
+              content.foundationDescription
+            }
+          />
 
           <div className="mt-10 grid gap-5 sm:mt-12 md:grid-cols-2">
-            {/* MISSION */}
-
-            <article className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:rounded-3xl sm:p-8">
+            <article className="min-w-0 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:rounded-3xl sm:p-8">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <Target
                   size={24}
@@ -578,18 +604,24 @@ export default function AboutPage() {
                 />
               </div>
 
-              <h3 className="mt-5 text-xl font-bold text-slate-900 sm:mt-6 sm:text-2xl">
-                {content.missionTitle}
-              </h3>
+              {content.missionTitle && (
+                <h3 className="mt-5 break-words text-xl font-bold text-slate-900 sm:mt-6 sm:text-2xl">
+                  {
+                    content.missionTitle
+                  }
+                </h3>
+              )}
 
-              <p className="mt-3 text-sm leading-7 text-slate-600 sm:mt-4 sm:text-base">
-                {content.missionDescription}
-              </p>
+              {content.missionDescription && (
+                <p className="mt-3 break-words text-sm leading-7 text-slate-600 sm:mt-4 sm:text-base">
+                  {
+                    content.missionDescription
+                  }
+                </p>
+              )}
             </article>
 
-            {/* VISION */}
-
-            <article className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:rounded-3xl sm:p-8">
+            <article className="min-w-0 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:rounded-3xl sm:p-8">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                 <Eye
                   size={24}
@@ -597,13 +629,21 @@ export default function AboutPage() {
                 />
               </div>
 
-              <h3 className="mt-5 text-xl font-bold text-slate-900 sm:mt-6 sm:text-2xl">
-                {content.visionTitle}
-              </h3>
+              {content.visionTitle && (
+                <h3 className="mt-5 break-words text-xl font-bold text-slate-900 sm:mt-6 sm:text-2xl">
+                  {
+                    content.visionTitle
+                  }
+                </h3>
+              )}
 
-              <p className="mt-3 text-sm leading-7 text-slate-600 sm:mt-4 sm:text-base">
-                {content.visionDescription}
-              </p>
+              {content.visionDescription && (
+                <p className="mt-3 break-words text-sm leading-7 text-slate-600 sm:mt-4 sm:text-base">
+                  {
+                    content.visionDescription
+                  }
+                </p>
+              )}
             </article>
           </div>
         </div>
@@ -613,49 +653,36 @@ export default function AboutPage() {
           OBJECTIVES
           ===================================================== */}
 
-      {content.objectives.length > 0 && (
+      {content.objectives.length >
+        0 && (
         <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl">
-            <div className="max-w-3xl">
-              {content.objectivesEyebrow && (
-                <p className="gnpc-eyebrow">
-                  {content.objectivesEyebrow}
-                </p>
-              )}
-
-              <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                {content.objectivesTitle}
-              </h2>
-
-              {content.objectivesDescription && (
-                <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
-                  {content.objectivesDescription}
-                </p>
-              )}
-            </div>
+            <SectionHeading
+              eyebrow={
+                content.objectivesEyebrow
+              }
+              title={
+                content.objectivesTitle ||
+                "Our Objectives"
+              }
+              description={
+                content.objectivesDescription
+              }
+            />
 
             <div className="mt-10 grid gap-5 sm:mt-12 md:grid-cols-2 lg:grid-cols-3">
               {content.objectives.map(
-                (objective, index) => (
-                  <article
+                (
+                  objective,
+                  index
+                ) => (
+                  <ItemCard
                     key={`${objective.title}-${index}`}
-                    className="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:shadow-lg sm:rounded-3xl sm:p-6"
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <CheckCircle2
-                        size={22}
-                        aria-hidden="true"
-                      />
-                    </div>
-
-                    <h3 className="mt-5 break-words text-lg font-bold text-slate-900 sm:text-xl">
-                      {objective.title}
-                    </h3>
-
-                    <p className="mt-3 break-words text-sm leading-7 text-slate-600 sm:text-base">
-                      {objective.description}
-                    </p>
-                  </article>
+                    item={
+                      objective
+                    }
+                    index={index}
+                  />
                 )
               )}
             </div>
@@ -664,22 +691,23 @@ export default function AboutPage() {
       )}
 
       {/* =====================================================
-          PRESIDENT'S MESSAGE
+          PRESIDENT
           ===================================================== */}
 
       {(content.presidentName ||
-        content.presidentMessage) && (
-        <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        content.presidentMessage ||
+        content.presidentPhoto) && (
+        <section className="bg-slate-50 px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl">
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:rounded-3xl">
               <div className="grid items-center gap-8 p-6 sm:p-8 md:grid-cols-[260px_1fr] md:gap-10 md:p-10 lg:grid-cols-[320px_1fr] lg:gap-16 lg:p-14">
-                {/* PRESIDENT PHOTO */}
-
                 <div className="flex justify-center md:justify-start">
                   {content.presidentPhoto ? (
                     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm sm:rounded-3xl">
                       <img
-                        src={content.presidentPhoto}
+                        src={
+                          content.presidentPhoto
+                        }
                         alt={
                           content.presidentName ||
                           "President, Greater Noida Press Club"
@@ -691,23 +719,27 @@ export default function AboutPage() {
                   ) : (
                     <div className="flex h-64 w-64 items-center justify-center rounded-2xl bg-slate-100 text-5xl font-black text-slate-400 sm:h-72 sm:w-72 sm:rounded-3xl lg:h-80 lg:w-80">
                       {content.presidentName
-                        ?.charAt(0)
+                        ?.charAt(
+                          0
+                        )
                         ?.toUpperCase() ||
                         "P"}
                     </div>
                   )}
                 </div>
 
-                {/* MESSAGE */}
-
                 <div className="min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 sm:text-sm sm:tracking-[0.2em]">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 sm:text-sm">
                     President's Message
                   </p>
 
                   {content.presidentMessage && (
                     <blockquote className="mt-4 break-words text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9">
-                      “{content.presidentMessage}”
+                      “
+                      {
+                        content.presidentMessage
+                      }
+                      ”
                     </blockquote>
                   )}
 
@@ -716,13 +748,17 @@ export default function AboutPage() {
                     <div className="mt-6 border-t border-slate-200 pt-5 sm:mt-7 sm:pt-6">
                       {content.presidentName && (
                         <p className="text-base font-bold text-slate-900 sm:text-lg">
-                          {content.presidentName}
+                          {
+                            content.presidentName
+                          }
                         </p>
                       )}
 
                       {content.presidentDesignation && (
                         <p className="mt-1 text-sm text-slate-500 sm:text-base">
-                          {content.presidentDesignation}
+                          {
+                            content.presidentDesignation
+                          }
                         </p>
                       )}
                     </div>
@@ -738,49 +774,34 @@ export default function AboutPage() {
           WHY CHOOSE US
           ===================================================== */}
 
-      {content.reasons.length > 0 && (
+      {content.reasons.length >
+        0 && (
         <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl">
-            <div className="max-w-3xl">
-              {content.whyChooseUsEyebrow && (
-                <p className="gnpc-eyebrow">
-                  {content.whyChooseUsEyebrow}
-                </p>
-              )}
-
-              <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                {content.whyChooseUsTitle}
-              </h2>
-
-              {content.whyChooseUsDescription && (
-                <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
-                  {content.whyChooseUsDescription}
-                </p>
-              )}
-            </div>
+            <SectionHeading
+              eyebrow={
+                content.whyChooseUsEyebrow
+              }
+              title={
+                content.whyChooseUsTitle ||
+                "Why Choose Us"
+              }
+              description={
+                content.whyChooseUsDescription
+              }
+            />
 
             <div className="mt-10 grid gap-5 sm:mt-12 md:grid-cols-2 lg:grid-cols-3">
               {content.reasons.map(
-                (reason, index) => (
-                  <article
+                (
+                  reason,
+                  index
+                ) => (
+                  <ItemCard
                     key={`${reason.title}-${index}`}
-                    className="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:rounded-3xl sm:p-7"
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <CheckCircle2
-                        size={22}
-                        aria-hidden="true"
-                      />
-                    </div>
-
-                    <h3 className="mt-5 break-words text-lg font-bold text-slate-900 sm:text-xl">
-                      {reason.title}
-                    </h3>
-
-                    <p className="mt-3 break-words text-sm leading-7 text-slate-600 sm:text-base">
-                      {reason.description}
-                    </p>
-                  </article>
+                    item={reason}
+                    index={index}
+                  />
                 )
               )}
             </div>
@@ -790,9 +811,43 @@ export default function AboutPage() {
 
       {/* =====================================================
           CTA
+          =====================================================
+
+          IMPORTANT:
+          CMS values are now explicitly passed into
+          AboutCTA. Previously this was simply:
+
+              <AboutCTA />
+
+          which meant the CMS CTA fields were never used.
           ===================================================== */}
 
-      <AboutCTA />
+      <AboutCTA
+        title={
+          content.ctaTitle
+        }
+        description={
+          content.ctaDescription
+        }
+        primaryLabel={
+          content.ctaPrimaryLabel
+        }
+        secondaryLabel={
+          content.ctaSecondaryLabel
+        }
+      />
+
+      {/* =====================================================
+          SMALL NAVIGATION FALLBACK
+          ===================================================== */}
+
+      <div className="sr-only">
+        <Link
+          href="/office-bearers"
+        >
+          Office Bearers
+        </Link>
+      </div>
     </main>
   );
 }
