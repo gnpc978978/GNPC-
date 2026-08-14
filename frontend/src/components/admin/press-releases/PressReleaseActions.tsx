@@ -9,6 +9,7 @@ import {
 
 import Link from "next/link";
 import DeleteModal from "./DeleteModal";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 
 
 interface Props {
@@ -45,31 +46,12 @@ export default function PressReleaseActions({
       setLoading(true);
 
 
-      const token = localStorage.getItem("token");
-
-
-
-      const res = await fetch(
-
-        `${process.env.NEXT_PUBLIC_API_URL}/press-releases/${id}`,
-
-        {
-
-          method:"DELETE",
-
-          headers:{
-
-            Authorization:`Bearer ${token}`
-
-          }
-
-        }
-
+      const res = await authenticatedApiFetch(
+        `/press-releases/${encodeURIComponent(id)}`,
+        { method: "DELETE" }
       );
 
-
-
-      const data = await res.json();
+      const data = await responseJson<{ success?: boolean; message?: string }>(res);
 
 
 
