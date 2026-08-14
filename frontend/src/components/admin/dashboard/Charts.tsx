@@ -12,7 +12,7 @@ import {
 } from "recharts";
 
 import { useEffect, useState } from "react";
-import { authenticatedFetch, responseJson } from "@/services/api";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 
 
 export default function Charts(){
@@ -29,7 +29,7 @@ const fetchCharts = async()=>{
 
 try{
 
-const response = await authenticatedFetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/charts`, { method: "GET" });
+const response = await authenticatedApiFetch("/dashboard/charts", { method: "GET" });
 const result = await responseJson<{ success: boolean; data: ChartPoint[] }>(response);
 
 
