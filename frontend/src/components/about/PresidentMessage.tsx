@@ -1,14 +1,171 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import OfficeBearersSection from "@/components/home/OfficeBearersSection";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-type President = { presidentName: string; presidentDesignation: string; presidentMessage: string; presidentPhoto?: string };
-const empty: President = { presidentName: "", presidentDesignation: "", presidentMessage: "", presidentPhoto: "" };
+import {
+  apiFetch,
+  responseJson,
+} from "@/services/api";
+
+type PresidentSettings = {
+  presidentName?: string;
+  presidentDesignation?: string;
+  presidentMessage?: string;
+  presidentImage?: string;
+  image?: string;
+  message?: string;
+  name?: string;
+  designation?: string;
+};
+
+const emptyPresident: PresidentSettings =
+  {};
 
 export default function PresidentMessage() {
-  const [president, setPresident] = useState<President>(empty);
-  useEffect(() => { void fetch(`${process.env.NEXT_PUBLIC_API_URL}/settings/about`).then((response) => response.json()).then((payload) => { if (payload.success) setPresident({ ...empty, ...payload.data }); }).catch(() => undefined); }, []);
-  return <><section className="bg-slate-50 py-16 sm:py-24"><div className="mx-auto max-w-7xl px-6"><div className="mb-12 text-center"><span className="inline-flex rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-widest text-blue-700">Leadership</span><h2 className="mt-5 text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl">President&apos;s Message</h2></div>{president.presidentMessage ? <div className="grid items-center gap-10 lg:grid-cols-[minmax(260px,.8fr)_1.2fr] lg:gap-16">{president.presidentPhoto && <div className="mx-auto w-full max-w-md"><div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-white p-3 shadow-xl"><Image src={president.presidentPhoto} alt={president.presidentName || "President"} fill sizes="(min-width: 1024px) 32vw, 90vw" className="rounded-2xl object-cover" /></div></div>}<div className="space-y-5 text-base leading-8 text-slate-600 sm:text-lg"><p className="whitespace-pre-line">{president.presidentMessage}</p><div className="rounded-2xl border-l-4 border-blue-600 bg-white p-5 shadow-sm"><h3 className="text-xl font-bold text-slate-900">{president.presidentName}</h3>{president.presidentDesignation && <p className="text-slate-500">{president.presidentDesignation}</p>}</div></div></div> : <p className="text-center text-slate-500">President&apos;s message will be shared soon.</p>}</div></section><OfficeBearersSection /></>;
+  const [
+    president,
+    setPresident,
+  ] =
+    useState<PresidentSettings>(
+      emptyPresident
+    );
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const response =
+          await apiFetch(
+            "/settings/about"
+          );
+
+        const payload =
+          await responseJson<{
+            success?: boolean;
+            data?: PresidentSettings;
+          }>(response);
+
+        if (
+          cancelled
+        ) {
+          return;
+        }
+
+        setPresident({
+          ...emptyPresident,
+          ...(payload.data || {}),
+        });
+      } catch {
+        if (
+          !cancelled
+        ) {
+          setPresident(
+            emptyPresident
+          );
+        }
+      } finally {
+        if (
+          !cancelled
+        ) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (
+    loading ||
+    !president
+  ) {
+    return null;
+  }
+
+  const name =
+    president.presidentName ||
+    president.name ||
+    "";
+
+  const designation =
+    president.presidentDesignation ||
+    president.designation ||
+    "";
+
+  const message =
+    president.presidentMessage ||
+    president.message ||
+    "";
+
+  const image =
+    president.presidentImage ||
+    president.image ||
+    "";
+
+  if (
+    !name &&
+    !designation &&
+    !message &&
+    !image
+  ) {
+    return null;
+  }
+
+  return (
+    <section className="bg-white py-14 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid items-center gap-10 lg:grid-cols-[320px_1fr] lg:gap-14">
+          {image ? (
+            <div className="overflow-hidden rounded-3xl bg-slate-100">
+              <img
+                src={image}
+                alt={
+                  name ||
+                  "President"
+                }
+                className="aspect-[4/5] w-full object-cover"
+              />
+            </div>
+          ) : null}
+
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">
+              President's Message
+            </p>
+
+            {name && (
+              <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+                {name}
+              </h2>
+            )}
+
+            {designation && (
+              <p className="mt-2 font-semibold text-slate-500">
+                {designation}
+              </p>
+            )}
+
+            {message && (
+              <div className="mt-6 whitespace-pre-line text-base leading-8 text-slate-600">
+                {message}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
