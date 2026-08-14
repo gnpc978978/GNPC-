@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useParams } from "next/navigation";
@@ -29,30 +30,11 @@ export default function EditPressReleasePage() {
 
 
       try{
-
-
-        const token = localStorage.getItem("token");
-
-
-        const res = await fetch(
-
-          `${process.env.NEXT_PUBLIC_API_URL}/press-releases/${id}`,
-
-          {
-
-            headers:{
-
-              Authorization:`Bearer ${token}`
-
-            }
-
-          }
-
+        const res = await authenticatedApiFetch(
+          `/press-releases/${encodeURIComponent(id)}`,
+          { method: "GET" }
         );
-
-
-
-        const data = await res.json();
+        const data = await responseJson<{ success?: boolean; data?: any }>(res);
 
 
 
