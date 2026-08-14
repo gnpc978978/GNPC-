@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
@@ -40,30 +41,13 @@ export default function ViewPressReleasePage() {
   useEffect(() => {
     if (!id) return;
 
-    const token =
-      localStorage.getItem("token");
-
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/press-releases/${id}`,
-      {
-        headers: {
-          Authorization:
-            `Bearer ${token || ""}`,
-        },
-      }
+    authenticatedApiFetch(
+      `/press-releases/${encodeURIComponent(id)}`,
+      { method: "GET" }
     )
-      .then(async (response) => {
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.message ||
-              "Press Release not found"
-          );
-        }
-
-        return data;
-      })
+      .then((response) =>
+        responseJson<{ data?: PressRelease; message?: string }>(response)
+      )
       .then((data) => {
         setPressRelease(data.data);
       })
