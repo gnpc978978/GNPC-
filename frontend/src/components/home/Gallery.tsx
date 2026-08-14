@@ -76,7 +76,7 @@ export default function Gallery() {
           )
             ? payload.data.slice(
                 0,
-                6
+                3
               )
             : []
         );
@@ -109,7 +109,7 @@ export default function Gallery() {
 
         {loading ? (
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map(
+            {[1, 2, 3].map(
               (item) => (
                 <div
                   key={item}

@@ -142,10 +142,11 @@ export default function LatestUpdates() {
     <section className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
-          align="center"
+          align="left"
           badge="Latest Updates"
           title="News from Greater Noida Press Club"
           description="Stay updated with the latest announcements, events, press releases and press conferences."
+          action={<Button href="/latest-updates" variant="outline" size="lg">View All Updates <ArrowRight size={17} /></Button>}
         />
 
         {loading && (
@@ -271,13 +272,7 @@ export default function LatestUpdates() {
           </div>
         )}
 
-        <div className="mt-10 flex justify-center">
-          <Button href="/latest-updates" size="lg">
-            View All Updates
-            <ArrowRight size={18} />
-          </Button>
-        </div>
       </div>
     </section>
   );
-}\
+}

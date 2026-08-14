@@ -10,6 +10,7 @@ type AboutCTAProps = {
   description?: string;
   primaryLabel?: string;
   secondaryLabel?: string;
+  secondaryHref?: string;
 };
 
 export default function AboutCTA({
@@ -17,6 +18,7 @@ export default function AboutCTA({
   description,
   primaryLabel,
   secondaryLabel,
+  secondaryHref = "/office-bearers",
 }: AboutCTAProps) {
   const finalTitle =
     title?.trim() ||
@@ -199,7 +201,7 @@ export default function AboutCTA({
                   ================================================= */}
 
               <Link
-                href="/office-bearers"
+                href={secondaryHref}
                 className="
                   inline-flex
                   min-h-14

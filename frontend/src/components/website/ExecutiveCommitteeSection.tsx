@@ -160,7 +160,7 @@ export default function ExecutiveCommitteeSection({
       <div className="mx-auto max-w-7xl px-6">
         {/* Only show this heading for limited/embedded sections */}
         {!isDirectory && (
-          <div className="mb-10"><SectionHeading badge="Our Strength" title={title} /></div>
+          <div className="mb-10"><SectionHeading badge="Our Strength" title={title} action={showViewAll ? <Button href="/committee" variant="outline" size="lg">View All</Button> : undefined} /></div>
         )}
 
         {/* Directory filters */}
@@ -364,12 +364,6 @@ export default function ExecutiveCommitteeSection({
           </div>
         )}
 
-        {/* View all */}
-        {showViewAll && (
-          <div className="mt-10 text-center">
-            <Button href="/committee" size="lg">View All Executive Committee</Button>
-          </div>
-        )}
       </div>
     </section>
   );

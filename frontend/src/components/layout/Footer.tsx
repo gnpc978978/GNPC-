@@ -426,7 +426,7 @@ export default function Footer() {
             </Link>
 
             <span className="text-white/70">
-              Designed & Developed by Ayzent Solutions
+              Designed & Developed by Ayush Chauhan & Shreyansh Mishra
             </span>
           </div>
         </div>

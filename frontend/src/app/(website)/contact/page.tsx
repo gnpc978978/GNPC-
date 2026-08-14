@@ -2,7 +2,7 @@ import PageHero from "@/components/ui/PageHero";
 import ContactInfo from "@/components/contact/ContactInfo";
 import ContactForm from "@/components/contact/ContactForm";
 import ContactMap from "@/components/contact/ContactMap";
-import ContactCTA from "@/components/contact/ContactCTA";
+import AboutCTA from "@/components/about/AboutCTA";
 
 export default function ContactPage() {
   return (
@@ -20,7 +20,12 @@ export default function ContactPage() {
       <ContactInfo />
       <ContactForm />
       <ContactMap />
-      <ContactCTA />
+      <AboutCTA
+        title="Ready to Connect With Us?"
+        description="Reach out for membership information, media enquiries, press conferences, and official communication."
+        secondaryLabel="Back to Home"
+        secondaryHref="/"
+      />
     </main>
   );
 }

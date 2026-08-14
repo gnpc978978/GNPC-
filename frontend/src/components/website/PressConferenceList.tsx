@@ -65,7 +65,7 @@ export default function PressConferenceList({
 
         setItems(
           Array.isArray(data.data)
-            ? data.data.slice(0, latestOnly ? 1 : 12)
+            ? data.data.slice(0, latestOnly ? 3 : 12)
             : []
         );
       } catch (error) {
@@ -119,7 +119,7 @@ export default function PressConferenceList({
         <Container>
           {/* Homepage / latest-only heading */}
           {latestOnly && (
-            <div className="mb-10"><SectionHeading badge="Media & Journalism" title={title} description={description} /></div>
+            <div className="mb-10"><SectionHeading badge="Media & Journalism" title={title} description={description} action={<Button href="/press-conference" variant="outline" size="lg">View All <ArrowRight size={17} aria-hidden="true" /></Button>} /></div>
           )}
 
           {/* Loading */}
@@ -153,7 +153,7 @@ export default function PressConferenceList({
             <div
               className={
                 latestOnly
-                  ? "grid gap-6"
+                  ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
                   : "grid gap-6 md:grid-cols-2"
               }
             >

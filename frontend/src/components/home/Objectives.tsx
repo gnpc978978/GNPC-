@@ -10,6 +10,7 @@ import {
 import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
 
 export default function Objectives() {
   const objectives = [
@@ -58,10 +59,11 @@ export default function Objectives() {
           badge="Our Objectives"
           title="Empowering Journalism & Media Community"
           description="Greater Noida Press Club works towards promoting ethical journalism, professional growth and stronger media collaboration."
+          action={<Button href="/about" variant="outline" size="lg">Learn More</Button>}
         />
 
         <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 lg:gap-8 lg:grid-cols-3">
-          {objectives.map((objective) => {
+          {objectives.slice(0, 3).map((objective) => {
             const Icon = objective.icon;
 
             return (

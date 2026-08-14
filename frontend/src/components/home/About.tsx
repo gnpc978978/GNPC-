@@ -252,6 +252,7 @@ export default function About() {
     {
       value: stats.members,
       label: "Members",
+      href: "/committee",
     },
     {
       value: stats.pressReleases,
@@ -269,15 +270,12 @@ export default function About() {
       className="bg-white py-14 sm:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-9 text-center sm:mb-14">
-          <span className="gnpc-eyebrow">
-            About Us
-          </span>
-
-          <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl lg:text-5xl">
-            {settings.siteName ||
-              "Press Club"}
-          </h2>
+        <div className="mb-9 flex flex-col gap-5 text-center sm:mb-14 sm:flex-row sm:items-end sm:justify-between sm:text-left">
+          <div>
+            <span className="gnpc-eyebrow">About Us</span>
+            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl lg:text-5xl">{settings.siteName || "Press Club"}</h2>
+          </div>
+          <Button href="/about" variant="outline" size="lg" className="self-center sm:self-auto">Learn More</Button>
         </div>
 
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -376,11 +374,6 @@ export default function About() {
                   </div>
                 )}
 
-                <Link href="/about">
-                  <Button className="mt-8 sm:mt-10">
-                    Learn More
-                  </Button>
-                </Link>
               </>
             )}
           </div>
@@ -390,8 +383,10 @@ export default function About() {
           <div className="grid grid-cols-3 gap-3 text-center sm:gap-8">
             {statItems.map(
               (stat) => (
-                <div
+                <Link
                   key={stat.label}
+                  href={stat.href || "/"}
+                  className={stat.href ? "rounded-xl transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" : "pointer-events-none"}
                 >
                   {loading ? (
                     <>
@@ -418,7 +413,7 @@ export default function About() {
                       </p>
                     </>
                   )}
-                </div>
+                </Link>
               )
             )}
           </div>
