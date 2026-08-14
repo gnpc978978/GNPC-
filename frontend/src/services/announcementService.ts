@@ -3,15 +3,21 @@ import {
   responseJson,
 } from "@/services/api";
 
-type AnnouncementResponse = {
+import { Announcement } from "@/types/announcement";
+
+export type AnnouncementResponse = {
   success: boolean;
-  data?: unknown;
+  data: Announcement[];
   message?: string;
 };
 
-const request = async <
-  T = AnnouncementResponse
->(
+export type AnnouncementMutationResponse = {
+  success: boolean;
+  data?: Announcement;
+  message?: string;
+};
+
+const request = async <T>(
   path: string,
   token: string,
   init: RequestInit = {}
@@ -49,22 +55,28 @@ export const getAnnouncements = (
   token: string,
   search = "",
   status = ""
-) => {
+): Promise<AnnouncementResponse> => {
   const query =
     new URLSearchParams();
 
   if (search) {
-    query.set("search", search);
+    query.set(
+      "search",
+      search
+    );
   }
 
   if (status) {
-    query.set("status", status);
+    query.set(
+      "status",
+      status
+    );
   }
 
   const queryString =
     query.toString();
 
-  return request(
+  return request<AnnouncementResponse>(
     `/announcements${
       queryString
         ? `?${queryString}`
@@ -77,8 +89,8 @@ export const getAnnouncements = (
 export const createAnnouncement = (
   data: FormData,
   token: string
-) =>
-  request(
+): Promise<AnnouncementMutationResponse> =>
+  request<AnnouncementMutationResponse>(
     "/announcements",
     token,
     {
@@ -91,8 +103,8 @@ export const updateAnnouncement = (
   id: string,
   data: FormData,
   token: string
-) =>
-  request(
+): Promise<AnnouncementMutationResponse> =>
+  request<AnnouncementMutationResponse>(
     `/announcements/${id}`,
     token,
     {
@@ -104,8 +116,8 @@ export const updateAnnouncement = (
 export const deleteAnnouncement = (
   id: string,
   token: string
-) =>
-  request(
+): Promise<AnnouncementMutationResponse> =>
+  request<AnnouncementMutationResponse>(
     `/announcements/${id}`,
     token,
     {
