@@ -11,20 +11,10 @@ import {
   responseJson,
 } from "@/services/api";
 
-export type MemberDirectoryFilters = {
-  search?: string;
-  organization?: string;
-  designation?: string;
-  state?: string;
-  district?: string;
-  sort?: "az" | "za" | "recent";
-};
-
 const toForm = (
   data: MemberFormData
 ) => {
-  const form =
-    new FormData();
+  const form = new FormData();
 
   form.append(
     "fullName",
@@ -76,6 +66,15 @@ const toForm = (
   return form;
 };
 
+export type MemberDirectoryFilters = {
+  search?: string;
+  organization?: string;
+  designation?: string;
+  state?: string;
+  district?: string;
+  sort?: "az" | "za" | "recent";
+};
+
 export const getPublicMembers =
   async (
     page = 1,
@@ -114,11 +113,9 @@ export const getPublicMembers =
 
     const payload =
       await responseJson<{
-        success: boolean;
         data: Member[];
         pagination?: MemberListResponse["pagination"];
         stats?: MemberListResponse["stats"];
-        message?: string;
       }>(response);
 
     return {
@@ -155,11 +152,9 @@ export const getMembers =
 
     const payload =
       await responseJson<{
-        success: boolean;
         data: Member[];
         pagination?: MemberListResponse["pagination"];
         stats?: MemberListResponse["stats"];
-        message?: string;
       }>(response);
 
     return {
@@ -170,134 +165,140 @@ export const getMembers =
     };
   };
 
-export const getMember = async (
-  id: string
-): Promise<Member> => {
-  const response =
-    await apiFetch(
-      `/members/${id}`
+export const getMember =
+  async (id: string) => {
+    const response =
+      await authenticatedApiFetch(
+        `/members/${id}`
+      );
+
+    const payload =
+      await responseJson<{
+        data: Member;
+      }>(response);
+
+    return payload.data;
+  };
+
+export const createMember =
+  async (
+    data: MemberFormData
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        "/members",
+        {
+          method: "POST",
+          body: toForm(data),
+        }
+      );
+
+    const payload =
+      await responseJson<{
+        data: Member;
+      }>(response);
+
+    return payload.data;
+  };
+
+export const updateMember =
+  async (
+    id: string,
+    data: MemberFormData
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/members/${id}`,
+        {
+          method: "PUT",
+          body: toForm(data),
+        }
+      );
+
+    const payload =
+      await responseJson<{
+        data: Member;
+      }>(response);
+
+    return payload.data;
+  };
+
+export const deleteMember =
+  async (id: string) => {
+    const response =
+      await authenticatedApiFetch(
+        `/members/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+    return responseJson<unknown>(
+      response
+    );
+  };
+
+export const importMembers =
+  async (file: File) => {
+    const form =
+      new FormData();
+
+    form.append(
+      "file",
+      file
     );
 
-  const payload =
-    await responseJson<{
-      data: Member;
-    }>(response);
+    const response =
+      await authenticatedApiFetch(
+        "/members/import",
+        {
+          method: "POST",
+          body: form,
+        }
+      );
 
-  return payload.data;
-};
+    const payload =
+      await responseJson<{
+        data: ImportSummary;
+      }>(response);
 
-export const createMember = async (
-  data: MemberFormData
-): Promise<Member> => {
-  const response =
-    await authenticatedApiFetch(
-      "/members",
-      {
-        method: "POST",
-        body: toForm(data),
-      }
+    return payload.data;
+  };
+
+export const exportMembers =
+  async (
+    format: "xlsx" | "csv"
+  ) => {
+    const response =
+      await authenticatedApiFetch(
+        `/members/export?format=${encodeURIComponent(
+          format
+        )}`
+      );
+
+    if (!response.ok) {
+      await responseJson(
+        response
+      );
+    }
+
+    const url =
+      URL.createObjectURL(
+        await response.blob()
+      );
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+    link.href = url;
+    link.download =
+      `members.${format}`;
+
+    link.click();
+
+    URL.revokeObjectURL(
+      url
     );
-
-  const payload =
-    await responseJson<{
-      data: Member;
-    }>(response);
-
-  return payload.data;
-};
-
-export const updateMember = async (
-  id: string,
-  data: MemberFormData
-): Promise<Member> => {
-  const response =
-    await authenticatedApiFetch(
-      `/members/${id}`,
-      {
-        method: "PUT",
-        body: toForm(data),
-      }
-    );
-
-  const payload =
-    await responseJson<{
-      data: Member;
-    }>(response);
-
-  return payload.data;
-};
-
-export const deleteMember = async (
-  id: string
-) => {
-  const response =
-    await authenticatedApiFetch(
-      `/members/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-  return responseJson(response);
-};
-
-export const importMembers = async (
-  file: File
-): Promise<ImportSummary> => {
-  const form =
-    new FormData();
-
-  form.append(
-    "file",
-    file
-  );
-
-  const response =
-    await authenticatedApiFetch(
-      "/members/import",
-      {
-        method: "POST",
-        body: form,
-      }
-    );
-
-  const payload =
-    await responseJson<{
-      data: ImportSummary;
-    }>(response);
-
-  return payload.data;
-};
-
-export const exportMembers = async (
-  format: "xlsx" | "csv"
-) => {
-  const response =
-    await authenticatedApiFetch(
-      `/members/export?format=${encodeURIComponent(
-        format
-      )}`
-    );
-
-  if (!response.ok) {
-    await responseJson(response);
-  }
-
-  const blob =
-    await response.blob();
-
-  const url =
-    URL.createObjectURL(blob);
-
-  const link =
-    document.createElement("a");
-
-  link.href = url;
-  link.download = `members.${format}`;
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  URL.revokeObjectURL(url);
-};
+  };
