@@ -1,92 +1,34 @@
-import type { ReactNode } from "react";
+type SectionHeaderProps = {
+  label: string
+  title: string
+  description?: string
+  className?: string
+}
 
-type SectionHeadingProps = {
-  badge?: string;
-  title: string;
-  description?: string;
-  align?: "left" | "center";
-  size?: "sm" | "md" | "lg";
-  action?: ReactNode;
-  className?: string;
-};
-
-export default function SectionHeading({
-  badge,
+export default function SectionHeader({
+  label,
   title,
   description,
-  align = "center",
-  size = "md",
-  action,
   className = "",
-}: SectionHeadingProps) {
-  const isCentered = align === "center";
-
-  const headingSize =
-    size === "sm"
-      ? "text-2xl sm:text-3xl"
-      : size === "lg"
-        ? "text-3xl sm:text-4xl lg:text-5xl xl:text-6xl"
-        : "text-3xl sm:text-4xl lg:text-5xl";
-
+}: SectionHeaderProps) {
   return (
-    <header
-      className={[
-        "mx-auto w-full",
-        isCentered ? "text-center" : "text-left",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {badge && (
-        <div
-          className={[
-            "flex",
-            isCentered ? "justify-center" : "justify-start",
-          ].join(" ")}
-        >
-          <span className="gnpc-eyebrow">
-            {badge}
-          </span>
-        </div>
-      )}
-
-      <div className="mt-3">
-        <h2
-          className={[
-            "gnpc-section-title",
-            headingSize,
-            isCentered ? "mx-auto text-center" : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {title}
-        </h2>
-
-        {description && (
-          <p
-            className={[
-              "gnpc-section-description",
-              "mx-auto",
-              "text-center",
-            ].join(" ")}
-          >
-            {description}
-          </p>
-        )}
+    <div className={`mx-auto w-full max-w-5xl text-center ${className}`}>
+      <div className="mb-4 flex items-center justify-center gap-3">
+        <span className="h-[3px] w-10 rounded-full bg-blue-600" />
+        <span className="text-sm font-bold uppercase tracking-[0.18em] text-blue-600">
+          {label}
+        </span>
       </div>
 
-      {action && (
-        <div
-          className={[
-            "mt-6 flex justify-center sm:mt-8",
-            isCentered ? "" : "sm:justify-start",
-          ].join(" ")}
-        >
-          {action}
-        </div>
+      <h2 className="text-4xl font-bold leading-[1.1] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+        {title}
+      </h2>
+
+      {description && (
+        <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-500 sm:text-lg">
+          {description}
+        </p>
       )}
-    </header>
-  );
+    </div>
+  )
 }
