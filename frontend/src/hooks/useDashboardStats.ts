@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { authenticatedFetch, responseJson } from "@/services/api";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 
 
 export default function useDashboardStats(){
@@ -25,7 +25,7 @@ const fetchStats = async()=>{
 
 try{
 
-const response = await authenticatedFetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/stats`, { method: "GET" });
+const response = await authenticatedApiFetch("/dashboard/stats", { method: "GET" });
 const data = await responseJson<{ success: boolean; stats: typeof stats }>(response);
 
 
