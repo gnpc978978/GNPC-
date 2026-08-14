@@ -6,9 +6,7 @@ import { FaPlus } from "react-icons/fa";
 
 import PressReleaseFilters from "@/components/admin/press-releases/PressReleaseFilters";
 import PressReleaseTable from "@/components/admin/press-releases/PressReleaseTable";
-
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 
 
 export default function PressReleasesPage() {
@@ -33,20 +31,11 @@ export default function PressReleasesPage() {
     try {
 
 
-      const token = localStorage.getItem("token");
+      const res = await authenticatedApiFetch("/press-releases", {
+        method: "GET",
+      });
 
-
-      const res = await fetch(
-        `${API_URL}/press-releases`,
-        {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        }
-      );
-
-
-      const data = await res.json();
+      const data = await responseJson<{ data?: any[] }>(res);
 
 
       setPressReleases(data.data || []);
