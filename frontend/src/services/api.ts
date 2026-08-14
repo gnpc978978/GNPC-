@@ -1,6 +1,3 @@
-api.ts
-
-
 import axios from "axios";
 
 export type AuthUser = {
