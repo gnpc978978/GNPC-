@@ -8,129 +8,139 @@ export type AdminAccount = {
   name: string;
   username?: string;
   email: string;
-  role: "ADMIN" | "SUPER_ADMIN";
-  status: "ACTIVE" | "INACTIVE";
+  role:
+    | "ADMIN"
+    | "SUPER_ADMIN";
+  status:
+    | "ACTIVE"
+    | "INACTIVE";
   lastLogin?: string;
   createdAt: string;
 };
 
-export const getAdmins = async (): Promise<
-  AdminAccount[]
-> => {
-  const response =
-    await authenticatedApiFetch("/admins");
+export const getAdmins =
+  async (): Promise<
+    AdminAccount[]
+  > => {
+    const response =
+      await authenticatedApiFetch(
+        "/admins"
+      );
 
-  const result = await responseJson<{
-    data: AdminAccount[];
-  }>(response);
+    return (
+      await responseJson<{
+        data: AdminAccount[];
+      }>(response)
+    ).data;
+  };
 
-  return result.data;
-};
+export const getAdminById =
+  async (
+    id: string
+  ): Promise<AdminAccount> => {
+    const response =
+      await authenticatedApiFetch(
+        `/admins/${id}`
+      );
 
-export const getAdminById = async (
-  id: string
-): Promise<AdminAccount> => {
-  const response =
-    await authenticatedApiFetch(
-      `/admins/${id}`
+    return (
+      await responseJson<{
+        data: AdminAccount;
+      }>(response)
+    ).data;
+  };
+
+export const createAdmin =
+  async (
+    adminData: unknown
+  ) =>
+    responseJson(
+      await authenticatedApiFetch(
+        "/admins",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify(
+            adminData
+          ),
+        }
+      )
     );
 
-  const result =
-    await responseJson<{
-      data: AdminAccount;
-    }>(response);
-
-  return result.data;
-};
-
-export const createAdmin = async (
-  adminData: unknown
-) => {
-  const response =
-    await authenticatedApiFetch(
-      "/admins",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(adminData),
-      }
+export const updateAdmin =
+  async (
+    id: string,
+    adminData: unknown
+  ) =>
+    responseJson(
+      await authenticatedApiFetch(
+        `/admins/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify(
+            adminData
+          ),
+        }
+      )
     );
 
-  return responseJson(response);
-};
-
-export const updateAdmin = async (
-  id: string,
-  adminData: unknown
-) => {
-  const response =
-    await authenticatedApiFetch(
-      `/admins/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(adminData),
-      }
+export const deleteAdmin =
+  async (
+    id: string
+  ) =>
+    responseJson(
+      await authenticatedApiFetch(
+        `/admins/${id}`,
+        {
+          method: "DELETE",
+        }
+      )
     );
 
-  return responseJson(response);
-};
-
-export const deleteAdmin = async (
-  id: string
-) => {
-  const response =
-    await authenticatedApiFetch(
-      `/admins/${id}`,
-      {
-        method: "DELETE",
-      }
+export const changeAdminStatus =
+  async (
+    id: string,
+    status:
+      | "ACTIVE"
+      | "INACTIVE"
+  ) =>
+    responseJson(
+      await authenticatedApiFetch(
+        `/admins/${id}/${
+          status === "ACTIVE"
+            ? "activate"
+            : "deactivate"
+        }`,
+        {
+          method: "PATCH",
+        }
+      )
     );
 
-  return responseJson(response);
-};
-
-export const changeAdminStatus = async (
-  id: string,
-  status: "ACTIVE" | "INACTIVE"
-) => {
-  const action =
-    status === "ACTIVE"
-      ? "activate"
-      : "deactivate";
-
-  const response =
-    await authenticatedApiFetch(
-      `/admins/${id}/${action}`,
-      {
-        method: "PATCH",
-      }
+export const resetAdminPassword =
+  async (
+    id: string,
+    password: string
+  ) =>
+    responseJson(
+      await authenticatedApiFetch(
+        `/admins/${id}/reset-password`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            password,
+          }),
+        }
+      )
     );
-
-  return responseJson(response);
-};
-
-export const resetAdminPassword = async (
-  id: string,
-  password: string
-) => {
-  const response =
-    await authenticatedApiFetch(
-      `/admins/${id}/reset-password`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password,
-        }),
-      }
-    );
-
-  return responseJson(response);
-};
