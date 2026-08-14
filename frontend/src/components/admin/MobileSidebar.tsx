@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+} from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import {
@@ -15,6 +18,11 @@ import {
   type AdminNavItem,
 } from "@/data/adminNavigation";
 
+import {
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
+
 interface MobileSidebarProps {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -27,16 +35,22 @@ function isItemActive(
   if (item.href) {
     return (
       pathname === item.href ||
-      pathname.startsWith(`${item.href}/`)
+      pathname.startsWith(
+        `${item.href}/`
+      )
     );
   }
 
   if (item.children) {
-    return item.children.some((child) =>
-      child.href
-        ? pathname === child.href ||
-          pathname.startsWith(`${child.href}/`)
-        : false
+    return item.children.some(
+      (child) =>
+        child.href
+          ? pathname ===
+              child.href ||
+            pathname.startsWith(
+              `${child.href}/`
+            )
+          : false
     );
   }
 
@@ -50,15 +64,20 @@ function MobileNavGroup({
 }: {
   item: AdminNavItem;
   pathname: string;
-  setOpen: (value: boolean) => void;
+  setOpen: (
+    value: boolean
+  ) => void;
 }) {
-  const active = isItemActive(
-    pathname,
-    item
-  );
+  const active =
+    isItemActive(
+      pathname,
+      item
+    );
 
-  const [expanded, setExpanded] =
-    useState(active);
+  const [
+    expanded,
+    setExpanded,
+  ] = useState(active);
 
   if (!item.children?.length) {
     if (!item.href) {
@@ -69,12 +88,16 @@ function MobileNavGroup({
 
     const itemActive =
       pathname === item.href ||
-      pathname.startsWith(`${item.href}/`);
+      pathname.startsWith(
+        `${item.href}/`
+      );
 
     return (
       <Link
         href={item.href}
-        onClick={() => setOpen(false)}
+        onClick={() =>
+          setOpen(false)
+        }
         className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition ${
           itemActive
             ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
@@ -98,21 +121,28 @@ function MobileNavGroup({
       <button
         type="button"
         onClick={() =>
-          setExpanded((value) => !value)
+          setExpanded(
+            (value) => !value
+          )
         }
-        className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition ${
+        aria-expanded={
+          expanded
+        }
+        className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm transition ${
           active
             ? "bg-slate-800 text-white"
             : "text-slate-300 hover:bg-slate-800 hover:text-white"
         }`}
       >
-        <Icon
-          size={20}
-          className="shrink-0"
-        />
+        <span className="flex items-center gap-3">
+          <Icon
+            size={20}
+            className="shrink-0"
+          />
 
-        <span className="flex-1">
-          {item.name}
+          <span>
+            {item.name}
+          </span>
         </span>
 
         <ChevronDown
@@ -126,45 +156,48 @@ function MobileNavGroup({
       </button>
 
       {expanded && (
-        <div className="ml-4 space-y-1 border-l border-slate-700 pl-3">
-          {item.children.map((child) => {
-            if (!child.href) {
-              return null;
-            }
+        <div className="ml-4 space-y-1 border-l border-slate-800 pl-3">
+          {item.children.map(
+            (child) => {
+              if (!child.href) {
+                return null;
+              }
 
-            const ChildIcon =
-              child.icon;
+              const childActive =
+                pathname ===
+                  child.href ||
+                pathname.startsWith(
+                  `${child.href}/`
+                );
 
-            const childActive =
-              pathname === child.href ||
-              pathname.startsWith(
-                `${child.href}/`
+              const ChildIcon =
+                child.icon;
+
+              return (
+                <Link
+                  key={`${item.name}-${child.name}`}
+                  href={child.href}
+                  onClick={() =>
+                    setOpen(false)
+                  }
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${
+                    childActive
+                      ? "bg-blue-600 text-white"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  }`}
+                >
+                  <ChildIcon
+                    size={17}
+                    className="shrink-0"
+                  />
+
+                  <span>
+                    {child.name}
+                  </span>
+                </Link>
               );
-
-            return (
-              <Link
-                key={child.name}
-                href={child.href}
-                onClick={() =>
-                  setOpen(false)
-                }
-                className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm transition ${
-                  childActive
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                <ChildIcon
-                  size={17}
-                  className="shrink-0"
-                />
-
-                <span>
-                  {child.name}
-                </span>
-              </Link>
-            );
-          })}
+            }
+          )}
         </div>
       )}
     </div>
@@ -175,13 +208,19 @@ export default function MobileSidebar({
   open,
   setOpen,
 }: MobileSidebarProps) {
-  const router = useRouter();
-  const pathname = usePathname();
+  const pathname =
+    usePathname();
 
-  const { user } = useAuth();
+  const router =
+    useRouter();
 
-  const [loggingOut, setLoggingOut] =
-    useState(false);
+  const { user } =
+    useAuth();
+
+  const [
+    loggingOut,
+    setLoggingOut,
+  ] = useState(false);
 
   const visibleItems =
     adminNavigation.filter(
@@ -192,52 +231,68 @@ export default function MobileSidebar({
         )
     );
 
-  const handleLogout = async () => {
-    if (loggingOut) {
-      return;
-    }
+  const handleLogout =
+    async () => {
+      if (loggingOut) {
+        return;
+      }
 
-    const confirmLogout =
-      window.confirm(
-        "Do you want to logout?"
-      );
+      const confirmLogout =
+        window.confirm(
+          "Do you want to logout?"
+        );
 
-    if (!confirmLogout) {
-      return;
-    }
+      if (!confirmLogout) {
+        return;
+      }
 
-    try {
-      setLoggingOut(true);
+      try {
+        setLoggingOut(true);
 
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+        await responseJson(
+          await authenticatedApiFetch(
+            "/auth/logout",
+            {
+              method: "POST",
+              headers: {
+                Accept:
+                  "application/json",
+              },
+            }
+          )
+        );
+      } catch {
+        // Continue clearing the local
+        // session even if the server
+        // logout request fails.
+      } finally {
+        localStorage.removeItem(
+          "token"
+        );
 
-      localStorage.removeItem("user");
+        localStorage.removeItem(
+          "user"
+        );
 
-      setOpen(false);
+        setOpen(false);
 
-      router.replace("/admin/login");
-      router.refresh();
-    } catch (error) {
-      console.error(
-        "Logout Error:",
-        error
-      );
-    } finally {
-      setLoggingOut(false);
-    }
-  };
+        router.replace(
+          "/admin/login"
+        );
+
+        router.refresh();
+
+        setLoggingOut(false);
+      }
+    };
 
   return (
     <>
       {open && (
         <div
-          onClick={() => setOpen(false)}
+          onClick={() =>
+            setOpen(false)
+          }
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           aria-hidden="true"
         />
@@ -264,7 +319,9 @@ export default function MobileSidebar({
 
           <button
             type="button"
-            onClick={() => setOpen(false)}
+            onClick={() =>
+              setOpen(false)
+            }
             className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
             aria-label="Close navigation"
           >
@@ -273,30 +330,43 @@ export default function MobileSidebar({
         </div>
 
         <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
-          {visibleItems.map((item) => (
-            <MobileNavGroup
-              key={item.name}
-              item={item}
-              pathname={pathname}
-              setOpen={setOpen}
-            />
-          ))}
+          {visibleItems.map(
+            (item) => (
+              <MobileNavGroup
+                key={item.name}
+                item={item}
+                pathname={
+                  pathname
+                }
+                setOpen={
+                  setOpen
+                }
+              />
+            )
+          )}
         </nav>
 
-        <div className="border-t border-slate-800 pt-5">
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="flex w-full items-center gap-3 rounded-xl bg-slate-800 px-4 py-3 text-sm text-slate-300 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <LogOut size={20} />
+        <button
+          type="button"
+          onClick={
+            handleLogout
+          }
+          disabled={
+            loggingOut
+          }
+          className="mt-5 flex w-full items-center gap-3 rounded-xl border border-slate-800 px-4 py-3 text-left text-sm text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <LogOut
+            size={20}
+            className="shrink-0"
+          />
 
+          <span>
             {loggingOut
               ? "Logging out..."
               : "Logout"}
-          </button>
-        </div>
+          </span>
+        </button>
       </aside>
     </>
   );
