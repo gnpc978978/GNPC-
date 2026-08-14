@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
+import Button from "@/components/ui/Button";
 
 export default function GalleryCTA() {
   return (
@@ -28,15 +28,7 @@ export default function GalleryCTA() {
         <div className="mt-10 flex justify-center">
 
 
-          <Link
-            href="/contact"
-            className="inline-flex items-center rounded-xl bg-white px-8 py-4 font-bold text-blue-800 transition-all hover:-translate-y-1 hover:bg-blue-50 hover:shadow-xl"
-          >
-            Contact Us
-
-            <FaArrowRight className="ml-3" />
-
-          </Link>
+          <Button href="/contact" variant="inverse" size="lg">Contact Us <FaArrowRight /></Button>
 
 
         </div>

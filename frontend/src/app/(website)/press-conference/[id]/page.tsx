@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 import {
   apiFetch,
@@ -191,14 +192,7 @@ export default function PressConferenceDetailsPage() {
       )}
 
       {item.pdfFile && (
-        <a
-          href={item.pdfFile}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-flex rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800"
-        >
-          View Press Conference PDF
-        </a>
+        <Button href={item.pdfFile} target="_blank" rel="noopener noreferrer" size="lg" className="mt-8">View Press Conference PDF</Button>
       )}
     </main>
   );

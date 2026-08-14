@@ -9,6 +9,7 @@ import {
   apiFetch,
   responseJson,
 } from "@/services/api";
+import Button from "@/components/ui/Button";
 
 const initialValues = {
   name: "",
@@ -287,15 +288,7 @@ export default function ContactForm() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {submitting
-              ? "Sending..."
-              : "Send Message"}
-          </button>
+          <Button type="submit" loading={submitting} loadingText="Sending..." className="w-full" size="lg">Send Message</Button>
         </form>
       </div>
     </section>

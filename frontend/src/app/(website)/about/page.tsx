@@ -17,6 +17,7 @@ import {
 
 import PageHero from "@/components/ui/PageHero";
 import AboutCTA from "@/components/about/AboutCTA";
+import Button from "@/components/ui/Button";
 
 import {
   apiFetch,
@@ -244,18 +245,7 @@ function ErrorState({
           {message}
         </p>
 
-        <button
-          type="button"
-          onClick={onRetry}
-          className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-        >
-          <RefreshCw
-            size={16}
-            aria-hidden="true"
-          />
-
-          Try Again
-        </button>
+        <Button type="button" onClick={onRetry} className="mt-6"> <RefreshCw size={16} aria-hidden="true" /> Try Again</Button>
       </div>
     </main>
   );

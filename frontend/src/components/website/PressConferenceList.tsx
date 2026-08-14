@@ -13,6 +13,7 @@ import { apiFetch, responseJson } from "@/services/api";
 import Card from "@/components/ui/Card";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 
 type PressConference = {
   _id: string;
@@ -222,17 +223,7 @@ export default function PressConferenceList({
                       </p>
 
                       {/* Action */}
-                      <Link
-                        href={`/press-conference/${item._id}`}
-                        className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
-                      >
-                        View Details
-
-                        <ArrowRight
-                          size={17}
-                          aria-hidden="true"
-                        />
-                      </Link>
+                      <Button href={`/press-conference/${item._id}`} size="md" className="mt-6">View Details <ArrowRight size={17} aria-hidden="true" /></Button>
                     </div>
                   </Card>
                 );
