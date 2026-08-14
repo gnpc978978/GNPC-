@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { authenticatedApiFetch, responseJson } from "@/services/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -185,32 +186,12 @@ export default function PressReleaseForm({
 
 
 
-      const res = await fetch(
+      const res = await authenticatedApiFetch("/press-releases", {
+        method: "POST",
+        body: data,
+      });
 
-        `${process.env.NEXT_PUBLIC_API_URL}/press-releases`,
-
-        {
-
-          method:"POST",
-
-          headers:{
-
-            Authorization:
-            `Bearer ${token}`
-
-          },
-
-          body:data
-
-        }
-
-      );
-
-
-
-
-      const result =
-        await res.json();
+      const result = await responseJson<{ success?: boolean; message?: string }>(res);
 
 
 
