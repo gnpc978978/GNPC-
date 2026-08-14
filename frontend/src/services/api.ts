@@ -8,25 +8,44 @@ export type AuthUser = {
   role: "ADMIN" | "SUPER_ADMIN";
 };
 
-const rawApiUrl =
-  process.env.NEXT_PUBLIC_API_URL?.trim();
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
 
 export const API_BASE_URL = rawApiUrl
   ? rawApiUrl.replace(/\/+$/, "")
   : "";
 
-export const apiUrl = (
-  path = ""
-): string => {
-  const normalizedPath = path.startsWith("/")
-    ? path
-    : `/${path}`;
-
-  if (!API_BASE_URL) {
-    return normalizedPath;
+const normalizePath = (path = ""): string => {
+  if (!path) {
+    return "";
   }
 
-  return `${API_BASE_URL}${normalizedPath}`;
+  return path.startsWith("/") ? path : `/${path}`;
+};
+
+/**
+ * Builds an API URL from the single configured API base URL.
+ *
+ * NEXT_PUBLIC_API_URL must be configured, for example:
+ * https://your-backend-domain.com/api
+ */
+export const apiUrl = (path = ""): string => {
+  if (!API_BASE_URL) {
+    throw new Error(
+      "NEXT_PUBLIC_API_URL is not configured. Please configure the frontend API URL."
+    );
+  }
+
+  return `${API_BASE_URL}${normalizePath(path)}`;
+};
+
+export const requireApiUrl = (): string => {
+  if (!API_BASE_URL) {
+    throw new Error(
+      "NEXT_PUBLIC_API_URL is not configured. Please configure the frontend API URL."
+    );
+  }
+
+  return API_BASE_URL;
 };
 
 export const getAuthToken = (): string | null => {
@@ -49,22 +68,28 @@ export const getAuthHeaders = (): HeadersInit => {
   };
 };
 
+const mergeHeaders = (
+  initHeaders?: HeadersInit,
+  includeAuth = false
+): Headers => {
+  const headers = new Headers(initHeaders);
+
+  if (includeAuth) {
+    const token = getAuthToken();
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+  }
+
+  return headers;
+};
+
 export const authenticatedFetch = (
   input: RequestInfo | URL,
   init: RequestInit = {}
-) => {
-  const headers = new Headers(
-    init.headers
-  );
-
-  const token = getAuthToken();
-
-  if (token) {
-    headers.set(
-      "Authorization",
-      `Bearer ${token}`
-    );
-  }
+): Promise<Response> => {
+  const headers = mergeHeaders(init.headers, true);
 
   return fetch(input, {
     ...init,
@@ -76,27 +101,21 @@ export const authenticatedFetch = (
 export const apiFetch = (
   path: string,
   init: RequestInit = {}
-) => {
-  return fetch(
-    apiUrl(path),
-    {
-      ...init,
-      credentials: "include",
-    }
-  );
+): Promise<Response> => {
+  return fetch(apiUrl(path), {
+    ...init,
+    credentials: "include",
+  });
 };
 
 export const authenticatedApiFetch = (
   path: string,
   init: RequestInit = {}
-) => {
-  return authenticatedFetch(
-    apiUrl(path),
-    init
-  );
+): Promise<Response> => {
+  return authenticatedFetch(apiUrl(path), init);
 };
 
-export const clearExpiredSession = () => {
+export const clearExpiredSession = (): void => {
   if (typeof window === "undefined") {
     return;
   }
@@ -104,20 +123,12 @@ export const clearExpiredSession = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 
-  if (
-    window.location.pathname !==
-    "/admin/login"
-  ) {
-    window.location.replace(
-      "/admin/login"
-    );
+  if (window.location.pathname !== "/admin/login") {
+    window.location.replace("/admin/login");
   }
 };
 
-const fallbackMessages: Record<
-  number,
-  string
-> = {
+const fallbackMessages: Record<number, string> = {
   400:
     "The request is invalid. Please review the submitted information.",
   401:
@@ -139,11 +150,8 @@ export const apiErrorMessage = (
   payload?: {
     message?: unknown;
   }
-) => {
-  if (
-    typeof payload?.message ===
-    "string"
-  ) {
+): string => {
+  if (typeof payload?.message === "string") {
     return payload.message;
   }
 
@@ -153,44 +161,27 @@ export const apiErrorMessage = (
   );
 };
 
-export const responseJson =
-  async <T>(
-    response: Response
-  ): Promise<T> => {
-    const payload =
-      await response
-        .json()
-        .catch(() => ({}));
+export const responseJson = async <T>(
+  response: Response
+): Promise<T> => {
+  const payload = await response.json().catch(() => ({}));
 
-    if (response.status === 401) {
-      clearExpiredSession();
-    }
+  if (response.status === 401) {
+    clearExpiredSession();
+  }
 
-    if (!response.ok) {
-      throw new Error(
-        apiErrorMessage(
-          response.status,
-          payload
-        )
-      );
-    }
-
-    return payload as T;
-  };
-
-export const requireApiUrl = () => {
-  if (!API_BASE_URL) {
+  if (!response.ok) {
     throw new Error(
-      "NEXT_PUBLIC_API_URL is not configured."
+      apiErrorMessage(response.status, payload)
     );
   }
 
-  return API_BASE_URL;
+  return payload as T;
 };
 
 export const axiosErrorMessage = (
   error: unknown
-) => {
+): string => {
   if (axios.isAxiosError(error)) {
     return apiErrorMessage(
       error.response?.status || 0,
