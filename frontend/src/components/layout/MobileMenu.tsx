@@ -9,7 +9,10 @@ import {
 
 import { usePathname } from "next/navigation";
 
-import { HiXMark } from "react-icons/hi2";
+import {
+  HiArrowRight,
+  HiXMark,
+} from "react-icons/hi2";
 
 import { navigation } from "@/data/navigation";
 
@@ -37,9 +40,7 @@ export default function MobileMenu({
     <AnimatePresence>
       {open && (
         <>
-          {/* =================================================
-              BACKDROP
-              ================================================= */}
+          {/* BACKDROP */}
 
           <motion.button
             type="button"
@@ -47,22 +48,20 @@ export default function MobileMenu({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
+            transition={{ duration: 0.25 }}
             onClick={() => setOpen(false)}
             className={[
               "fixed",
               "inset-0",
               "z-[998]",
               "cursor-default",
-              "bg-slate-900/35",
-              "backdrop-blur-[2px]",
+              "bg-[#03111d]/60",
+              "backdrop-blur-md",
               "xl:hidden",
             ].join(" ")}
           />
 
-          {/* =================================================
-              DRAWER
-              ================================================= */}
+          {/* DRAWER */}
 
           <motion.aside
             id="mobile-navigation"
@@ -83,8 +82,8 @@ export default function MobileMenu({
             }}
             transition={{
               type: "spring",
-              damping: 28,
-              stiffness: 320,
+              damping: 30,
+              stiffness: 280,
             }}
             className={[
               "fixed",
@@ -94,16 +93,34 @@ export default function MobileMenu({
               "z-[999]",
               "flex",
               "w-full",
-              "max-w-[380px]",
+              "max-w-[430px]",
               "flex-col",
+              "overflow-hidden",
+              "border-l",
+              "border-white/10",
               "bg-white",
-              "shadow-2xl",
+              "shadow-[-20px_0_60px_rgba(0,0,0,0.18)]",
               "xl:hidden",
             ].join(" ")}
           >
-            {/* =================================================
-                DRAWER HEADER
-                ================================================= */}
+            {/* Top accent */}
+
+            <div
+              aria-hidden="true"
+              className={[
+                "absolute",
+                "left-0",
+                "right-0",
+                "top-0",
+                "h-1",
+                "bg-gradient-to-r",
+                "from-[#0f4c81]",
+                "via-[#155eef]",
+                "to-[#c8102e]",
+              ].join(" ")}
+            />
+
+            {/* HEADER */}
 
             <div
               className={[
@@ -113,7 +130,9 @@ export default function MobileMenu({
                 "border-b",
                 "border-slate-200",
                 "px-5",
-                "py-4",
+                "pb-5",
+                "pt-6",
+                "sm:px-7",
               ].join(" ")}
             >
               <Logo />
@@ -125,23 +144,26 @@ export default function MobileMenu({
                 }
                 aria-label="Close navigation menu"
                 className={[
+                  "group/close",
                   "flex",
-                  "h-10",
-                  "w-10",
+                  "h-11",
+                  "w-11",
                   "items-center",
                   "justify-center",
                   "rounded-xl",
                   "border",
                   "border-slate-200",
-                  "bg-white",
+                  "bg-slate-50",
                   "text-[#0f4c81]",
-                  "transition-colors",
-                  "duration-200",
-                  "hover:border-[#0f4c81]",
-                  "hover:bg-[#eef6fc]",
+                  "transition-all",
+                  "duration-300",
+                  "hover:rotate-90",
+                  "hover:border-[#c8102e]/30",
+                  "hover:bg-red-50",
+                  "hover:text-[#c8102e]",
                   "focus-visible:outline-none",
                   "focus-visible:ring-2",
-                  "focus-visible:ring-[#0f4c81]",
+                  "focus-visible:ring-[#155eef]",
                   "focus-visible:ring-offset-2",
                 ].join(" ")}
               >
@@ -152,9 +174,39 @@ export default function MobileMenu({
               </button>
             </div>
 
-            {/* =================================================
-                NAVIGATION
-                ================================================= */}
+            {/* INTRO */}
+
+            <div
+              className={[
+                "border-b",
+                "border-slate-100",
+                "bg-gradient-to-br",
+                "from-[#f5f9ff]",
+                "via-white",
+                "to-[#fff8f8]",
+                "px-5",
+                "py-5",
+                "sm:px-7",
+              ].join(" ")}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 rounded-full bg-[#c8102e]"
+                />
+
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#155eef]">
+                  Greater Noida Press Club
+                </span>
+              </div>
+
+              <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-500">
+                Journalism, media and community —
+                connected through GNPC.
+              </p>
+            </div>
+
+            {/* NAVIGATION */}
 
             <nav
               aria-label="Mobile navigation"
@@ -163,15 +215,16 @@ export default function MobileMenu({
                 "overflow-y-auto",
                 "px-5",
                 "py-6",
+                "sm:px-7",
               ].join(" ")}
             >
-              <div className="mb-4">
-                <p className="px-3 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                  Main Navigation
+              <div className="mb-4 px-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                  Explore
                 </p>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {navigation.map(
                   (item, index) => {
                     const active =
@@ -188,17 +241,18 @@ export default function MobileMenu({
                         key={item.name}
                         initial={{
                           opacity: 0,
-                          x: 12,
+                          x: 24,
                         }}
                         animate={{
                           opacity: 1,
                           x: 0,
                         }}
                         transition={{
-                          duration: 0.18,
+                          duration: 0.3,
                           delay:
-                            index *
-                            0.025,
+                            0.05 +
+                            index * 0.045,
+                          ease: "easeOut",
                         }}
                       >
                         <Link
@@ -212,42 +266,79 @@ export default function MobileMenu({
                               : undefined
                           }
                           className={[
+                            "group/item",
+                            "relative",
                             "flex",
                             "items-center",
                             "justify-between",
+                            "overflow-hidden",
                             "rounded-xl",
+                            "border",
                             "px-4",
-                            "py-3.5",
-                            "text-[15px]",
-                            "font-semibold",
-                            "transition-colors",
-                            "duration-200",
+                            "py-4",
+                            "transition-all",
+                            "duration-300",
                             active
                               ? [
-                                  "bg-[#eef6fc]",
+                                  "border-blue-100",
+                                  "bg-[#f0f6ff]",
                                   "text-[#0f4c81]",
+                                  "shadow-[0_6px_20px_rgba(21,94,239,0.08)]",
                                 ].join(" ")
                               : [
+                                  "border-transparent",
                                   "text-slate-700",
+                                  "hover:-translate-x-1",
+                                  "hover:border-slate-200",
                                   "hover:bg-slate-50",
                                   "hover:text-[#0f4c81]",
                                 ].join(" "),
                             "focus-visible:outline-none",
                             "focus-visible:ring-2",
-                            "focus-visible:ring-[#0f4c81]",
+                            "focus-visible:ring-[#155eef]",
                             "focus-visible:ring-offset-2",
                           ].join(" ")}
                         >
-                          <span>
+                          {/* Active left rail */}
+
+                          <span
+                            aria-hidden="true"
+                            className={[
+                              "absolute",
+                              "bottom-2",
+                              "left-0",
+                              "top-2",
+                              "w-1",
+                              "rounded-r-full",
+                              "bg-[#155eef]",
+                              "transition-all",
+                              "duration-300",
+                              active
+                                ? "opacity-100"
+                                : "opacity-0 group-hover/item:opacity-100",
+                            ].join(" ")}
+                          />
+
+                          <span className="relative z-10 text-[15px] font-bold">
                             {item.name}
                           </span>
 
-                          {active && (
-                            <span
-                              aria-hidden="true"
-                              className="h-2 w-2 rounded-full bg-[#0f4c81]"
-                            />
-                          )}
+                          <HiArrowRight
+                            size={17}
+                            className={[
+                              "relative",
+                              "z-10",
+                              "text-slate-300",
+                              "transition-all",
+                              "duration-300",
+                              "group-hover/item:translate-x-1",
+                              "group-hover/item:text-[#155eef]",
+                              active
+                                ? "text-[#155eef]"
+                                : "",
+                            ].join(" ")}
+                            aria-hidden="true"
+                          />
                         </Link>
                       </motion.div>
                     );
@@ -256,15 +347,15 @@ export default function MobileMenu({
               </div>
             </nav>
 
-            {/* =================================================
-                DRAWER FOOTER
-                ================================================= */}
+            {/* FOOTER */}
 
             <div
               className={[
                 "border-t",
                 "border-slate-200",
+                "bg-slate-50/80",
                 "p-5",
+                "sm:p-7",
               ].join(" ")}
             >
               <Link
@@ -273,29 +364,46 @@ export default function MobileMenu({
                   setOpen(false)
                 }
                 className={[
+                  "group/admin",
+                  "relative",
                   "flex",
                   "h-12",
                   "w-full",
                   "items-center",
                   "justify-center",
+                  "gap-2",
+                  "overflow-hidden",
                   "rounded-xl",
-                  "border",
-                  "border-[#0f4c81]",
-                  "bg-white",
-                  "px-5",
+                  "bg-[#0f4c81]",
                   "text-sm",
-                  "font-bold",
-                  "text-[#0f4c81]",
-                  "transition-colors",
-                  "duration-200",
-                  "hover:bg-[#0f4c81]",
-                  "hover:text-white",
+                  "font-extrabold",
+                  "text-white",
+                  "shadow-[0_8px_24px_rgba(15,76,129,0.18)]",
+                  "transition-all",
+                  "duration-300",
+                  "hover:-translate-y-0.5",
+                  "hover:bg-[#0b3d68]",
+                  "hover:shadow-[0_12px_30px_rgba(15,76,129,0.25)]",
                 ].join(" ")}
               >
-                Admin Login
+                <span className="relative z-10">
+                  Admin Login
+                </span>
+
+                <HiArrowRight
+                  size={16}
+                  className={[
+                    "relative",
+                    "z-10",
+                    "transition-transform",
+                    "duration-300",
+                    "group-hover/admin:translate-x-1",
+                  ].join(" ")}
+                  aria-hidden="true"
+                />
               </Link>
 
-              <p className="mt-4 text-center text-xs leading-5 text-slate-400">
+              <p className="mt-4 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
                 {settings.siteName ||
                   "Greater Noida Press Club"}
               </p>
