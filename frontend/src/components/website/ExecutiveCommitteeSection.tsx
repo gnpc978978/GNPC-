@@ -20,11 +20,13 @@ import type {
 } from "@/types/executiveCommittee";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
+import type { ExecutiveCommitteePageSettings } from "@/types/pageSettings";
 
 type Props = {
   limit?: number;
   showViewAll?: boolean;
   title?: string;
+  settings?: ExecutiveCommitteePageSettings;
 };
 
 const values = (
@@ -55,6 +57,7 @@ export default function ExecutiveCommitteeSection({
   limit,
   showViewAll = false,
   title = "Executive Committee",
+  settings,
 }: Props) {
   const [members, setMembers] =
     useState<ExecutiveCommittee[]>(
@@ -76,6 +79,9 @@ export default function ExecutiveCommitteeSection({
   const [state, setState] =
     useState("");
 
+  const [page, setPage] = useState(1);
+  const pageSize = Math.max(1, Math.min(100, Number(settings?.pageSize) || (limit || 8)));
+
   const filters = useMemo(
     () => ({
       search,
@@ -94,6 +100,8 @@ export default function ExecutiveCommitteeSection({
   useEffect(() => {
     const timer =
       window.setTimeout(() => {
+        setPage(1);
+
         const params =
           new URLSearchParams();
 
@@ -127,6 +135,12 @@ export default function ExecutiveCommitteeSection({
     return () =>
       window.clearTimeout(timer);
   }, [filters, limit]);
+
+  const visibleMembers = members.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+  const totalPages = Math.max(1, Math.ceil(members.length / pageSize));
 
   const filterOptions = {
     designation: values(
@@ -166,6 +180,7 @@ export default function ExecutiveCommitteeSection({
         {/* Directory filters */}
         {isDirectory && (
           <div className="mb-10 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5">
+            {settings?.showSearch !== false && (
             <input
               value={search}
               onChange={(event) =>
@@ -176,7 +191,9 @@ export default function ExecutiveCommitteeSection({
               placeholder="Search by name, designation, or organization"
               className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             />
+            )}
 
+            {settings?.showFilters !== false && (
             <div className="mt-3 grid gap-3 sm:grid-cols-3">
               <select
                 value={designation}
@@ -253,6 +270,7 @@ export default function ExecutiveCommitteeSection({
                 )}
               </select>
             </div>
+            )}
           </div>
         )}
 
@@ -289,7 +307,7 @@ export default function ExecutiveCommitteeSection({
         ) : (
           /* Members */
           <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {members.map((member) => (
+            {visibleMembers.map((member) => (
               <article
                 key={member._id}
                 className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-lg"
@@ -361,6 +379,30 @@ export default function ExecutiveCommitteeSection({
                 </div>
               </article>
             ))}
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              disabled={page === 1}
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <span className="px-3 text-sm font-semibold text-slate-600">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              type="button"
+              disabled={page === totalPages}
+              onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold disabled:opacity-40"
+            >
+              Next
+            </button>
           </div>
         )}
 
