@@ -48,14 +48,9 @@ export default function TopBar() {
 
     updateDateTime();
 
-    const timer = window.setInterval(
-      updateDateTime,
-      1000
-    );
+    const timer = window.setInterval(updateDateTime, 1000);
 
-    return () => {
-      window.clearInterval(timer);
-    };
+    return () => window.clearInterval(timer);
   }, []);
 
   const socialLinks = [
@@ -77,88 +72,82 @@ export default function TopBar() {
   ].filter((item) => Boolean(item.href));
 
   return (
-    <div className="relative w-full overflow-hidden bg-[#4a515b] text-white">
-      {/* subtle top accent */}
+    <div className="relative z-[110] w-full overflow-hidden border-b border-slate-200 bg-[#eef1f4] text-slate-700">
+      {/* subtle animated top line */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[#c8102e] via-[#d6a928] to-[#0f4c81]"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c8102e]/50 to-transparent"
       />
 
-      <div
-        className={[
-          "mx-auto flex min-h-[48px]",
-          "max-w-7xl items-center justify-between",
-          "gap-3 px-4 sm:px-6 lg:px-8",
-        ].join(" ")}
-      >
+      <div className="mx-auto flex min-h-[42px] w-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
         {/* LEFT */}
-
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-          <div className="flex shrink-0 items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="h-2.5 w-2.5 rounded-full bg-[#d6a928] shadow-[0_0_10px_rgba(214,169,40,0.45)]"
-            />
+          {/* Location */}
+          <div className="group flex shrink-0 items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#c8102e] shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
+              <FaMapMarkerAlt
+                size={10}
+                aria-hidden="true"
+              />
+            </span>
 
-            <FaMapMarkerAlt
-              size={11}
-              className="text-white/75"
-              aria-hidden="true"
-            />
-
-            <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.12em] sm:text-xs">
+            <span className="hidden text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-600 sm:inline">
               Greater Noida
             </span>
           </div>
 
-          <div className="hidden h-5 w-px bg-white/20 sm:block" />
+          {/* Divider */}
+          <span
+            aria-hidden="true"
+            className="hidden h-5 w-px bg-slate-300 sm:block"
+          />
 
-          <div className="hidden items-center text-[10px] font-semibold uppercase tracking-[0.12em] text-white/65 md:flex">
+          {/* Established */}
+          <span className="hidden text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 md:inline">
             Est. 2003
-          </div>
+          </span>
 
-          <div className="hidden h-5 w-px bg-white/20 lg:block" />
-
-          <div className="hidden text-[10px] font-bold uppercase tracking-[0.12em] text-white/85 lg:block">
+          <span className="hidden text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-700 lg:inline">
             23 Years of Truthful Journalism
-          </div>
+          </span>
         </div>
 
         {/* RIGHT */}
-
-        <div className="flex shrink-0 items-center gap-3 sm:gap-5">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           {/* Date */}
-
           <div className="hidden items-center gap-2 lg:flex">
             <HiCalendarDays
-              size={14}
-              className="text-[#d6a928]"
+              size={13}
+              className="text-[#c8102e]"
               aria-hidden="true"
             />
 
-            <span className="text-xs font-semibold text-white/80">
+            <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
               {date}
             </span>
           </div>
 
           {/* Time */}
+          <div className="group flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c8102e]/40" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c8102e]" />
+            </span>
 
-          <div className="flex items-center gap-2">
             <HiClock
-              size={15}
-              className="text-[#c8102e]"
+              size={13}
+              className="text-slate-500"
               aria-hidden="true"
             />
 
-            <span className="whitespace-nowrap font-mono text-[10px] font-bold tracking-wide text-white sm:text-xs">
+            <span className="whitespace-nowrap text-[10px] font-black tracking-[0.08em] text-slate-700 sm:text-xs">
               {time}
             </span>
           </div>
 
           {/* Social */}
-
           {socialLinks.length > 0 && (
-            <div className="hidden items-center gap-1 border-l border-white/15 pl-3 sm:flex">
+            <div className="hidden items-center gap-1 md:flex">
               {socialLinks.map(
                 ({
                   label,
@@ -172,21 +161,24 @@ export default function TopBar() {
                     rel="noopener noreferrer"
                     aria-label={label}
                     className={[
-                      "flex h-7 w-7 items-center justify-center",
-                      "rounded-lg",
-                      "text-white/60",
+                      "group flex h-7 w-7 items-center justify-center",
+                      "rounded-full border border-slate-200 bg-white",
+                      "text-slate-500 shadow-sm",
                       "transition-all duration-300",
-                      "hover:-translate-y-0.5",
-                      "hover:bg-white/10",
+                      "hover:-translate-y-1",
+                      "hover:border-slate-300",
+                      "hover:bg-slate-900",
                       "hover:text-white",
+                      "hover:shadow-lg",
                       "focus-visible:outline-none",
                       "focus-visible:ring-2",
-                      "focus-visible:ring-white",
+                      "focus-visible:ring-[#c8102e]",
                     ].join(" ")}
                   >
                     <Icon
-                      size={12}
+                      size={11}
                       aria-hidden="true"
+                      className="transition-transform duration-300 group-hover:scale-110"
                     />
                   </a>
                 )
