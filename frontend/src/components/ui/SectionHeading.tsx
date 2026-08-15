@@ -25,14 +25,16 @@ export default function SectionHeading({
     size === "sm"
       ? "text-2xl sm:text-3xl"
       : size === "lg"
-        ? "text-3xl sm:text-4xl lg:text-5xl xl:text-6xl"
-        : "text-3xl sm:text-4xl lg:text-5xl";
+        ? "text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem]"
+        : "text-3xl sm:text-4xl lg:text-[3.1rem]";
 
   const content = (
     <div
       className={[
         "min-w-0",
-        isCentered ? "mx-auto max-w-5xl text-center" : "text-left",
+        isCentered
+          ? "mx-auto max-w-4xl text-center"
+          : "text-left",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -40,24 +42,60 @@ export default function SectionHeading({
       {badge ? (
         <div
           className={[
-            "mb-3 flex items-center gap-3",
-            isCentered ? "justify-center" : "justify-start",
+            "mb-4",
+            "flex",
+            "items-center",
+            "gap-3",
+            isCentered
+              ? "justify-center"
+              : "justify-start",
           ].join(" ")}
         >
           <span
             aria-hidden="true"
-            className="h-[3px] w-10 shrink-0 rounded-full bg-blue-600"
+            className={[
+              "h-px",
+              "w-8",
+              "shrink-0",
+              "bg-[#155eef]",
+              "sm:w-10",
+            ].join(" ")}
           />
 
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
+          <span
+            className={[
+              "text-[10px]",
+              "font-extrabold",
+              "uppercase",
+              "tracking-[0.2em]",
+              "text-[#155eef]",
+              "sm:text-xs",
+            ].join(" ")}
+          >
             {badge}
           </span>
+
+          {isCentered && (
+            <span
+              aria-hidden="true"
+              className={[
+                "h-px",
+                "w-8",
+                "shrink-0",
+                "bg-[#155eef]",
+                "sm:w-10",
+              ].join(" ")}
+            />
+          )}
         </div>
       ) : null}
 
       <h2
         className={[
-          "font-bold leading-[1.08] tracking-tight text-slate-950",
+          "font-black",
+          "leading-[1.08]",
+          "tracking-[-0.035em]",
+          "text-[#0b1f33]",
           headingSize,
         ].join(" ")}
       >
@@ -67,13 +105,42 @@ export default function SectionHeading({
       {description ? (
         <p
           className={[
-            "mt-4 max-w-3xl text-base leading-7 text-slate-500 sm:text-lg sm:leading-8",
-            isCentered ? "mx-auto text-center" : "text-left",
+            "mt-4",
+            "max-w-3xl",
+            "text-[15px]",
+            "leading-7",
+            "text-slate-500",
+            "sm:text-base",
+            "sm:leading-8",
+            isCentered
+              ? "mx-auto text-center"
+              : "text-left",
           ].join(" ")}
         >
           {description}
         </p>
       ) : null}
+
+      {/* Editorial accent */}
+
+      <div
+        aria-hidden="true"
+        className={[
+          "mt-5",
+          "flex",
+          "items-center",
+          "gap-1.5",
+          isCentered
+            ? "justify-center"
+            : "justify-start",
+        ].join(" ")}
+      >
+        <span className="h-1 w-9 rounded-full bg-[#155eef]" />
+
+        <span className="h-1 w-2 rounded-full bg-[#c8102e]" />
+
+        <span className="h-px w-12 bg-slate-200" />
+      </div>
     </div>
   );
 
@@ -82,7 +149,7 @@ export default function SectionHeading({
       className={[
         "w-full",
         action
-          ? "sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-6"
+          ? "sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-8"
           : "",
         className,
       ]
