@@ -248,14 +248,13 @@ export default function PageSettingsForm({
     };
   }, [pageKey]);
 
-  const update = <K extends keyof FormState>(
-    key: K,
-    value: FormState[K]
-  ) => {
-    setForm((current) => ({
-      ...current,
-      [key]: value,
-    }));
+  const update = (key: keyof FormState, value: unknown) => {
+    setForm((current) =>
+      ({
+        ...current,
+        [key]: value,
+      }) as FormState
+    );
   };
 
   const save = async (event: FormEvent) => {
