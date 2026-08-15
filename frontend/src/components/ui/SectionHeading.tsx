@@ -19,128 +19,63 @@ export default function SectionHeading({
   action,
   className = "",
 }: SectionHeadingProps) {
-  const isCentered = align === "center";
+  const centered = align === "center";
 
   const headingSize =
     size === "sm"
-      ? "text-2xl sm:text-3xl"
+      ? "text-3xl sm:text-4xl"
       : size === "lg"
-        ? "text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem]"
-        : "text-3xl sm:text-4xl lg:text-[3.1rem]";
+        ? "text-4xl sm:text-5xl lg:text-7xl"
+        : "text-4xl sm:text-5xl lg:text-6xl";
 
   const content = (
     <div
       className={[
-        "min-w-0",
-        isCentered
-          ? "mx-auto max-w-4xl text-center"
+        "relative min-w-0",
+        centered
+          ? "mx-auto max-w-5xl text-center"
           : "text-left",
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      ].join(" ")}
     >
-      {badge ? (
+      {badge && (
         <div
           className={[
-            "mb-4",
-            "flex",
-            "items-center",
-            "gap-3",
-            isCentered
+            "mb-5 flex items-center gap-3",
+            centered
               ? "justify-center"
               : "justify-start",
           ].join(" ")}
         >
-          <span
-            aria-hidden="true"
-            className={[
-              "h-px",
-              "w-8",
-              "shrink-0",
-              "bg-[#155eef]",
-              "sm:w-10",
-            ].join(" ")}
-          />
+          <span className="h-[3px] w-10 rounded-full bg-[#d7193f]" />
 
-          <span
-            className={[
-              "text-[10px]",
-              "font-extrabold",
-              "uppercase",
-              "tracking-[0.2em]",
-              "text-[#155eef]",
-              "sm:text-xs",
-            ].join(" ")}
-          >
+          <span className="text-[11px] font-black uppercase tracking-[0.24em] text-[#d7193f]">
             {badge}
           </span>
 
-          {isCentered && (
-            <span
-              aria-hidden="true"
-              className={[
-                "h-px",
-                "w-8",
-                "shrink-0",
-                "bg-[#155eef]",
-                "sm:w-10",
-              ].join(" ")}
-            />
-          )}
+          <span className="hidden h-px w-12 bg-[#155eef]/30 sm:block" />
         </div>
-      ) : null}
+      )}
 
       <h2
         className={[
-          "font-black",
-          "leading-[1.08]",
-          "tracking-[-0.035em]",
-          "text-[#0b1f33]",
+          "font-black leading-[0.95] tracking-[-0.055em]",
+          "text-[#07111f]",
           headingSize,
         ].join(" ")}
       >
         {title}
       </h2>
 
-      {description ? (
+      {description && (
         <p
           className={[
-            "mt-4",
-            "max-w-3xl",
-            "text-[15px]",
-            "leading-7",
-            "text-slate-500",
-            "sm:text-base",
-            "sm:leading-8",
-            isCentered
-              ? "mx-auto text-center"
-              : "text-left",
+            "mt-5 max-w-2xl text-[15px] leading-8 text-slate-500 sm:text-base",
+            centered ? "mx-auto" : "",
           ].join(" ")}
         >
           {description}
         </p>
-      ) : null}
-
-      {/* Editorial accent */}
-
-      <div
-        aria-hidden="true"
-        className={[
-          "mt-5",
-          "flex",
-          "items-center",
-          "gap-1.5",
-          isCentered
-            ? "justify-center"
-            : "justify-start",
-        ].join(" ")}
-      >
-        <span className="h-1 w-9 rounded-full bg-[#155eef]" />
-
-        <span className="h-1 w-2 rounded-full bg-[#c8102e]" />
-
-        <span className="h-px w-12 bg-slate-200" />
-      </div>
+      )}
     </div>
   );
 
@@ -152,9 +87,7 @@ export default function SectionHeading({
           ? "sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-8"
           : "",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      ].join(" ")}
     >
       {action ? (
         <>
