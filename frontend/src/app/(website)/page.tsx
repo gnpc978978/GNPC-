@@ -1,12 +1,8 @@
 "use client";
-import Hero from "@/components/home/Hero";
+
 import Image from "next/image";
 import Link from "next/link";
-
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
 import {
   Award,
@@ -124,37 +120,23 @@ type PublicStats = {
   events: number;
 };
 
-function formatDate(
-  value?: string
-) {
-  if (!value) {
+function formatDate(value?: string) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
     return "";
   }
 
-  const date =
-    new Date(value);
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return "";
-  }
-
-  return new Intl.DateTimeFormat(
-    "en-IN",
-    {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }
-  ).format(date);
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 }
 
-function detailHref(
-  item: LatestUpdate
-) {
+function detailHref(item: LatestUpdate) {
   const type = (
     item.type ||
     item.category ||
@@ -162,43 +144,27 @@ function detailHref(
   ).toLowerCase();
 
   if (
-    type.includes(
-      "press conference"
-    ) ||
-    type.includes(
-      "press-conference"
-    ) ||
-    type ===
-      "pressconference"
+    type.includes("press conference") ||
+    type.includes("press-conference") ||
+    type === "pressconference"
   ) {
-    return `/press-conference/${encodeURIComponent(
-      item._id
-    )}`;
+    return `/press-conference/${encodeURIComponent(item._id)}`;
   }
 
-  if (
-    type.includes(
-      "announcement"
-    )
-  ) {
+  if (type.includes("announcement")) {
     return `/announcements/${encodeURIComponent(
-      item.slug ||
-        item._id
+      item.slug || item._id
     )}`;
   }
 
-  if (
-    type.includes("event")
-  ) {
+  if (type.includes("event")) {
     return `/events/${encodeURIComponent(
-      item.slug ||
-        item._id
+      item.slug || item._id
     )}`;
   }
 
   return `/press-releases/${encodeURIComponent(
-    item.slug ||
-      item._id
+    item.slug || item._id
   )}`;
 }
 
@@ -207,16 +173,13 @@ function PageSection({
   background,
 }: {
   children: React.ReactNode;
-  background:
-    | "white"
-    | "slate";
+  background: "white" | "slate";
 }) {
   return (
     <div
       className={
-        background ===
-        "slate"
-          ? "bg-slate-50"
+        background === "slate"
+          ? "bg-[#f5f7fa]"
           : "bg-white"
       }
     >
@@ -225,201 +188,265 @@ function PageSection({
   );
 }
 
-function HeroSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   HERO
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function HeroSection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   const buttonClass =
-    "group inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-bold text-[#0f4c81] shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2 sm:px-6 sm:text-base";
+    "group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/95 px-6 py-3.5 text-sm font-bold text-slate-900 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:px-7";
 
   return (
-    <section className="relative overflow-hidden border-b border-slate-200 bg-transparent">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-      >
-        <div className="absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-blue-50 blur-3xl" />
-
-        <div className="absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-slate-100 blur-3xl" />
-
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#155eef 1px, transparent 1px), linear-gradient(90deg, #155eef 1px, transparent 1px)",
-            backgroundSize:
-              "64px 64px",
-          }}
+    <section className="relative min-h-[720px] overflow-hidden bg-slate-950 sm:min-h-[820px] lg:min-h-[900px]">
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <HeroCarousel
+          fallbackImage={
+            settings.heroImage || "/Logo.png"
+          }
+          alt={
+            home.hero.title ||
+            settings.siteName ||
+            "Greater Noida Press Club"
+          }
         />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20 xl:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      {/* Cinematic overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-900/25 to-slate-950/80" />
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.18)_45%,rgba(0,0,0,0.65)_100%)]" />
+
+      {/* Decorative glow */}
+      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-blue-400/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-20 h-96 w-96 rounded-full bg-cyan-300/15 blur-3xl" />
+
+      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1500px] flex-col px-4 pb-10 pt-5 sm:px-8 sm:pb-12 sm:pt-8 lg:min-h-[900px] lg:px-10">
+        {/* Floating hero navigation-style bar
+            This is intentionally only the hero visual shell.
+            Actual site navbar remains untouched. */}
+        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between rounded-full border border-white/30 bg-white/10 px-4 py-3 shadow-2xl backdrop-blur-2xl sm:px-6 sm:py-3.5">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/90 shadow-lg sm:h-11 sm:w-11">
+              <Image
+                src="/Logo.png"
+                alt={
+                  settings.siteName ||
+                  "Greater Noida Press Club"
+                }
+                width={44}
+                height={44}
+                className="h-full w-full object-contain p-1.5"
+              />
+            </div>
+
+            <div className="hidden min-w-0 sm:block">
+              <p className="truncate text-sm font-extrabold tracking-tight text-white">
+                {settings.siteName ||
+                  "Greater Noida Press Club"}
+              </p>
+
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/65">
+                Media • Community • Connection
+              </p>
+            </div>
+          </div>
+
+          <div className="hidden items-center gap-8 lg:flex">
+            <Link
+              href="/"
+              className="text-sm font-semibold text-white transition hover:text-white/70"
+            >
+              Home
+            </Link>
+
+            <Link
+              href="/about"
+              className="text-sm font-semibold text-white/70 transition hover:text-white"
+            >
+              About
+            </Link>
+
+            <Link
+              href="/latest-updates"
+              className="text-sm font-semibold text-white/70 transition hover:text-white"
+            >
+              Updates
+            </Link>
+
+            <Link
+              href="/gallery"
+              className="text-sm font-semibold text-white/70 transition hover:text-white"
+            >
+              Gallery
+            </Link>
+          </div>
+
+          <Link
+            href="/membership"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-extrabold text-slate-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:px-5 sm:text-sm"
+          >
+            Get Started
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+
+        {/* Hero content */}
+        <div className="flex flex-1 items-center justify-center py-14 sm:py-20 lg:py-24">
           <motion.div
             initial={{
               opacity: 0,
-              y: 20,
+              y: 30,
             }}
             animate={{
               opacity: 1,
               y: 0,
             }}
             transition={{
-              duration: 0.65,
+              duration: 0.8,
             }}
-            className="order-2 lg:order-1"
+            className="mx-auto w-full max-w-5xl text-center"
           >
-            <div className="flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="h-0.5 w-8 rounded-full bg-[#155eef]"
-              />
+            {/* Eyebrow */}
+            <div className="mb-5 flex justify-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-xs font-bold text-white shadow-xl backdrop-blur-xl sm:text-sm">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef]">
+                  <Newspaper size={13} />
+                </span>
 
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#155eef] sm:text-sm">
-                {home.hero.eyebrow}
-              </span>
+                {home.hero.identityLabel}
+              </div>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3.5 py-2 text-xs font-bold text-[#155eef]">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm">
-                <Newspaper
-                  size={13}
-                />
-              </span>
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/75 sm:text-sm">
+              {home.hero.eyebrow}
+            </p>
 
-              {home.hero.identityLabel}
-            </div>
-
-            <h1 className="mt-6 max-w-3xl text-[2.35rem] font-black leading-[1.08] tracking-[-0.035em] text-[#101828] sm:text-5xl md:text-[3.5rem] lg:text-[4rem] xl:text-[4.5rem]">
+            {/* IMPORTANT:
+                CMS title is untouched */}
+            <h1 className="mx-auto mt-5 max-w-5xl text-[2.7rem] font-medium leading-[0.98] tracking-[-0.055em] text-white drop-shadow-2xl sm:text-6xl md:text-7xl lg:text-[5.8rem] xl:text-[6.5rem]">
               {home.hero.title ||
                 settings.heroTitle}
             </h1>
 
-            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+            {/* IMPORTANT:
+                CMS description is untouched */}
+            <p className="mx-auto mt-7 max-w-2xl text-sm leading-6 text-white/80 drop-shadow-lg sm:text-lg sm:leading-8">
               {home.hero.description ||
                 settings.heroDescription}
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-4">
+            {/* CTA */}
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row">
               <MembershipFormLink
-                className={
-                  buttonClass
-                }
+                className={buttonClass}
                 unavailableClassName={`${buttonClass} cursor-not-allowed opacity-60`}
               >
                 {home.hero.primaryLabel}
 
-                <ArrowRight
-                  size={18}
-                />
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-white transition-transform duration-300 group-hover:translate-x-0.5">
+                  <ArrowRight size={15} />
+                </span>
               </MembershipFormLink>
 
               <Link
                 href="/latest-updates"
-                className={
-                  buttonClass
-                }
+                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/20 sm:px-7"
               >
-                {
-                  home.hero
-                    .secondaryLabel
-                }
+                {home.hero.secondaryLabel}
 
                 <ArrowRight
                   size={18}
+                  className="transition-transform group-hover:translate-x-1"
                 />
               </Link>
             </div>
 
-            {home.hero.quickLinks
-              .length > 0 && (
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-200 pt-6 sm:mt-10">
+            {/* Quick links */}
+            {home.hero.quickLinks.length > 0 && (
+              <div className="mx-auto mt-9 flex max-w-2xl flex-wrap justify-center gap-2">
                 {home.hero.quickLinks.map(
                   (item) => (
                     <Link
                       key={`${item.label}-${item.href}`}
-                      href={
-                        item.href ||
-                        "/"
-                      }
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700"
+                      href={item.href || "/"}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/15 px-4 py-2 text-xs font-semibold text-white/75 backdrop-blur-md transition hover:bg-white/15 hover:text-white"
                     >
-                      <Newspaper
-                        size={15}
-                        className="text-blue-600"
-                      />
-
+                      <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
                       {item.label}
-
-                      <ArrowRight
-                        size={13}
-                      />
                     </Link>
                   )
                 )}
               </div>
             )}
           </motion.div>
+        </div>
 
-          <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.98,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-            }}
-            transition={{
-              duration: 0.7,
-              delay: 0.1,
-            }}
-            className="order-1 lg:order-2"
-          >
-            <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-100 shadow-2xl">
-              <div className="aspect-[4/3] min-h-[290px] sm:aspect-[16/11] lg:min-h-[460px]">
-                <HeroCarousel
-                  fallbackImage={
-                    settings.heroImage ||
-                    "/Logo.png"
-                  }
-                  alt={
-                    home.hero.title ||
-                    settings.siteName ||
-                    "Greater Noida Press Club"
-                  }
-                />
+        {/* Floating bottom glass info */}
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.3,
+          }}
+          className="flex justify-end"
+        >
+          <div className="hidden w-full max-w-sm rounded-3xl border border-white/20 bg-black/20 p-4 shadow-2xl backdrop-blur-xl sm:block">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/55">
+                  Greater Noida
+                </p>
+
+                <p className="mt-1 text-sm font-bold text-white">
+                  Press Club
+                </p>
+              </div>
+
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white">
+                <ArrowRight size={17} />
               </div>
             </div>
-          </motion.div>
-        </div>
+
+            <div className="mt-4 h-px bg-white/10" />
+
+            <p className="mt-3 text-xs leading-5 text-white/60">
+              Connecting journalists, media professionals
+              and the community through credible
+              communication.
+            </p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
+/* =========================================================
+   ABOUT
+   ========================================================= */
+
 function AboutSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+  const { settings } = useWebsiteSettings();
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+  const home = mergeHomeSettings(settings.home);
 
-  const [data, setData] =
-    useState<{
-      image?: string;
-      heading?: string;
-      description?: string;
-    }>({});
+  const [data, setData] = useState<{
+    image?: string;
+    heading?: string;
+    description?: string;
+  }>({});
 
   const [stats, setStats] =
     useState<PublicStats>({
@@ -435,12 +462,9 @@ function AboutSection() {
     let cancelled = false;
 
     Promise.allSettled([
-      apiFetch(
-        "/settings/about",
-        {
-          cache: "no-store",
-        }
-      ).then((response) =>
+      apiFetch("/settings/about", {
+        cache: "no-store",
+      }).then((response) =>
         responseJson<{
           data?: {
             image?: string;
@@ -450,12 +474,9 @@ function AboutSection() {
         }>(response)
       ),
 
-      apiFetch(
-        "/dashboard/public-stats",
-        {
-          cache: "no-store",
-        }
-      ).then((response) =>
+      apiFetch("/dashboard/public-stats", {
+        cache: "no-store",
+      }).then((response) =>
         responseJson<{
           data: PublicStats;
         }>(response)
@@ -465,18 +486,10 @@ function AboutSection() {
         about,
         publicStats,
       ]) => {
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return;
 
-        if (
-          about.status ===
-          "fulfilled"
-        ) {
-          setData(
-            about.value.data ||
-              {}
-          );
+        if (about.status === "fulfilled") {
+          setData(about.value.data || {});
         }
 
         if (
@@ -498,37 +511,35 @@ function AboutSection() {
   }, [settings.aboutImage]);
 
   const image =
-    data.image ||
-    settings.aboutImage;
+    data.image || settings.aboutImage;
 
   const statItems = [
     [
       stats.members,
-      home.about
-        .statsLabels[0],
+      home.about.statsLabels[0],
     ],
     [
       stats.pressReleases,
-      home.about
-        .statsLabels[1],
+      home.about.statsLabels[1],
     ],
     [
       stats.events,
-      home.about
-        .statsLabels[2],
+      home.about.statsLabels[2],
     ],
   ];
 
   return (
-    <section className="bg-transparent py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-9 flex flex-col gap-5 text-center sm:mb-14 sm:flex-row sm:items-end sm:justify-between sm:text-left">
-          <div>
+    <section className="relative overflow-hidden bg-white py-20 sm:py-28 lg:py-32">
+      <div className="pointer-events-none absolute -right-48 top-20 h-96 w-96 rounded-full bg-blue-50 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
             <span className="gnpc-eyebrow">
               {home.about.eyebrow}
             </span>
 
-            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl lg:text-5xl">
+            <h2 className="gnpc-section-title mt-4 text-4xl sm:text-5xl lg:text-6xl">
               {home.about.title ||
                 data.heading ||
                 settings.siteName}
@@ -536,39 +547,71 @@ function AboutSection() {
           </div>
 
           <Button
-            href={
-              home.about.buttonHref
-            }
+            href={home.about.buttonHref}
             variant="outline"
             size="lg"
           >
             {home.about.buttonLabel}
+            <ArrowRight size={17} />
           </Button>
         </div>
 
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+          {/* Image */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: -25,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              margin: "-100px",
+            }}
+            transition={{
+              duration: 0.7,
+            }}
+          >
             {loading ? (
-              <div className="aspect-[6/5] animate-pulse rounded-3xl bg-slate-200" />
+              <div className="aspect-[6/5] animate-pulse rounded-[2rem] bg-slate-200" />
             ) : image ? (
-              <div className="relative aspect-[6/5] overflow-hidden rounded-3xl bg-slate-100 shadow-2xl">
-                <Image
-                  src={image}
-                  alt={
-                    home.about
-                      .title
-                  }
-                  fill
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  className="object-cover"
-                />
+              <div className="group relative overflow-hidden rounded-[2rem] bg-slate-100 shadow-2xl">
+                <div className="relative aspect-[6/5]">
+                  <Image
+                    src={image}
+                    alt={
+                      home.about.title ||
+                      "About Greater Noida Press Club"
+                    }
+                    fill
+                    sizes="(min-width: 1024px) 55vw, 100vw"
+                    className="object-cover transition duration-700 group-hover:scale-105"
+                  />
 
-                <span className="absolute bottom-5 left-5 rounded-2xl bg-slate-950/45 px-4 py-3 text-xs font-bold tracking-[0.18em] text-white backdrop-blur">
-                  GNPC
-                </span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-transparent" />
+
+                  <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/65">
+                        Greater Noida
+                      </p>
+
+                      <p className="mt-1 text-2xl font-bold text-white">
+                        Press Club
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-xl">
+                      <ArrowRight size={20} />
+                    </div>
+                  </div>
+                </div>
               </div>
             ) : (
-              <div className="flex aspect-[6/5] items-center justify-center rounded-3xl bg-slate-100">
+              <div className="flex aspect-[6/5] items-center justify-center rounded-[2rem] bg-slate-100">
                 <div className="text-center text-slate-500">
                   <ImageOff
                     className="mx-auto"
@@ -581,44 +624,59 @@ function AboutSection() {
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
 
-          <div>
+          {/* Content */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: 25,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              margin: "-100px",
+            }}
+            transition={{
+              duration: 0.7,
+              delay: 0.1,
+            }}
+          >
             {loading ? (
               <div className="space-y-4">
                 <div className="h-10 w-4/5 animate-pulse rounded bg-slate-200" />
-
                 <div className="h-5 animate-pulse rounded bg-slate-200" />
+                <div className="h-5 w-5/6 animate-pulse rounded bg-slate-200" />
               </div>
             ) : (
               <>
-                <h3 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+                <h3 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
                   {home.about.title ||
                     data.heading}
                 </h3>
 
-                <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-6 sm:text-lg sm:leading-8">
+                <p className="mt-6 text-base leading-8 text-slate-600 sm:text-lg">
                   {home.about.description ||
                     data.description}
                 </p>
 
-                {home.about.features
-                  .length >
+                {home.about.features.length >
                   0 && (
-                  <div className="mt-7 space-y-3">
+                  <div className="mt-8 grid gap-3 sm:grid-cols-2">
                     {home.about.features.map(
                       (feature) => (
                         <div
-                          key={
-                            feature
-                          }
-                          className="flex items-center gap-3"
+                          key={feature}
+                          className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
                         >
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
                             ✓
                           </span>
 
-                          <span className="text-sm font-medium text-slate-700 sm:text-base">
+                          <span className="text-sm font-semibold text-slate-700">
                             {feature}
                           </span>
                         </div>
@@ -628,30 +686,29 @@ function AboutSection() {
                 )}
               </>
             )}
-          </div>
+          </motion.div>
         </div>
 
-        {home.about
-          .showStats && (
-          <div className="mt-12 rounded-3xl bg-slate-50 p-6 sm:mt-16 sm:p-8">
-            <div className="grid grid-cols-3 gap-3 text-center sm:gap-8">
+        {home.about.showStats && (
+          <div className="mt-14 overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 shadow-2xl sm:mt-20">
+            <div className="grid grid-cols-3">
               {statItems.map(
-                ([
-                  value,
-                  label,
-                ]) => (
+                ([value, label], index) => (
                   <div
-                    key={String(
-                      label
-                    )}
+                    key={String(label)}
+                    className={`px-3 py-7 text-center sm:px-8 sm:py-10 ${
+                      index !== 0
+                        ? "border-l border-white/10"
+                        : ""
+                    }`}
                   >
-                    <h3 className="text-2xl font-bold text-blue-600 sm:text-4xl">
+                    <h3 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
                       {loading
                         ? "—"
                         : value}
                     </h3>
 
-                    <p className="mt-1 text-xs font-medium text-slate-600 sm:text-base">
+                    <p className="mt-2 text-xs font-medium text-white/55 sm:text-sm">
                       {label}
                     </p>
                   </div>
@@ -665,112 +722,108 @@ function AboutSection() {
   );
 }
 
-function ObjectivesSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   OBJECTIVES
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function ObjectivesSection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   return (
-    <section className="bg-transparent py-14 sm:py-20 lg:py-24">
+    <section className="bg-[#f5f7fa] py-20 sm:py-28 lg:py-32">
       <Container>
         <SectionHeading
-          badge={
-            home.objectives
-              .eyebrow
-          }
-          title={
-            home.objectives
-              .title
-          }
-          description={
-            home.objectives
-              .description
-          }
+          badge={home.objectives.eyebrow}
+          title={home.objectives.title}
+          description={home.objectives.description}
           action={
             <Button
-              href={
-                home.objectives
-                  .buttonHref
-              }
+              href={home.objectives.buttonHref}
               variant="outline"
               size="lg"
             >
-              {
-                home.objectives
-                  .buttonLabel
-              }
+              {home.objectives.buttonLabel}
+              <ArrowRight size={17} />
             </Button>
           }
         />
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
           {home.objectives.cards
             .slice(
               0,
               Math.max(
                 1,
-                home.objectives
-                  .displayCount
+                home.objectives.displayCount
               )
             )
-            .map(
-              (
-                card,
-                index
-              ) => {
-                const Icon =
-                  iconMap[
-                    card.icon
-                  ] ||
-                  Star;
+            .map((card, index) => {
+              const Icon =
+                iconMap[card.icon] ||
+                Star;
 
-                return (
+              return (
+                <motion.div
+                  key={`${card.title}-${index}`}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  viewport={{
+                    once: true,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.05,
+                  }}
+                >
                   <Card
-                    key={`${card.title}-${index}`}
                     padding="sm"
+                    className="group h-full rounded-[1.75rem] border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-2xl sm:p-8"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-600 sm:h-16 sm:w-16 sm:rounded-2xl">
-                      <Icon className="text-lg sm:text-3xl" />
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition duration-300 group-hover:bg-blue-600 group-hover:text-white">
+                      <Icon className="text-2xl" />
                     </div>
 
-                    <h3 className="mt-3 text-sm font-bold text-slate-900 sm:mt-6 sm:text-2xl">
+                    <h3 className="mt-6 text-xl font-bold text-slate-950 sm:text-2xl">
                       {card.title}
                     </h3>
 
-                    <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-600 sm:mt-4 sm:text-base sm:leading-7">
-                      {
-                        card.description
-                      }
+                    <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
+                      {card.description}
                     </p>
+
+                    <div className="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-blue-600">
+                      Learn More
+                      <ArrowRight size={14} />
+                    </div>
                   </Card>
-                );
-              }
-            )}
+                </motion.div>
+              );
+            })}
         </div>
       </Container>
     </section>
   );
 }
 
-function LatestUpdatesSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   LATEST UPDATES
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function LatestUpdatesSection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   const [items, setItems] =
-    useState<
-      LatestUpdate[]
-    >([]);
+    useState<LatestUpdate[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -778,9 +831,7 @@ function LatestUpdatesSection() {
   useEffect(() => {
     let cancelled = false;
 
-    apiFetch(
-      "/latest-updates"
-    )
+    apiFetch("/latest-updates")
       .then((response) =>
         responseJson<{
           data?: LatestUpdate[];
@@ -790,8 +841,7 @@ function LatestUpdatesSection() {
         if (!cancelled) {
           setItems(
             (
-              payload.data ||
-              []
+              payload.data || []
             ).slice(
               0,
               Math.max(
@@ -818,26 +868,18 @@ function LatestUpdatesSection() {
       cancelled = true;
     };
   }, [
-    home.latestUpdates
-      .displayCount,
+    home.latestUpdates.displayCount,
   ]);
 
   return (
-    <section className="bg-transparent py-16 sm:py-24">
+    <section className="bg-white py-20 sm:py-28 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
           align="left"
-          badge={
-            home.latestUpdates
-              .eyebrow
-          }
-          title={
-            home.latestUpdates
-              .title
-          }
+          badge={home.latestUpdates.eyebrow}
+          title={home.latestUpdates.title}
           description={
-            home.latestUpdates
-              .description
+            home.latestUpdates.description
           }
           action={
             <Button
@@ -852,28 +894,22 @@ function LatestUpdatesSection() {
                 home.latestUpdates
                   .buttonLabel
               }
-
-              <ArrowRight
-                size={17}
-              />
+              <ArrowRight size={17} />
             </Button>
           }
         />
 
         {loading ? (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[1, 2, 3].map(
-              (number) => (
-                <div
-                  key={number}
-                  className="aspect-[16/12] animate-pulse rounded-2xl bg-slate-200"
-                />
-              )
-            )}
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((number) => (
+              <div
+                key={number}
+                className="aspect-[16/12] animate-pulse rounded-[1.5rem] bg-slate-200"
+              />
+            ))}
           </div>
-        ) : items.length ===
-          0 ? (
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center">
+        ) : items.length === 0 ? (
+          <div className="mt-12 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-6 py-14 text-center">
             <Newspaper
               className="mx-auto text-slate-400"
               size={38}
@@ -884,98 +920,97 @@ function LatestUpdatesSection() {
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
-            {items.map(
-              (item) => {
-                const image =
-                  item.featuredImage ||
-                  item.image;
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item, index) => {
+              const image =
+                item.featuredImage ||
+                item.image;
 
-                const date =
-                  item.publishedAt ||
-                  item.date ||
-                  item.createdAt;
+              const date =
+                item.publishedAt ||
+                item.date ||
+                item.createdAt;
 
-                return (
-                  <article
-                    key={
-                      item._id
-                    }
-                    className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    {image ? (
-                      <div className="aspect-[16/9] overflow-hidden">
-                        <img
-                          src={
-                            image
-                          }
-                          alt={
-                            item.title
-                          }
-                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex aspect-[16/9] items-center justify-center bg-slate-100">
-                        <Newspaper
-                          className="text-blue-300"
-                          size={40}
-                        />
-                      </div>
-                    )}
+              return (
+                <motion.article
+                  key={item._id}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  viewport={{
+                    once: true,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.05,
+                  }}
+                  className="group flex min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                  {image ? (
+                    <div className="aspect-[16/10] overflow-hidden">
+                      <img
+                        src={image}
+                        alt={item.title}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[16/10] items-center justify-center bg-slate-100">
+                      <Newspaper
+                        className="text-blue-300"
+                        size={40}
+                      />
+                    </div>
+                  )}
 
-                    <div className="flex flex-1 flex-col p-3 sm:p-6">
-                      <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-blue-700 sm:text-xs">
-                        <span>
-                          {item.type ||
-                            item.category ||
-                            "Update"}
-                        </span>
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-700 sm:text-xs">
+                      <span>
+                        {item.type ||
+                          item.category ||
+                          "Update"}
+                      </span>
 
-                        {date && (
+                      {date && (
+                        <>
+                          <span className="h-1 w-1 rounded-full bg-slate-300" />
+
                           <span className="inline-flex items-center gap-1 text-slate-400">
                             <CalendarDays
-                              size={
-                                14
-                              }
+                              size={13}
                             />
-
-                            {formatDate(
-                              date
-                            )}
+                            {formatDate(date)}
                           </span>
-                        )}
-                      </div>
-
-                      <h3 className="mt-2 line-clamp-2 text-sm font-bold text-slate-900 sm:text-xl">
-                        {
-                          item.title
-                        }
-                      </h3>
-
-                      <p className="mt-2 line-clamp-3 flex-1 text-xs leading-5 text-slate-600 sm:text-sm">
-                        {item.excerpt ||
-                          item.description ||
-                          "Read the latest update from Greater Noida Press Club."}
-                      </p>
-
-                      <Link
-                        href={detailHref(
-                          item
-                        )}
-                        className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-blue-700 sm:text-base"
-                      >
-                        Read More
-
-                        <ArrowRight
-                          size={17}
-                        />
-                      </Link>
+                        </>
+                      )}
                     </div>
-                  </article>
-                );
-              }
-            )}
+
+                    <h3 className="mt-3 line-clamp-2 text-xl font-bold tracking-tight text-slate-950">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-3 line-clamp-3 flex-1 text-sm leading-6 text-slate-600">
+                      {item.excerpt ||
+                        item.description ||
+                        "Read the latest update from Greater Noida Press Club."}
+                    </p>
+
+                    <Link
+                      href={detailHref(item)}
+                      className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-700 transition hover:gap-3"
+                    >
+                      Read More
+                      <ArrowRight size={17} />
+                    </Link>
+                  </div>
+                </motion.article>
+              );
+            })}
           </div>
         )}
       </div>
@@ -983,20 +1018,17 @@ function LatestUpdatesSection() {
   );
 }
 
-function GallerySection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   GALLERY
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function GallerySection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   const [items, setItems] =
-    useState<
-      GalleryItem[]
-    >([]);
+    useState<GalleryItem[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -1014,14 +1046,12 @@ function GallerySection() {
         if (!cancelled) {
           setItems(
             (
-              payload.data ||
-              []
+              payload.data || []
             ).slice(
               0,
               Math.max(
                 1,
-                home.gallery
-                  .displayCount
+                home.gallery.displayCount
               )
             )
           );
@@ -1041,62 +1071,38 @@ function GallerySection() {
     return () => {
       cancelled = true;
     };
-  }, [
-    home.gallery
-      .displayCount,
-  ]);
+  }, [home.gallery.displayCount]);
 
   return (
-    <section className="bg-transparent py-16 sm:py-24">
+    <section className="bg-[#f5f7fa] py-20 sm:py-28 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
-          badge={
-            home.gallery
-              .eyebrow
-          }
-          title={
-            home.gallery
-              .title
-          }
-          description={
-            home.gallery
-              .description
-          }
+          badge={home.gallery.eyebrow}
+          title={home.gallery.title}
+          description={home.gallery.description}
           action={
             <Button
-              href={
-                home.gallery
-                  .buttonHref
-              }
+              href={home.gallery.buttonHref}
               variant="outline"
               size="lg"
             >
-              {
-                home.gallery
-                  .buttonLabel
-              }
-
-              <ArrowRight
-                size={17}
-              />
+              {home.gallery.buttonLabel}
+              <ArrowRight size={17} />
             </Button>
           }
         />
 
         {loading ? (
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {[1, 2, 3].map(
-              (number) => (
-                <div
-                  key={number}
-                  className="aspect-[4/3] animate-pulse rounded-2xl bg-slate-200"
-                />
-              )
-            )}
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+            {[1, 2, 3].map((number) => (
+              <div
+                key={number}
+                className="aspect-[4/3] animate-pulse rounded-[1.5rem] bg-slate-200"
+              />
+            ))}
           </div>
-        ) : items.length ===
-          0 ? (
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center">
+        ) : items.length === 0 ? (
+          <div className="mt-12 rounded-[1.5rem] border border-slate-200 bg-white px-6 py-14 text-center">
             <ImageOff
               className="mx-auto text-slate-400"
               size={38}
@@ -1107,44 +1113,55 @@ function GallerySection() {
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {items.map(
-              (
-                item,
-                index
-              ) => {
-                const src =
-                  item.image ||
-                  item.imageUrl ||
-                  item.url;
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+            {items.map((item, index) => {
+              const src =
+                item.image ||
+                item.imageUrl ||
+                item.url;
 
-                return (
+              return (
+                <motion.div
+                  key={
+                    item._id ||
+                    item.id ||
+                    index
+                  }
+                  initial={{
+                    opacity: 0,
+                    scale: 0.97,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    scale: 1,
+                  }}
+                  viewport={{
+                    once: true,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.05,
+                  }}
+                >
                   <Link
-                    key={
-                      item._id ||
-                      item.id ||
-                      index
-                    }
                     href={
                       home.gallery
                         .buttonHref
                     }
-                    className="group relative overflow-hidden rounded-2xl bg-slate-100"
+                    className="group relative block overflow-hidden rounded-[1.5rem] bg-slate-100 shadow-sm"
                   >
                     <div className="relative aspect-[4/3]">
                       {src ? (
                         <Image
-                          src={
-                            src
-                          }
+                          src={src}
                           alt={
                             item.title ||
                             item.name ||
                             "GNPC Gallery"
                           }
                           fill
-                          sizes="(min-width: 640px) 33vw, 50vw"
-                          className="object-cover transition duration-500 group-hover:scale-105"
+                          sizes="(min-width: 640px) 33vw, 100vw"
+                          className="object-cover transition duration-700 group-hover:scale-110"
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center">
@@ -1155,19 +1172,27 @@ function GallerySection() {
                         </div>
                       )}
 
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-4 pt-10">
-                        <p className="line-clamp-2 text-sm font-semibold text-white sm:text-base">
-                          {item.title ||
-                            item.name ||
-                            item.category ||
-                            "GNPC Gallery"}
-                        </p>
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-90" />
+
+                      <div className="absolute bottom-0 left-0 right-0 p-5">
+                        <div className="flex items-end justify-between gap-4">
+                          <p className="line-clamp-2 text-base font-bold text-white">
+                            {item.title ||
+                              item.name ||
+                              item.category ||
+                              "GNPC Gallery"}
+                          </p>
+
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition group-hover:bg-white group-hover:text-slate-900">
+                            <ArrowRight size={15} />
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </Link>
-                );
-              }
-            )}
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -1175,20 +1200,17 @@ function GallerySection() {
   );
 }
 
-function PressConferencesSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   PRESS CONFERENCES
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function PressConferencesSection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   const [items, setItems] =
-    useState<
-      PressConference[]
-    >([]);
+    useState<PressConference[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -1196,12 +1218,9 @@ function PressConferencesSection() {
   useEffect(() => {
     let cancelled = false;
 
-    apiFetch(
-      "/press-conferences",
-      {
-        cache: "no-store",
-      }
-    )
+    apiFetch("/press-conferences", {
+      cache: "no-store",
+    })
       .then((response) =>
         responseJson<{
           data?: PressConference[];
@@ -1211,8 +1230,7 @@ function PressConferencesSection() {
         if (!cancelled) {
           setItems(
             (
-              payload.data ||
-              []
+              payload.data || []
             ).slice(
               0,
               Math.max(
@@ -1239,25 +1257,17 @@ function PressConferencesSection() {
       cancelled = true;
     };
   }, [
-    home.pressConferences
-      .displayCount,
+    home.pressConferences.displayCount,
   ]);
 
   return (
-    <section className="bg-transparent py-14 sm:py-20">
+    <section className="bg-white py-20 sm:py-28">
       <Container>
         <SectionHeading
-          badge={
-            home.pressConferences
-              .eyebrow
-          }
-          title={
-            home.pressConferences
-              .title
-          }
+          badge={home.pressConferences.eyebrow}
+          title={home.pressConferences.title}
           description={
-            home.pressConferences
-              .description
+            home.pressConferences.description
           }
           action={
             <Button
@@ -1272,10 +1282,7 @@ function PressConferencesSection() {
                 home.pressConferences
                   .buttonLabel
               }
-
-              <ArrowRight
-                size={17}
-              />
+              <ArrowRight size={17} />
             </Button>
           }
         />
@@ -1286,47 +1293,58 @@ function PressConferencesSection() {
               Loading press conferences...
             </p>
           </div>
-        ) : items.length ===
-          0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-6 py-14 text-center">
+        ) : items.length === 0 ? (
+          <div className="mt-10 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-6 py-14 text-center">
             <p className="font-semibold text-slate-700">
               No press conferences available
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map(
-              (item) => (
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item, index) => (
+              <motion.div
+                key={item._id}
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.05,
+                }}
+              >
                 <Card
-                  key={
-                    item._id
-                  }
-                  className="overflow-hidden border-slate-200 bg-white p-0 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                  className="group h-full overflow-hidden rounded-[1.5rem] border-slate-200 bg-white p-0 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   {item.featuredImage && (
-                    <img
-                      src={
-                        item.featuredImage
-                      }
-                      alt={
-                        item.title
-                      }
-                      className="h-52 w-full object-cover"
-                    />
+                    <div className="relative h-52 overflow-hidden">
+                      <img
+                        src={item.featuredImage}
+                        alt={item.title}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      />
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 to-transparent" />
+                    </div>
                   )}
 
-                  <div className="p-5 sm:p-6">
-                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-blue-700">
+                  <div className="p-6 sm:p-7">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-blue-700">
                       Press Conference
                     </p>
 
-                    <h3 className="mt-2 text-xl font-extrabold text-slate-900">
-                      {
-                        item.title
-                      }
+                    <h3 className="mt-3 text-xl font-extrabold tracking-tight text-slate-950">
+                      {item.title}
                     </h3>
 
-                    <div className="mt-4 space-y-2 text-sm text-slate-600">
+                    <div className="mt-5 space-y-2 text-sm text-slate-600">
                       <span className="flex items-center gap-2">
                         <CalendarDays
                           size={16}
@@ -1350,7 +1368,7 @@ function PressConferencesSection() {
                       </span>
                     </div>
 
-                    <p className="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">
+                    <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-600">
                       {item.description ||
                         item.content ||
                         "Read the latest press conference update."}
@@ -1359,18 +1377,15 @@ function PressConferencesSection() {
                     <Button
                       href={`/press-conference/${item._id}`}
                       size="md"
-                      className="mt-5"
+                      className="mt-6"
                     >
                       View Details
-
-                      <ArrowRight
-                        size={17}
-                      />
+                      <ArrowRight size={17} />
                     </Button>
                   </div>
                 </Card>
-              )
-            )}
+              </motion.div>
+            ))}
           </div>
         )}
       </Container>
@@ -1378,20 +1393,19 @@ function PressConferencesSection() {
   );
 }
 
+/* =========================================================
+   EXECUTIVE COMMITTEE
+   ========================================================= */
+
 function ExecutiveCommitteeSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+  const { settings } = useWebsiteSettings();
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+  const home = mergeHomeSettings(settings.home);
 
-  const [members, setMembers] =
-    useState<
-      ExecutiveCommittee[]
-    >([]);
+  const [
+    members,
+    setMembers,
+  ] = useState<ExecutiveCommittee[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -1404,16 +1418,13 @@ function ExecutiveCommitteeSection() {
         limit: String(
           Math.max(
             1,
-            home
-              .executiveCommittee
+            home.executiveCommittee
               .displayCount
           )
         ),
       });
 
-    getPublicExecutiveCommittee(
-      params
-    )
+    getPublicExecutiveCommittee(params)
       .then((data) => {
         if (!cancelled) {
           setMembers(data);
@@ -1434,67 +1445,58 @@ function ExecutiveCommitteeSection() {
       cancelled = true;
     };
   }, [
-    home
-      .executiveCommittee
+    home.executiveCommittee
       .displayCount,
   ]);
 
   return (
-    <section className="bg-transparent py-12 sm:py-16 lg:py-20">
+    <section className="bg-[#f5f7fa] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           badge={
-            home
-              .executiveCommittee
+            home.executiveCommittee
               .eyebrow
           }
           title={
-            home
-              .executiveCommittee
+            home.executiveCommittee
               .title
           }
           description={
-            home
-              .executiveCommittee
+            home.executiveCommittee
               .description
           }
           action={
-            home
-              .executiveCommittee
+            home.executiveCommittee
               .showViewAll ? (
               <Button
                 href={
-                  home
-                    .executiveCommittee
+                  home.executiveCommittee
                     .buttonHref
                 }
                 variant="outline"
                 size="lg"
               >
                 {
-                  home
-                    .executiveCommittee
+                  home.executiveCommittee
                     .buttonLabel
                 }
+                <ArrowRight size={17} />
               </Button>
             ) : undefined
           }
         />
 
         {loading ? (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[1, 2, 3].map(
-              (number) => (
-                <div
-                  key={number}
-                  className="h-80 animate-pulse rounded-2xl bg-slate-200"
-                />
-              )
-            )}
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {[1, 2, 3].map((number) => (
+              <div
+                key={number}
+                className="h-80 animate-pulse rounded-[1.5rem] bg-slate-200"
+              />
+            ))}
           </div>
-        ) : members.length ===
-          0 ? (
-          <div className="mt-10 rounded-2xl bg-white py-14 text-center">
+        ) : members.length === 0 ? (
+          <div className="mt-12 rounded-[1.5rem] bg-white py-14 text-center shadow-sm">
             <SearchX
               className="mx-auto text-blue-600"
               size={42}
@@ -1505,61 +1507,62 @@ function ExecutiveCommitteeSection() {
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
-            {members.map(
-              (member) => (
-                <article
-                  key={
-                    member._id
-                  }
-                  className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200"
-                >
-                  <div className="relative aspect-square bg-slate-100">
-                    {member.photo ? (
-                      <Image
-                        src={
-                          member.photo
-                        }
-                        alt={
-                          member.name
-                        }
-                        fill
-                        sizes="(min-width: 1024px) 33vw, 50vw"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center bg-blue-100 text-5xl font-bold text-blue-700">
-                        {member.name.charAt(
-                          0
-                        )}
-                      </div>
-                    )}
-                  </div>
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
+            {members.map((member, index) => (
+              <motion.article
+                key={member._id}
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.05,
+                }}
+                className="group overflow-hidden rounded-[1.5rem] bg-white shadow-sm ring-1 ring-slate-200 transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              >
+                <div className="relative aspect-square overflow-hidden bg-slate-100">
+                  {member.photo ? (
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 50vw"
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-blue-100 text-5xl font-bold text-blue-700">
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
 
-                  <div className="p-4 sm:p-5">
-                    <h3 className="font-bold text-slate-900">
-                      {
-                        member.name
-                      }
-                    </h3>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-transparent" />
+                </div>
 
-                    <p className="mt-1 text-sm font-semibold text-blue-700">
-                      {
-                        member.designation
-                      }
+                <div className="p-5 sm:p-6">
+                  <h3 className="font-bold text-slate-950 sm:text-lg">
+                    {member.name}
+                  </h3>
+
+                  <p className="mt-1 text-sm font-bold text-blue-700">
+                    {member.designation}
+                  </p>
+
+                  {member.organization && (
+                    <p className="mt-1 text-sm text-slate-500">
+                      {member.organization}
                     </p>
-
-                    {member.organization && (
-                      <p className="mt-1 text-sm text-slate-600">
-                        {
-                          member.organization
-                        }
-                      </p>
-                    )}
-                  </div>
-                </article>
-              )
-            )}
+                  )}
+                </div>
+              </motion.article>
+            ))}
           </div>
         )}
       </div>
@@ -1567,15 +1570,14 @@ function ExecutiveCommitteeSection() {
   );
 }
 
-function OfficeBearersSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   OFFICE BEARERS
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function OfficeBearersSection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   const {
     data,
@@ -1585,33 +1587,23 @@ function OfficeBearersSection() {
     1,
     Math.max(
       1,
-      home.officeBearers
-        .displayCount
+      home.officeBearers.displayCount
     )
   );
 
-  const members =
-    data?.data || [];
+  const members = data?.data || [];
 
   return (
-    <section className="bg-transparent py-16 sm:py-20">
+    <section className="bg-white py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          badge={
-            home.officeBearers
-              .eyebrow
-          }
-          title={
-            home.officeBearers
-              .title
-          }
+          badge={home.officeBearers.eyebrow}
+          title={home.officeBearers.title}
           description={
-            home.officeBearers
-              .description
+            home.officeBearers.description
           }
           action={
-            home.officeBearers
-              .showViewAll ? (
+            home.officeBearers.showViewAll ? (
               <Button
                 href={
                   home.officeBearers
@@ -1624,43 +1616,43 @@ function OfficeBearersSection() {
                   home.officeBearers
                     .buttonLabel
                 }
+                <ArrowRight size={17} />
               </Button>
             ) : undefined
           }
         />
 
-        <div className="mt-9">
+        <div className="mt-12">
           {isLoading ? (
             <OfficeBearersSkeleton
               count={Math.max(
                 1,
-                home
-                  .officeBearers
+                home.officeBearers
                   .displayCount
               )}
             />
           ) : isError ? (
-            <p className="rounded-2xl border border-slate-200 bg-slate-50 py-12 text-center text-slate-600">
-              Office bearers are unavailable right now.
+            <p className="rounded-[1.5rem] border border-slate-200 bg-slate-50 py-12 text-center text-slate-600">
+              Office bearers are unavailable
+              right now.
             </p>
           ) : members.length ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {members.map(
-                (member) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {members.map((member) => (
+                <div
+                  key={member._id}
+                  className="overflow-hidden rounded-[1.5rem] transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
                   <OfficeBearerCard
-                    key={
-                      member._id
-                    }
-                    member={
-                      member
-                    }
+                    member={member}
                   />
-                )
-              )}
+                </div>
+              ))}
             </div>
           ) : (
-            <p className="rounded-2xl border border-slate-200 bg-slate-50 py-12 text-center text-slate-500">
-              No office bearers have been published yet.
+            <p className="rounded-[1.5rem] border border-slate-200 bg-slate-50 py-12 text-center text-slate-500">
+              No office bearers have been
+              published yet.
             </p>
           )}
         </div>
@@ -1669,84 +1661,67 @@ function OfficeBearersSection() {
   );
 }
 
-function MembershipSection() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+/* =========================================================
+   MEMBERSHIP
+   ========================================================= */
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+function MembershipSection() {
+  const { settings } = useWebsiteSettings();
+
+  const home = mergeHomeSettings(settings.home);
 
   return (
-    <AboutCTA
-      title={
-        home.membership
-          .title
-      }
-      description={
-        home.membership
-          .description
-      }
-      primaryLabel={
-        home.membership
-          .primaryLabel
-      }
-      secondaryLabel={
-        home.membership
-          .secondaryLabel
-      }
-      secondaryHref={
-        home.membership
-          .secondaryHref
-      }
-    />
+    <section className="bg-[#f5f7fa] py-10 sm:py-16">
+      <AboutCTA
+        title={home.membership.title}
+        description={home.membership.description}
+        primaryLabel={
+          home.membership.primaryLabel
+        }
+        secondaryLabel={
+          home.membership.secondaryLabel
+        }
+        secondaryHref={
+          home.membership.secondaryHref
+        }
+      />
+    </section>
   );
 }
 
+/* =========================================================
+   HOME PAGE
+   ========================================================= */
+
 export default function HomePage() {
-  const {
-    settings,
-  } = useWebsiteSettings();
+  const { settings } = useWebsiteSettings();
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+  const home = mergeHomeSettings(settings.home);
 
-  const sections =
-    Object.entries(
-      home.sections
+  const sections = Object.entries(
+    home.sections
+  )
+    .filter(([, value]) => value.enabled)
+    .sort(
+      ([, a], [, b]) =>
+        a.order - b.order
     )
-      .filter(
-        ([, value]) =>
-          value.enabled
-      )
-      .sort(
-        ([, a], [, b]) =>
-          a.order -
-          b.order
-      )
-      .map(
-        ([key]) =>
-          key as keyof typeof home.sections
-      );
+    .map(
+      ([key]) =>
+        key as keyof typeof home.sections
+    );
 
   const render = (
     key: keyof typeof home.sections
   ) => {
     const background =
-      home.sections[key]
-        .background;
+      home.sections[key].background;
 
     const wrap = (
       node: React.ReactNode
     ) => (
       <PageSection
-        background={
-          background
-        }
+        background={background}
       >
         {node}
       </PageSection>
@@ -1756,18 +1731,14 @@ export default function HomePage() {
       case "hero":
         return (
           <div key={key}>
-            {wrap(
-              <HeroSection />
-            )}
+            {wrap(<HeroSection />)}
           </div>
         );
 
       case "about":
         return (
           <div key={key}>
-            {wrap(
-              <AboutSection />
-            )}
+            {wrap(<AboutSection />)}
           </div>
         );
 
@@ -1792,9 +1763,7 @@ export default function HomePage() {
       case "gallery":
         return (
           <div key={key}>
-            {wrap(
-              <GallerySection />
-            )}
+            {wrap(<GallerySection />)}
           </div>
         );
 
@@ -1841,9 +1810,7 @@ export default function HomePage() {
 
   return (
     <main className="home-page w-full overflow-x-hidden bg-white">
-      {sections.map(
-        render
-      )}
+      {sections.map(render)}
     </main>
   );
 }
