@@ -38,9 +38,9 @@ export default function TopBar() {
 
       setDate(
         now.toLocaleDateString("en-IN", {
-          weekday: "short",
+          weekday: "long",
           day: "numeric",
-          month: "short",
+          month: "long",
           year: "numeric",
         })
       );
@@ -53,9 +53,7 @@ export default function TopBar() {
       1000
     );
 
-    return () => {
-      window.clearInterval(timer);
-    };
+    return () => window.clearInterval(timer);
   }, []);
 
   const socialLinks = [
@@ -77,218 +75,76 @@ export default function TopBar() {
   ].filter((item) => Boolean(item.href));
 
   return (
-    <div
-      className={[
-        "relative",
-        "z-[110]",
-        "w-full",
-        "overflow-hidden",
-        "border-b",
-        "border-white/10",
-        "bg-[#061827]",
-        "text-white",
-      ].join(" ")}
-    >
-      {/* Animated ambient light */}
-
+    <div className="relative z-[110] w-full overflow-hidden bg-[#050d18] text-white">
+      {/* Ambient accent */}
       <div
         aria-hidden="true"
-        className={[
-          "pointer-events-none",
-          "absolute",
-          "-left-20",
-          "top-1/2",
-          "h-24",
-          "w-72",
-          "-translate-y-1/2",
-          "rounded-full",
-          "bg-[#155eef]/20",
-          "blur-3xl",
-        ].join(" ")}
+        className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(21,94,239,.22),transparent_24%),radial-gradient(circle_at_85%_50%,rgba(215,25,63,.12),transparent_22%)]"
       />
 
-      <div
-        aria-hidden="true"
-        className={[
-          "pointer-events-none",
-          "absolute",
-          "right-0",
-          "top-0",
-          "h-full",
-          "w-1/3",
-          "bg-gradient-to-l",
-          "from-[#c8102e]/10",
-          "to-transparent",
-        ].join(" ")}
-      />
+      {/* Top accent line */}
+      <div className="absolute left-0 right-0 top-0 h-[2px] bg-gradient-to-r from-[#d7193f] via-[#155eef] to-[#d7193f]" />
 
-      <div
-        className={[
-          "relative",
-          "mx-auto",
-          "flex",
-          "h-[40px]",
-          "max-w-[90rem]",
-          "items-center",
-          "justify-between",
-          "gap-4",
-          "px-4",
-          "sm:px-6",
-          "lg:px-8",
-        ].join(" ")}
-      >
-        {/* LEFT */}
+      <div className="relative mx-auto flex min-h-[42px] max-w-[82rem] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
 
-        <div
-          className={[
-            "flex",
-            "min-w-0",
-            "items-center",
-            "gap-3",
-            "sm:gap-5",
-          ].join(" ")}
-        >
-          {/* Live marker */}
+        <div className="flex min-w-0 items-center gap-3 sm:gap-5">
 
-          <div
-            className={[
-              "hidden",
-              "items-center",
-              "gap-2",
-              "sm:flex",
-            ].join(" ")}
-          >
+          <div className="flex shrink-0 items-center gap-2">
             <span className="relative flex h-2 w-2">
-              <span
-                className={[
-                  "absolute",
-                  "inline-flex",
-                  "h-full",
-                  "w-full",
-                  "animate-ping",
-                  "rounded-full",
-                  "bg-[#c8102e]",
-                  "opacity-60",
-                ].join(" ")}
-              />
-
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c8102e]" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#d7193f] opacity-70" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#d7193f]" />
             </span>
 
-            <span className="text-[9px] font-black uppercase tracking-[0.18em] text-white/65">
-              GNPC Live
-            </span>
-          </div>
-
-          {/* Location */}
-
-          <div
-            className={[
-              "flex",
-              "items-center",
-              "gap-1.5",
-              "border-l",
-              "border-white/10",
-              "pl-3",
-              "sm:pl-5",
-            ].join(" ")}
-          >
             <FaMapMarkerAlt
-              size={10}
-              className="text-[#8bbcff]"
+              size={11}
+              className="text-white/60"
               aria-hidden="true"
             />
 
-            <span className="whitespace-nowrap text-[9px] font-bold tracking-wide text-white/80 sm:text-[10px]">
+            <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.12em] text-white/85 sm:text-xs">
               Greater Noida
             </span>
           </div>
 
-          {/* Scrolling editorial message */}
+          <div className="hidden h-4 w-px bg-white/15 sm:block" />
 
-          <div className="hidden min-w-0 overflow-hidden md:block">
-            <div
-              className={[
-                "whitespace-nowrap",
-                "text-[9px]",
-                "font-semibold",
-                "uppercase",
-                "tracking-[0.13em]",
-                "text-white/45",
-              ].join(" ")}
-            >
-              Est. 2003
-              <span className="mx-2 text-[#c8102e]">
-                •
-              </span>
-              23 Years of Truthful Journalism
-            </div>
-          </div>
+          <span className="hidden whitespace-nowrap text-[10px] font-semibold tracking-[0.08em] text-white/50 md:block">
+            EST. 2003
+          </span>
+
+          <span className="hidden whitespace-nowrap text-[10px] font-semibold text-white/70 lg:block">
+            23 YEARS OF TRUTHFUL JOURNALISM
+          </span>
         </div>
 
-        {/* RIGHT */}
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
 
-        <div
-          className={[
-            "flex",
-            "shrink-0",
-            "items-center",
-            "gap-2",
-            "sm:gap-4",
-          ].join(" ")}
-        >
-          {/* Date */}
-
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden items-center gap-2 xl:flex">
             <HiCalendarDays
-              size={12}
-              className="text-[#8bbcff]"
+              size={13}
+              className="text-[#155eef]"
               aria-hidden="true"
             />
 
-            <span className="text-[10px] font-semibold text-white/60">
+            <span className="text-[10px] font-semibold tracking-wide text-white/65">
               {date}
             </span>
           </div>
 
-          {/* Time */}
-
-          <div
-            className={[
-              "flex",
-              "items-center",
-              "gap-1.5",
-              "border-l",
-              "border-white/10",
-              "pl-2",
-              "sm:pl-4",
-            ].join(" ")}
-          >
+          <div className="flex items-center gap-2">
             <HiClock
-              size={12}
-              className="text-[#8bbcff]"
+              size={13}
+              className="text-[#d7193f]"
               aria-hidden="true"
             />
 
-            <span className="whitespace-nowrap font-mono text-[9px] font-bold tabular-nums text-white/80 sm:text-[10px]">
+            <span className="font-mono text-[10px] font-bold tracking-wide text-white sm:text-xs">
               {time}
             </span>
           </div>
 
-          {/* Social */}
-
           {socialLinks.length > 0 && (
-            <div
-              className={[
-                "hidden",
-                "items-center",
-                "gap-1",
-                "border-l",
-                "border-white/10",
-                "pl-3",
-                "sm:flex",
-              ].join(" ")}
-            >
+            <div className="hidden items-center gap-1 border-l border-white/10 pl-3 sm:flex">
               {socialLinks.map(
                 ({
                   label,
@@ -301,40 +157,11 @@ export default function TopBar() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className={[
-                      "group/social",
-                      "relative",
-                      "flex",
-                      "h-6",
-                      "w-6",
-                      "items-center",
-                      "justify-center",
-                      "rounded-full",
-                      "text-white/45",
-                      "transition-all",
-                      "duration-200",
-                      "hover:-translate-y-0.5",
-                      "hover:bg-white/10",
-                      "hover:text-white",
-                    ].join(" ")}
+                    className="group flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/50 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#155eef]/50 hover:bg-[#155eef] hover:text-white"
                   >
                     <Icon
-                      size={10}
-                      aria-hidden="true"
-                    />
-
-                    <span
-                      aria-hidden="true"
-                      className={[
-                        "absolute",
-                        "bottom-0",
-                        "h-px",
-                        "w-0",
-                        "bg-[#8bbcff]",
-                        "transition-all",
-                        "duration-200",
-                        "group-hover/social:w-3",
-                      ].join(" ")}
+                      size={11}
+                      className="transition-transform duration-300 group-hover:scale-110"
                     />
                   </a>
                 )
