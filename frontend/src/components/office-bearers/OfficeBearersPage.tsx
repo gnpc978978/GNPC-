@@ -5,6 +5,7 @@ import { SearchX } from "lucide-react";
 import OfficeBearerCard from "./OfficeBearerCard";
 import OfficeBearersSkeleton from "./OfficeBearersSkeleton";
 import { usePublicMembers } from "@/hooks/useMembers";
+import type { OfficeBearersPageSettings } from "@/types/pageSettings";
 
 const optionsFrom = (
   values: Array<string | undefined>
@@ -18,7 +19,11 @@ const optionsFrom = (
     ),
   ].sort((a, b) => a.localeCompare(b));
 
-export default function OfficeBearersPage() {
+export default function OfficeBearersPage({
+  settings,
+}: {
+  settings?: OfficeBearersPageSettings;
+}) {
   const [search, setSearch] = useState("");
   const [organization, setOrganization] =
     useState("");
@@ -31,6 +36,8 @@ export default function OfficeBearersPage() {
     "az" | "za" | "recent"
   >("recent");
   const [page, setPage] = useState(1);
+
+  const pageSize = Math.max(1, Math.min(100, Number(settings?.pageSize) || 12));
 
   const filters = useMemo(
     () => ({
@@ -69,14 +76,21 @@ export default function OfficeBearersPage() {
       setPage(1);
     };
 
-  const directoryOptions =
-    data?.data ?? [];
+  const allMembers = data?.data ?? [];
+  const directoryOptions = allMembers;
+  const visibleMembers = allMembers.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+  const totalPages = Math.max(1, Math.ceil(allMembers.length / pageSize));
 
   return (
     <section className="min-h-screen bg-slate-50 py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Filters */}
+        {(settings?.showSearch !== false || settings?.showFilters !== false) && (
         <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5">
+          {settings?.showSearch !== false && (
           <label className="relative block">
             <span className="sr-only">
               Search office bearers
@@ -93,7 +107,9 @@ export default function OfficeBearersPage() {
               className="w-full rounded-xl border border-slate-200 py-3 pl-4 pr-4 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             />
           </label>
+          )}
 
+          {settings?.showFilters !== false && (
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <select
               value={organization}
@@ -230,7 +246,9 @@ export default function OfficeBearersPage() {
               </option>
             </select>
           </div>
+          )}
         </div>
+        )}
 
         {/* Content */}
         {isLoading ? (
@@ -243,7 +261,7 @@ export default function OfficeBearersPage() {
           </p>
         ) : data?.data.length ? (
           <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
-            {data.data.map((member) => (
+            {visibleMembers.map((member) => (
               <OfficeBearerCard
                 key={member._id}
                 member={member}
@@ -265,6 +283,30 @@ export default function OfficeBearersPage() {
               Try changing your search or
               filters.
             </p>
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              disabled={page === 1}
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <span className="px-3 text-sm font-semibold text-slate-600">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              type="button"
+              disabled={page === totalPages}
+              onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold disabled:opacity-40"
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
