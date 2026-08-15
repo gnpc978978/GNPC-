@@ -5,6 +5,7 @@ import {
 
 import WebsiteSettings, {
   DEFAULT_HOME_SETTINGS,
+  DEFAULT_PAGE_SETTINGS,
   IHomeSettings,
 } from "../models/WebsiteSettings";
 
@@ -100,6 +101,19 @@ const mergeHomeSettings = (
   };
 };
 
+const mergePageSettings = (value?: Record<string, unknown> | null) => {
+  const source = value || {};
+  return Object.fromEntries(
+    Object.entries(DEFAULT_PAGE_SETTINGS).map(([key, fallback]) => [
+      key,
+      {
+        ...fallback,
+        ...((source as Record<string, unknown>)[key] as object || {}),
+      },
+    ])
+  ) as typeof DEFAULT_PAGE_SETTINGS;
+};
+
 export const getSettings =
   async (
     _req: Request,
@@ -134,6 +148,8 @@ export const getSettings =
 
             home:
               DEFAULT_HOME_SETTINGS,
+            pageSettings:
+              DEFAULT_PAGE_SETTINGS,
           });
       }
 
@@ -149,6 +165,9 @@ export const getSettings =
           ...settings.toObject(),
 
           home,
+          pageSettings: mergePageSettings(
+            settings.pageSettings as Record<string, unknown> | undefined
+          ),
         },
       });
     } catch (error) {
@@ -193,6 +212,7 @@ export const updateSettings =
         seo,
 
         home,
+        pageSettings,
       } = req.body;
 
       let settings =
@@ -365,6 +385,27 @@ export const updateSettings =
           );
       }
 
+      if (pageSettings !== undefined) {
+        if (
+          !pageSettings ||
+          typeof pageSettings !== "object" ||
+          Array.isArray(pageSettings)
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Page settings must be an object.",
+          });
+        }
+
+        settings.pageSettings = mergePageSettings(
+          pageSettings as Record<string, unknown>
+        );
+      } else {
+        settings.pageSettings = mergePageSettings(
+          settings.pageSettings as Record<string, unknown> | undefined
+        );
+      }
+
       await settings.save();
 
       return res.status(200).json({
@@ -380,6 +421,9 @@ export const updateSettings =
             mergeHomeSettings(
               settings.home
             ),
+          pageSettings: mergePageSettings(
+            settings.pageSettings as Record<string, unknown> | undefined
+          ),
         },
       });
     } catch (error) {
