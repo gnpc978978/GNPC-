@@ -19,88 +19,121 @@ export default function SectionHeading({
   action,
   className = "",
 }: SectionHeadingProps) {
-  const centered = align === "center";
+  const isCentered = align === "center";
 
   const headingSize =
     size === "sm"
-      ? "text-3xl sm:text-4xl"
+      ? "text-2xl sm:text-3xl"
       : size === "lg"
-        ? "text-4xl sm:text-5xl lg:text-7xl"
-        : "text-4xl sm:text-5xl lg:text-6xl";
-
-  const content = (
-    <div
-      className={[
-        "relative min-w-0",
-        centered
-          ? "mx-auto max-w-5xl text-center"
-          : "text-left",
-      ].join(" ")}
-    >
-      {badge && (
-        <div
-          className={[
-            "mb-5 flex items-center gap-3",
-            centered
-              ? "justify-center"
-              : "justify-start",
-          ].join(" ")}
-        >
-          <span className="h-[3px] w-10 rounded-full bg-[#d7193f]" />
-
-          <span className="text-[11px] font-black uppercase tracking-[0.24em] text-[#d7193f]">
-            {badge}
-          </span>
-
-          <span className="hidden h-px w-12 bg-[#155eef]/30 sm:block" />
-        </div>
-      )}
-
-      <h2
-        className={[
-          "font-black leading-[0.95] tracking-[-0.055em]",
-          "text-[#07111f]",
-          headingSize,
-        ].join(" ")}
-      >
-        {title}
-      </h2>
-
-      {description && (
-        <p
-          className={[
-            "mt-5 max-w-2xl text-[15px] leading-8 text-slate-500 sm:text-base",
-            centered ? "mx-auto" : "",
-          ].join(" ")}
-        >
-          {description}
-        </p>
-      )}
-    </div>
-  );
+        ? "text-3xl sm:text-5xl lg:text-6xl"
+        : "text-3xl sm:text-4xl lg:text-5xl";
 
   return (
     <header
       className={[
-        "w-full",
-        action
-          ? "sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-end sm:gap-8"
-          : "",
+        "relative w-full",
         className,
-      ].join(" ")}
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       {action ? (
-        <>
-          <div className="hidden sm:block" />
+        <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+          <div
+            className={[
+              "min-w-0",
+              "max-w-4xl",
+              isCentered
+                ? "lg:text-left"
+                : "text-left",
+            ].join(" ")}
+          >
+            {badge && (
+              <div className="mb-4 flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="relative h-[3px] w-12 overflow-hidden rounded-full bg-[#c8102e]"
+                >
+                  <span className="absolute inset-y-0 left-0 w-1/2 bg-[#c49a3a]" />
+                </span>
 
-          {content}
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#17324d]">
+                  {badge}
+                </span>
+              </div>
+            )}
 
-          <div className="mt-6 flex justify-center sm:mt-0 sm:justify-end">
+            <h2
+              className={[
+                "font-black leading-[1.02] tracking-[-0.045em] text-[#18222d]",
+                headingSize,
+              ].join(" ")}
+            >
+              {title}
+            </h2>
+
+            {description && (
+              <p className="mt-5 max-w-2xl text-base leading-7 text-[#697582] sm:text-lg sm:leading-8">
+                {description}
+              </p>
+            )}
+          </div>
+
+          <div className="flex shrink-0 items-center lg:pb-1">
             {action}
           </div>
-        </>
+        </div>
       ) : (
-        content
+        <div
+          className={[
+            "max-w-4xl",
+            isCentered
+              ? "mx-auto text-center"
+              : "text-left",
+          ].join(" ")}
+        >
+          {badge && (
+            <div
+              className={[
+                "mb-4 flex items-center gap-3",
+                isCentered
+                  ? "justify-center"
+                  : "justify-start",
+              ].join(" ")}
+            >
+              <span
+                aria-hidden="true"
+                className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#c8102e] to-[#c49a3a]"
+              />
+
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#17324d]">
+                {badge}
+              </span>
+            </div>
+          )}
+
+          <h2
+            className={[
+              "font-black leading-[1.02] tracking-[-0.045em] text-[#18222d]",
+              headingSize,
+            ].join(" ")}
+          >
+            {title}
+          </h2>
+
+          {description && (
+            <p
+              className={[
+                "mt-5 max-w-3xl text-base leading-7 text-[#697582] sm:text-lg sm:leading-8",
+                isCentered
+                  ? "mx-auto"
+                  : "",
+              ].join(" ")}
+            >
+              {description}
+            </p>
+          )}
+        </div>
       )}
     </header>
   );
