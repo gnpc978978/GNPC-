@@ -7,6 +7,7 @@ import WebsiteSettings, {
   DEFAULT_HOME_SETTINGS,
   DEFAULT_PAGE_SETTINGS,
   IHomeSettings,
+  IPageSettings,
 } from "../models/WebsiteSettings";
 
 const mergeHomeSettings = (
@@ -101,8 +102,10 @@ const mergeHomeSettings = (
   };
 };
 
-const mergePageSettings = (value?: Record<string, unknown> | null) => {
-  const source = value || {};
+const mergePageSettings = (
+  value?: IPageSettings | Record<string, unknown> | null
+) => {
+  const source = (value || {}) as Record<string, unknown>;
   return Object.fromEntries(
     Object.entries(DEFAULT_PAGE_SETTINGS).map(([key, fallback]) => [
       key,
@@ -166,7 +169,7 @@ export const getSettings =
 
           home,
           pageSettings: mergePageSettings(
-            settings.pageSettings as Record<string, unknown> | undefined
+            settings.pageSettings
           ),
         },
       });
@@ -402,7 +405,7 @@ export const updateSettings =
         );
       } else {
         settings.pageSettings = mergePageSettings(
-          settings.pageSettings as Record<string, unknown> | undefined
+          settings.pageSettings
         );
       }
 
@@ -422,7 +425,7 @@ export const updateSettings =
               settings.home
             ),
           pageSettings: mergePageSettings(
-            settings.pageSettings as Record<string, unknown> | undefined
+            settings.pageSettings
           ),
         },
       });
