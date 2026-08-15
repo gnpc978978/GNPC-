@@ -18,6 +18,12 @@ export default function WebsiteLayout({
 }: WebsiteLayoutProps) {
   const pathname = usePathname();
 
+  const isHomePage = pathname === "/";
+
+  const isContactPage =
+    pathname === "/contact" ||
+    pathname.startsWith("/contact/");
+
   /*
    * =========================================================
    * WEBSITE TRAFFIC TRACKING
@@ -46,34 +52,31 @@ export default function WebsiteLayout({
       );
     }
 
-    const sendHeartbeat =
-      async () => {
-        try {
-          await apiFetch("/dashboard/traffic", {
-              method: "POST",
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-              credentials: "include",
-              body: JSON.stringify({
-                sessionId,
-                page:
-                  window.location.pathname,
-              }),
-            }
-          );
-        } catch (error) {
-          /*
-           * Analytics must never
-           * break the website.
-           */
-          console.error(
-            "Traffic heartbeat error:",
-            error
-          );
-        }
-      };
+    const sendHeartbeat = async () => {
+      try {
+        await apiFetch(
+          "/dashboard/traffic",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              sessionId,
+              page:
+                window.location.pathname,
+            }),
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Traffic heartbeat error:",
+          error
+        );
+      }
+    };
 
     void sendHeartbeat();
 
@@ -87,16 +90,6 @@ export default function WebsiteLayout({
       window.clearInterval(interval);
     };
   }, []);
-
-  /*
-   * =========================================================
-   * CONTACT PAGE
-   * =========================================================
-   */
-
-  const isContactPage =
-    pathname === "/contact" ||
-    pathname.startsWith("/contact/");
 
   return (
     <div
@@ -113,38 +106,28 @@ export default function WebsiteLayout({
 
       <header
         className={[
-          "fixed",
-          "inset-x-0",
-          "top-0",
-          "z-[100]",
-          "w-full",
+          "z-[100] w-full",
+          isHomePage
+            ? "absolute inset-x-0 top-0"
+            : "fixed inset-x-0 top-0",
         ].join(" ")}
       >
-        <TopBar />
+        {!isHomePage && <TopBar />}
+
         <Navbar />
       </header>
 
       {/* =====================================================
-          HEADER SPACE RESERVATION
-          =====================================================
-
-          TopBar:
-          48px
-
-          Navbar:
-          74px
-
-          Total:
-          122px
-
-          This value is kept synchronized with the actual
-          desktop header dimensions.
+          HEADER SPACE
           ===================================================== */}
 
-<div
-  aria-hidden="true"
-  className="h-[114px]"
-/>
+      {!isHomePage && (
+        <div
+          aria-hidden="true"
+          className="h-[114px]"
+        />
+      )}
+
       {/* =====================================================
           MAIN WEBSITE CONTENT
           ===================================================== */}
