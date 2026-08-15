@@ -8,6 +8,7 @@ import {
 } from "react";
 import Image from "next/image";
 import { apiFetch, responseJson } from "@/services/api";
+import type { GalleryPageSettings } from "@/types/pageSettings";
 import {
   ChevronLeft,
   ChevronRight,
@@ -33,9 +34,11 @@ type GalleryPhoto = {
   galleryId: string;
 };
 
-const pageSize = 12;
-
-export default function PublicGallery() {
+export default function PublicGallery({
+  settings,
+}: {
+  settings: GalleryPageSettings;
+}) {
   const [galleries, setGalleries] = useState<
     Gallery[]
   >([]);
@@ -53,6 +56,11 @@ export default function PublicGallery() {
 
   const [selectedIndex, setSelectedIndex] =
     useState<number | null>(null);
+
+  const pageSize = Math.max(
+    1,
+    Math.min(100, Number(settings.pageSize) || 12)
+  );
 
   /*
    * -------------------------------------------------------
