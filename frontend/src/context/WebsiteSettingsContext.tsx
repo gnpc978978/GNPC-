@@ -16,6 +16,12 @@ import type {
   HomeSettings,
 } from "@/types/homeSettings";
 
+import {
+  defaultPageSettings,
+  mergePageSettings,
+  type PageSettings,
+} from "@/types/pageSettings";
+
 export type WebsiteSettings = {
   siteName?: string;
 
@@ -59,18 +65,16 @@ export type WebsiteSettings = {
   };
 
   home?: HomeSettings;
+
+  pageSettings?: Partial<PageSettings>;
 };
 
-type WebsiteSettingsContextValue =
-  {
-    settings: WebsiteSettings;
-
-    loading: boolean;
-
-    error: boolean;
-
-    refresh: () => Promise<void>;
-  };
+type WebsiteSettingsContextValue = {
+  settings: WebsiteSettings;
+  loading: boolean;
+  error: boolean;
+  refresh: () => Promise<void>;
+};
 
 const WebsiteSettingsContext =
   createContext<WebsiteSettingsContextValue | null>(
@@ -83,7 +87,9 @@ export function WebsiteSettingsProvider({
   children: React.ReactNode;
 }) {
   const [settings, setSettings] =
-    useState<WebsiteSettings>({});
+    useState<WebsiteSettings>({
+      pageSettings: defaultPageSettings,
+    });
 
   const [loading, setLoading] =
     useState(true);
@@ -95,8 +101,9 @@ export function WebsiteSettingsProvider({
     setLoading(true);
 
     try {
-      const response =
-        await apiFetch("/settings");
+      const response = await apiFetch(
+        "/settings"
+      );
 
       const payload =
         await responseJson<{
@@ -105,24 +112,28 @@ export function WebsiteSettingsProvider({
           message?: string;
         }>(response);
 
-      if (
-        payload.success === false
-      ) {
+      if (payload.success === false) {
         throw new Error(
           payload.message ||
             "Unable to load website settings."
         );
       }
 
-      setSettings(
-        payload.data || {}
-      );
+      const nextSettings =
+        payload.data || {};
+
+      setSettings({
+        ...nextSettings,
+        pageSettings: mergePageSettings(
+          nextSettings.pageSettings
+        ),
+      });
 
       setError(false);
-    } catch (error) {
+    } catch (requestError) {
       console.error(
         "Failed to load website settings:",
-        error
+        requestError
       );
 
       setError(true);
@@ -134,10 +145,9 @@ export function WebsiteSettingsProvider({
   useEffect(() => {
     void refresh();
 
-    const handleSettingsUpdated =
-      () => {
-        void refresh();
-      };
+    const handleSettingsUpdated = () => {
+      void refresh();
+    };
 
     window.addEventListener(
       "website-settings-updated",
@@ -152,14 +162,11 @@ export function WebsiteSettingsProvider({
   }, []);
 
   useEffect(() => {
-    if (
-      !settings.seo?.title
-    ) {
+    if (!settings.seo?.title) {
       return;
     }
 
-    document.title =
-      settings.seo.title;
+    document.title = settings.seo.title;
 
     const description =
       document.querySelector(
@@ -195,10 +202,9 @@ export function WebsiteSettingsProvider({
 }
 
 export function useWebsiteSettings() {
-  const context =
-    useContext(
-      WebsiteSettingsContext
-    );
+  const context = useContext(
+    WebsiteSettingsContext
+  );
 
   if (!context) {
     throw new Error(
