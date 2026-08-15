@@ -1,121 +1,67 @@
 @import "tailwindcss";
 
 /* =========================================================
-   GNPC — PREMIUM EDITORIAL DESIGN SYSTEM
-   Light / Grey / Navy / Red / Gold
+   GNPC PREMIUM EDITORIAL DESIGN SYSTEM
+   STEP 5 — RESPONSIVE + SPACING + VISUAL POLISH
    ========================================================= */
 
 :root {
-  /* =======================================================
-     BRAND
-     ======================================================= */
+  --gnpc-primary: #26364a;
+  --gnpc-primary-hover: #1c2939;
+  --gnpc-primary-dark: #172033;
 
-  --gnpc-primary: #17324d;
-  --gnpc-primary-hover: #10263b;
-  --gnpc-primary-dark: #0b1b2b;
+  --gnpc-accent: #c8102e;
+  --gnpc-accent-dark: #a50d25;
 
-  --gnpc-primary-soft: #e9eef2;
-  --gnpc-primary-soft-hover: #dde5eb;
+  --gnpc-background: #f3f4f6;
+  --gnpc-background-warm: #f0f1f2;
 
-  --gnpc-editorial-red: #c8102e;
-  --gnpc-editorial-red-dark: #a90d27;
+  --gnpc-surface: #ffffff;
+  --gnpc-surface-soft: #e9ecef;
+  --gnpc-surface-muted: #e5e7eb;
 
-  --gnpc-gold: #c49a3a;
-  --gnpc-gold-soft: #f3ead5;
+  --gnpc-text: #172033;
+  --gnpc-text-secondary: #475467;
+  --gnpc-text-muted: #667085;
+  --gnpc-text-subtle: #98a2b3;
 
-  /* =======================================================
-     SURFACES
-     ======================================================= */
+  --gnpc-border: #d9dde3;
+  --gnpc-border-strong: #c7ccd4;
 
-  --gnpc-background: #eef0f1;
-  --gnpc-surface: #f5f6f6;
-  --gnpc-surface-soft: #fafafa;
-  --gnpc-surface-blue: #edf2f5;
+  --gnpc-success: #15803d;
+  --gnpc-warning: #b45309;
+  --gnpc-danger: #c62828;
+  --gnpc-info: #0369a1;
 
-  --gnpc-white: #ffffff;
-
-  /* =======================================================
-     TEXT
-     ======================================================= */
-
-  --gnpc-text: #18222d;
-  --gnpc-text-secondary: #3f4b57;
-  --gnpc-text-muted: #697582;
-  --gnpc-text-subtle: #929ca5;
-
-  /* =======================================================
-     BORDERS
-     ======================================================= */
-
-  --gnpc-border: #d8dde1;
-  --gnpc-border-strong: #c4ccd3;
-
-  /* =======================================================
-     STATUS
-     ======================================================= */
-
-  --gnpc-success: #18794e;
-  --gnpc-warning: #a36b12;
-  --gnpc-danger: #c8102e;
-  --gnpc-info: #315d7e;
-
-  /* =======================================================
-     RADIUS
-     ======================================================= */
-
-  --gnpc-radius-xs: 0.35rem;
-  --gnpc-radius-sm: 0.55rem;
+  --gnpc-radius-sm: 0.5rem;
   --gnpc-radius-md: 0.75rem;
   --gnpc-radius-lg: 1rem;
-  --gnpc-radius-xl: 1.35rem;
-  --gnpc-radius-2xl: 1.65rem;
-  --gnpc-radius-full: 9999px;
-
-  /* =======================================================
-     SHADOWS
-     ======================================================= */
-
-  --gnpc-shadow-xs:
-    0 1px 2px rgba(20, 30, 40, 0.05);
+  --gnpc-radius-xl: 1.25rem;
+  --gnpc-radius-2xl: 1.5rem;
 
   --gnpc-shadow-sm:
-    0 5px 18px rgba(20, 30, 40, 0.07);
+    0 2px 8px rgba(15, 23, 42, 0.05);
 
   --gnpc-shadow-md:
-    0 12px 32px rgba(20, 30, 40, 0.10);
+    0 12px 30px rgba(15, 23, 42, 0.08);
 
   --gnpc-shadow-lg:
-    0 24px 60px rgba(20, 30, 40, 0.14);
+    0 24px 60px rgba(15, 23, 42, 0.12);
 
-  --gnpc-shadow-xl:
-    0 35px 90px rgba(20, 30, 40, 0.18);
+  --gnpc-shadow-hover:
+    0 22px 50px rgba(15, 23, 42, 0.16);
 
-  --gnpc-shadow-red:
-    0 12px 32px rgba(200, 16, 46, 0.20);
+  --gnpc-container: 1440px;
 
-  --gnpc-shadow-navy:
-    0 12px 32px rgba(23, 50, 77, 0.18);
+  --gnpc-section-spacing: clamp(
+    4rem,
+    7vw,
+    7rem
+  );
 
-  /* =======================================================
-     LAYOUT
-     ======================================================= */
-
-  --gnpc-container: 80rem;
-
-  --gnpc-section-spacing:
-    clamp(4.5rem, 8vw, 7.5rem);
-
-  /* =======================================================
-     MOTION
-     ======================================================= */
-
-  --gnpc-transition-fast: 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
-
-  --gnpc-transition:
-    280ms cubic-bezier(0.2, 0.8, 0.2, 1);
-
-  --gnpc-transition-slow:
-    520ms cubic-bezier(0.16, 1, 0.3, 1);
+  --gnpc-transition-fast: 150ms ease;
+  --gnpc-transition: 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  --gnpc-transition-slow: 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 
@@ -132,6 +78,11 @@ html {
   overflow-x: hidden;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -139,15 +90,14 @@ body {
   background:
     radial-gradient(
       circle at 10% 0%,
-      rgba(196, 154, 58, 0.055),
-      transparent 28rem
+      rgba(255, 255, 255, 0.9),
+      transparent 30%
     ),
-    radial-gradient(
-      circle at 95% 20%,
-      rgba(23, 50, 77, 0.055),
-      transparent 30rem
-    ),
-    var(--gnpc-background);
+    linear-gradient(
+      180deg,
+      #f4f5f6 0%,
+      #eef0f2 100%
+    );
 
   color: var(--gnpc-text);
 
@@ -159,7 +109,6 @@ body {
     sans-serif;
 
   text-rendering: optimizeLegibility;
-
   -webkit-font-smoothing: antialiased;
 
   overflow-x: hidden;
@@ -216,7 +165,7 @@ p {
    ========================================================= */
 
 ::selection {
-  background: var(--gnpc-editorial-red);
+  background: var(--gnpc-accent);
   color: #ffffff;
 }
 
@@ -226,13 +175,13 @@ p {
    ========================================================= */
 
 :focus-visible {
-  outline: 2px solid var(--gnpc-gold);
-  outline-offset: 4px;
+  outline: 2px solid var(--gnpc-accent);
+  outline-offset: 3px;
 }
 
 
 /* =========================================================
-   CONTAINER
+   GLOBAL CONTAINER
    ========================================================= */
 
 .gnpc-container {
@@ -241,7 +190,7 @@ p {
 
   margin-inline: auto;
 
-  padding-inline: 1.1rem;
+  padding-inline: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -250,79 +199,22 @@ p {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .gnpc-container {
-    padding-inline: 2.25rem;
+    padding-inline: 2rem;
   }
 }
 
-
-/* =========================================================
-   PUBLIC WEBSITE BACKGROUND
-   ========================================================= */
-
-.gnpc-public {
-  min-height: 100vh;
-
-  background:
-    radial-gradient(
-      circle at 15% 5%,
-      rgba(196, 154, 58, 0.05),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 85% 35%,
-      rgba(23, 50, 77, 0.045),
-      transparent 32rem
-    ),
-    var(--gnpc-background);
-
-  color: var(--gnpc-text);
+@media (min-width: 1024px) {
+  .gnpc-container {
+    padding-inline: 2.5rem;
+  }
 }
 
-
-/* =========================================================
-   HOMEPAGE ATMOSPHERE
-   ========================================================= */
-
-.home-page {
-  position: relative;
-
-  background:
-    linear-gradient(
-      180deg,
-      #f4f5f5 0%,
-      #eef0f1 45%,
-      #f4f5f5 100%
-    );
-}
-
-.home-page::before {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  left: 0;
-  right: 0;
-
-  height: 420px;
-
-  pointer-events: none;
-
-  opacity: 0.45;
-
-  background:
-    radial-gradient(
-      circle at 20% 15%,
-      rgba(196, 154, 58, 0.07),
-      transparent 22rem
-    ),
-    radial-gradient(
-      circle at 80% 10%,
-      rgba(23, 50, 77, 0.08),
-      transparent 25rem
-    );
+@media (min-width: 1280px) {
+  .gnpc-container {
+    padding-inline: 3rem;
+  }
 }
 
 
@@ -332,52 +224,19 @@ p {
 
 .gnpc-section {
   position: relative;
-
   padding-block: var(--gnpc-section-spacing);
 }
 
 .gnpc-section-white {
-  background: #f7f8f8;
+  background: #ffffff;
 }
 
 .gnpc-section-muted {
-  background: #e9edef;
+  background: #eceff1;
 }
 
 .gnpc-section-blue {
-  background: #e8eef2;
-}
-
-
-/* =========================================================
-   SECTION DIVIDERS
-   ========================================================= */
-
-.home-page > div {
-  position: relative;
-}
-
-.home-page > div + div::before {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  left: 50%;
-
-  width: min(90%, 76rem);
-
-  height: 1px;
-
-  transform: translateX(-50%);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(23, 50, 77, 0.12),
-      transparent
-    );
+  background: #e8edf2;
 }
 
 
@@ -387,21 +246,15 @@ p {
 
 .gnpc-eyebrow {
   display: inline-flex;
-
   align-items: center;
+  gap: 0.65rem;
 
-  gap: 0.7rem;
-
-  color: var(--gnpc-primary);
+  color: var(--gnpc-accent);
 
   font-size: 0.7rem;
-
   font-weight: 900;
-
+  line-height: 1;
   letter-spacing: 0.18em;
-
-  line-height: 1.2;
-
   text-transform: uppercase;
 }
 
@@ -410,57 +263,35 @@ p {
 
   display: block;
 
-  width: 2.4rem;
+  width: 24px;
   height: 2px;
 
-  flex: 0 0 auto;
+  border-radius: 999px;
 
-  border-radius: var(--gnpc-radius-full);
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--gnpc-editorial-red),
-      var(--gnpc-gold)
-    );
-}
-
-.gnpc-section-title {
-  margin-top: 0.85rem;
-
-  color: var(--gnpc-text);
-
-  font-size:
-    clamp(2rem, 4vw, 3.25rem);
-
-  font-weight: 900;
-
-  line-height: 1.02;
-
-  letter-spacing: -0.045em;
-}
-
-.gnpc-section-description {
-  margin-top: 1.15rem;
-
-  max-width: 46rem;
-
-  color: var(--gnpc-text-muted);
-
-  font-size: 1rem;
-
-  line-height: 1.8;
-}
-
-@media (min-width: 640px) {
-  .gnpc-section-description {
-    font-size: 1.05rem;
-  }
+  background: var(--gnpc-accent);
 }
 
 
 /* =========================================================
-   PREMIUM CARDS
+   PREMIUM INTERACTION
+   ========================================================= */
+
+.gnpc-interactive {
+  transition:
+    transform var(--gnpc-transition),
+    box-shadow var(--gnpc-transition),
+    border-color var(--gnpc-transition),
+    background-color var(--gnpc-transition);
+}
+
+.gnpc-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--gnpc-shadow-hover);
+}
+
+
+/* =========================================================
+   PREMIUM CARD
    ========================================================= */
 
 .gnpc-card {
@@ -468,38 +299,68 @@ p {
 
   overflow: hidden;
 
-  border: 1px solid rgba(23, 50, 77, 0.11);
+  border: 1px solid var(--gnpc-border);
 
   border-radius: var(--gnpc-radius-xl);
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.98),
-      rgba(246, 248, 249, 0.98)
-    );
+  background: rgba(255, 255, 255, 0.88);
 
   box-shadow: var(--gnpc-shadow-sm);
 
   transition:
     transform var(--gnpc-transition),
-    border-color var(--gnpc-transition),
     box-shadow var(--gnpc-transition),
-    background var(--gnpc-transition);
+    border-color var(--gnpc-transition);
 }
 
-.gnpc-card::before {
+.gnpc-card:hover {
+  transform: translateY(-6px);
+
+  border-color: #c9ced6;
+
+  box-shadow: var(--gnpc-shadow-hover);
+}
+
+
+/* =========================================================
+   IMAGE INTERACTION
+   ========================================================= */
+
+.gnpc-image-wrap {
+  overflow: hidden;
+}
+
+.gnpc-image-wrap img {
+  transition:
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 500ms ease;
+}
+
+.gnpc-image-wrap:hover img {
+  transform: scale(1.055);
+}
+
+
+/* =========================================================
+   SHINE EFFECT
+   ========================================================= */
+
+.gnpc-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.gnpc-shine::after {
   content: "";
 
   position: absolute;
 
   top: 0;
+  bottom: 0;
+
   left: -120%;
 
-  width: 70%;
-  height: 100%;
-
-  pointer-events: none;
+  width: 60%;
 
   transform: skewX(-18deg);
 
@@ -507,554 +368,82 @@ p {
     linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.42),
+      rgba(255, 255, 255, 0.35),
       transparent
     );
 
-  transition:
-    left 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: left 700ms ease;
 }
 
-.gnpc-card:hover::before {
-  left: 150%;
-}
-
-.gnpc-card-hover:hover {
-  transform:
-    translateY(-7px)
-    scale(1.008);
-
-  border-color:
-    rgba(23, 50, 77, 0.22);
-
-  background:
-    linear-gradient(
-      145deg,
-      #ffffff,
-      #f4f6f7
-    );
-
-  box-shadow: var(--gnpc-shadow-lg);
+.gnpc-shine:hover::after {
+  left: 140%;
 }
 
 
 /* =========================================================
-   GLOBAL IMAGE HOVER
+   FLOATING MOTION
    ========================================================= */
 
-.gnpc-card img,
-.gnpc-image img {
-  transition:
-    transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 500ms ease;
-}
-
-.gnpc-card:hover img,
-.gnpc-image:hover img {
-  transform: scale(1.045);
-
-  filter:
-    saturate(1.04)
-    contrast(1.02);
-}
-
-
-/* =========================================================
-   PREMIUM BUTTON SYSTEM
-   ========================================================= */
-
-.gnpc-btn {
-  position: relative;
-
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 0.6rem;
-
-  min-height: 2.9rem;
-
-  overflow: hidden;
-
-  border-radius: 0.85rem;
-
-  font-weight: 800;
-
-  line-height: 1;
-
-  white-space: nowrap;
-
-  user-select: none;
-
-  isolation: isolate;
-
-  transition:
-    background-color var(--gnpc-transition),
-    border-color var(--gnpc-transition),
-    color var(--gnpc-transition),
-    transform var(--gnpc-transition),
-    box-shadow var(--gnpc-transition);
-}
-
-.gnpc-btn::after {
-  content: "";
-
-  position: absolute;
-
-  top: -120%;
-  left: -35%;
-
-  width: 22%;
-  height: 340%;
-
-  transform: rotate(20deg);
-
-  pointer-events: none;
-
-  background: rgba(255, 255, 255, 0.20);
-
-  transition:
-    left 650ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.gnpc-btn:hover::after {
-  left: 125%;
-}
-
-.gnpc-btn svg {
-  position: relative;
-  z-index: 2;
-
-  flex: 0 0 auto;
-
-  transition:
-    transform var(--gnpc-transition);
-}
-
-.gnpc-btn:hover svg {
-  transform: translateX(3px);
-}
-
-
-/* =========================================================
-   PRIMARY
-   ========================================================= */
-
-.gnpc-btn-primary {
-  border: 1px solid var(--gnpc-primary);
-
-  background:
-    linear-gradient(
-      135deg,
-      #17324d,
-      #10283e
-    );
-
-  color: #ffffff;
-
-  box-shadow: var(--gnpc-shadow-navy);
-}
-
-.gnpc-btn-primary:hover:not(:disabled) {
-  border-color: var(--gnpc-primary-hover);
-
-  background:
-    linear-gradient(
-      135deg,
-      #1d415f,
-      #10283e
-    );
-
-  color: #ffffff;
-
-  transform:
-    translateY(-3px);
-
-  box-shadow:
-    0 18px 38px rgba(23, 50, 77, 0.25);
-}
-
-.gnpc-btn-primary:active:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-
-/* =========================================================
-   OUTLINE
-   ========================================================= */
-
-.gnpc-btn-outline {
-  border: 1px solid #aeb8c0;
-
-  background:
-    rgba(255, 255, 255, 0.72);
-
-  color: var(--gnpc-primary);
-
-  box-shadow:
-    0 2px 8px rgba(20, 30, 40, 0.05);
-
-  backdrop-filter: blur(8px);
-}
-
-.gnpc-btn-outline:hover:not(:disabled) {
-  border-color: var(--gnpc-primary);
-
-  background: var(--gnpc-primary);
-
-  color: #ffffff;
-
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 15px 32px rgba(23, 50, 77, 0.18);
-}
-
-
-/* =========================================================
-   SOFT
-   ========================================================= */
-
-.gnpc-btn-soft {
-  border: 1px solid transparent;
-
-  background: var(--gnpc-primary-soft);
-
-  color: var(--gnpc-primary);
-}
-
-.gnpc-btn-soft:hover:not(:disabled) {
-  border-color: rgba(23, 50, 77, 0.16);
-
-  background: #ffffff;
-
-  color: var(--gnpc-primary);
-
-  transform: translateY(-3px);
-
-  box-shadow: var(--gnpc-shadow-md);
-}
-
-
-/* =========================================================
-   INVERSE
-   ========================================================= */
-
-.gnpc-btn-inverse {
-  border: 1px solid rgba(23, 50, 77, 0.15);
-
-  background: #ffffff;
-
-  color: var(--gnpc-primary);
-
-  box-shadow: var(--gnpc-shadow-sm);
-}
-
-.gnpc-btn-inverse:hover:not(:disabled) {
-  border-color: #ffffff;
-
-  background: #eef1f3;
-
-  color: var(--gnpc-primary);
-
-  transform: translateY(-3px);
-
-  box-shadow: var(--gnpc-shadow-md);
-}
-
-
-/* =========================================================
-   DANGER
-   ========================================================= */
-
-.gnpc-btn-danger {
-  border: 1px solid var(--gnpc-editorial-red);
-
-  background:
-    linear-gradient(
-      135deg,
-      #c8102e,
-      #a90d27
-    );
-
-  color: #ffffff;
-
-  box-shadow: var(--gnpc-shadow-red);
-}
-
-.gnpc-btn-danger:hover:not(:disabled) {
-  border-color: var(--gnpc-editorial-red-dark);
-
-  background:
-    linear-gradient(
-      135deg,
-      #db1738,
-      #a90d27
-    );
-
-  color: #ffffff;
-
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 18px 38px rgba(200, 16, 46, 0.28);
-}
-
-
-/* =========================================================
-   GHOST
-   ========================================================= */
-
-.gnpc-btn-ghost {
-  border: 1px solid transparent;
-
-  background: transparent;
-
-  color: var(--gnpc-primary);
-}
-
-.gnpc-btn-ghost:hover:not(:disabled) {
-  background: rgba(23, 50, 77, 0.07);
-
-  color: var(--gnpc-primary-dark);
-
-  transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   BUTTON SIZES
-   ========================================================= */
-
-.gnpc-btn-sm {
-  min-height: 2.35rem;
-
-  padding: 0.6rem 0.9rem;
-
-  border-radius: 0.7rem;
-
-  font-size: 0.78rem;
-}
-
-.gnpc-btn-md {
-  min-height: 2.9rem;
-
-  padding: 0.78rem 1.15rem;
-
-  border-radius: 0.82rem;
-
-  font-size: 0.9rem;
-}
-
-.gnpc-btn-lg {
-  min-height: 3.25rem;
-
-  padding: 0.9rem 1.55rem;
-
-  border-radius: 0.95rem;
-
-  font-size: 0.95rem;
-}
-
-@media (min-width: 640px) {
-  .gnpc-btn-lg {
-    padding-inline: 1.8rem;
-
-    font-size: 1rem;
-  }
-}
-
-
-/* =========================================================
-   PREMIUM PAGE HERO
-   ========================================================= */
-
-.gnpc-page-header {
-  position: relative;
-
-  overflow: hidden;
-
-  border-bottom: 1px solid var(--gnpc-border);
-
-  background:
-    linear-gradient(
-      135deg,
-      #e7ebed,
-      #f6f7f7
-    );
-}
-
-.gnpc-page-header::before {
-  content: "";
-
-  position: absolute;
-
-  width: 28rem;
-  height: 28rem;
-
-  right: -10rem;
-  top: -12rem;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(196, 154, 58, 0.14),
-      transparent 68%
-    );
-}
-
-.gnpc-page-header-inner {
-  position: relative;
-
-  width: 100%;
-
-  max-width: var(--gnpc-container);
-
-  margin-inline: auto;
-
-  padding: 4rem 1.1rem;
-}
-
-@media (min-width: 640px) {
-  .gnpc-page-header-inner {
-    padding: 5rem 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .gnpc-page-header-inner {
-    padding: 6rem 2.25rem;
-  }
-}
-
-
-/* =========================================================
-   IMAGE
-   ========================================================= */
-
-.gnpc-image {
-  position: relative;
-
-  overflow: hidden;
-
-  border-radius: var(--gnpc-radius-xl);
-
-  background: #dfe4e7;
-
-  box-shadow: var(--gnpc-shadow-md);
-}
-
-
-/* =========================================================
-   LINK MICRO-INTERACTIONS
-   ========================================================= */
-
-.gnpc-public a:not(.gnpc-btn) {
-  transition:
-    color var(--gnpc-transition-fast);
-}
-
-
-/* =========================================================
-   FLOATING / INTERACTIVE UTILITIES
-   ========================================================= */
-
-.gnpc-float {
-  animation:
-    gnpcFloat 5s ease-in-out infinite;
-}
-
-@keyframes gnpcFloat {
+@keyframes gnpc-float {
   0%,
   100% {
     transform: translateY(0);
   }
 
   50% {
-    transform: translateY(-7px);
+    transform: translateY(-5px);
   }
 }
 
-.gnpc-pulse-dot {
-  animation:
-    gnpcPulse 2s ease-in-out infinite;
-}
-
-@keyframes gnpcPulse {
-  0%,
-  100% {
-    transform: scale(1);
-
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.3);
-
-    opacity: 0.65;
-  }
+.gnpc-float {
+  animation: gnpc-float 4s ease-in-out infinite;
 }
 
 
 /* =========================================================
-   SCROLL REVEAL UTILITY
+   SOFT PULSE
    ========================================================= */
 
-.gnpc-reveal {
-  animation:
-    gnpcReveal 700ms cubic-bezier(0.16, 1, 0.3, 1)
-    both;
+@keyframes gnpc-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
 }
 
-@keyframes gnpcReveal {
+.gnpc-pulse {
+  animation: gnpc-pulse 2.8s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   REVEAL ANIMATION
+   ========================================================= */
+
+@keyframes gnpc-reveal {
   from {
     opacity: 0;
-
-    transform:
-      translateY(20px)
-      scale(0.985);
+    transform: translateY(18px);
   }
 
   to {
     opacity: 1;
-
-    transform:
-      translateY(0)
-      scale(1);
+    transform: translateY(0);
   }
 }
 
-
-/* =========================================================
-   MOBILE FORM USABILITY
-   ========================================================= */
-
-@media (max-width: 639px) {
-  input,
-  select,
-  textarea {
-    font-size: 16px;
-  }
-}
-
-
-/* =========================================================
-   LEGACY UTILITIES
-   ========================================================= */
-
-.section-padding {
-  padding-block: var(--gnpc-section-spacing);
-}
-
-.card-shadow {
-  box-shadow: var(--gnpc-shadow-md);
-}
-
-.transition-base {
-  transition: all var(--gnpc-transition);
+.gnpc-reveal {
+  animation:
+    gnpc-reveal
+    650ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
 }
 
 
@@ -1075,4 +464,62 @@ p {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+
+/* =========================================================
+   MOBILE POLISH
+   ========================================================= */
+
+@media (max-width: 767px) {
+  body {
+    background:
+      linear-gradient(
+        180deg,
+        #f4f5f6 0%,
+        #eef0f2 100%
+      );
+  }
+
+  .gnpc-section {
+    padding-block: 3.75rem;
+  }
+
+  .gnpc-card {
+    border-radius: 1rem;
+  }
+}
+
+
+/* =========================================================
+   TABLET POLISH
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .gnpc-section {
+    padding-block: 4.75rem;
+  }
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e8eaed;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #aeb5be;
+  border-radius: 999px;
+  border: 2px solid #e8eaed;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7d8794;
 }
