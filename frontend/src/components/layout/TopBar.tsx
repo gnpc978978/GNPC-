@@ -61,17 +61,20 @@ export default function TopBar() {
   const socialLinks = [
     {
       label: "Facebook",
-      href: settings.socialLinks?.facebook || "",
+      href:
+        settings.socialLinks?.facebook || "",
       icon: FaFacebookF,
     },
     {
       label: "Instagram",
-      href: settings.socialLinks?.instagram || "",
+      href:
+        settings.socialLinks?.instagram || "",
       icon: FaInstagram,
     },
     {
       label: "X",
-      href: settings.socialLinks?.twitter || "",
+      href:
+        settings.socialLinks?.twitter || "",
       icon: FaXTwitter,
     },
   ].filter((item) => Boolean(item.href));
@@ -80,53 +83,82 @@ export default function TopBar() {
     <div
       className={[
         "relative",
-        "z-50",
+        "z-[110]",
         "w-full",
         "overflow-hidden",
         "border-b",
         "border-white/10",
-        "bg-[#092f4f]",
+        "bg-[#071c2d]",
         "text-white",
       ].join(" ")}
     >
-      {/* Subtle premium highlight */}
+      {/* =====================================================
+          SUBTLE BACKGROUND DETAIL
+          ===================================================== */}
+
       <div
         aria-hidden="true"
         className={[
           "pointer-events-none",
           "absolute",
           "inset-0",
-          "bg-[linear-gradient(90deg,rgba(255,255,255,0.025),transparent_35%,rgba(255,255,255,0.025))]",
+          "opacity-40",
         ].join(" ")}
-      />
+      >
+        <div
+          className={[
+            "absolute",
+            "left-0",
+            "top-0",
+            "h-full",
+            "w-48",
+            "bg-gradient-to-r",
+            "from-[#155eef]/10",
+            "to-transparent",
+          ].join(" ")}
+        />
+
+        <div
+          className={[
+            "absolute",
+            "right-0",
+            "top-0",
+            "h-full",
+            "w-72",
+            "bg-gradient-to-l",
+            "from-[#155eef]/10",
+            "to-transparent",
+          ].join(" ")}
+        />
+      </div>
 
       <div
         className={[
           "relative",
           "mx-auto",
           "flex",
-          "min-h-[42px]",
+          "min-h-[38px]",
           "max-w-[80rem]",
           "items-center",
           "justify-between",
-          "gap-3",
+          "gap-4",
           "px-4",
-          "sm:min-h-[44px]",
+          "sm:min-h-[40px]",
           "sm:px-6",
           "lg:px-8",
         ].join(" ")}
       >
-        {/* =====================================================
-            LEFT SIDE
-            ===================================================== */}
+        {/* =================================================
+            LEFT
+            ================================================= */}
 
         <div
           className={[
             "flex",
             "min-w-0",
             "items-center",
-            "gap-2",
-            "sm:gap-4",
+            "gap-3",
+            "sm:gap-5",
           ].join(" ")}
         >
           {/* Location */}
@@ -137,13 +169,12 @@ export default function TopBar() {
               "shrink-0",
               "items-center",
               "gap-1.5",
-              "text-white/90",
-              "sm:gap-2",
+              "text-white/85",
             ].join(" ")}
           >
             <FaMapMarkerAlt
-              size={11}
-              className="text-white/55"
+              size={10}
+              className="text-[#7eb0ff]"
               aria-hidden="true"
             />
 
@@ -160,14 +191,14 @@ export default function TopBar() {
             </span>
           </div>
 
-          {/* Vertical divider */}
+          {/* Divider */}
 
           <span
             aria-hidden="true"
-            className="h-4 w-px bg-white/15"
+            className="hidden h-4 w-px bg-white/15 sm:block"
           />
 
-          {/* Established message */}
+          {/* Established */}
 
           <div
             className={[
@@ -175,8 +206,8 @@ export default function TopBar() {
               "items-center",
               "text-[10px]",
               "font-medium",
-              "tracking-[0.04em]",
-              "text-white/65",
+              "tracking-wide",
+              "text-white/60",
               "sm:flex",
               "sm:text-[11px]",
             ].join(" ")}
@@ -186,37 +217,35 @@ export default function TopBar() {
 
           <span
             aria-hidden="true"
-            className="hidden h-1 w-1 rounded-full bg-white/25 sm:block"
+            className="hidden h-1 w-1 rounded-full bg-[#c8102e] sm:block"
           />
 
           <div
             className={[
               "hidden",
-              "items-center",
               "text-[10px]",
               "font-semibold",
-              "tracking-[0.025em]",
-              "text-white/85",
-              "md:flex",
-              "sm:text-[11px]",
+              "tracking-wide",
+              "text-white/75",
+              "md:block",
+              "md:text-[11px]",
             ].join(" ")}
           >
             23 Years of Truthful Journalism
           </div>
         </div>
 
-        {/* =====================================================
-            RIGHT SIDE
-            ===================================================== */}
+        {/* =================================================
+            RIGHT
+            ================================================= */}
 
         <div
           className={[
             "flex",
             "shrink-0",
             "items-center",
-            "gap-2",
-            "sm:gap-3",
-            "lg:gap-5",
+            "gap-2.5",
+            "sm:gap-4",
           ].join(" ")}
         >
           {/* Date */}
@@ -226,22 +255,24 @@ export default function TopBar() {
               "hidden",
               "items-center",
               "gap-2",
+              "border-l",
+              "border-white/10",
+              "pl-4",
               "lg:flex",
             ].join(" ")}
           >
             <HiCalendarDays
               size={13}
-              className="text-white/45"
+              className="text-[#7eb0ff]"
               aria-hidden="true"
             />
 
             <span
               className={[
-                "whitespace-nowrap",
-                "text-[11px]",
+                "text-[10px]",
                 "font-medium",
                 "tracking-wide",
-                "text-white/70",
+                "text-white/65",
               ].join(" ")}
             >
               {date}
@@ -255,12 +286,16 @@ export default function TopBar() {
               "flex",
               "items-center",
               "gap-1.5",
+              "border-l",
+              "border-white/10",
+              "pl-3",
               "sm:gap-2",
+              "sm:pl-4",
             ].join(" ")}
           >
             <HiClock
               size={13}
-              className="text-white/45"
+              className="text-[#7eb0ff]"
               aria-hidden="true"
             />
 
@@ -268,10 +303,10 @@ export default function TopBar() {
               className={[
                 "whitespace-nowrap",
                 "text-[9px]",
-                "font-semibold",
-                "tabular-nums",
+                "font-bold",
                 "tracking-wide",
                 "text-white/85",
+                "tabular-nums",
                 "sm:text-[11px]",
               ].join(" ")}
             >
@@ -279,59 +314,92 @@ export default function TopBar() {
             </span>
           </div>
 
-          {/* Social links */}
+          {/* Social */}
 
           {socialLinks.length > 0 && (
-            <>
-              <span
-                aria-hidden="true"
-                className="hidden h-5 w-px bg-white/10 sm:block"
-              />
-
-              <div className="hidden items-center gap-0.5 sm:flex">
-                {socialLinks.map(
-                  ({
-                    label,
-                    href,
-                    icon: Icon,
-                  }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      className={[
-                        "flex",
-                        "h-7",
-                        "w-7",
-                        "items-center",
-                        "justify-center",
-                        "rounded-full",
-                        "text-white/50",
-                        "transition-all",
-                        "duration-200",
-                        "hover:bg-white/10",
-                        "hover:text-white",
-                        "focus-visible:outline-none",
-                        "focus-visible:ring-2",
-                        "focus-visible:ring-white",
-                        "focus-visible:ring-offset-2",
-                        "focus-visible:ring-offset-[#092f4f]",
-                      ].join(" ")}
-                    >
-                      <Icon
-                        size={11}
-                        aria-hidden="true"
-                      />
-                    </a>
-                  )
-                )}
-              </div>
-            </>
+            <div
+              className={[
+                "hidden",
+                "items-center",
+                "gap-1",
+                "border-l",
+                "border-white/10",
+                "pl-3",
+                "sm:flex",
+                "sm:pl-4",
+              ].join(" ")}
+            >
+              {socialLinks.map(
+                ({
+                  label,
+                  href,
+                  icon: Icon,
+                }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className={[
+                      "flex",
+                      "h-6.5",
+                      "w-6.5",
+                      "items-center",
+                      "justify-center",
+                      "rounded-md",
+                      "border",
+                      "border-white/10",
+                      "text-white/55",
+                      "transition-all",
+                      "duration-200",
+                      "hover:border-white/20",
+                      "hover:bg-white/10",
+                      "hover:text-white",
+                      "focus-visible:outline-none",
+                      "focus-visible:ring-2",
+                      "focus-visible:ring-white",
+                    ].join(" ")}
+                  >
+                    <Icon
+                      size={10}
+                      aria-hidden="true"
+                    />
+                  </a>
+                )
+              )}
+            </div>
           )}
         </div>
       </div>
+
+      {/* =====================================================
+          EDITORIAL ACCENT
+          ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className={[
+          "absolute",
+          "bottom-0",
+          "left-0",
+          "h-px",
+          "w-24",
+          "bg-[#c8102e]",
+        ].join(" ")}
+      />
+
+      <div
+        aria-hidden="true"
+        className={[
+          "absolute",
+          "bottom-0",
+          "right-0",
+          "h-px",
+          "w-32",
+          "bg-[#155eef]",
+        ].join(" ")}
+      />
     </div>
   );
 }
