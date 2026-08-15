@@ -1,20 +1,29 @@
+"use client";
+
 import PageHero from "@/components/ui/PageHero";
 import OfficeBearersPage from "@/components/office-bearers/OfficeBearersPage";
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+import { mergePageSettings } from "@/types/pageSettings";
 
-export default function OfficeBearers() {
+export default function OfficeBearersRoute() {
+  const { settings } = useWebsiteSettings();
+  const pageSettings = mergePageSettings(
+    settings.pageSettings
+  ).officeBearers;
+
   return (
-    <main className="bg-white">
+    <main>
       <PageHero
-        eyebrow="Office Bearers"
-        title="Our Office Bearers"
-        description="Meet the office bearers of Greater Noida Press Club and learn more about the team leading the organization."
+        eyebrow={pageSettings.pageEyebrow}
+        title={pageSettings.pageTitle}
+        description={pageSettings.pageDescription}
         breadcrumbs={[
           { label: "Home", href: "/" },
-          { label: "Office Bearers" },
+          { label: pageSettings.pageTitle },
         ]}
       />
 
-      <OfficeBearersPage />
+      <OfficeBearersPage settings={pageSettings} />
     </main>
   );
 }
