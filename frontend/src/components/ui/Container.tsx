@@ -23,15 +23,20 @@ export default function Container({
         : size === "lg"
           ? "max-w-6xl"
           : size === "full"
-            ? "max-w-full"
-            : "max-w-[1280px]";
+            ? "max-w-none"
+            : "max-w-[1440px]";
 
   return (
     <Component
       className={[
         "mx-auto w-full",
         sizeClass,
-        "px-4 sm:px-6 lg:px-8 xl:px-10",
+        "px-4",
+        "sm:px-6",
+        "md:px-8",
+        "lg:px-10",
+        "xl:px-12",
+        "2xl:px-14",
         className,
       ]
         .filter(Boolean)
