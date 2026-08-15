@@ -28,80 +28,188 @@ export default function Hero() {
     "A professional platform for journalists, media professionals and the community of Greater Noida.";
 
   const heroImage =
-    settings.heroImage || "/Logo.png";
+    settings.heroImage ||
+    "/Logo.png";
 
-  const buttonClass = [
-    "group",
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "gap-2",
-    "rounded-xl",
-    "border",
-    "border-slate-200",
-    "bg-white",
-    "px-5",
-    "py-3.5",
-    "text-sm",
-    "font-bold",
-    "text-[#0f4c81]",
-    "shadow-sm",
-    "transition-all",
-    "duration-300",
-    "hover:-translate-y-0.5",
-    "hover:border-slate-300",
-    "hover:bg-slate-50",
-    "hover:shadow-md",
-    "focus-visible:outline-none",
-    "focus-visible:ring-2",
-    "focus-visible:ring-[#155eef]",
-    "focus-visible:ring-offset-2",
-    "sm:px-6",
-    "sm:text-base",
-  ].join(" ");
+  const primaryButton =
+    [
+      "group",
+      "inline-flex",
+      "items-center",
+      "justify-center",
+      "gap-2.5",
+      "rounded-lg",
+      "border",
+      "border-[#0f4c81]",
+      "bg-[#0f4c81]",
+      "px-5",
+      "py-3.5",
+      "text-sm",
+      "font-bold",
+      "tracking-[-0.01em]",
+      "text-white",
+      "shadow-[0_8px_24px_rgba(15,76,129,0.18)]",
+      "transition-all",
+      "duration-200",
+      "hover:-translate-y-0.5",
+      "hover:bg-[#0b3d68]",
+      "hover:shadow-[0_12px_28px_rgba(15,76,129,0.24)]",
+      "focus-visible:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-[#155eef]",
+      "focus-visible:ring-offset-2",
+      "sm:px-6",
+      "sm:text-[15px]",
+    ].join(" ");
+
+  const secondaryButton =
+    [
+      "group",
+      "inline-flex",
+      "items-center",
+      "justify-center",
+      "gap-2.5",
+      "rounded-lg",
+      "border",
+      "border-slate-200",
+      "bg-white",
+      "px-5",
+      "py-3.5",
+      "text-sm",
+      "font-bold",
+      "tracking-[-0.01em]",
+      "text-[#0f4c81]",
+      "shadow-[0_2px_8px_rgba(15,23,42,0.04)]",
+      "transition-all",
+      "duration-200",
+      "hover:-translate-y-0.5",
+      "hover:border-[#b9c8d8]",
+      "hover:bg-slate-50",
+      "hover:shadow-[0_8px_20px_rgba(15,23,42,0.08)]",
+      "focus-visible:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-[#155eef]",
+      "focus-visible:ring-offset-2",
+      "sm:px-6",
+      "sm:text-[15px]",
+    ].join(" ");
 
   return (
     <section
       aria-labelledby="gnpc-hero-title"
-      className="relative overflow-hidden border-b border-slate-200 bg-white"
+      className={[
+        "relative",
+        "overflow-hidden",
+        "border-b",
+        "border-slate-200",
+        "bg-[#f8fafc]",
+      ].join(" ")}
     >
       {/* =====================================================
-          SOFT BRAND BACKGROUND
+          BACKGROUND
           ===================================================== */}
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="absolute -left-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-blue-50 blur-3xl" />
-
-        <div className="absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full bg-slate-100 blur-3xl" />
+        {/* Editorial light field */}
 
         <div
-          className="absolute inset-0 opacity-[0.035]"
+          className={[
+            "absolute",
+            "-left-40",
+            "-top-40",
+            "h-[32rem]",
+            "w-[32rem]",
+            "rounded-full",
+            "bg-blue-100/40",
+            "blur-[100px]",
+          ].join(" ")}
+        />
+
+        <div
+          className={[
+            "absolute",
+            "-bottom-48",
+            "-right-40",
+            "h-[32rem]",
+            "w-[32rem]",
+            "rounded-full",
+            "bg-slate-200/60",
+            "blur-[110px]",
+          ].join(" ")}
+        />
+
+        {/* Very subtle editorial grid */}
+
+        <div
+          className={[
+            "absolute",
+            "inset-0",
+            "opacity-[0.022]",
+          ].join(" ")}
           style={{
             backgroundImage:
-              "linear-gradient(#155eef 1px, transparent 1px), linear-gradient(90deg, #155eef 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
+              "linear-gradient(#0f4c81 1px, transparent 1px), linear-gradient(90deg, #0f4c81 1px, transparent 1px)",
+            backgroundSize:
+              "72px 72px",
           }}
+        />
+
+        {/* Vertical editorial accent */}
+
+        <div
+          className={[
+            "absolute",
+            "left-0",
+            "top-0",
+            "h-full",
+            "w-px",
+            "bg-gradient-to-b",
+            "from-transparent",
+            "via-[#155eef]/20",
+            "to-transparent",
+          ].join(" ")}
         />
       </div>
 
       {/* =====================================================
-          HERO CONTAINER
+          MAIN HERO
           ===================================================== */}
 
-      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20 xl:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 xl:gap-20">
-
+      <div
+        className={[
+          "relative",
+          "mx-auto",
+          "max-w-[80rem]",
+          "px-4",
+          "py-12",
+          "sm:px-6",
+          "sm:py-16",
+          "lg:px-8",
+          "lg:py-20",
+          "xl:py-24",
+        ].join(" ")}
+      >
+        <div
+          className={[
+            "grid",
+            "items-center",
+            "gap-12",
+            "lg:grid-cols-[0.88fr_1.12fr]",
+            "lg:gap-14",
+            "xl:gap-20",
+          ].join(" ")}
+        >
           {/* =================================================
-              LEFT — CONTENT
+              LEFT — EDITORIAL CONTENT
               ================================================= */}
 
           <motion.div
             initial={{
               opacity: 0,
-              y: 20,
+              y: 18,
             }}
             animate={{
               opacity: 1,
@@ -115,30 +223,94 @@ export default function Hero() {
           >
             {/* Eyebrow */}
 
-            <div className="flex items-center gap-3">
+            <div
+              className={[
+                "flex",
+                "items-center",
+                "gap-3",
+              ].join(" ")}
+            >
               <span
                 aria-hidden="true"
-                className="h-0.5 w-8 rounded-full bg-[#155eef]"
+                className={[
+                  "h-px",
+                  "w-10",
+                  "bg-[#155eef]",
+                  "sm:w-12",
+                ].join(" ")}
               />
 
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#155eef] sm:text-sm">
+              <span
+                className={[
+                  "text-[10px]",
+                  "font-extrabold",
+                  "uppercase",
+                  "tracking-[0.2em]",
+                  "text-[#155eef]",
+                  "sm:text-xs",
+                ].join(" ")}
+              >
                 Greater Noida Press Club
               </span>
             </div>
 
-            {/* Organization identity */}
+            {/* Editorial identity */}
 
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3.5 py-2 text-xs font-bold text-[#155eef]">
+            <div
+              className={[
+                "mt-6",
+                "flex",
+                "items-center",
+                "gap-3",
+              ].join(" ")}
+            >
               <span
-                aria-hidden="true"
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef] shadow-sm"
+                className={[
+                  "flex",
+                  "h-9",
+                  "w-9",
+                  "shrink-0",
+                  "items-center",
+                  "justify-center",
+                  "rounded-lg",
+                  "border",
+                  "border-blue-100",
+                  "bg-white",
+                  "text-[#155eef]",
+                  "shadow-[0_4px_12px_rgba(15,76,129,0.06)]",
+                ].join(" ")}
               >
-                <Newspaper size={13} />
+                <Newspaper
+                  size={17}
+                  aria-hidden="true"
+                />
               </span>
 
-              <span>
-                Journalism • Media • Community
-              </span>
+              <div>
+                <p
+                  className={[
+                    "text-[10px]",
+                    "font-extrabold",
+                    "uppercase",
+                    "tracking-[0.15em]",
+                    "text-slate-400",
+                  ].join(" ")}
+                >
+                  Independent Media Platform
+                </p>
+
+                <p
+                  className={[
+                    "mt-0.5",
+                    "text-xs",
+                    "font-bold",
+                    "text-slate-700",
+                    "sm:text-sm",
+                  ].join(" ")}
+                >
+                  Journalism • Media • Community
+                </p>
+              </div>
             </div>
 
             {/* Main heading */}
@@ -146,32 +318,50 @@ export default function Hero() {
             <h1
               id="gnpc-hero-title"
               className={[
-                "mt-6",
+                "mt-7",
                 "max-w-3xl",
-                "text-[2.35rem]",
+                "text-[2.45rem]",
                 "font-black",
-                "leading-[1.08]",
-                "tracking-[-0.035em]",
-                "text-[#101828]",
+                "leading-[1.04]",
+                "tracking-[-0.045em]",
+                "text-[#0b1f33]",
                 "sm:text-5xl",
-                "md:text-[3.5rem]",
+                "md:text-[3.65rem]",
                 "lg:text-[4rem]",
-                "xl:text-[4.5rem]",
+                "xl:text-[4.7rem]",
               ].join(" ")}
             >
               {heroTitle}
             </h1>
 
+            {/* Decorative rule */}
+
+            <div
+              aria-hidden="true"
+              className={[
+                "mt-7",
+                "flex",
+                "items-center",
+                "gap-2",
+              ].join(" ")}
+            >
+              <span className="h-1 w-12 rounded-full bg-[#155eef]" />
+
+              <span className="h-1 w-2 rounded-full bg-[#c8102e]" />
+
+              <span className="h-px w-20 bg-slate-200" />
+            </div>
+
             {/* Description */}
 
             <p
               className={[
-                "mt-6",
+                "mt-7",
                 "max-w-2xl",
-                "text-base",
+                "text-[15px]",
                 "leading-7",
                 "text-slate-600",
-                "sm:text-lg",
+                "sm:text-[17px]",
                 "sm:leading-8",
               ].join(" ")}
             >
@@ -179,7 +369,7 @@ export default function Hero() {
             </p>
 
             {/* =================================================
-                PRIMARY ACTIONS
+                ACTIONS
                 ================================================= */}
 
             <div
@@ -188,27 +378,24 @@ export default function Hero() {
                 "flex",
                 "flex-col",
                 "gap-3",
-                "sm:mt-10",
+                "sm:mt-9",
                 "sm:flex-row",
                 "sm:flex-wrap",
-                "sm:gap-4",
               ].join(" ")}
             >
-              {/* Become a Member */}
-
               <MembershipFormLink
-                className={buttonClass}
+                className={primaryButton}
                 unavailableClassName={[
                   "group",
                   "inline-flex",
                   "cursor-not-allowed",
                   "items-center",
                   "justify-center",
-                  "gap-2",
-                  "rounded-xl",
+                  "gap-2.5",
+                  "rounded-lg",
                   "border",
                   "border-slate-200",
-                  "bg-slate-50",
+                  "bg-slate-100",
                   "px-5",
                   "py-3.5",
                   "text-sm",
@@ -216,30 +403,36 @@ export default function Hero() {
                   "text-[#0f4c81]",
                   "opacity-60",
                   "sm:px-6",
-                  "sm:text-base",
+                  "sm:text-[15px]",
                 ].join(" ")}
               >
                 Become a Member
 
                 <ArrowRight
-                  size={18}
+                  size={17}
                   aria-hidden="true"
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className={[
+                    "transition-transform",
+                    "duration-200",
+                    "group-hover:translate-x-1",
+                  ].join(" ")}
                 />
               </MembershipFormLink>
 
-              {/* Latest Updates */}
-
               <Link
                 href="/latest-updates"
-                className={buttonClass}
+                className={secondaryButton}
               >
                 Latest Updates
 
                 <ArrowRight
-                  size={18}
+                  size={17}
                   aria-hidden="true"
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className={[
+                    "transition-transform",
+                    "duration-200",
+                    "group-hover:translate-x-1",
+                  ].join(" ")}
                 />
               </Link>
             </div>
@@ -250,15 +443,14 @@ export default function Hero() {
 
             <div
               className={[
-                "mt-8",
+                "mt-9",
                 "flex",
                 "flex-wrap",
-                "gap-x-6",
+                "gap-x-7",
                 "gap-y-3",
                 "border-t",
                 "border-slate-200",
                 "pt-6",
-                "sm:mt-10",
               ].join(" ")}
             >
               <Link
@@ -268,16 +460,17 @@ export default function Hero() {
                   "inline-flex",
                   "items-center",
                   "gap-2",
-                  "text-sm",
-                  "font-semibold",
+                  "text-xs",
+                  "font-bold",
                   "text-slate-600",
                   "transition-colors",
                   "duration-200",
                   "hover:text-[#155eef]",
+                  "sm:text-sm",
                 ].join(" ")}
               >
                 <Newspaper
-                  size={16}
+                  size={15}
                   className="text-[#155eef]"
                   aria-hidden="true"
                 />
@@ -287,7 +480,7 @@ export default function Hero() {
                 </span>
 
                 <ArrowRight
-                  size={14}
+                  size={13}
                   className={[
                     "opacity-0",
                     "transition-all",
@@ -306,16 +499,17 @@ export default function Hero() {
                   "inline-flex",
                   "items-center",
                   "gap-2",
-                  "text-sm",
-                  "font-semibold",
+                  "text-xs",
+                  "font-bold",
                   "text-slate-600",
                   "transition-colors",
                   "duration-200",
                   "hover:text-[#155eef]",
+                  "sm:text-sm",
                 ].join(" ")}
               >
                 <CalendarDays
-                  size={16}
+                  size={15}
                   className="text-[#155eef]"
                   aria-hidden="true"
                 />
@@ -325,7 +519,7 @@ export default function Hero() {
                 </span>
 
                 <ArrowRight
-                  size={14}
+                  size={13}
                   className={[
                     "opacity-0",
                     "transition-all",
@@ -340,14 +534,14 @@ export default function Hero() {
           </motion.div>
 
           {/* =================================================
-              RIGHT — HERO VISUAL
+              RIGHT — CINEMATIC CMS HERO
               ================================================= */}
 
           <motion.div
             initial={{
               opacity: 0,
               x: 24,
-              scale: 0.98,
+              scale: 0.985,
             }}
             animate={{
               opacity: 1,
@@ -356,65 +550,65 @@ export default function Hero() {
             }}
             transition={{
               duration: 0.75,
-              delay: 0.1,
+              delay: 0.08,
               ease: "easeOut",
             }}
             className="order-1 lg:order-2"
           >
             <div className="relative">
-
-              {/* Decorative brand frame */}
+              {/* Offset frame */}
 
               <div
                 aria-hidden="true"
                 className={[
                   "absolute",
                   "-inset-3",
-                  "rounded-[2rem]",
+                  "rounded-[1.75rem]",
                   "border",
-                  "border-blue-100",
-                  "bg-blue-50/50",
+                  "border-[#155eef]/10",
+                  "bg-[#155eef]/[0.025]",
+                  "sm:-inset-4",
+                  "sm:rounded-[2rem]",
                 ].join(" ")}
               />
 
-              {/* Main image card */}
+              {/* Main visual */}
 
               <div
                 className={[
                   "relative",
                   "overflow-hidden",
-                  "rounded-[1.5rem]",
+                  "rounded-[1.35rem]",
                   "border",
                   "border-slate-200",
                   "bg-white",
-                  "p-2",
-                  "shadow-xl",
-                  "shadow-slate-200/70",
-                  "sm:rounded-[2rem]",
-                  "sm:p-2.5",
+                  "p-1.5",
+                  "shadow-[0_24px_70px_rgba(15,23,42,0.13)]",
+                  "sm:rounded-[1.75rem]",
+                  "sm:p-2",
                 ].join(" ")}
               >
                 <div
                   className={[
                     "relative",
-                    "h-[300px]",
+                    "h-[320px]",
                     "overflow-hidden",
-                    "rounded-[1.15rem]",
-                    "bg-slate-100",
-                    "sm:h-[410px]",
-                    "sm:rounded-[1.5rem]",
-                    "lg:h-[480px]",
-                    "xl:h-[530px]",
+                    "rounded-[1.05rem]",
+                    "bg-slate-200",
+                    "sm:h-[420px]",
+                    "sm:rounded-[1.4rem]",
+                    "lg:h-[485px]",
+                    "xl:h-[535px]",
                   ].join(" ")}
                 >
-                  {/* Carousel */}
+                  {/* CMS carousel */}
 
                   <HeroCarousel
                     fallbackImage={heroImage}
                     alt={heroTitle}
                   />
 
-                  {/* Readability overlay */}
+                  {/* Editorial readability overlay */}
 
                   <div
                     aria-hidden="true"
@@ -423,13 +617,13 @@ export default function Hero() {
                       "absolute",
                       "inset-0",
                       "bg-gradient-to-t",
-                      "from-[#0f4c81]/65",
-                      "via-transparent",
-                      "to-white/5",
+                      "from-[#071c2d]/75",
+                      "via-[#071c2d]/10",
+                      "to-transparent",
                     ].join(" ")}
                   />
 
-                  {/* Top label */}
+                  {/* Top brand marker */}
 
                   <div
                     className={[
@@ -439,36 +633,37 @@ export default function Hero() {
                       "inline-flex",
                       "items-center",
                       "gap-2",
-                      "rounded-full",
+                      "rounded-md",
                       "border",
-                      "border-white/40",
-                      "bg-white/90",
+                      "border-white/25",
+                      "bg-[#071c2d]/65",
                       "px-3",
                       "py-2",
-                      "text-[10px]",
+                      "text-[9px]",
                       "font-extrabold",
                       "uppercase",
-                      "tracking-[0.16em]",
-                      "text-[#0f4c81]",
-                      "shadow-sm",
+                      "tracking-[0.2em]",
+                      "text-white",
+                      "shadow-lg",
                       "backdrop-blur-md",
                       "sm:left-5",
                       "sm:top-5",
-                      "sm:text-xs",
+                      "sm:text-[10px]",
                     ].join(" ")}
                   >
                     <span
                       aria-hidden="true"
-                      className="h-2 w-2 rounded-full bg-[#155eef]"
+                      className="h-1.5 w-1.5 rounded-full bg-[#c8102e]"
                     />
 
                     GNPC
                   </div>
 
-                  {/* Bottom image information */}
+                  {/* Bottom editorial caption */}
 
                   <div
                     className={[
+                      "pointer-events-none",
                       "absolute",
                       "bottom-0",
                       "left-0",
@@ -477,16 +672,110 @@ export default function Hero() {
                       "sm:p-7",
                     ].join(" ")}
                   >
-                    <div className="max-w-lg">
-                      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/75">
+                    <div
+                      className={[
+                        "max-w-xl",
+                        "border-l-2",
+                        "border-white/60",
+                        "pl-4",
+                      ].join(" ")}
+                    >
+                      <p
+                        className={[
+                          "text-[9px]",
+                          "font-extrabold",
+                          "uppercase",
+                          "tracking-[0.2em]",
+                          "text-white/65",
+                          "sm:text-[10px]",
+                        ].join(" ")}
+                      >
                         {siteName}
                       </p>
 
-                      <p className="mt-1.5 text-sm font-bold leading-6 text-white sm:text-base sm:leading-7">
-                        Journalism, media and community — connected through GNPC.
+                      <p
+                        className={[
+                          "mt-1.5",
+                          "text-sm",
+                          "font-bold",
+                          "leading-6",
+                          "text-white",
+                          "sm:text-base",
+                          "sm:leading-7",
+                        ].join(" ")}
+                      >
+                        Journalism, media and community —
+                        connected through GNPC.
                       </p>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* =================================================
+                  FLOATING EDITORIAL DETAIL
+                  ================================================= */}
+
+              <div
+                className={[
+                  "absolute",
+                  "-bottom-5",
+                  "left-5",
+                  "hidden",
+                  "items-center",
+                  "gap-3",
+                  "rounded-xl",
+                  "border",
+                  "border-slate-200",
+                  "bg-white",
+                  "px-4",
+                  "py-3",
+                  "shadow-[0_12px_32px_rgba(15,23,42,0.10)]",
+                  "sm:flex",
+                  "lg:left-8",
+                ].join(" ")}
+              >
+                <span
+                  className={[
+                    "flex",
+                    "h-8",
+                    "w-8",
+                    "items-center",
+                    "justify-center",
+                    "rounded-lg",
+                    "bg-[#eef4ff]",
+                    "text-[#155eef]",
+                  ].join(" ")}
+                >
+                  <Newspaper
+                    size={15}
+                    aria-hidden="true"
+                  />
+                </span>
+
+                <div>
+                  <p
+                    className={[
+                      "text-[9px]",
+                      "font-extrabold",
+                      "uppercase",
+                      "tracking-[0.16em]",
+                      "text-slate-400",
+                    ].join(" ")}
+                  >
+                    GNPC
+                  </p>
+
+                  <p
+                    className={[
+                      "mt-0.5",
+                      "text-xs",
+                      "font-bold",
+                      "text-slate-700",
+                    ].join(" ")}
+                  >
+                    Greater Noida
+                  </p>
                 </div>
               </div>
             </div>
@@ -495,16 +784,66 @@ export default function Hero() {
       </div>
 
       {/* =====================================================
-          TRUST / IDENTITY STRIP
+          BOTTOM IDENTITY STRIP
           ===================================================== */}
 
-      <div className="relative border-t border-slate-100 bg-slate-50/70">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
-            {siteName}
-          </p>
+      <div
+        className={[
+          "relative",
+          "border-t",
+          "border-slate-200/80",
+          "bg-white/75",
+        ].join(" ")}
+      >
+        <div
+          className={[
+            "mx-auto",
+            "flex",
+            "max-w-[80rem]",
+            "flex-col",
+            "gap-2.5",
+            "px-4",
+            "py-4",
+            "sm:flex-row",
+            "sm:items-center",
+            "sm:justify-between",
+            "sm:px-6",
+            "lg:px-8",
+          ].join(" ")}
+        >
+          <div
+            className={[
+              "flex",
+              "items-center",
+              "gap-2.5",
+            ].join(" ")}
+          >
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full bg-[#c8102e]"
+            />
 
-          <p className="text-sm font-medium text-slate-600">
+            <p
+              className={[
+                "text-[10px]",
+                "font-extrabold",
+                "uppercase",
+                "tracking-[0.16em]",
+                "text-slate-500",
+              ].join(" ")}
+            >
+              {siteName}
+            </p>
+          </div>
+
+          <p
+            className={[
+              "text-xs",
+              "font-semibold",
+              "text-slate-500",
+              "sm:text-sm",
+            ].join(" ")}
+          >
             Journalism • Media • Community
           </p>
         </div>
