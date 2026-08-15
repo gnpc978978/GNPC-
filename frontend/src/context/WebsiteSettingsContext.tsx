@@ -12,14 +12,20 @@ import {
   responseJson,
 } from "@/services/api";
 
+import type {
+  HomeSettings,
+} from "@/types/homeSettings";
+
 export type WebsiteSettings = {
   siteName?: string;
+
   logo?: string;
   favicon?: string;
 
   heroTitle?: string;
   heroDescription?: string;
   heroImage?: string;
+
   aboutImage?: string;
 
   email?: string;
@@ -51,14 +57,20 @@ export type WebsiteSettings = {
     description?: string;
     keywords?: string[];
   };
+
+  home?: HomeSettings;
 };
 
-type WebsiteSettingsContextValue = {
-  settings: WebsiteSettings;
-  loading: boolean;
-  error: boolean;
-  refresh: () => Promise<void>;
-};
+type WebsiteSettingsContextValue =
+  {
+    settings: WebsiteSettings;
+
+    loading: boolean;
+
+    error: boolean;
+
+    refresh: () => Promise<void>;
+  };
 
 const WebsiteSettingsContext =
   createContext<WebsiteSettingsContextValue | null>(
@@ -140,7 +152,9 @@ export function WebsiteSettingsProvider({
   }, []);
 
   useEffect(() => {
-    if (!settings.seo?.title) {
+    if (
+      !settings.seo?.title
+    ) {
       return;
     }
 
