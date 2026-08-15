@@ -112,7 +112,7 @@ export default function PublicGallery({
         setLoading(false);
       }
     },
-    [API_URL]
+    []
   );
 
   useEffect(() => {
