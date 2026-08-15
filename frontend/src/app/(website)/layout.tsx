@@ -141,11 +141,10 @@ export default function WebsiteLayout({
           desktop header dimensions.
           ===================================================== */}
 
-      <div
-        aria-hidden="true"
-        className="h-[122px]"
-      />
-
+<div
+  aria-hidden="true"
+  className="h-[114px]"
+/>
       {/* =====================================================
           MAIN WEBSITE CONTENT
           ===================================================== */}
