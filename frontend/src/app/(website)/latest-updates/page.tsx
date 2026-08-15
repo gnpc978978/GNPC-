@@ -23,6 +23,9 @@ import {
 import { motion } from "framer-motion";
 
 import Container from "@/components/ui/Container";
+import PageHero from "@/components/ui/PageHero";
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+import { mergePageSettings } from "@/types/pageSettings";
 import {
   apiFetch,
   responseJson,
@@ -111,26 +114,11 @@ type CalendarItem = {
   href: string;
 };
 
-const tabs: {
-  value: Tab;
-  label: string;
-}[] = [
-  {
-    value: "all",
-    label: "All",
-  },
-  {
-    value: "press-releases",
-    label: "Press Releases",
-  },
-  {
-    value: "announcements",
-    label: "Announcements",
-  },
-  {
-    value: "events",
-    label: "Events",
-  },
+const tabValues: Tab[] = [
+  "all",
+  "press-releases",
+  "announcements",
+  "events",
 ];
 
 const typeLabels: Record<
@@ -977,6 +965,23 @@ function UpdatesCalendar({
 }
 
 export default function LatestUpdatesPage() {
+  const { settings } = useWebsiteSettings();
+  const pageSettings = mergePageSettings(
+    settings.pageSettings
+  ).latestUpdates;
+
+  const tabs = tabValues.map((value) => ({
+    value,
+    label:
+      value === "all"
+        ? pageSettings.allTabLabel
+        : value === "press-releases"
+          ? pageSettings.pressReleasesTabLabel
+          : value === "announcements"
+            ? pageSettings.announcementsTabLabel
+            : pageSettings.eventsTabLabel,
+  }));
+
   const router =
     useRouter();
 
@@ -1301,12 +1306,17 @@ export default function LatestUpdatesPage() {
               ? bDate - aDate
               : aDate - bDate;
           }
+        )
+        .slice(
+          0,
+          Math.max(1, Math.min(100, Number(pageSettings.pageSize) || 12))
         );
     }, [
       feed,
       query,
       sortOrder,
       tab,
+      pageSettings.pageSize,
     ]);
 
   const selectTab = (
@@ -1341,7 +1351,18 @@ export default function LatestUpdatesPage() {
   };
 
   return (
-    <section className="min-h-screen bg-slate-50 py-14 sm:py-20">
+    <main>
+      <PageHero
+        eyebrow={pageSettings.pageEyebrow}
+        title={pageSettings.pageTitle}
+        description={pageSettings.pageDescription}
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: pageSettings.pageTitle },
+        ]}
+      />
+
+      <section className="min-h-screen bg-slate-50 py-14 sm:py-20">
       <Container>
         <div className="flex flex-col gap-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap gap-2">
@@ -1373,7 +1394,9 @@ export default function LatestUpdatesPage() {
             )}
           </div>
 
+          {pageSettings.showSearch || pageSettings.showSort ? (
           <div className="flex flex-col gap-3 sm:flex-row">
+            {pageSettings.showSearch && (
             <label className="relative">
               <Search
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -1390,11 +1413,13 @@ export default function LatestUpdatesPage() {
                       .value
                   )
                 }
-                placeholder="Search updates"
+                placeholder={pageSettings.searchPlaceholder}
                 className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 sm:w-60"
               />
             </label>
+            )}
 
+            {pageSettings.showSort && (
             <select
               value={sortOrder}
               onChange={(
@@ -1417,10 +1442,13 @@ export default function LatestUpdatesPage() {
                 Oldest first
               </option>
             </select>
+            )}
           </div>
+          ) : null}
         </div>
 
-        {!loading &&
+        {pageSettings.showCalendar &&
+          !loading &&
           !error && (
             <UpdatesCalendar
               items={
@@ -1552,7 +1580,7 @@ export default function LatestUpdatesPage() {
                           )}`}
                           className="mt-6 inline-flex items-center gap-1 text-sm font-extrabold text-blue-700 transition group-hover:gap-2"
                         >
-                          Read More
+                          {pageSettings.readMoreLabel}
                           <ChevronRight
                             size={
                               17
@@ -1568,6 +1596,8 @@ export default function LatestUpdatesPage() {
           )}
         </div>
       </Container>
-    </section>
+      </section>
+    </main>
   );
 }
+
