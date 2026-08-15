@@ -38,9 +38,9 @@ export default function TopBar() {
 
       setDate(
         now.toLocaleDateString("en-IN", {
-          weekday: "long",
+          weekday: "short",
           day: "numeric",
-          month: "long",
+          month: "short",
           year: "numeric",
         })
       );
@@ -61,20 +61,17 @@ export default function TopBar() {
   const socialLinks = [
     {
       label: "Facebook",
-      href:
-        settings.socialLinks?.facebook || "",
+      href: settings.socialLinks?.facebook || "",
       icon: FaFacebookF,
     },
     {
       label: "Instagram",
-      href:
-        settings.socialLinks?.instagram || "",
+      href: settings.socialLinks?.instagram || "",
       icon: FaInstagram,
     },
     {
       label: "X",
-      href:
-        settings.socialLinks?.twitter || "",
+      href: settings.socialLinks?.twitter || "",
       icon: FaXTwitter,
     },
   ].filter((item) => Boolean(item.href));
@@ -88,69 +85,59 @@ export default function TopBar() {
         "overflow-hidden",
         "border-b",
         "border-white/10",
-        "bg-[#071c2d]",
+        "bg-[#061827]",
         "text-white",
       ].join(" ")}
     >
-      {/* =====================================================
-          SUBTLE BACKGROUND DETAIL
-          ===================================================== */}
+      {/* Animated ambient light */}
 
       <div
         aria-hidden="true"
         className={[
           "pointer-events-none",
           "absolute",
-          "inset-0",
-          "opacity-40",
+          "-left-20",
+          "top-1/2",
+          "h-24",
+          "w-72",
+          "-translate-y-1/2",
+          "rounded-full",
+          "bg-[#155eef]/20",
+          "blur-3xl",
         ].join(" ")}
-      >
-        <div
-          className={[
-            "absolute",
-            "left-0",
-            "top-0",
-            "h-full",
-            "w-48",
-            "bg-gradient-to-r",
-            "from-[#155eef]/10",
-            "to-transparent",
-          ].join(" ")}
-        />
+      />
 
-        <div
-          className={[
-            "absolute",
-            "right-0",
-            "top-0",
-            "h-full",
-            "w-72",
-            "bg-gradient-to-l",
-            "from-[#155eef]/10",
-            "to-transparent",
-          ].join(" ")}
-        />
-      </div>
+      <div
+        aria-hidden="true"
+        className={[
+          "pointer-events-none",
+          "absolute",
+          "right-0",
+          "top-0",
+          "h-full",
+          "w-1/3",
+          "bg-gradient-to-l",
+          "from-[#c8102e]/10",
+          "to-transparent",
+        ].join(" ")}
+      />
 
       <div
         className={[
           "relative",
           "mx-auto",
           "flex",
-          "min-h-[38px]",
-          "max-w-[80rem]",
+          "h-[40px]",
+          "max-w-[90rem]",
           "items-center",
           "justify-between",
           "gap-4",
           "px-4",
-          "sm:min-h-[40px]",
           "sm:px-6",
           "lg:px-8",
         ].join(" ")}
       >
-        {/* =================================================
-            LEFT
-            ================================================= */}
+        {/* LEFT */}
 
         <div
           className={[
@@ -161,120 +148,105 @@ export default function TopBar() {
             "sm:gap-5",
           ].join(" ")}
         >
-          {/* Location */}
-
-          <div
-            className={[
-              "flex",
-              "shrink-0",
-              "items-center",
-              "gap-1.5",
-              "text-white/85",
-            ].join(" ")}
-          >
-            <FaMapMarkerAlt
-              size={10}
-              className="text-[#7eb0ff]"
-              aria-hidden="true"
-            />
-
-            <span
-              className={[
-                "whitespace-nowrap",
-                "text-[9px]",
-                "font-semibold",
-                "tracking-wide",
-                "sm:text-[11px]",
-              ].join(" ")}
-            >
-              Greater Noida
-            </span>
-          </div>
-
-          {/* Divider */}
-
-          <span
-            aria-hidden="true"
-            className="hidden h-4 w-px bg-white/15 sm:block"
-          />
-
-          {/* Established */}
-
-          <div
-            className={[
-              "hidden",
-              "items-center",
-              "text-[10px]",
-              "font-medium",
-              "tracking-wide",
-              "text-white/60",
-              "sm:flex",
-              "sm:text-[11px]",
-            ].join(" ")}
-          >
-            Est. 2003
-          </div>
-
-          <span
-            aria-hidden="true"
-            className="hidden h-1 w-1 rounded-full bg-[#c8102e] sm:block"
-          />
-
-          <div
-            className={[
-              "hidden",
-              "text-[10px]",
-              "font-semibold",
-              "tracking-wide",
-              "text-white/75",
-              "md:block",
-              "md:text-[11px]",
-            ].join(" ")}
-          >
-            23 Years of Truthful Journalism
-          </div>
-        </div>
-
-        {/* =================================================
-            RIGHT
-            ================================================= */}
-
-        <div
-          className={[
-            "flex",
-            "shrink-0",
-            "items-center",
-            "gap-2.5",
-            "sm:gap-4",
-          ].join(" ")}
-        >
-          {/* Date */}
+          {/* Live marker */}
 
           <div
             className={[
               "hidden",
               "items-center",
               "gap-2",
-              "border-l",
-              "border-white/10",
-              "pl-4",
-              "lg:flex",
+              "sm:flex",
             ].join(" ")}
           >
-            <HiCalendarDays
-              size={13}
-              className="text-[#7eb0ff]"
+            <span className="relative flex h-2 w-2">
+              <span
+                className={[
+                  "absolute",
+                  "inline-flex",
+                  "h-full",
+                  "w-full",
+                  "animate-ping",
+                  "rounded-full",
+                  "bg-[#c8102e]",
+                  "opacity-60",
+                ].join(" ")}
+              />
+
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c8102e]" />
+            </span>
+
+            <span className="text-[9px] font-black uppercase tracking-[0.18em] text-white/65">
+              GNPC Live
+            </span>
+          </div>
+
+          {/* Location */}
+
+          <div
+            className={[
+              "flex",
+              "items-center",
+              "gap-1.5",
+              "border-l",
+              "border-white/10",
+              "pl-3",
+              "sm:pl-5",
+            ].join(" ")}
+          >
+            <FaMapMarkerAlt
+              size={10}
+              className="text-[#8bbcff]"
               aria-hidden="true"
             />
 
-            <span
+            <span className="whitespace-nowrap text-[9px] font-bold tracking-wide text-white/80 sm:text-[10px]">
+              Greater Noida
+            </span>
+          </div>
+
+          {/* Scrolling editorial message */}
+
+          <div className="hidden min-w-0 overflow-hidden md:block">
+            <div
               className={[
-                "text-[10px]",
-                "font-medium",
-                "tracking-wide",
-                "text-white/65",
+                "whitespace-nowrap",
+                "text-[9px]",
+                "font-semibold",
+                "uppercase",
+                "tracking-[0.13em]",
+                "text-white/45",
               ].join(" ")}
             >
+              Est. 2003
+              <span className="mx-2 text-[#c8102e]">
+                •
+              </span>
+              23 Years of Truthful Journalism
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT */}
+
+        <div
+          className={[
+            "flex",
+            "shrink-0",
+            "items-center",
+            "gap-2",
+            "sm:gap-4",
+          ].join(" ")}
+        >
+          {/* Date */}
+
+          <div className="hidden items-center gap-2 lg:flex">
+            <HiCalendarDays
+              size={12}
+              className="text-[#8bbcff]"
+              aria-hidden="true"
+            />
+
+            <span className="text-[10px] font-semibold text-white/60">
               {date}
             </span>
           </div>
@@ -288,28 +260,17 @@ export default function TopBar() {
               "gap-1.5",
               "border-l",
               "border-white/10",
-              "pl-3",
-              "sm:gap-2",
+              "pl-2",
               "sm:pl-4",
             ].join(" ")}
           >
             <HiClock
-              size={13}
-              className="text-[#7eb0ff]"
+              size={12}
+              className="text-[#8bbcff]"
               aria-hidden="true"
             />
 
-            <span
-              className={[
-                "whitespace-nowrap",
-                "text-[9px]",
-                "font-bold",
-                "tracking-wide",
-                "text-white/85",
-                "tabular-nums",
-                "sm:text-[11px]",
-              ].join(" ")}
-            >
+            <span className="whitespace-nowrap font-mono text-[9px] font-bold tabular-nums text-white/80 sm:text-[10px]">
               {time}
             </span>
           </div>
@@ -326,7 +287,6 @@ export default function TopBar() {
                 "border-white/10",
                 "pl-3",
                 "sm:flex",
-                "sm:pl-4",
               ].join(" ")}
             >
               {socialLinks.map(
@@ -342,28 +302,39 @@ export default function TopBar() {
                     rel="noopener noreferrer"
                     aria-label={label}
                     className={[
+                      "group/social",
+                      "relative",
                       "flex",
-                      "h-6.5",
-                      "w-6.5",
+                      "h-6",
+                      "w-6",
                       "items-center",
                       "justify-center",
-                      "rounded-md",
-                      "border",
-                      "border-white/10",
-                      "text-white/55",
+                      "rounded-full",
+                      "text-white/45",
                       "transition-all",
                       "duration-200",
-                      "hover:border-white/20",
+                      "hover:-translate-y-0.5",
                       "hover:bg-white/10",
                       "hover:text-white",
-                      "focus-visible:outline-none",
-                      "focus-visible:ring-2",
-                      "focus-visible:ring-white",
                     ].join(" ")}
                   >
                     <Icon
                       size={10}
                       aria-hidden="true"
+                    />
+
+                    <span
+                      aria-hidden="true"
+                      className={[
+                        "absolute",
+                        "bottom-0",
+                        "h-px",
+                        "w-0",
+                        "bg-[#8bbcff]",
+                        "transition-all",
+                        "duration-200",
+                        "group-hover/social:w-3",
+                      ].join(" ")}
                     />
                   </a>
                 )
@@ -372,34 +343,6 @@ export default function TopBar() {
           )}
         </div>
       </div>
-
-      {/* =====================================================
-          EDITORIAL ACCENT
-          ===================================================== */}
-
-      <div
-        aria-hidden="true"
-        className={[
-          "absolute",
-          "bottom-0",
-          "left-0",
-          "h-px",
-          "w-24",
-          "bg-[#c8102e]",
-        ].join(" ")}
-      />
-
-      <div
-        aria-hidden="true"
-        className={[
-          "absolute",
-          "bottom-0",
-          "right-0",
-          "h-px",
-          "w-32",
-          "bg-[#155eef]",
-        ].join(" ")}
-      />
     </div>
   );
 }
