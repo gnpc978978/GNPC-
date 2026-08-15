@@ -14,6 +14,7 @@ import Card from "@/components/ui/Card";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
+import type { PressConferencePageSettings } from "@/types/pageSettings";
 
 type PressConference = {
   _id: string;
@@ -47,11 +48,17 @@ function formatDate(value?: string) {
 
 export default function PressConferenceList({
   latestOnly = false,
+  settings,
 }: {
   latestOnly?: boolean;
+  settings?: PressConferencePageSettings;
 }) {
   const [items, setItems] = useState<PressConference[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const pageSize = latestOnly
+    ? 3
+    : Math.max(1, Math.min(100, Number(settings?.pageSize) || 12));
 
   useEffect(() => {
     const load = async () => {
@@ -65,7 +72,7 @@ export default function PressConferenceList({
 
         setItems(
           Array.isArray(data.data)
-            ? data.data.slice(0, latestOnly ? 3 : 12)
+            ? data.data.slice(0, pageSize)
             : []
         );
       } catch (error) {
@@ -81,15 +88,16 @@ export default function PressConferenceList({
     };
 
     void load();
-  }, [latestOnly]);
+  }, [latestOnly, pageSize]);
 
   const title = latestOnly
     ? "Latest Press Conference"
-    : "Press Conferences";
+    : settings?.pageTitle || "Press Conferences";
 
   const description = latestOnly
     ? "The latest media interaction and official briefing from Greater Noida Press Club."
-    : "Stay informed about media interactions, public briefings and official announcements from Greater Noida Press Club.";
+    : settings?.pageDescription ||
+      "Stay informed about media interactions, public briefings and official announcements from Greater Noida Press Club.";
 
   return (
     <main className="bg-white">
@@ -99,8 +107,8 @@ export default function PressConferenceList({
 
       {!latestOnly && (
         <PageHero
-          eyebrow="Media & Journalism"
-          title="Press Conferences"
+          eyebrow={settings?.pageEyebrow || "Media & Journalism"}
+          title={title}
           description={description}
         />
       )}
@@ -235,3 +243,4 @@ export default function PressConferenceList({
     </main>
   );
 }
+
