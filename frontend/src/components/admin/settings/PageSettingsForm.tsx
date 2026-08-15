@@ -248,7 +248,7 @@ export default function PageSettingsForm({
     };
   }, [pageKey]);
 
-  const update = (key: keyof FormState, value: unknown) => {
+  const update = (key: string, value: unknown) => {
     setForm((current) =>
       ({
         ...current,
@@ -334,7 +334,7 @@ export default function PageSettingsForm({
             label="Eyebrow"
             value={common.pageEyebrow}
             onChange={(value) =>
-              update("pageEyebrow" as keyof FormState, value as never)
+              update("pageEyebrow", value)
             }
           />
 
@@ -342,7 +342,7 @@ export default function PageSettingsForm({
             label="Page Title"
             value={common.pageTitle}
             onChange={(value) =>
-              update("pageTitle" as keyof FormState, value as never)
+              update("pageTitle", value)
             }
           />
 
@@ -351,7 +351,7 @@ export default function PageSettingsForm({
             value={common.pageDescription}
             textarea
             onChange={(value) =>
-              update("pageDescription" as keyof FormState, value as never)
+              update("pageDescription", value)
             }
           />
         </div>
