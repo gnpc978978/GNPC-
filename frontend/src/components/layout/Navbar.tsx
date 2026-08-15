@@ -45,19 +45,17 @@ export default function Navbar() {
   return (
     <>
       <nav
-        aria-label="Primary navigation"
-        className={[
-          "relative",
-          "z-[105]",
-          "w-full",
-          "border-b",
-          "transition-all",
-          "duration-300",
-          scrolled
-            ? "border-slate-200/80 bg-white/90 shadow-[0_12px_35px_rgba(15,23,42,0.10)] backdrop-blur-xl"
-            : "border-slate-100 bg-white",
-        ].join(" ")}
-      >
+ <nav
+  className={[
+    "relative z-[105] w-full",
+    "bg-[#07111f] text-white",
+    "border-b border-white/[0.08]",
+    "transition-all duration-500",
+    scrolled
+      ? "shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+      : "",
+  ].join(" ")}
+>
         <div
           aria-hidden="true"
           className="absolute left-0 right-0 top-0 h-[2px] bg-gradient-to-r from-[#0f4c81] via-[#155eef] to-[#c8102e]"
