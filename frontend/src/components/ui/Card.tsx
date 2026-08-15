@@ -7,9 +7,6 @@ type CardProps = {
 
   padding?: "none" | "sm" | "md" | "lg";
 
-  /*
-   * Public cards use hover elevation by default.
-   */
   hover?: boolean;
 
   onClick?: () => void;
@@ -35,41 +32,60 @@ export default function Card({
     <div
       onClick={onClick}
       className={[
-        /*
-         * GNPC standard card.
-         *
-         * rounded-2xl
-         * border
-         * white
-         * subtle shadow
-         */
-        "gnpc-card",
+        "group",
+        "relative",
+        "overflow-hidden",
+        "border",
+        "border-slate-200/80",
+        "bg-white",
+        "shadow-[0_4px_18px_rgba(15,23,42,0.045)]",
+        "transition-all",
+        "duration-300",
+        "ease-out",
 
-        /*
-         * Controlled hover elevation.
-         */
-        hover ? "gnpc-card-hover" : "",
+        hover
+          ? [
+              "hover:-translate-y-1",
+              "hover:border-slate-300",
+              "hover:shadow-[0_16px_38px_rgba(15,23,42,0.09)]",
+            ].join(" ")
+          : "",
 
-        /*
-         * Standard internal spacing.
-         */
         paddingClass,
 
-        /*
-         * Clickable cards.
-         */
-        onClick ? "cursor-pointer" : "",
+        onClick
+          ? "cursor-pointer"
+          : "",
 
-        /*
-         * Page-specific layout classes are still allowed
-         * through className, but the visual foundation
-         * remains GNPC-standardized.
-         */
         className,
       ]
         .filter(Boolean)
         .join(" ")}
     >
+      {/* Subtle top highlight */}
+
+      <span
+        aria-hidden="true"
+        className={[
+          "pointer-events-none",
+          "absolute",
+          "left-0",
+          "right-0",
+          "top-0",
+          "h-px",
+          "bg-gradient-to-r",
+          "from-transparent",
+          "via-[#155eef]/20",
+          "to-transparent",
+          "opacity-0",
+          "transition-opacity",
+          "duration-300",
+          hover
+            ? "group-hover:opacity-100"
+            : "",
+        ].join(" ")}
+      />
+
       {children}
     </div>
   );
