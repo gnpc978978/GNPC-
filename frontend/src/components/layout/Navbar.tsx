@@ -55,34 +55,58 @@ export default function Navbar() {
       <nav
         aria-label="Primary navigation"
         className={[
-          "relative",
+          "sticky",
+          "top-0",
+          "z-40",
           "w-full",
           "border-b",
-          "border-slate-200",
-          "bg-white",
-          "transition-shadow",
-          "duration-200",
+          "transition-all",
+          "duration-300",
           scrolled
-            ? "shadow-[0_4px_18px_rgba(15,76,129,0.08)]"
-            : "shadow-none",
+            ? [
+                "border-slate-200/80",
+                "bg-white/95",
+                "shadow-[0_8px_30px_rgba(15,23,42,0.07)]",
+                "backdrop-blur-xl",
+              ].join(" ")
+            : [
+                "border-slate-200/70",
+                "bg-white",
+                "shadow-[0_1px_2px_rgba(15,23,42,0.02)]",
+              ].join(" "),
         ].join(" ")}
       >
         <Container>
           <div
             className={[
               "flex",
-              "h-[74px]",
+              "h-[72px]",
               "items-center",
               "justify-between",
               "gap-5",
-              "lg:h-[76px]",
+              "transition-[height]",
+              "duration-300",
+              "lg:h-[78px]",
+              scrolled
+                ? "lg:h-[70px]"
+                : "",
             ].join(" ")}
           >
             {/* =================================================
                 LOGO
                 ================================================= */}
 
-            <div className="min-w-0 shrink-0">
+            <div
+              className={[
+                "min-w-0",
+                "shrink-0",
+                "transition-transform",
+                "duration-300",
+                scrolled
+                  ? "scale-[0.97]"
+                  : "scale-100",
+              ].join(" ")}
+            >
               <Logo />
             </div>
 
@@ -93,7 +117,12 @@ export default function Navbar() {
             <div className="hidden min-w-0 flex-1 items-center justify-end xl:flex">
               <nav
                 aria-label="Desktop navigation"
-                className="flex items-center gap-4 2xl:gap-6"
+                className={[
+                  "flex",
+                  "items-center",
+                  "gap-1",
+                  "2xl:gap-2",
+                ].join(" ")}
               >
                 {navigation.map((item) => (
                   <NavLink
@@ -112,30 +141,47 @@ export default function Navbar() {
               <Link
                 href="/admin/login"
                 className={[
-                  "ml-5",
+                  "group",
+                  "ml-4",
                   "inline-flex",
-                  "h-11",
+                  "h-10",
                   "items-center",
                   "justify-center",
-                  "rounded-xl",
+                  "gap-2",
+                  "rounded-lg",
                   "border",
                   "border-[#0f4c81]",
-                  "bg-white",
-                  "px-5",
-                  "text-sm",
+                  "bg-[#0f4c81]",
+                  "px-4",
+                  "text-[13px]",
                   "font-bold",
-                  "text-[#0f4c81]",
+                  "tracking-[0.01em]",
+                  "text-white",
+                  "shadow-[0_4px_14px_rgba(15,76,129,0.14)]",
                   "transition-all",
                   "duration-200",
-                  "hover:bg-[#0f4c81]",
-                  "hover:text-white",
+                  "hover:-translate-y-0.5",
+                  "hover:bg-[#0b3d68]",
+                  "hover:shadow-[0_8px_20px_rgba(15,76,129,0.20)]",
                   "focus-visible:outline-none",
                   "focus-visible:ring-2",
                   "focus-visible:ring-[#0f4c81]",
                   "focus-visible:ring-offset-2",
                 ].join(" ")}
               >
-                Login
+                <span>Login</span>
+
+                <span
+                  aria-hidden="true"
+                  className={[
+                    "text-white/60",
+                    "transition-transform",
+                    "duration-200",
+                    "group-hover:translate-x-0.5",
+                  ].join(" ")}
+                >
+                  →
+                </span>
               </Link>
             </div>
 
@@ -150,20 +196,24 @@ export default function Navbar() {
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
               className={[
+                "group",
                 "flex",
                 "h-11",
                 "w-11",
                 "items-center",
                 "justify-center",
-                "rounded-xl",
+                "rounded-lg",
                 "border",
                 "border-slate-200",
                 "bg-white",
                 "text-[#0f4c81]",
+                "shadow-[0_2px_8px_rgba(15,23,42,0.04)]",
                 "transition-all",
                 "duration-200",
+                "hover:-translate-y-0.5",
                 "hover:border-[#0f4c81]",
-                "hover:bg-[#eef6fc]",
+                "hover:bg-[#eef4ff]",
+                "hover:shadow-[0_6px_16px_rgba(15,76,129,0.10)]",
                 "focus-visible:outline-none",
                 "focus-visible:ring-2",
                 "focus-visible:ring-[#0f4c81]",
@@ -172,12 +222,30 @@ export default function Navbar() {
               ].join(" ")}
             >
               <HiBars3
-                size={25}
+                size={24}
                 aria-hidden="true"
+                className="transition-transform duration-200 group-hover:scale-105"
               />
             </button>
           </div>
         </Container>
+
+        {/* Subtle bottom highlight */}
+        <div
+          aria-hidden="true"
+          className={[
+            "pointer-events-none",
+            "absolute",
+            "bottom-0",
+            "left-0",
+            "h-px",
+            "w-full",
+            "bg-gradient-to-r",
+            "from-transparent",
+            "via-[#155eef]/10",
+            "to-transparent",
+          ].join(" ")}
+        />
       </nav>
 
       <MobileMenu
