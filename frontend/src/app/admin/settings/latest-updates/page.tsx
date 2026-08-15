@@ -6,11 +6,15 @@ export default function LatestUpdatesSettingsPage() {
       <h1 className="mb-2 text-3xl font-bold text-slate-900">
         Latest Updates Section
       </h1>
+
       <p className="mb-6 max-w-4xl text-sm leading-6 text-slate-500">
-        Control the public page heading, display options, filters and card
-        limits. Use the linked content manager to edit the actual records.
+        Control the public Latest Updates page heading, description, display
+        limits, search, filters, sorting, tabs and pagination. Use the linked
+        content managers to edit the actual updates, announcements, press
+        releases and events.
       </p>
-      <PageSettingsForm pageKey="latest-updates" />
+
+      <PageSettingsForm pageKey="latestUpdates" />
     </div>
   );
 }
