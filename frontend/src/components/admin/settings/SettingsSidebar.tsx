@@ -11,6 +11,11 @@ import {
   FaFilePdf,
   FaSearch,
   FaInfoCircle,
+  FaImages,
+  FaNewspaper,
+  FaMicrophone,
+  FaUsers,
+  FaUserTie,
 } from "react-icons/fa";
 
 const menu = [
@@ -19,43 +24,61 @@ const menu = [
     link: "/admin/settings/site-details",
     icon: <FaGlobe />,
   },
-
   {
     name: "Logo Upload",
     link: "/admin/settings/logo",
     icon: <FaImage />,
   },
-
   {
     name: "Home Section",
     link: "/admin/settings/home",
     icon: <FaHome />,
   },
-
   {
     name: "About Section",
     link: "/admin/settings/about",
     icon: <FaInfoCircle />,
   },
-
+  {
+    name: "Gallery Section",
+    link: "/admin/settings/gallery",
+    icon: <FaImages />,
+  },
+  {
+    name: "Latest Updates Section",
+    link: "/admin/settings/latest-updates",
+    icon: <FaNewspaper />,
+  },
+  {
+    name: "Press Conference Section",
+    link: "/admin/settings/press-conference",
+    icon: <FaMicrophone />,
+  },
+  {
+    name: "Office Bearers Section",
+    link: "/admin/settings/office-bearers",
+    icon: <FaUserTie />,
+  },
+  {
+    name: "Executive Committee Section",
+    link: "/admin/settings/executive-committee",
+    icon: <FaUsers />,
+  },
   {
     name: "Contact Information",
     link: "/admin/settings/contact",
     icon: <FaPhone />,
   },
-
   {
     name: "Social Links",
     link: "/admin/settings/social-links",
     icon: <FaShareAlt />,
   },
-
   {
     name: "Membership Form",
     link: "/admin/settings/membership",
     icon: <FaFilePdf />,
   },
-
   {
     name: "SEO Settings",
     link: "/admin/settings/seo",
@@ -70,20 +93,18 @@ export default function SettingsSidebar() {
         Website Settings
       </h2>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {menu.map((item) => (
           <Link
             key={item.link}
             href={item.link}
-            className="flex items-center gap-3 rounded-lg p-3 text-gray-700 transition hover:bg-blue-50"
+            className="flex items-center gap-3 rounded-lg p-3 text-gray-700 transition hover:bg-blue-50 hover:text-slate-900"
           >
-            <span className="text-blue-600">
+            <span className="shrink-0 text-blue-600">
               {item.icon}
             </span>
 
-            <span>
-              {item.name}
-            </span>
+            <span>{item.name}</span>
           </Link>
         ))}
       </div>
