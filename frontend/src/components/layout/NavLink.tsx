@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
 
 interface NavLinkProps {
   href: string;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export default function NavLink({
@@ -25,44 +24,66 @@ export default function NavLink({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className="group/nav relative inline-flex h-[68px] items-center whitespace-nowrap px-1 text-[13px] font-bold tracking-[-0.01em] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-4 focus-visible:ring-offset-white"
+      className={[
+        "group relative inline-flex h-[58px] items-center",
+        "px-3.5 2xl:px-4",
+        "whitespace-nowrap",
+        "text-[13px] 2xl:text-[14px]",
+        "font-extrabold uppercase",
+        "tracking-[0.075em]",
+        "transition-all duration-300 ease-out",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-[#c8102e]",
+        "focus-visible:ring-offset-2",
+        active
+          ? "text-[#172033]"
+          : "text-slate-500 hover:-translate-y-0.5 hover:text-[#172033]",
+      ].join(" ")}
     >
+      {/* Hover background */}
       <span
+        aria-hidden="true"
         className={[
-          "relative z-10 transition-all duration-300 group-hover/nav:-translate-y-0.5",
-          active
-            ? "text-[#0f4c81]"
-            : "text-slate-600 group-hover/nav:text-[#0f4c81]",
+          "absolute inset-x-1 top-2 bottom-2 -z-10 rounded-xl",
+          "bg-slate-100",
+          "opacity-0 scale-95",
+          "transition-all duration-300",
+          "group-hover:scale-100 group-hover:opacity-100",
+          active ? "scale-100 opacity-100" : "",
         ].join(" ")}
-      >
+      />
+
+      {/* Text */}
+      <span className="relative z-10">
         {children}
       </span>
 
+      {/* Animated underline */}
       <span
         aria-hidden="true"
         className={[
-          "absolute bottom-[9px] left-0 h-[3px] overflow-hidden rounded-full bg-[#155eef] shadow-[0_0_12px_rgba(21,94,239,0.35)] transition-all duration-300",
+          "absolute bottom-[7px] left-1/2 h-[3px]",
+          "-translate-x-1/2 rounded-full",
+          "bg-[#c8102e]",
+          "transition-all duration-300 ease-out",
           active
-            ? "w-full"
-            : "w-0 group-hover/nav:w-full",
+            ? "w-[24px]"
+            : "w-0 group-hover:w-[24px]",
         ].join(" ")}
       />
 
+      {/* Small active dot */}
       <span
         aria-hidden="true"
         className={[
-          "absolute bottom-[8px] left-1/2 h-1 w-1 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#c8102e] transition-all duration-300",
+          "absolute right-1 top-1/2 h-1.5 w-1.5",
+          "-translate-y-1/2 rounded-full",
+          "bg-[#c8102e]",
+          "transition-all duration-300",
           active
-            ? "opacity-100"
-            : "opacity-0 group-hover/nav:opacity-100",
-        ].join(" ")}
-      />
-
-      <span
-        aria-hidden="true"
-        className={[
-          "pointer-events-none absolute -inset-x-3 inset-y-2 -z-0 rounded-lg bg-[#f2f7fc] opacity-0 scale-95 transition-all duration-300 group-hover/nav:scale-100 group-hover/nav:opacity-100",
-          active ? "scale-100 opacity-100" : "",
+            ? "scale-100 opacity-100"
+            : "scale-0 opacity-0",
         ].join(" ")}
       />
     </Link>
