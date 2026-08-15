@@ -2,11 +2,8 @@ import type { ReactNode } from "react";
 
 type ContainerProps = {
   children: ReactNode;
-
   className?: string;
-
   size?: "sm" | "md" | "lg" | "xl" | "full";
-
   as?: "div" | "section" | "main";
 };
 
@@ -27,17 +24,14 @@ export default function Container({
           ? "max-w-6xl"
           : size === "full"
             ? "max-w-full"
-            : "max-w-7xl";
+            : "max-w-[1280px]";
 
   return (
     <Component
       className={[
-        "mx-auto",
-        "w-full",
+        "mx-auto w-full",
         sizeClass,
-        "px-4",
-        "sm:px-6",
-        "lg:px-8",
+        "px-4 sm:px-6 lg:px-8 xl:px-10",
         className,
       ]
         .filter(Boolean)
