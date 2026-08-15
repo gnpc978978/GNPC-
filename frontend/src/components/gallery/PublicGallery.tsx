@@ -11,6 +11,8 @@ import {
   apiFetch,
   responseJson,
 } from "@/services/api";
+import type { GalleryPageSettings } from "@/types/pageSettings";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -36,9 +38,11 @@ type GalleryPhoto = {
   galleryId: string;
 };
 
-const PAGE_SIZE = 12;
-
-export default function PublicGallery() {
+export default function PublicGallery({
+  settings,
+}: {
+  settings: GalleryPageSettings;
+}) {
   const [galleries, setGalleries] =
     useState<Gallery[]>([]);
 
@@ -56,6 +60,8 @@ export default function PublicGallery() {
 
   const [selectedIndex, setSelectedIndex] =
     useState<number | null>(null);
+
+  const pageSize = Math.max(1, Math.min(100, Number(settings.pageSize) || 12));
 
   /*
    * -------------------------------------------------------
@@ -226,14 +232,14 @@ export default function PublicGallery() {
   const totalPages = Math.max(
     1,
     Math.ceil(
-      photos.length / PAGE_SIZE
+      photos.length / pageSize
     )
   );
 
   const visiblePhotos =
     photos.slice(
-      (page - 1) * PAGE_SIZE,
-      page * PAGE_SIZE
+      (page - 1) * pageSize,
+      page * pageSize
     );
 
   /*
@@ -428,7 +434,7 @@ export default function PublicGallery() {
     <>
       <section className="bg-white px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
-          {categories.length > 1 && (
+          {settings.showCategoryFilter && categories.length > 1 && (
             <div className="mb-8 flex gap-2 overflow-x-auto pb-2 scrollbar-hide sm:mb-10 sm:flex-wrap sm:overflow-visible">
               {categories.map(
                 (item) => {
@@ -558,7 +564,7 @@ export default function PublicGallery() {
                 )}
               </div>
 
-              {totalPages > 1 && (
+              {settings.showPagination && totalPages > 1 && (
                 <div className="mt-10 flex items-center justify-center gap-2 sm:mt-12">
                   <button
                     type="button"
