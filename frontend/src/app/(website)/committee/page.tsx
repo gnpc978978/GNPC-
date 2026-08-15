@@ -1,20 +1,29 @@
+"use client";
+
 import PageHero from "@/components/ui/PageHero";
 import ExecutiveCommitteeSection from "@/components/website/ExecutiveCommitteeSection";
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+import { mergePageSettings } from "@/types/pageSettings";
 
-export default function CommitteePage() {
+export default function ExecutiveCommitteePage() {
+  const { settings } = useWebsiteSettings();
+  const pageSettings = mergePageSettings(
+    settings.pageSettings
+  ).executiveCommittee;
+
   return (
-    <main className="bg-white">
+    <main>
       <PageHero
-        eyebrow="Executive Committee"
-        title="Our Executive Committee"
-        description="Meet the office bearers and executive committee members of Greater Noida Press Club."
+        eyebrow={pageSettings.pageEyebrow}
+        title={pageSettings.pageTitle}
+        description={pageSettings.pageDescription}
         breadcrumbs={[
           { label: "Home", href: "/" },
-          { label: "Executive Committee" },
+          { label: pageSettings.pageTitle },
         ]}
       />
 
-      <ExecutiveCommitteeSection />
+      <ExecutiveCommitteeSection settings={pageSettings} />
     </main>
   );
 }
