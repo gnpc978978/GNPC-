@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { HiBars3 } from "react-icons/hi2";
+
+import {
+  HiArrowRight,
+  HiBars3,
+} from "react-icons/hi2";
 
 import Container from "@/components/ui/Container";
 
@@ -13,12 +17,15 @@ import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
+  const [scrolled, setScrolled] =
+    useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 8);
+      setScrolled(window.scrollY > 12);
     };
 
     handleScroll();
@@ -55,24 +62,21 @@ export default function Navbar() {
       <nav
         aria-label="Primary navigation"
         className={[
-          "sticky",
-          "top-0",
-          "z-40",
+          "relative",
           "w-full",
           "border-b",
           "transition-all",
           "duration-300",
           scrolled
             ? [
-                "border-slate-200/80",
+                "border-slate-200/90",
                 "bg-white/95",
-                "shadow-[0_8px_30px_rgba(15,23,42,0.07)]",
+                "shadow-[0_12px_35px_rgba(15,23,42,0.10)]",
                 "backdrop-blur-xl",
               ].join(" ")
             : [
-                "border-slate-200/70",
+                "border-slate-200",
                 "bg-white",
-                "shadow-[0_1px_2px_rgba(15,23,42,0.02)]",
               ].join(" "),
         ].join(" ")}
       >
@@ -80,41 +84,68 @@ export default function Navbar() {
           <div
             className={[
               "flex",
-              "h-[72px]",
+              "h-[78px]",
               "items-center",
               "justify-between",
               "gap-5",
-              "transition-[height]",
-              "duration-300",
-              "lg:h-[78px]",
-              scrolled
-                ? "lg:h-[70px]"
-                : "",
+              "lg:h-[82px]",
             ].join(" ")}
           >
             {/* =================================================
                 LOGO
                 ================================================= */}
 
-            <div
+            <Link
+              href="/"
+              aria-label="Greater Noida Press Club home"
               className={[
+                "group",
+                "relative",
+                "flex",
                 "min-w-0",
                 "shrink-0",
-                "transition-transform",
-                "duration-300",
-                scrolled
-                  ? "scale-[0.97]"
-                  : "scale-100",
+                "items-center",
+                "rounded-lg",
+                "focus-visible:outline-none",
+                "focus-visible:ring-2",
+                "focus-visible:ring-[#155eef]",
+                "focus-visible:ring-offset-4",
               ].join(" ")}
             >
               <Logo />
-            </div>
+
+              {/* Small editorial underline */}
+
+              <span
+                aria-hidden="true"
+                className={[
+                  "absolute",
+                  "-bottom-2",
+                  "left-0",
+                  "h-0.5",
+                  "w-0",
+                  "bg-[#c8102e]",
+                  "transition-all",
+                  "duration-300",
+                  "group-hover:w-10",
+                ].join(" ")}
+              />
+            </Link>
 
             {/* =================================================
-                DESKTOP NAVIGATION
+                DESKTOP NAV
                 ================================================= */}
 
-            <div className="hidden min-w-0 flex-1 items-center justify-end xl:flex">
+            <div
+              className={[
+                "hidden",
+                "min-w-0",
+                "flex-1",
+                "items-center",
+                "justify-end",
+                "xl:flex",
+              ].join(" ")}
+            >
               <nav
                 aria-label="Desktop navigation"
                 className={[
@@ -124,27 +155,43 @@ export default function Navbar() {
                   "2xl:gap-2",
                 ].join(" ")}
               >
-                {navigation.map((item) => (
-                  <NavLink
-                    key={item.name}
-                    href={item.href}
-                  >
-                    {item.name}
-                  </NavLink>
-                ))}
+                {navigation.map(
+                  (item) => (
+                    <NavLink
+                      key={item.name}
+                      href={item.href}
+                    >
+                      {item.name}
+                    </NavLink>
+                  )
+                )}
               </nav>
 
               {/* =================================================
-                  LOGIN
+                  DIVIDER
+                  ================================================= */}
+
+              <div
+                aria-hidden="true"
+                className={[
+                  "mx-4",
+                  "h-8",
+                  "w-px",
+                  "bg-slate-200",
+                  "2xl:mx-5",
+                ].join(" ")}
+              />
+
+              {/* =================================================
+                  ADMIN / LOGIN
                   ================================================= */}
 
               <Link
                 href="/admin/login"
                 className={[
                   "group",
-                  "ml-4",
                   "inline-flex",
-                  "h-10",
+                  "h-11",
                   "items-center",
                   "justify-center",
                   "gap-2",
@@ -152,36 +199,34 @@ export default function Navbar() {
                   "border",
                   "border-[#0f4c81]",
                   "bg-[#0f4c81]",
-                  "px-4",
+                  "px-4.5",
                   "text-[13px]",
-                  "font-bold",
-                  "tracking-[0.01em]",
+                  "font-extrabold",
+                  "tracking-wide",
                   "text-white",
-                  "shadow-[0_4px_14px_rgba(15,76,129,0.14)]",
+                  "shadow-[0_5px_16px_rgba(15,76,129,0.14)]",
                   "transition-all",
                   "duration-200",
                   "hover:-translate-y-0.5",
                   "hover:bg-[#0b3d68]",
-                  "hover:shadow-[0_8px_20px_rgba(15,76,129,0.20)]",
+                  "hover:shadow-[0_9px_22px_rgba(15,76,129,0.22)]",
                   "focus-visible:outline-none",
                   "focus-visible:ring-2",
                   "focus-visible:ring-[#0f4c81]",
                   "focus-visible:ring-offset-2",
                 ].join(" ")}
               >
-                <span>Login</span>
+                Login
 
-                <span
+                <HiArrowRight
+                  size={15}
                   aria-hidden="true"
                   className={[
-                    "text-white/60",
                     "transition-transform",
                     "duration-200",
                     "group-hover:translate-x-0.5",
                   ].join(" ")}
-                >
-                  →
-                </span>
+                />
               </Link>
             </div>
 
@@ -191,7 +236,9 @@ export default function Navbar() {
 
             <button
               type="button"
-              onClick={() => setMenuOpen(true)}
+              onClick={() =>
+                setMenuOpen(true)
+              }
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
@@ -200,6 +247,7 @@ export default function Navbar() {
                 "flex",
                 "h-11",
                 "w-11",
+                "shrink-0",
                 "items-center",
                 "justify-center",
                 "rounded-lg",
@@ -213,7 +261,7 @@ export default function Navbar() {
                 "hover:-translate-y-0.5",
                 "hover:border-[#0f4c81]",
                 "hover:bg-[#eef4ff]",
-                "hover:shadow-[0_6px_16px_rgba(15,76,129,0.10)]",
+                "hover:shadow-[0_6px_15px_rgba(15,76,129,0.10)]",
                 "focus-visible:outline-none",
                 "focus-visible:ring-2",
                 "focus-visible:ring-[#0f4c81]",
@@ -222,15 +270,22 @@ export default function Navbar() {
               ].join(" ")}
             >
               <HiBars3
-                size={24}
+                size={25}
                 aria-hidden="true"
-                className="transition-transform duration-200 group-hover:scale-105"
+                className={[
+                  "transition-transform",
+                  "duration-200",
+                  "group-hover:scale-105",
+                ].join(" ")}
               />
             </button>
           </div>
         </Container>
 
-        {/* Subtle bottom highlight */}
+        {/* =====================================================
+            BOTTOM ACCENT
+            ===================================================== */}
+
         <div
           aria-hidden="true"
           className={[
@@ -238,12 +293,14 @@ export default function Navbar() {
             "absolute",
             "bottom-0",
             "left-0",
-            "h-px",
-            "w-full",
-            "bg-gradient-to-r",
-            "from-transparent",
-            "via-[#155eef]/10",
-            "to-transparent",
+            "h-[2px]",
+            "w-0",
+            "bg-[#c8102e]",
+            "transition-all",
+            "duration-500",
+            scrolled
+              ? "w-16"
+              : "w-10",
           ].join(" ")}
         />
       </nav>
