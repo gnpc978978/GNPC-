@@ -62,6 +62,11 @@ router.post(
     },
 
     {
+      name: "aboutMedia",
+      maxCount: 2,
+    },
+
+    {
       name: "presidentPhoto",
       maxCount: 1,
     },
