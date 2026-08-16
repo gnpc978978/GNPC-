@@ -81,6 +81,7 @@ export interface IAboutSettings extends Document {
   ctaDescription: string;
   ctaPrimaryLabel: string;
   ctaSecondaryLabel: string;
+  ctaSecondaryHref: string;
 
   createdAt: Date;
   updatedAt: Date;
@@ -371,6 +372,12 @@ const AboutSettingsSchema =
         type: String,
         trim: true,
         default: "Meet Our Office Bearers",
+      },
+
+      ctaSecondaryHref: {
+        type: String,
+        trim: true,
+        default: "/office-bearers",
       },
     },
     {
