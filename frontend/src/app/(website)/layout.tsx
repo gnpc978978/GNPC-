@@ -1,136 +1,150 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaMapMarkerAlt,
-} from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { HiCalendarDays, HiClock } from "react-icons/hi2";
+import TopBar from "@/components/layout/TopBar";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import FloatingContactButton from "@/components/layout/FloatingContactButton";
+import { apiFetch } from "@/services/api";
 
-import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+interface WebsiteLayoutProps {
+  children: React.ReactNode;
+}
 
-export default function TopBar() {
-  const { settings } = useWebsiteSettings();
+export default function WebsiteLayout({
+  children,
+}: WebsiteLayoutProps) {
+  const pathname = usePathname();
 
-  const [time, setTime] = useState("");
-  const [date, setDate] = useState("");
+  const isContactPage =
+    pathname === "/contact" ||
+    pathname.startsWith("/contact/");
+
+  /*
+   * =========================================================
+   * WEBSITE TRAFFIC TRACKING
+   * =========================================================
+   */
 
   useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-
-      setTime(
-        now.toLocaleTimeString("en-IN", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true,
-        })
+    let sessionId =
+      localStorage.getItem(
+        "gnpc_traffic_session"
       );
 
-      setDate(
-        now.toLocaleDateString("en-IN", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })
+    if (!sessionId) {
+      sessionId =
+        typeof crypto !== "undefined" &&
+        typeof crypto.randomUUID ===
+          "function"
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random()
+              .toString(36)
+              .substring(2)}`;
+
+      localStorage.setItem(
+        "gnpc_traffic_session",
+        sessionId
       );
+    }
+
+    const sendHeartbeat = async () => {
+      try {
+        await apiFetch(
+          "/dashboard/traffic",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              sessionId,
+              page:
+                window.location.pathname,
+            }),
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Traffic heartbeat error:",
+          error
+        );
+      }
     };
 
-    updateDateTime();
-    const timer = window.setInterval(updateDateTime, 1000);
+    void sendHeartbeat();
 
-    return () => window.clearInterval(timer);
+    const interval =
+      window.setInterval(
+        sendHeartbeat,
+        30_000
+      );
+
+    return () => {
+      window.clearInterval(interval);
+    };
   }, []);
 
-  const socialLinks = [
-    {
-      label: "Facebook",
-      href: settings.socialLinks?.facebook || "",
-      icon: FaFacebookF,
-    },
-    {
-      label: "Instagram",
-      href: settings.socialLinks?.instagram || "",
-      icon: FaInstagram,
-    },
-    {
-      label: "X",
-      href: settings.socialLinks?.twitter || "",
-      icon: FaXTwitter,
-    },
-  ].filter((item) => Boolean(item.href));
-
   return (
-    <div className="relative z-[130] w-full overflow-hidden border-b border-slate-200 bg-[#eef1f4] text-slate-700">
+    <div className="gnpc-public min-h-screen bg-white text-slate-900">
+      {/* =====================================================
+          FIXED GLOBAL WEBSITE HEADER
+
+          TOP BAR
+             ↓
+          NAVBAR
+             ↓
+          WEBSITE CONTENT
+
+          Both remain fixed together while scrolling.
+          ===================================================== */}
+
+      <header className="fixed inset-x-0 top-0 z-[200] w-full">
+        {/* TOP BAR */}
+        <TopBar />
+
+        {/* NAVBAR */}
+        <Navbar />
+      </header>
+
+      {/* =====================================================
+          HEADER OFFSET
+
+          TopBar ≈ 42px
+          Navbar ≈ 76px
+          Total ≈ 118px
+
+          Keeps hero/content from going underneath the header.
+          ===================================================== */}
+
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c8102e]/60 to-transparent"
+        className="h-[108px] sm:h-[118px] lg:h-[120px]"
       />
 
-      <div className="mx-auto flex min-h-[40px] w-full max-w-[1500px] items-center justify-between gap-3 px-3 sm:min-h-[42px] sm:px-5 lg:px-7 xl:px-9">
-        <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-          <div className="group flex shrink-0 items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#c8102e] shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
-              <FaMapMarkerAlt size={10} aria-hidden="true" />
-            </span>
-            <span className="hidden text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-600 sm:inline">
-              Greater Noida
-            </span>
-          </div>
+      {/* =====================================================
+          MAIN WEBSITE CONTENT
+          ===================================================== */}
 
-          <span aria-hidden="true" className="hidden h-5 w-px bg-slate-300 sm:block" />
+      <main>{children}</main>
 
-          <span className="hidden text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 md:inline">
-            Est. 2003
-          </span>
+      {/* =====================================================
+          FOOTER
+          ===================================================== */}
 
-          <span className="hidden text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-700 lg:inline">
-            23 Years of Truthful Journalism
-          </span>
-        </div>
+      <Footer />
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-          <div className="hidden items-center gap-2 lg:flex">
-            <HiCalendarDays size={13} className="text-[#c8102e]" aria-hidden="true" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-slate-500">
-              {date}
-            </span>
-          </div>
+      {/* =====================================================
+          FLOATING CONTACT ACTION
+          ===================================================== */}
 
-          <div className="group flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c8102e]/40" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c8102e]" />
-            </span>
-            <HiClock size={13} className="text-slate-500" aria-hidden="true" />
-            <span className="whitespace-nowrap text-[10px] font-black tracking-[0.08em] text-slate-700 sm:text-xs">
-              {time}
-            </span>
-          </div>
-
-          {socialLinks.length > 0 && (
-            <div className="hidden items-center gap-1 md:flex">
-              {socialLinks.map(({ label, href, icon: Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="group flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:bg-slate-900 hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8102e]"
-                >
-                  <Icon size={11} aria-hidden="true" className="transition-transform duration-300 group-hover:scale-110" />
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      {!isContactPage && (
+        <FloatingContactButton />
+      )}
     </div>
   );
 }
