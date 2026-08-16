@@ -51,15 +51,37 @@ const errorMessage = (
 };
 
 /*
- * Only these Home sections are allowed to receive
- * Website Settings media uploads.
+ * ============================================================
+ * HOME SECTION MEDIA
+ * ============================================================
  *
- * Hero remains managed by the existing Banner CMS.
+ * Hero photos are intentionally excluded here because the Hero
+ * carousel is managed by the existing Banner CMS.
+ *
+ * Supported fields:
+ *
+ * homeMedia_about_0
+ * homeMedia_about_1
+ *
+ * homeMedia_objectives_0
+ * homeMedia_objectives_1
+ *
+ * homeMedia_latestUpdates_0
+ * ...
+ *
+ * Maximum 4 editorial photos per homepage section.
  */
+
 const HOME_MEDIA_PATTERN =
   /^homeMedia_(about|objectives|latestUpdates|gallery|pressConferences|executiveCommittee|officeBearers|membership)_(\d+)$/;
 
 const MAX_MEDIA_PER_SECTION = 4;
+
+/*
+ * ============================================================
+ * UPLOAD WEBSITE SETTINGS FILES
+ * ============================================================
+ */
 
 export const uploadSettingsFiles =
   async (
@@ -68,7 +90,14 @@ export const uploadSettingsFiles =
   ) => {
     try {
       const files =
-        (req.files ?? []) as Express.Multer.File[];
+        (req.files ??
+          []) as Express.Multer.File[];
+
+      /*
+       * --------------------------------------------------------
+       * HELPERS
+       * --------------------------------------------------------
+       */
 
       const fileFor = (
         fieldName: string
@@ -79,10 +108,11 @@ export const uploadSettingsFiles =
             fieldName
         );
 
-      const updateData: Record<
-        string,
-        unknown
-      > = {};
+      /*
+       * --------------------------------------------------------
+       * STANDARD WEBSITE SETTINGS FILES
+       * --------------------------------------------------------
+       */
 
       const logo =
         fileFor("logo");
@@ -101,38 +131,43 @@ export const uploadSettingsFiles =
           "membershipPdf"
         );
 
+      const scalarUpdates: Record<
+        string,
+        string
+      > = {};
+
       if (logo?.path) {
-        updateData.logo =
+        scalarUpdates.logo =
           logo.path;
       }
 
       if (favicon?.path) {
-        updateData.favicon =
+        scalarUpdates.favicon =
           favicon.path;
       }
 
       if (heroImage?.path) {
-        updateData.heroImage =
+        scalarUpdates.heroImage =
           heroImage.path;
       }
 
       if (
         aboutImage?.path
       ) {
-        updateData.aboutImage =
+        scalarUpdates.aboutImage =
           aboutImage.path;
       }
 
       if (
         membershipPdf?.path
       ) {
-        updateData.membershipPdf =
+        scalarUpdates.membershipPdf =
           membershipPdf.path;
       }
 
       /*
        * --------------------------------------------------------
-       * HOME SECTION MEDIA
+       * HOME MEDIA FILES
        * --------------------------------------------------------
        */
 
@@ -179,43 +214,61 @@ export const uploadSettingsFiles =
             });
         }
 
+        if (!file.path) {
+          return res
+            .status(400)
+            .json({
+              success:
+                false,
+
+              message:
+                `Uploaded file for ${file.fieldname} has no Cloudinary path.`,
+            });
+        }
+
         homeMediaFiles.push({
           section,
           index,
-          path:
-            file.path,
+          path: file.path,
         });
       }
 
       /*
-       * Reject unsupported dynamic file fields.
+       * --------------------------------------------------------
+       * REJECT UNKNOWN FILE FIELDS
+       * --------------------------------------------------------
        *
-       * This prevents .any() from becoming an unrestricted
-       * website-settings file mutation endpoint.
+       * websiteSettingsUpload uses .any() because home media
+       * fields are dynamic. We therefore validate every field
+       * here before saving.
+       * --------------------------------------------------------
        */
+
+      const allowedScalarFields =
+        new Set([
+          "logo",
+          "favicon",
+          "heroImage",
+          "aboutImage",
+          "membershipPdf",
+        ]);
 
       const unsupportedFields =
         files.filter(
           (file) => {
-            const knownScalar =
-              [
-                "logo",
-                "favicon",
-                "heroImage",
-                "aboutImage",
-                "membershipPdf",
-              ].includes(
+            const isKnownScalar =
+              allowedScalarFields.has(
                 file.fieldname
               );
 
-            const knownHomeMedia =
+            const isKnownHomeMedia =
               HOME_MEDIA_PATTERN.test(
                 file.fieldname
               );
 
             return (
-              !knownScalar &&
-              !knownHomeMedia
+              !isKnownScalar &&
+              !isKnownHomeMedia
             );
           }
         );
@@ -231,13 +284,19 @@ export const uploadSettingsFiles =
               false,
 
             message:
-              "One or more uploaded fields are not supported by Website Settings.",
+              `Unsupported upload field: ${unsupportedFields[0].fieldname}`,
           });
       }
 
+      /*
+       * --------------------------------------------------------
+       * NOTHING UPLOADED
+       * --------------------------------------------------------
+       */
+
       if (
         Object.keys(
-          updateData
+          scalarUpdates
         ).length === 0 &&
         homeMediaFiles.length ===
           0
@@ -253,6 +312,12 @@ export const uploadSettingsFiles =
           });
       }
 
+      /*
+       * --------------------------------------------------------
+       * GET / CREATE SETTINGS DOCUMENT
+       * --------------------------------------------------------
+       */
+
       let settings =
         await WebsiteSettings.findOne();
 
@@ -266,15 +331,13 @@ export const uploadSettingsFiles =
 
       /*
        * --------------------------------------------------------
-       * HOME MEDIA MERGE
+       * EXISTING HOME SETTINGS
        * --------------------------------------------------------
        */
 
       const previousHome =
-        (
-          settings.home ||
-          {}
-        ) as Record<
+        (settings.home ||
+          {}) as Record<
           string,
           unknown
         >;
@@ -285,6 +348,19 @@ export const uploadSettingsFiles =
       > = {
         ...previousHome,
       };
+
+      /*
+       * --------------------------------------------------------
+       * MERGE NEW HOME MEDIA
+       * --------------------------------------------------------
+       *
+       * Important:
+       *
+       * Uploading photo 2 does not erase photo 1.
+       * Uploading a replacement at a given position replaces
+       * that position.
+       * --------------------------------------------------------
+       */
 
       for (
         const item of homeMediaFiles
@@ -312,7 +388,7 @@ export const uploadSettingsFiles =
             : [];
 
         /*
-         * Expand to the requested position.
+         * Expand array to target position.
          */
 
         while (
@@ -324,12 +400,16 @@ export const uploadSettingsFiles =
           );
         }
 
+        /*
+         * Place uploaded Cloudinary URL.
+         */
+
         currentMedia[
           item.index
         ] = item.path;
 
         /*
-         * Normalize empty values.
+         * Remove empty entries and enforce maximum.
          */
 
         currentSection.media =
@@ -358,64 +438,111 @@ export const uploadSettingsFiles =
 
       /*
        * --------------------------------------------------------
-       * SAVE
+       * APPLY STANDARD FILE UPDATES
        * --------------------------------------------------------
        */
 
       if (
         Object.keys(
-          updateData
+          scalarUpdates
         ).length > 0
       ) {
         Object.assign(
           settings,
-          updateData
+          scalarUpdates
         );
       }
+
+      /*
+       * --------------------------------------------------------
+       * APPLY HOME SETTINGS
+       * --------------------------------------------------------
+       *
+       * IMPORTANT:
+       *
+       * Do NOT cast Record<string, unknown> to IHomeSettings.
+       * WebsiteSettings.home is a MongoDB Mixed field.
+       *
+       * Mongoose's set() is the correct way to update it and
+       * avoids the TS2352 build error.
+       * --------------------------------------------------------
+       */
 
       if (
         homeMediaFiles.length >
         0
       ) {
-        settings.home =
-          nextHome as typeof settings.home;
+        settings.set(
+          "home",
+          nextHome
+        );
       }
+
+      /*
+       * --------------------------------------------------------
+       * SAVE
+       * --------------------------------------------------------
+       */
 
       await settings.save();
 
       /*
        * --------------------------------------------------------
-       * CLEAN UP REPLACED SCALAR ASSETS
+       * CLEAN UP REPLACED STANDARD ASSETS
+       * --------------------------------------------------------
        *
-       * Section media order/remove operations are handled by
-       * the JSON settings endpoint. We don't delete those here
-       * because this endpoint only adds/uploads new media.
+       * Home editorial media isn't deleted here because this
+       * upload endpoint only adds/replaces uploaded positions.
+       * Deletion of individual media entries can be handled by
+       * the normal settings update flow.
        * --------------------------------------------------------
        */
 
-      await deleteCloudinaryAssets(
+      const oldScalarAssets =
         [
-          updateData.logo
+          scalarUpdates.logo
             ? previousSettings.logo
             : undefined,
 
-          updateData.favicon
+          scalarUpdates.favicon
             ? previousSettings.favicon
             : undefined,
 
-          updateData.heroImage
+          scalarUpdates.heroImage
             ? previousSettings.heroImage
             : undefined,
 
-          updateData.aboutImage
+          scalarUpdates.aboutImage
             ? previousSettings.aboutImage
             : undefined,
 
-          updateData.membershipPdf
+          scalarUpdates.membershipPdf
             ? previousSettings.membershipPdf
             : undefined,
-        ]
-      );
+        ].filter(
+          (
+            value
+          ): value is string =>
+            typeof value ===
+              "string" &&
+            value.length >
+              0
+        );
+
+      if (
+        oldScalarAssets.length >
+        0
+      ) {
+        await deleteCloudinaryAssets(
+          oldScalarAssets
+        );
+      }
+
+      /*
+       * --------------------------------------------------------
+       * RESPONSE
+       * --------------------------------------------------------
+       */
 
       return res
         .status(200)
@@ -428,13 +555,13 @@ export const uploadSettingsFiles =
 
           data: {
             ...settings.toObject(),
-            home:
-              settings.home,
+
+            home: settings.home,
           },
         });
     } catch (error) {
       console.error(
-        "Website Settings Update Error:",
+        "Website Settings Upload Error:",
         error
       );
 
