@@ -223,26 +223,29 @@ export default function Hero() {
               />
             </MembershipFormLink>
 
-            <Link
-              href="/latest-updates"
-              className={[
-                buttonBase,
-                "border border-black/10",
-                "bg-white/55",
-                "text-[#171717]",
-                "backdrop-blur-md",
-                "hover:-translate-y-0.5",
-                "hover:bg-white",
-                "hover:shadow-sm",
-              ].join(" ")}
-            >
-              <span>{secondaryLabel}</span>
+           <Link
+  href={
+    home.hero.quickLinks[0]?.href ||
+    "/latest-updates"
+  }
+  className={[
+    buttonBase,
+    "border border-black/10",
+    "bg-white/55",
+    "text-[#171717]",
+    "backdrop-blur-md",
+    "hover:-translate-y-0.5",
+    "hover:bg-white",
+    "hover:shadow-sm",
+  ].join(" ")}
+>
+  <span>{secondaryLabel}</span>
 
-              <ArrowRight
-                size={16}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
+  <ArrowRight
+    size={16}
+    className="transition-transform duration-300 group-hover:translate-x-1"
+  />
+</Link>
           </div>
         </motion.div>
 
