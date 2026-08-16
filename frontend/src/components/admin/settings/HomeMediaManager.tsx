@@ -1,32 +1,59 @@
-use client;
+"use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, Images, Loader2, Plus, Trash2, Upload } from "lucide-react";
+import {
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Images,
+  Loader2,
+  Plus,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { toast } from "sonner";
 
-import { authenticatedApiFetch, responseJson } from "@/services/api";
-import type { HomeSectionMediaKey } from "@/types/homeSettings";
+import {
+  authenticatedApiFetch,
+  responseJson,
+} from "@/services/api";
+import type {
+  HomeSectionMediaKey,
+} from "@/types/homeSettings";
 
 type Props = {
   section: HomeSectionMediaKey;
   label?: string;
   media: string[];
-  onChange: (media: string[]) => void;
+  onChange: (
+    media: string[]
+  ) => void;
   max?: number;
 };
 
 type SettingsResponse = {
   success?: boolean;
   data?: {
-    home?: Record<string, { media?: string[] }>;
+    home?: Record<
+      string,
+      {
+        media?: string[];
+      }
+    >;
   };
 };
 
-const safeMedia = (value: string[]) =>
+const safeMedia = (
+  value: string[]
+) =>
   value.filter(
     (item) =>
-      typeof item === "string" &&
+      typeof item ===
+        "string" &&
       item.trim().length > 0
   );
 
@@ -46,37 +73,52 @@ export default function HomeMediaManager({
   const [saving, setSaving] =
     useState(false);
 
-  const remaining =
-    Math.max(0, max - media.length);
+  const remaining = Math.max(
+    0,
+    max - media.length
+  );
 
   const canAdd =
-    remaining > 0 && !uploading && !saving;
+    remaining > 0 &&
+    !uploading &&
+    !saving;
 
   const hasMedia =
     media.length > 0;
 
-  const helperText = useMemo(() => {
-    if (media.length === 0) {
-      return `Add up to ${max} photos. The redesigned homepage section can use these photos as its editorial media layer.`;
-    }
+  const helperText =
+    useMemo(() => {
+      if (media.length === 0) {
+        return `Add up to ${max} photos. The redesigned homepage section can use these photos as its editorial media layer.`;
+      }
 
-    if (media.length >= max) {
-      return `Maximum of ${max} photos reached for this section.`;
-    }
+      if (media.length >= max) {
+        return `Maximum of ${max} photos reached for this section.`;
+      }
 
-    return `${media.length} of ${max} photos configured. ${remaining} more can be added.`;
-  }, [media.length, max, remaining]);
+      return `${media.length} of ${max} photos configured. ${remaining} more can be added.`;
+    }, [
+      media.length,
+      max,
+      remaining,
+    ]);
 
   const uploadFiles = async (
     files: File[]
   ) => {
     const selected =
-      files.slice(0, remaining);
+      files.slice(
+        0,
+        remaining
+      );
 
-    if (selected.length === 0) {
+    if (
+      selected.length === 0
+    ) {
       toast.error(
         `This section can contain a maximum of ${max} photos.`
       );
+
       return;
     }
 
@@ -87,7 +129,10 @@ export default function HomeMediaManager({
         new FormData();
 
       selected.forEach(
-        (file, offset) => {
+        (
+          file,
+          offset
+        ) => {
           formData.append(
             `homeMedia_${section}_${media.length + offset}`,
             file
@@ -129,7 +174,9 @@ export default function HomeMediaManager({
           ? "Section photo uploaded."
           : `${selected.length} section photos uploaded.`
       );
-    } catch (error) {
+    } catch (
+      error
+    ) {
       toast.error(
         error instanceof Error
           ? error.message
@@ -139,7 +186,8 @@ export default function HomeMediaManager({
       setUploading(false);
 
       if (inputRef.current) {
-        inputRef.current.value = "";
+        inputRef.current.value =
+          "";
       }
     }
   };
@@ -173,7 +221,8 @@ export default function HomeMediaManager({
             body: JSON.stringify({
               home: {
                 [section]: {
-                  media: nextMedia,
+                  media:
+                    nextMedia,
                 },
               },
             }),
@@ -186,7 +235,9 @@ export default function HomeMediaManager({
           data?: {
             home?: Record<
               string,
-              { media?: string[] }
+              {
+                media?: string[];
+              }
             >;
           };
         }>(response);
@@ -195,7 +246,8 @@ export default function HomeMediaManager({
         safeMedia(
           payload.data?.home?.[
             section
-          ]?.media || nextMedia
+          ]?.media ||
+            nextMedia
         );
 
       onChange(saved);
@@ -209,7 +261,9 @@ export default function HomeMediaManager({
       toast.success(
         "Section photo order saved."
       );
-    } catch (error) {
+    } catch (
+      error
+    ) {
       toast.error(
         error instanceof Error
           ? error.message
@@ -225,11 +279,17 @@ export default function HomeMediaManager({
   ) => {
     const nextMedia =
       media.filter(
-        (_, itemIndex) =>
-          itemIndex !== index
+        (
+          _,
+          itemIndex
+        ) =>
+          itemIndex !==
+          index
       );
 
-    void saveMedia(nextMedia);
+    void saveMedia(
+      nextMedia
+    );
   };
 
   const movePhoto = (
@@ -241,7 +301,8 @@ export default function HomeMediaManager({
 
     if (
       nextIndex < 0 ||
-      nextIndex >= media.length
+      nextIndex >=
+        media.length
     ) {
       return;
     }
@@ -258,7 +319,9 @@ export default function HomeMediaManager({
       nextMedia[index],
     ];
 
-    void saveMedia(nextMedia);
+    void saveMedia(
+      nextMedia
+    );
   };
 
   return (
@@ -332,13 +395,17 @@ export default function HomeMediaManager({
           </p>
 
           <p className="mt-1 text-xs text-slate-400">
-            Add the photos required by the section design.
+            Add the photos required by the
+            section design.
           </p>
         </div>
       ) : (
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {media.map(
-            (image, index) => (
+            (
+              image,
+              index
+            ) => (
               <div
                 key={`${image}-${index}`}
                 className="group overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
@@ -346,7 +413,9 @@ export default function HomeMediaManager({
                 <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
                   <Image
                     src={image}
-                    alt={`${label} photo ${index + 1}`}
+                    alt={`${label} photo ${
+                      index + 1
+                    }`}
                     fill
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover transition duration-500 group-hover:scale-105"
@@ -355,7 +424,10 @@ export default function HomeMediaManager({
                   <div className="absolute left-3 top-3 flex h-8 min-w-8 items-center justify-center rounded-full bg-black/65 px-2 text-[10px] font-black text-white backdrop-blur">
                     {String(
                       index + 1
-                    ).padStart(2, "0")}
+                    ).padStart(
+                      2,
+                      "0"
+                    )}
                   </div>
                 </div>
 
@@ -377,7 +449,9 @@ export default function HomeMediaManager({
                     aria-label="Move photo earlier"
                     className="flex items-center justify-center rounded-xl border border-slate-200 bg-white py-2 text-slate-700 transition hover:bg-slate-50 disabled:opacity-30"
                   >
-                    <ArrowUp size={15} />
+                    <ArrowUp
+                      size={15}
+                    />
                   </button>
 
                   <button
@@ -398,13 +472,17 @@ export default function HomeMediaManager({
                     aria-label="Move photo later"
                     className="flex items-center justify-center rounded-xl border border-slate-200 bg-white py-2 text-slate-700 transition hover:bg-slate-50 disabled:opacity-30"
                   >
-                    <ArrowDown size={15} />
+                    <ArrowDown
+                      size={15}
+                    />
                   </button>
 
                   <button
                     type="button"
                     onClick={() =>
-                      removePhoto(index)
+                      removePhoto(
+                        index
+                      )
                     }
                     disabled={
                       saving ||
@@ -413,7 +491,9 @@ export default function HomeMediaManager({
                     aria-label="Remove photo"
                     className="flex items-center justify-center rounded-xl border border-red-100 bg-white py-2 text-red-600 transition hover:bg-red-50 disabled:opacity-30"
                   >
-                    <Trash2 size={15} />
+                    <Trash2
+                      size={15}
+                    />
                   </button>
                 </div>
               </div>
@@ -436,7 +516,8 @@ export default function HomeMediaManager({
               </span>
 
               <span className="mt-1 text-xs">
-                {remaining} remaining
+                {remaining}{" "}
+                remaining
               </span>
             </button>
           )}
