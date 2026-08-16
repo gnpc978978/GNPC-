@@ -68,6 +68,7 @@ type AboutSettings = {
   ctaDescription: string;
   ctaPrimaryLabel: string;
   ctaSecondaryLabel: string;
+  ctaSecondaryHref: string;
 };
 
 type AboutResponse = {
@@ -169,6 +170,9 @@ const defaultForm: AboutSettings =
 
     ctaSecondaryLabel:
       "Meet Our Office Bearers",
+
+    ctaSecondaryHref:
+      "/office-bearers",
   };
 
 function normalizeForm(
@@ -1180,6 +1184,17 @@ export default function AboutSectionForm() {
             onChange={updateField(
               "ctaSecondaryLabel"
             )}
+          />
+
+          <Field
+            label="Secondary Button Route"
+            value={
+              form.ctaSecondaryHref
+            }
+            onChange={updateField(
+              "ctaSecondaryHref"
+            )}
+            placeholder="/office-bearers"
           />
         </div>
       </Section>
