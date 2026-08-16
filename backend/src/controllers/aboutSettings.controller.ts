@@ -55,8 +55,8 @@ type AboutListItem = {
 type UploadedFiles = {
   image?: Express.Multer.File[];
   presidentPhoto?: Express.Multer.File[];
+  aboutMedia?: Express.Multer.File[];
 };
-
 const normalizeString = (
   value: unknown
 ) =>
@@ -336,6 +336,7 @@ export const updateAboutSettings =
  * Supported fields:
  *
  * image
+ * aboutMedia (up to 2 files)
  * presidentPhoto
  */
 export const uploadAboutSettingsFiles =
@@ -393,6 +394,55 @@ export const uploadAboutSettingsFiles =
 
         settings.image =
           imageUrl;
+      }
+
+      /*
+       * -----------------------------
+       * ADDITIONAL ABOUT MEDIA
+       * -----------------------------
+       */
+      const additionalMedia =
+        files.aboutMedia || [];
+
+      if (
+        additionalMedia.length >
+        2
+      ) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message:
+              "A maximum of 2 additional About photos is allowed.",
+          });
+      }
+
+      if (
+        additionalMedia.length >
+        0
+      ) {
+        const uploadedMedia =
+          additionalMedia
+            .map(
+              getUploadedUrl
+            )
+            .filter(Boolean);
+
+        if (
+          uploadedMedia.length !==
+          additionalMedia.length
+        ) {
+          return res
+            .status(500)
+            .json({
+              success: false,
+              message:
+                "One or more About photos uploaded without a Cloudinary URL.",
+            });
+        }
+
+        settings.media =
+          uploadedMedia;
       }
 
       /*
