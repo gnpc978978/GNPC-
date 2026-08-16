@@ -3,12 +3,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { Check, ImageOff } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  ArrowRight,
+  Check,
+  ImageOff,
+  Users,
+  Newspaper,
+  CalendarDays,
+} from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import Button from "@/components/ui/Button";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
-import { apiFetch, responseJson } from "@/services/api";
+import {
+  apiFetch,
+  responseJson,
+} from "@/services/api";
 
 type AboutSettings = {
   image?: string;
@@ -36,65 +50,21 @@ const emptyStats: PublicStats = {
   events: 0,
 };
 
-function GnpcOverlay() {
-  const [cycle, setCycle] = useState(0);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setCycle((current) => current + 1);
-    }, 2500);
-
-    return () => {
-      window.clearInterval(timer);
-    };
-  }, []);
-
-  return (
-    <motion.div
-      key={cycle}
-      initial="hidden"
-      animate="visible"
-      className="absolute bottom-5 left-5 flex gap-1 rounded-2xl border border-white/30 bg-slate-950/35 px-4 py-3 shadow-2xl backdrop-blur-md sm:bottom-7 sm:left-7"
-    >
-      <span className="mr-2 self-center text-xs font-bold tracking-[0.18em] text-white/70">
-        GNPC
-      </span>
-
-      {["G", "N", "P", "C"].map((letter, index) => (
-        <motion.span
-          key={letter}
-          variants={{
-            hidden: {
-              opacity: 0,
-              y: 14,
-            },
-            visible: {
-              opacity: 1,
-              y: 0,
-            },
-          }}
-          transition={{
-            duration: 0.35,
-            delay: index * 0.3,
-          }}
-          className="text-xl font-black text-white sm:text-2xl"
-        >
-          {letter}
-        </motion.span>
-      ))}
-    </motion.div>
-  );
-}
-
-function AnimatedNumber({ value }: { value: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
+function AnimatedNumber({
+  value,
+}: {
+  value: number;
+}) {
+  const ref =
+    useRef<HTMLSpanElement>(null);
 
   const isInView = useInView(ref, {
     once: true,
     amount: 0.5,
   });
 
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] =
+    useState(0);
 
   useEffect(() => {
     if (!isInView) {
@@ -103,8 +73,10 @@ function AnimatedNumber({ value }: { value: number }) {
 
     let frame = 0;
 
-    const start = performance.now();
-    const duration = 2000;
+    const start =
+      performance.now();
+
+    const duration = 1600;
 
     const update = (now: number) => {
       const progress = Math.min(
@@ -112,49 +84,99 @@ function AnimatedNumber({ value }: { value: number }) {
         1
       );
 
+      const eased =
+        1 -
+        Math.pow(
+          1 - progress,
+          3
+        );
+
       setDisplay(
-        Math.round(
-          value *
-            (1 -
-              Math.pow(
-                1 - progress,
-                3
-              ))
-        )
+        Math.round(value * eased)
       );
 
       if (progress < 1) {
-        frame = requestAnimationFrame(update);
+        frame =
+          requestAnimationFrame(
+            update
+          );
       }
     };
 
-    frame = requestAnimationFrame(update);
+    frame =
+      requestAnimationFrame(
+        update
+      );
 
     return () => {
       cancelAnimationFrame(frame);
     };
   }, [isInView, value]);
 
-  return <span ref={ref}>{display}</span>;
+  return (
+    <span ref={ref}>
+      {display}
+    </span>
+  );
+}
+
+function ImageBadge() {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 15,
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+      }}
+      viewport={{
+        once: true,
+        amount: 0.5,
+      }}
+      transition={{
+        duration: 0.6,
+      }}
+      className="absolute bottom-5 left-5 z-20 rounded-2xl border border-white/30 bg-black/55 px-4 py-3 text-white shadow-2xl backdrop-blur-md sm:bottom-7 sm:left-7"
+    >
+      <p className="text-[9px] font-black uppercase tracking-[0.22em] text-white/60">
+        Greater Noida
+      </p>
+
+      <p className="mt-1 text-sm font-black sm:text-base">
+        Press Club
+      </p>
+    </motion.div>
+  );
 }
 
 export default function About() {
-  const { settings } = useWebsiteSettings();
+  const { settings } =
+    useWebsiteSettings();
 
   const [about, setAbout] =
-    useState<AboutSettings>(emptyAbout);
+    useState<AboutSettings>(
+      emptyAbout
+    );
 
   const [stats, setStats] =
-    useState<PublicStats>(emptyStats);
+    useState<PublicStats>(
+      emptyStats
+    );
 
   const [loading, setLoading] =
     useState(true);
 
-  const [statsUnavailable, setStatsUnavailable] =
-    useState(false);
+  const [
+    statsUnavailable,
+    setStatsUnavailable,
+  ] = useState(false);
 
-  const [imageLoaded, setImageLoaded] =
-    useState(false);
+  const [
+    imageLoaded,
+    setImageLoaded,
+  ] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -168,9 +190,12 @@ export default function About() {
         }>(response)
       ),
 
-      apiFetch("/dashboard/public-stats", {
-        cache: "no-store",
-      }).then((response) =>
+      apiFetch(
+        "/dashboard/public-stats",
+        {
+          cache: "no-store",
+        }
+      ).then((response) =>
         responseJson<{
           success: boolean;
           data: PublicStats;
@@ -178,7 +203,10 @@ export default function About() {
       ),
     ])
       .then(
-        ([aboutResult, statsResult]) => {
+        ([
+          aboutResult,
+          statsResult,
+        ]) => {
           if (cancelled) {
             return;
           }
@@ -227,13 +255,19 @@ export default function About() {
             statsResult.status ===
             "fulfilled"
           ) {
-            setStatsUnavailable(false);
+            setStatsUnavailable(
+              false
+            );
+
             setStats({
               ...emptyStats,
-              ...statsResult.value.data,
+              ...statsResult.value
+                .data,
             });
           } else {
-            setStatsUnavailable(true);
+            setStatsUnavailable(
+              true
+            );
           }
         }
       )
@@ -246,178 +280,465 @@ export default function About() {
     return () => {
       cancelled = true;
     };
-  }, [settings.aboutImage]);
+  }, [
+    settings.aboutImage,
+  ]);
 
   const statItems = [
     {
       value: stats.members,
       label: "Members",
+      icon: Users,
       href: "/committee",
     },
     {
-      value: stats.pressReleases,
-      label: "Press Release",
+      value:
+        stats.pressReleases,
+      label: "Press Releases",
+      icon: Newspaper,
     },
     {
       value: stats.events,
       label: "Active Events",
+      icon: CalendarDays,
     },
   ];
 
   return (
     <section
       id="about"
-      className="bg-white py-14 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[#f4ede2] py-16 text-[#171717] sm:py-24 lg:py-28"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-9 flex flex-col gap-5 text-center sm:mb-14 sm:flex-row sm:items-end sm:justify-between sm:text-left">
-          <div>
-            <span className="gnpc-eyebrow">About Us</span>
-            <h2 className="gnpc-section-title mt-3 text-3xl sm:text-4xl lg:text-5xl">{settings.siteName || "Press Club"}</h2>
+      {/* =====================================================
+          BACKGROUND
+          ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+      >
+        <div className="absolute -left-40 top-20 h-[25rem] w-[25rem] rounded-full bg-white/70 blur-3xl" />
+
+        <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#d8c7af]/35 blur-3xl" />
+
+        <div
+          className="absolute inset-0 opacity-[0.12]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(23,23,23,0.14) 1px, transparent 1px)",
+            backgroundSize:
+              "24px 24px",
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        {/* ===================================================
+            SECTION INTRO
+            =================================================== */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.25,
+          }}
+          transition={{
+            duration: 0.7,
+            ease: [
+              0.22,
+              1,
+              0.36,
+              1,
+            ],
+          }}
+          className="mx-auto max-w-[900px] text-center"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <span
+              aria-hidden="true"
+              className="h-px w-8 bg-black/20 sm:w-12"
+            />
+
+            <span className="text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
+              About Us
+            </span>
+
+            <span
+              aria-hidden="true"
+              className="h-px w-8 bg-black/20 sm:w-12"
+            />
           </div>
-          <Button href="/about" variant="outline" size="lg" className="self-center sm:self-auto">Learn More</Button>
-        </div>
 
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="relative">
-            <div className="absolute -left-6 -top-6 -z-10 h-64 w-64 rounded-full bg-blue-100 blur-3xl" />
+          <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.4rem]">
+            {settings.siteName ||
+              "Greater Noida Press Club"}
+          </h2>
 
-            {loading ? (
-              <div className="aspect-[6/5] animate-pulse rounded-3xl bg-slate-200" />
-            ) : about.image ? (
-              <motion.div
-                initial={{
-                  opacity: 0,
-                }}
-                animate={{
-                  opacity: imageLoaded
-                    ? 1
-                    : 0,
-                }}
-                transition={{
-                  duration: 0.6,
-                }}
-                className="relative aspect-[6/5] overflow-hidden rounded-3xl bg-slate-100 shadow-2xl"
-              >
-                <Image
-                  src={about.image}
-                  alt="Greater Noida Press Club"
-                  fill
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  onLoad={() =>
-                    setImageLoaded(true)
-                  }
-                  className="object-cover"
-                />
+          <p className="mx-auto mt-5 max-w-[650px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
+            A stronger visual introduction
+            to the organisation, its people
+            and its work.
+          </p>
+        </motion.div>
 
-                <GnpcOverlay />
-              </motion.div>
-            ) : (
-              <div className="relative flex aspect-[6/5] items-center justify-center rounded-3xl bg-gradient-to-br from-blue-100 via-slate-100 to-blue-50 shadow-2xl">
-                <div className="text-center text-blue-700">
-                  <ImageOff
-                    className="mx-auto"
-                    size={42}
+        {/* ===================================================
+            MAIN ABOUT
+            =================================================== */}
+
+        <div className="mt-14 grid items-center gap-10 lg:mt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          {/* =================================================
+              IMAGE
+              ================================================= */}
+
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: -35,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.8,
+              ease: [
+                0.22,
+                1,
+                0.36,
+                1,
+              ],
+            }}
+            className="relative"
+          >
+            {/* Decorative back card */}
+
+            <div
+              aria-hidden="true"
+              className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] border border-black/5 bg-[#d8c7af]/45 sm:-bottom-7 sm:-left-7"
+            />
+
+            {/* Decorative top card */}
+
+            <div
+              aria-hidden="true"
+              className="absolute -right-3 -top-3 z-0 h-24 w-24 rounded-[1.5rem] border border-white/70 bg-white/55 backdrop-blur-md sm:-right-5 sm:-top-5 sm:h-32 sm:w-32"
+            />
+
+            <div className="relative z-10 overflow-hidden rounded-[2rem] border-[7px] border-white bg-white shadow-[0_30px_80px_rgba(38,32,23,0.18)]">
+              {loading ? (
+                <div className="aspect-[6/5] animate-pulse bg-black/5" />
+              ) : about.image ? (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity:
+                      imageLoaded
+                        ? 1
+                        : 0,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                  }}
+                  className="relative aspect-[6/5] overflow-hidden bg-black/5"
+                >
+                  <Image
+                    src={about.image}
+                    alt={
+                      about.heading ||
+                      settings.siteName ||
+                      "Greater Noida Press Club"
+                    }
+                    fill
+                    sizes="(min-width: 1024px) 55vw, 100vw"
+                    onLoad={() =>
+                      setImageLoaded(
+                        true
+                      )
+                    }
+                    className="object-cover transition duration-700 hover:scale-[1.025]"
                   />
 
-                  <p className="mt-3 text-sm font-semibold">
-                    About image coming soon
-                  </p>
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-white/5"
+                  />
+
+                  <ImageBadge />
+                </motion.div>
+              ) : (
+                <div className="relative flex aspect-[6/5] items-center justify-center bg-gradient-to-br from-[#e6d8c5] via-[#f4ede2] to-white">
+                  <div className="text-center text-black/40">
+                    <ImageOff
+                      className="mx-auto"
+                      size={42}
+                    />
+
+                    <p className="mt-3 text-xs font-bold uppercase tracking-[0.15em]">
+                      About image coming soon
+                    </p>
+                  </div>
+
+                  <ImageBadge />
                 </div>
+              )}
+            </div>
 
-                <GnpcOverlay />
-              </div>
-            )}
-          </div>
+            {/* Floating label */}
 
-          <div>
+            <div className="absolute -bottom-5 right-3 z-20 rounded-2xl border border-black/10 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-md sm:-bottom-6 sm:right-6">
+              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-black/40">
+                GNPC
+              </p>
+
+              <p className="mt-1 text-xs font-black text-black sm:text-sm">
+                Journalism • Community
+              </p>
+            </div>
+          </motion.div>
+
+          {/* =================================================
+              CONTENT
+              ================================================= */}
+
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: 35,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.08,
+              ease: [
+                0.22,
+                1,
+                0.36,
+                1,
+              ],
+            }}
+          >
             {loading ? (
-              <div className="space-y-4">
-                <div className="h-10 w-4/5 animate-pulse rounded bg-slate-200" />
+              <div className="space-y-5">
+                <div className="h-12 w-4/5 animate-pulse rounded-2xl bg-black/5" />
 
-                <div className="h-5 animate-pulse rounded bg-slate-200" />
+                <div className="h-5 w-full animate-pulse rounded bg-black/5" />
 
-                <div className="h-5 w-5/6 animate-pulse rounded bg-slate-200" />
+                <div className="h-5 w-11/12 animate-pulse rounded bg-black/5" />
+
+                <div className="h-5 w-4/5 animate-pulse rounded bg-black/5" />
               </div>
             ) : (
               <>
-                <h3 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+                <span className="inline-flex rounded-full border border-black/10 bg-white/55 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50 backdrop-blur-md">
+                  Who We Are
+                </span>
+
+                <h3 className="mt-5 max-w-[650px] text-3xl font-black leading-[1.02] tracking-[-0.045em] sm:text-4xl lg:text-[3.3rem]">
                   {about.heading}
                 </h3>
 
-                <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-6 sm:text-lg sm:leading-8">
+                <p className="mt-6 max-w-[650px] text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
                   {about.description}
                 </p>
 
-                {about.features.length >
-                  0 && (
-                  <div className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
+                {about.features
+                  .length > 0 && (
+                  <div className="mt-7 grid gap-3 sm:mt-9 sm:grid-cols-2">
                     {about.features.map(
-                      (feature) => (
-                        <div
-                          key={feature}
-                          className="flex items-center gap-3"
+                      (
+                        feature,
+                        index
+                      ) => (
+                        <motion.div
+                          key={
+                            feature
+                          }
+                          initial={{
+                            opacity: 0,
+                            y: 10,
+                          }}
+                          whileInView={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          viewport={{
+                            once: true,
+                          }}
+                          transition={{
+                            duration: 0.45,
+                            delay:
+                              index *
+                              0.06,
+                          }}
+                          className="group rounded-2xl border border-black/10 bg-white/55 p-4 backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:bg-white"
                         >
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                            <Check
-                              size={17}
-                              strokeWidth={3}
-                            />
-                          </div>
+                          <div className="flex items-start gap-3">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#171717] text-white">
+                              <Check
+                                size={14}
+                                strokeWidth={
+                                  3
+                                }
+                              />
+                            </span>
 
-                          <p className="text-sm font-medium text-slate-700 sm:text-base">
-                            {feature}
-                          </p>
-                        </div>
+                            <p className="pt-0.5 text-xs font-bold leading-5 text-black/70 sm:text-sm">
+                              {feature}
+                            </p>
+                          </div>
+                        </motion.div>
                       )
                     )}
                   </div>
                 )}
 
+                <div className="mt-8 sm:mt-10">
+                  <Button
+                    href="/about"
+                    variant="outline"
+                    size="lg"
+                    className="group rounded-full border-black/15 bg-white/50"
+                  >
+                    Learn More
+
+                    <ArrowRight
+                      size={17}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  </Button>
+                </div>
               </>
             )}
-          </div>
+          </motion.div>
         </div>
 
-        <div className="mt-12 rounded-2xl bg-slate-50 p-5 sm:mt-16 sm:rounded-3xl sm:p-8">
-          <div className="grid grid-cols-3 gap-3 text-center sm:gap-8">
-            {statItems.map(
-              (stat) => (
-                <Link
-                  key={stat.label}
-                  href={stat.href || "/"}
-                  className={stat.href ? "rounded-xl transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" : "pointer-events-none"}
-                >
-                  {loading ? (
-                    <>
-                      <div className="mx-auto h-10 w-20 animate-pulse rounded bg-slate-200" />
+        {/* ===================================================
+            STATS
+            =================================================== */}
 
-                      <div className="mx-auto mt-3 h-5 w-24 animate-pulse rounded bg-slate-200" />
-                    </>
-                  ) : statsUnavailable ? (
-                    <p className="pt-2 text-xs font-medium text-slate-500 sm:text-sm">
-                      Statistics unavailable
-                    </p>
-                  ) : (
-                    <>
-                      <h3 className="text-2xl font-bold text-blue-600 sm:text-4xl">
-                        <AnimatedNumber
-                          value={
-                            stat.value
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
+          transition={{
+            duration: 0.7,
+          }}
+          className="mt-20 sm:mt-24"
+        >
+          <div className="rounded-[2rem] border border-black/10 bg-white/55 p-3 shadow-[0_20px_60px_rgba(38,32,23,0.08)] backdrop-blur-md sm:p-4">
+            <div className="grid grid-cols-3 divide-x divide-black/10">
+              {statItems.map(
+                (stat) => {
+                  const Icon =
+                    stat.icon;
+
+                  const content =
+                    loading ? (
+                      <div className="px-2 py-5 sm:px-6 sm:py-7">
+                        <div className="mx-auto h-8 w-16 animate-pulse rounded bg-black/5" />
+
+                        <div className="mx-auto mt-3 h-4 w-20 animate-pulse rounded bg-black/5" />
+                      </div>
+                    ) : statsUnavailable ? (
+                      <div className="px-2 py-5 sm:px-6 sm:py-7">
+                        <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-black/40 sm:text-xs">
+                          Statistics
+                          unavailable
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="px-2 py-5 sm:px-6 sm:py-7">
+                        <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#171717] text-white sm:h-10 sm:w-10">
+                          <Icon
+                            size={16}
+                          />
+                        </div>
+
+                        <p className="mt-3 text-2xl font-black tracking-[-0.04em] text-black sm:text-4xl">
+                          <AnimatedNumber
+                            value={
+                              stat.value
+                            }
+                          />
+                          <span className="text-[#c8102e]">
+                            +
+                          </span>
+                        </p>
+
+                        <p className="mt-1 text-[9px] font-black uppercase tracking-[0.12em] text-black/45 sm:text-xs">
+                          {
+                            stat.label
                           }
-                        />
-                      </h3>
+                        </p>
+                      </div>
+                    );
 
-                      <p className="mt-1 text-xs font-medium text-slate-600 sm:mt-2 sm:text-base">
-                        {stat.label}
-                      </p>
-                    </>
-                  )}
-                </Link>
-              )
-            )}
+                  if (
+                    stat.href
+                  ) {
+                    return (
+                      <Link
+                        key={
+                          stat.label
+                        }
+                        href={
+                          stat.href
+                        }
+                        className="rounded-[1.5rem] transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
+                      >
+                        {
+                          content
+                        }
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={
+                        stat.label
+                      }
+                    >
+                      {
+                        content
+                      }
+                    </div>
+                  );
+                }
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
