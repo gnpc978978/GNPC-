@@ -194,49 +194,37 @@ function PageSection({
 
 function HeroSection() {
   const { settings } = useWebsiteSettings();
-
   const home = mergeHomeSettings(settings.home);
 
   const buttonClass =
-    "group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white px-6 py-3.5 text-sm font-bold text-slate-900 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:px-7";
+    "group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/95 px-6 py-3.5 text-sm font-bold text-slate-900 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:px-7";
 
   return (
     <section className="relative min-h-[720px] overflow-hidden bg-slate-950 sm:min-h-[820px] lg:min-h-[900px]">
-      {/* CMS-controlled hero image remains unchanged. */}
       <div className="absolute inset-0">
         <HeroCarousel
           fallbackImage={settings.heroImage || "/Logo.png"}
-          alt={
-            home.hero.title ||
-            settings.siteName ||
-            "Greater Noida Press Club"
-          }
+          alt={home.hero.title || settings.siteName || "Greater Noida Press Club"}
         />
       </div>
 
-      {/* Softer cinematic overlay: keeps the image visible while preserving text contrast. */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/45 via-slate-900/15 to-slate-950/65" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.08)_48%,rgba(0,0,0,0.45)_100%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/55 via-slate-900/15 to-slate-950/70" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.10)_48%,rgba(0,0,0,0.48)_100%)]" />
 
-      <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl" />
-      <div className="pointer-events-none absolute -right-32 bottom-24 h-96 w-96 rounded-full bg-cyan-300/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-20 h-96 w-96 rounded-full bg-cyan-300/10 blur-3xl" />
 
-      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1500px] items-center px-4 pb-12 pt-16 sm:min-h-[820px] sm:px-8 sm:pb-16 sm:pt-20 lg:min-h-[900px] lg:px-10">
-        {/*
-          IMPORTANT:
-          There is deliberately NO second navbar inside the hero.
-          The only public navbar is the fixed global Navbar in website/layout.tsx.
-        */}
-        <div className="w-full translate-y-10 sm:translate-y-14 lg:translate-y-16">
+      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1500px] items-center px-4 pb-16 pt-24 sm:min-h-[820px] sm:px-8 sm:pb-20 sm:pt-28 lg:min-h-[900px] lg:px-10 lg:pt-32">
+        {/* No second navbar here. The global website Navbar is the only navbar. */}
+        <div className="w-full translate-y-8 sm:translate-y-12 lg:translate-y-16">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="mx-auto w-full max-w-5xl text-center"
           >
-            {/* Existing CMS eyebrow / identity fields — unchanged. */}
             <div className="mb-5 flex justify-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-bold text-white shadow-xl backdrop-blur-xl sm:text-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-xs font-bold text-white shadow-xl backdrop-blur-xl sm:text-sm">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef]">
                   <Newspaper size={13} />
                 </span>
@@ -248,12 +236,10 @@ function HeroSection() {
               {home.hero.eyebrow}
             </p>
 
-            {/* CMS title — do not replace with hardcoded text. */}
-            <h1 className="mx-auto mt-5 max-w-5xl text-[2.65rem] font-medium leading-[1.02] tracking-[-0.055em] text-white drop-shadow-[0_8px_30px_rgba(0,0,0,0.45)] sm:text-6xl md:text-7xl lg:text-[5.8rem] xl:text-[6.5rem]">
+            <h1 className="mx-auto mt-5 max-w-5xl text-[2.7rem] font-medium leading-[0.98] tracking-[-0.055em] text-white drop-shadow-[0_8px_30px_rgba(0,0,0,0.45)] sm:text-6xl md:text-7xl lg:text-[5.8rem] xl:text-[6.5rem]">
               {home.hero.title || settings.heroTitle}
             </h1>
 
-            {/* CMS description — do not replace with hardcoded text. */}
             <p className="mx-auto mt-7 max-w-2xl text-sm leading-6 text-white/90 drop-shadow-lg sm:text-lg sm:leading-8">
               {home.hero.description || settings.heroDescription}
             </p>
@@ -271,26 +257,22 @@ function HeroSection() {
 
               <Link
                 href="/latest-updates"
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-6 py-3.5 text-sm font-bold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/25 sm:px-7"
+                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/20 sm:px-7"
               >
                 {home.hero.secondaryLabel}
-                <ArrowRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-1"
-                />
+                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
 
-            {/* Existing CMS quick links — e.g. Calendar — remain dynamic. */}
             {home.hero.quickLinks.length > 0 && (
-              <div className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-2 sm:mt-9">
+              <div className="mx-auto mt-9 flex max-w-2xl flex-wrap justify-center gap-2">
                 {home.hero.quickLinks.map((item) => (
                   <Link
                     key={`${item.label}-${item.href}`}
                     href={item.href || "/"}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-md transition hover:bg-white/20 hover:text-white"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/15 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur-md transition hover:bg-white/15 hover:text-white"
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
                     {item.label}
                   </Link>
                 ))}
@@ -302,6 +284,10 @@ function HeroSection() {
     </section>
   );
 }
+
+/* =========================================================
+   ABOUT
+   ========================================================= */
 
 function AboutSection() {
   const { settings } = useWebsiteSettings();
