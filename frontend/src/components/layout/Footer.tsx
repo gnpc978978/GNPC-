@@ -144,7 +144,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="border-t border-[#0a3a61] bg-[#0a3a61] text-white">
+    <footer className="border-t border-[#839669] bg-[#839669] text-white">
       {/* ===================================================
           MAIN FOOTER
           =================================================== */}
