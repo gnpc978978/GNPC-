@@ -7,67 +7,52 @@ import {
   useMemo,
   useState,
 } from "react";
-
 import { toast } from "sonner";
 
+import BannerManager from "@/components/admin/BannerManager";
+import HomeMediaManager from "@/components/admin/settings/HomeMediaManager";
 import {
   authenticatedApiFetch,
   responseJson,
 } from "@/services/api";
-
-import BannerManager from "@/components/admin/BannerManager";
-
 import {
   defaultHomeSettings,
-  HomeCard,
-  HomeSectionKey,
-  HomeSettings,
+  type HomeCard,
+  type HomeSectionKey,
+  type HomeSettings,
   mergeHomeSettings,
 } from "@/types/homeSettings";
 
-const sectionLabels: Record<
-  HomeSectionKey,
-  string
-> = {
+const sectionLabels: Record<HomeSectionKey, string> = {
   hero: "Hero",
   about: "About",
   objectives: "Objectives",
   latestUpdates: "Latest Updates",
   gallery: "Gallery",
-  pressConferences:
-    "Press Conferences",
-  executiveCommittee:
-    "Executive Committee",
-  officeBearers:
-    "Office Bearers",
+  pressConferences: "Press Conferences",
+  executiveCommittee: "Executive Committee",
+  officeBearers: "Office Bearers",
   membership: "Membership CTA",
 };
 
-const sectionOrder: HomeSectionKey[] =
-  [
-    "hero",
-    "about",
-    "objectives",
-    "latestUpdates",
-    "gallery",
-    "pressConferences",
-    "executiveCommittee",
-    "officeBearers",
-    "membership",
-  ];
+const sectionOrder: HomeSectionKey[] = [
+  "hero",
+  "about",
+  "objectives",
+  "latestUpdates",
+  "gallery",
+  "pressConferences",
+  "executiveCommittee",
+  "officeBearers",
+  "membership",
+];
 
 type WebsiteResponse = {
+  success?: boolean;
   data?: {
     home?: Partial<HomeSettings>;
-    heroImage?: string;
     aboutImage?: string;
   };
-};
-
-type EditableSettings = {
-  home: HomeSettings;
-  heroImage: string;
-  aboutImage: string;
 };
 
 function Field({
@@ -75,6 +60,7 @@ function Field({
   value,
   onChange,
   placeholder,
+  type = "text",
 }: {
   label: string;
   value: string;
@@ -82,6 +68,7 @@ function Field({
     event: ChangeEvent<HTMLInputElement>
   ) => void;
   placeholder?: string;
+  type?: string;
 }) {
   return (
     <label className="block">
@@ -90,10 +77,11 @@ function Field({
       </span>
 
       <input
+        type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-slate-900 focus:ring-4 focus:ring-slate-100"
       />
     </label>
   );
@@ -122,7 +110,7 @@ function TextArea({
         value={value}
         onChange={onChange}
         rows={rows}
-        className="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+        className="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-slate-900 focus:ring-4 focus:ring-slate-100"
       />
     </label>
   );
@@ -152,20 +140,21 @@ function NumberField({
         min={min}
         max={max}
         value={value}
-        onChange={(event) =>
+        onChange={(event) => {
+          const raw = Number(
+            event.target.value
+          );
+
           onChange(
-            Math.max(
-              min,
-              Math.min(
-                max,
-                Number(
-                  event.target.value
-                ) || min
-              )
-            )
-          )
-        }
-        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+            Number.isFinite(raw)
+              ? Math.max(
+                  min,
+                  Math.min(max, raw)
+                )
+              : min
+          );
+        }}
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none focus:border-slate-900 focus:ring-4 focus:ring-slate-100"
       />
     </label>
   );
@@ -178,9 +167,7 @@ function Toggle({
 }: {
   label: string;
   checked: boolean;
-  onChange: (
-    value: boolean
-  ) => void;
+  onChange: (value: boolean) => void;
 }) {
   return (
     <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
@@ -196,7 +183,7 @@ function Toggle({
             event.target.checked
           )
         }
-        className="h-5 w-5 accent-blue-600"
+        className="h-5 w-5 accent-slate-900"
       />
     </label>
   );
@@ -212,14 +199,14 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+    <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
+        <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">
           {title}
         </h2>
 
         {description && (
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-500">
             {description}
           </p>
         )}
@@ -248,13 +235,13 @@ function CardEditor({
     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
       <div className="mb-5 flex items-center justify-between gap-4">
         <h3 className="font-bold text-slate-900">
-          Card {index + 1}
+          Objective Card {index + 1}
         </h3>
 
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+          className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
         >
           Remove
         </button>
@@ -303,23 +290,20 @@ function CardEditor({
 }
 
 export default function HomeSectionForm() {
-  const [form, setForm] =
-    useState<EditableSettings>({
-      home: defaultHomeSettings,
-      heroImage: "",
-      aboutImage: "",
-    });
+  const [home, setHome] =
+    useState<HomeSettings>(
+      defaultHomeSettings
+    );
 
-  const [files, setFiles] =
-    useState<
-      Record<string, File | null>
-    >({});
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const [loading, setLoading] =
-    useState(true);
-
-  const [saving, setSaving] =
-    useState(false);
+  const [
+    saving,
+    setSaving,
+  ] = useState(false);
 
   const load = async () => {
     try {
@@ -338,19 +322,11 @@ export default function HomeSectionForm() {
           response
         );
 
-      setForm({
-        home: mergeHomeSettings(
+      setHome(
+        mergeHomeSettings(
           payload.data?.home
-        ),
-
-        heroImage:
-          payload.data?.heroImage ||
-          "",
-
-        aboutImage:
-          payload.data?.aboutImage ||
-          "",
-      });
+        )
+      );
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -369,14 +345,16 @@ export default function HomeSectionForm() {
   const sortedSections =
     useMemo(
       () =>
-        [...sectionOrder].sort(
+        [
+          ...sectionOrder,
+        ].sort(
           (a, b) =>
-            form.home.sections[a]
+            home.sections[a]
               .order -
-            form.home.sections[b]
+            home.sections[b]
               .order
         ),
-      [form.home.sections]
+      [home.sections]
     );
 
   const updateSection = (
@@ -385,36 +363,28 @@ export default function HomeSectionForm() {
       HomeSettings["sections"][HomeSectionKey]
     >
   ) => {
-    setForm((current) => ({
-      ...current,
-
-      home: {
-        ...current.home,
-
+    setHome(
+      (current) => ({
+        ...current,
         sections: {
-          ...current.home.sections,
-
+          ...current.sections,
           [key]: {
-            ...current.home.sections[
+            ...current.sections[
               key
             ],
-
             ...patch,
           },
         },
-      },
-    }));
+      })
+    );
   };
 
   const moveSection = (
     key: HomeSectionKey,
     direction: -1 | 1
   ) => {
-    const ordered =
-      sortedSections;
-
     const index =
-      ordered.indexOf(key);
+      sortedSections.indexOf(key);
 
     const nextIndex =
       index + direction;
@@ -422,167 +392,182 @@ export default function HomeSectionForm() {
     if (
       nextIndex < 0 ||
       nextIndex >=
-        ordered.length
+        sortedSections.length
     ) {
       return;
     }
 
     const nextKey =
-      ordered[nextIndex];
+      sortedSections[nextIndex];
 
     const currentOrder =
-      form.home.sections[key]
+      home.sections[key]
         .order;
 
     const nextOrder =
-      form.home.sections[nextKey]
+      home.sections[nextKey]
         .order;
 
-    updateSection(key, {
-      order: nextOrder,
-    });
-
-    updateSection(nextKey, {
-      order: currentOrder,
-    });
-  };
-
-  const updateNested = (
-    section: keyof HomeSettings,
-    field: string,
-    value: unknown
-  ) => {
-    setForm((current) => ({
-      ...current,
-
-      home: {
-        ...current.home,
-
-        [section]: {
-          ...(current.home[
-            section
-          ] as Record<
-            string,
-            unknown
-          >),
-
-          [field]: value,
+    setHome(
+      (current) => ({
+        ...current,
+        sections: {
+          ...current.sections,
+          [key]: {
+            ...current.sections[
+              key
+            ],
+            order: nextOrder,
+          },
+          [nextKey]: {
+            ...current.sections[
+              nextKey
+            ],
+            order: currentOrder,
+          },
         },
-      },
-    }));
+      })
+    );
   };
 
-  const updateArrayItem = (
-    section:
-      | "hero"
-      | "about"
-      | "objectives",
-    field:
-      | "quickLinks"
-      | "features"
-      | "cards",
-    index: number,
-    value: unknown
+  const updateNested = <
+    K extends Exclude<
+      HomeSectionKey,
+      "hero"
+    >
+  >(
+    section: K,
+    patch: Partial<HomeSettings[K]>
   ) => {
-    const currentSection =
-      form.home[
-        section
-      ] as Record<
-        string,
-        unknown
-      >;
+    setHome(
+      (current) => ({
+        ...current,
+        [section]: {
+          ...current[section],
+          ...patch,
+        },
+      })
+    );
+  };
 
-    const list =
-      Array.isArray(
-        currentSection[field]
-      )
-        ? [
-            ...(currentSection[
-              field
-            ] as unknown[]),
-          ]
-        : [];
-
-    list[index] = value;
-
-    updateNested(
-      section,
-      field,
-      list
+  const updateHero = (
+    patch: Partial<HomeSettings["hero"]>
+  ) => {
+    setHome(
+      (current) => ({
+        ...current,
+        hero: {
+          ...current.hero,
+          ...patch,
+        },
+      })
     );
   };
 
   const addQuickLink = () => {
-    updateNested(
-      "hero",
-      "quickLinks",
-      [
-        ...form.home.hero
+    updateHero({
+      quickLinks: [
+        ...home.hero
           .quickLinks,
-
         {
           label: "New Link",
           href: "/",
         },
-      ]
-    );
+      ],
+    });
   };
 
   const removeQuickLink = (
     index: number
   ) => {
-    updateNested(
-      "hero",
-      "quickLinks",
-      form.home.hero.quickLinks.filter(
-        (_, itemIndex) =>
-          itemIndex !== index
-      )
-    );
+    updateHero({
+      quickLinks:
+        home.hero.quickLinks.filter(
+          (_, itemIndex) =>
+            itemIndex !== index
+        ),
+    });
+  };
+
+  const updateQuickLink = (
+    index: number,
+    patch: Partial<{
+      label: string;
+      href: string;
+    }>
+  ) => {
+    updateHero({
+      quickLinks:
+        home.hero.quickLinks.map(
+          (
+            item,
+            itemIndex
+          ) =>
+            itemIndex === index
+              ? {
+                  ...item,
+                  ...patch,
+                }
+              : item
+        ),
+    });
   };
 
   const addFeature = () => {
-    updateNested(
-      "about",
-      "features",
-      [
-        ...form.home.about
+    updateNested("about", {
+      features: [
+        ...home.about
           .features,
-
         "New feature",
-      ]
-    );
+      ],
+    });
   };
 
   const removeFeature = (
     index: number
   ) => {
-    updateNested(
-      "about",
-      "features",
-      form.home.about.features.filter(
-        (_, itemIndex) =>
-          itemIndex !== index
-      )
-    );
+    updateNested("about", {
+      features:
+        home.about.features.filter(
+          (_, itemIndex) =>
+            itemIndex !== index
+        ),
+    });
+  };
+
+  const updateFeature = (
+    index: number,
+    value: string
+  ) => {
+    updateNested("about", {
+      features:
+        home.about.features.map(
+          (
+            item,
+            itemIndex
+          ) =>
+            itemIndex === index
+              ? value
+              : item
+        ),
+    });
   };
 
   const addObjective = () => {
     updateNested(
       "objectives",
-      "cards",
-      [
-        ...form.home.objectives
-          .cards,
-
-        {
-          icon: "Star",
-          title:
-            "New objective",
-          description:
-            "Describe this objective.",
-        },
-      ]
+      {
+        cards: [
+          ...home.objectives
+            .cards,
+          {
+            icon: "Star",
+            title: "New objective",
+            description:
+              "Describe this objective.",
+          },
+        ],
+      }
     );
   };
 
@@ -591,30 +576,41 @@ export default function HomeSectionForm() {
   ) => {
     updateNested(
       "objectives",
-      "cards",
-      form.home.objectives.cards.filter(
-        (_, itemIndex) =>
-          itemIndex !== index
-      )
+      {
+        cards:
+          home.objectives.cards.filter(
+            (_, itemIndex) =>
+              itemIndex !== index
+          ),
+      }
     );
   };
 
-  const setFile =
-    (field: string) =>
-    (
-      event: ChangeEvent<HTMLInputElement>
-    ) => {
-      setFiles(
-        (current) => ({
-          ...current,
-
-          [field]:
-            event.target
-              .files?.[0] ||
-            null,
-        })
-      );
-    };
+  const updateObjective = (
+    index: number,
+    key: keyof HomeCard,
+    value: string
+  ) => {
+    updateNested(
+      "objectives",
+      {
+        cards:
+          home.objectives.cards.map(
+            (
+              card,
+              itemIndex
+            ) =>
+              itemIndex ===
+              index
+                ? {
+                    ...card,
+                    [key]: value,
+                  }
+                : card
+          ),
+      }
+    );
+  };
 
   const save = async (
     event: FormEvent
@@ -624,61 +620,22 @@ export default function HomeSectionForm() {
     try {
       setSaving(true);
 
-      const settingsResponse =
+      const response =
         await authenticatedApiFetch(
           "/settings",
           {
             method: "PUT",
-
             headers: {
               "Content-Type":
                 "application/json",
             },
-
             body: JSON.stringify({
-              home: form.home,
+              home,
             }),
           }
         );
 
-      await responseJson(
-        settingsResponse
-      );
-
-      if (
-        Object.values(files).some(
-          Boolean
-        )
-      ) {
-        const upload =
-          new FormData();
-
-        Object.entries(files).forEach(
-          ([field, file]) => {
-            if (file) {
-              upload.append(
-                field,
-                file
-              );
-            }
-          }
-        );
-
-        const uploadResponse =
-          await authenticatedApiFetch(
-            "/settings/upload",
-            {
-              method: "PUT",
-              body: upload,
-            }
-          );
-
-        await responseJson(
-          uploadResponse
-        );
-      }
-
-      setFiles({});
+      await responseJson(response);
 
       window.dispatchEvent(
         new Event(
@@ -704,13 +661,33 @@ export default function HomeSectionForm() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl bg-white p-8 shadow">
+      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="h-8 w-1/3 animate-pulse rounded bg-slate-200" />
-
         <div className="mt-5 h-32 animate-pulse rounded bg-slate-200" />
       </div>
     );
   }
+
+  const Media = ({
+    section,
+  }: {
+    section: Exclude<
+      HomeSectionKey,
+      "hero"
+    >;
+  }) => (
+    <HomeMediaManager
+      section={section}
+      media={home[section].media}
+      onChange={(media) =>
+        updateNested(
+          section,
+          { media }
+        )
+      }
+      max={4}
+    />
+  );
 
   return (
     <form
@@ -719,15 +696,13 @@ export default function HomeSectionForm() {
     >
       <Panel
         title="Homepage Section Manager"
-        description="Turn sections on/off, change their order, and choose the background used for each section."
+        description="Control the visibility, order and background treatment of every homepage section. The content and media editors below remain attached to the same CMS source."
       >
         <div className="space-y-3">
           {sortedSections.map(
             (key, index) => {
               const config =
-                form.home.sections[
-                  key
-                ];
+                home.sections[key];
 
               return (
                 <div
@@ -745,10 +720,7 @@ export default function HomeSectionForm() {
                     </p>
 
                     <p className="text-xs text-slate-500">
-                      Order{" "}
-                      {
-                        config.order
-                      }
+                      Order {config.order}
                     </p>
                   </div>
 
@@ -781,8 +753,7 @@ export default function HomeSectionForm() {
                         key,
                         {
                           background:
-                            event
-                              .target
+                            event.target
                               .value as
                               | "white"
                               | "slate",
@@ -794,7 +765,6 @@ export default function HomeSectionForm() {
                     <option value="white">
                       White background
                     </option>
-
                     <option value="slate">
                       Light slate background
                     </option>
@@ -844,51 +814,43 @@ export default function HomeSectionForm() {
 
       <Panel
         title="Hero Section"
-        description="Edit the homepage hero content and quick links, then manage all carousel photos directly below. The carousel photos are separate CMS-managed media and can be added, reordered, replaced, hidden or deleted."
+        description="Hero content is CMS controlled. Hero carousel photos remain managed separately through the multi-photo banner manager."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
-            value={
-              form.home.hero.eyebrow
-            }
+            value={home.hero.eyebrow}
             onChange={(event) =>
-              updateNested(
-                "hero",
-                "eyebrow",
-                event.target.value
-              )
+              updateHero({
+                eyebrow:
+                  event.target.value,
+              })
             }
           />
 
           <Field
             label="Identity Label"
             value={
-              form.home.hero
+              home.hero
                 .identityLabel
             }
             onChange={(event) =>
-              updateNested(
-                "hero",
-                "identityLabel",
-                event.target.value
-              )
+              updateHero({
+                identityLabel:
+                  event.target.value,
+              })
             }
           />
 
           <div className="md:col-span-2">
             <Field
               label="Title"
-              value={
-                form.home.hero
-                  .title
-              }
+              value={home.hero.title}
               onChange={(event) =>
-                updateNested(
-                  "hero",
-                  "title",
-                  event.target.value
-                )
+                updateHero({
+                  title:
+                    event.target.value,
+                })
               }
             />
           </div>
@@ -897,97 +859,83 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home.hero
+                home.hero
                   .description
               }
               onChange={(event) =>
-                updateNested(
-                  "hero",
-                  "description",
-                  event.target.value
-                )
+                updateHero({
+                  description:
+                    event.target.value,
+                })
               }
-              rows={4}
             />
           </div>
 
           <Field
             label="Primary Button Label"
             value={
-              form.home.hero
+              home.hero
                 .primaryLabel
             }
             onChange={(event) =>
-              updateNested(
-                "hero",
-                "primaryLabel",
-                event.target.value
-              )
+              updateHero({
+                primaryLabel:
+                  event.target.value,
+              })
             }
           />
 
           <Field
             label="Secondary Button Label"
             value={
-              form.home.hero
+              home.hero
                 .secondaryLabel
             }
             onChange={(event) =>
-              updateNested(
-                "hero",
-                "secondaryLabel",
-                event.target.value
-              )
+              updateHero({
+                secondaryLabel:
+                  event.target.value,
+              })
             }
           />
         </div>
 
         <div className="mt-7 rounded-2xl border border-slate-200 p-5">
           <div className="mb-4 flex items-center justify-between gap-4">
-            <h3 className="font-bold">
+            <h3 className="font-bold text-slate-900">
               Hero Quick Links
             </h3>
 
             <button
               type="button"
-              onClick={
-                addQuickLink
-              }
-              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+              onClick={addQuickLink}
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white"
             >
               Add Link
             </button>
           </div>
 
-          <div className="space-y-3">
-            {form.home.hero.quickLinks.map(
+          <div className="space-y-4">
+            {home.hero.quickLinks.map(
               (
                 link,
                 index
               ) => (
                 <div
-                  key={index}
+                  key={`${link.label}-${index}`}
                   className="grid gap-3 md:grid-cols-[1fr_1fr_auto]"
                 >
                   <Field
-                    label={`Label ${
-                      index + 1
-                    }`}
-                    value={
-                      link.label
-                    }
+                    label={`Label ${index + 1}`}
+                    value={link.label}
                     onChange={(
                       event
                     ) =>
-                      updateArrayItem(
-                        "hero",
-                        "quickLinks",
+                      updateQuickLink(
                         index,
                         {
-                          ...link,
                           label:
-                            event
-                              .target
+                            event.target
                               .value,
                         }
                       )
@@ -995,22 +943,16 @@ export default function HomeSectionForm() {
                   />
 
                   <Field
-                    label="Href"
-                    value={
-                      link.href
-                    }
+                    label="Route / Href"
+                    value={link.href}
                     onChange={(
                       event
                     ) =>
-                      updateArrayItem(
-                        "hero",
-                        "quickLinks",
+                      updateQuickLink(
                         index,
                         {
-                          ...link,
                           href:
-                            event
-                              .target
+                            event.target
                               .value,
                         }
                       )
@@ -1024,7 +966,7 @@ export default function HomeSectionForm() {
                         index
                       )
                     }
-                    className="self-end rounded-lg border border-red-200 px-3 py-3 text-sm font-semibold text-red-600"
+                    className="self-end rounded-xl border border-red-200 px-4 py-3 text-sm font-bold text-red-600"
                   >
                     Remove
                   </button>
@@ -1034,90 +976,52 @@ export default function HomeSectionForm() {
           </div>
         </div>
 
-        <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50/60 p-5">
-          <div className="mb-5">
-            <h3 className="text-lg font-bold text-slate-900">
-              Hero Carousel Photos
-            </h3>
-            <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-500">
-              Add multiple photos for the new homepage hero carousel.
-              Upload several images at once, reorder them, replace an image,
-              temporarily hide a slide, or delete it. Only active photos are
-              displayed on the public homepage.
-            </p>
-          </div>
+        <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <h3 className="font-bold text-slate-900">
+            Hero Carousel Photos
+          </h3>
 
-          <BannerManager />
-        </div>
+          <p className="mt-1 text-sm leading-6 text-slate-500">
+            The hero carousel is already complete. Use this manager to add, replace, hide, delete and reorder its CMS photos.
+          </p>
 
-        <div className="mt-7 rounded-2xl border border-slate-200 p-5">
-          <div className="mb-4">
-            <h3 className="font-bold text-slate-900">
-              About Section Image
-            </h3>
-            <p className="mt-1 text-sm text-slate-500">
-              This image remains separate from the hero carousel and is used by the homepage About section.
-            </p>
-          </div>
-
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={setFile(
-                "aboutImage"
-              )}
-              className="block w-full rounded-xl border border-slate-300 bg-white p-3"
-            />
-
-            {files.aboutImage && (
-              <p className="mt-2 text-xs text-slate-500">
-                Selected: {files.aboutImage.name}
-              </p>
-            )}
-
-            {form.aboutImage && (
-              <img
-                src={form.aboutImage}
-                alt="Current about"
-                className="mt-3 h-32 w-full rounded-xl object-cover"
-              />
-            )}
+          <div className="mt-5">
+            <BannerManager />
           </div>
         </div>
       </Panel>
 
       <Panel
         title="About Section"
-        description="These values control the About block shown on the homepage."
+        description="The redesigned About block uses these CMS fields and the section-specific photo collection."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home.about
-                .eyebrow
+              home.about.eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "about",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
             label="Title"
-            value={
-              form.home.about
-                .title
-            }
+            value={home.about.title}
             onChange={(event) =>
               updateNested(
                 "about",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1126,14 +1030,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home.about
-                  .description
+                home.about.description
               }
               onChange={(event) =>
                 updateNested(
                   "about",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target
+                        .value,
+                  }
                 )
               }
             />
@@ -1142,126 +1048,133 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home.about
-                .buttonLabel
+              home.about.buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "about",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home.about
-                .buttonHref
+              home.about.buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "about",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
-        </div>
 
-        <div className="mt-5">
           <Toggle
-            label="Show statistics row"
+            label="Show Statistics"
             checked={
-              form.home.about
-                .showStats
+              home.about.showStats
             }
             onChange={(value) =>
               updateNested(
                 "about",
-                "showStats",
-                value
+                {
+                  showStats:
+                    value,
+                }
               )
             }
           />
-        </div>
 
-        <div className="mt-5 grid gap-5 md:grid-cols-3">
-          {form.home.about.statsLabels.map(
-            (label, index) => (
-              <Field
-                key={index}
-                label={`Statistic ${
-                  index + 1
-                } Label`}
-                value={label}
-                onChange={(event) => {
-                  const next =
-                    [
-                      ...form.home
-                        .about
-                        .statsLabels,
-                    ] as [
-                      string,
-                      string,
-                      string
-                    ];
-
-                  next[index] =
-                    event.target.value;
-
-                  updateNested(
-                    "about",
-                    "statsLabels",
-                    next
-                  );
-                }}
-              />
-            )
-          )}
+          <div className="md:col-span-2 grid gap-5 sm:grid-cols-3">
+            {home.about.statsLabels.map(
+              (
+                label,
+                index
+              ) => (
+                <Field
+                  key={index}
+                  label={`Statistic ${
+                    index + 1
+                  } Label`}
+                  value={label}
+                  onChange={(
+                    event
+                  ) =>
+                    updateNested(
+                      "about",
+                      {
+                        statsLabels:
+                          home.about.statsLabels.map(
+                            (
+                              item,
+                              itemIndex
+                            ) =>
+                              itemIndex ===
+                              index
+                                ? event
+                                    .target
+                                    .value
+                                : item
+                          ) as [
+                            string,
+                            string,
+                            string
+                          ],
+                      }
+                    )
+                  }
+                />
+              )
+            )}
+          </div>
         </div>
 
         <div className="mt-7 rounded-2xl border border-slate-200 p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-bold">
-              Homepage About Features
+              About Features
             </h3>
 
             <button
               type="button"
-              onClick={
-                addFeature
-              }
-              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+              onClick={addFeature}
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white"
             >
               Add Feature
             </button>
           </div>
 
           <div className="space-y-3">
-            {form.home.about.features.map(
+            {home.about.features.map(
               (
                 feature,
                 index
               ) => (
                 <div
                   key={index}
-                  className="flex gap-3"
+                  className="grid gap-3 md:grid-cols-[1fr_auto]"
                 >
-                  <input
-                    value={
-                      feature
-                    }
-                    onChange={(event) =>
-                      updateArrayItem(
-                        "about",
-                        "features",
+                  <Field
+                    label={`Feature ${
+                      index + 1
+                    }`}
+                    value={feature}
+                    onChange={(
+                      event
+                    ) =>
+                      updateFeature(
                         index,
                         event.target.value
                       )
                     }
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3"
                   />
 
                   <button
@@ -1271,7 +1184,7 @@ export default function HomeSectionForm() {
                         index
                       )
                     }
-                    className="rounded-lg border border-red-200 px-3 text-sm text-red-600"
+                    className="self-end rounded-xl border border-red-200 px-4 py-3 text-sm font-bold text-red-600"
                   >
                     Remove
                   </button>
@@ -1280,25 +1193,43 @@ export default function HomeSectionForm() {
             )}
           </div>
         </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="about"
+            label="About Photos"
+            media={
+              home.about.media
+            }
+            onChange={(media) =>
+              updateNested(
+                "about",
+                { media }
+              )
+            }
+            max={4}
+          />
+        </div>
       </Panel>
 
       <Panel
         title="Objectives Section"
-        description="Edit objective cards, icon names, section copy and exactly how many cards appear on the homepage."
+        description="Control the section heading, CTA, number of cards and every objective card. You can also upload up to four editorial photos for the visual layout."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .objectives
+              home.objectives
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "objectives",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1306,15 +1237,16 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .objectives
+              home.objectives
                 .title
             }
             onChange={(event) =>
               updateNested(
                 "objectives",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1323,15 +1255,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .objectives
+                home.objectives
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "objectives",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -1340,61 +1273,62 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home
-                .objectives
+              home.objectives
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "objectives",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home
-                .objectives
+              home.objectives
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "objectives",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
 
           <NumberField
-            label="Cards shown on homepage"
+            label="Cards shown"
             value={
-              form.home
-                .objectives
+              home.objectives
                 .displayCount
+            }
+            min={1}
+            max={
+              home.objectives
+                .cards.length || 1
             }
             onChange={(value) =>
               updateNested(
                 "objectives",
-                "displayCount",
-                value
+                {
+                  displayCount:
+                    value,
+                }
               )
-            }
-            min={1}
-            max={
-              form.home
-                .objectives
-                .cards
-                .length || 1
             }
           />
         </div>
 
         <div className="mt-7 space-y-4">
-          {form.home.objectives.cards.map(
+          {home.objectives.cards.map(
             (
               card,
               index
@@ -1407,15 +1341,10 @@ export default function HomeSectionForm() {
                   key,
                   value
                 ) =>
-                  updateArrayItem(
-                    "objectives",
-                    "cards",
+                  updateObjective(
                     index,
-                    {
-                      ...card,
-                      [key]:
-                        value,
-                    }
+                    key,
+                    value
                   )
                 }
                 onRemove={() =>
@@ -1430,32 +1359,49 @@ export default function HomeSectionForm() {
 
         <button
           type="button"
-          onClick={
-            addObjective
-          }
-          className="mt-4 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+          onClick={addObjective}
+          className="mt-4 rounded-xl border border-slate-300 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50"
         >
           Add Objective Card
         </button>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="objectives"
+            label="Objectives Photos"
+            media={
+              home.objectives
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "objectives",
+                { media }
+              )
+            }
+            max={4}
+          />
+        </div>
       </Panel>
 
       <Panel
         title="Latest Updates Section"
-        description="The actual update records remain managed in Latest Updates. These settings control the homepage presentation and card count."
+        description="The actual press releases, announcements and events remain in their own CMS modules. These settings control the homepage editorial presentation, CTA and optional section photos."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .latestUpdates
+              home.latestUpdates
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "latestUpdates",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1463,15 +1409,16 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .latestUpdates
+              home.latestUpdates
                 .title
             }
             onChange={(event) =>
               updateNested(
                 "latestUpdates",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1480,15 +1427,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .latestUpdates
+                home.latestUpdates
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "latestUpdates",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -1497,31 +1445,33 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home
-                .latestUpdates
+              home.latestUpdates
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "latestUpdates",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home
-                .latestUpdates
+              home.latestUpdates
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "latestUpdates",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1529,37 +1479,59 @@ export default function HomeSectionForm() {
           <NumberField
             label="Cards shown"
             value={
-              form.home
-                .latestUpdates
+              home.latestUpdates
                 .displayCount
             }
+            min={1}
+            max={12}
             onChange={(value) =>
               updateNested(
                 "latestUpdates",
-                "displayCount",
-                value
+                {
+                  displayCount:
+                    value,
+                }
               )
             }
+          />
+        </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="latestUpdates"
+            label="Latest Updates Photos"
+            media={
+              home.latestUpdates
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "latestUpdates",
+                { media }
+              )
+            }
+            max={4}
           />
         </div>
       </Panel>
 
       <Panel
         title="Gallery Section"
-        description="The actual gallery items remain managed in Gallery. Choose the homepage heading and number of images displayed here."
+        description="The real gallery images remain managed through the Gallery CMS. The section-level photos below are optional editorial images used by the redesigned homepage layout."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .gallery.eyebrow
+              home.gallery.eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "gallery",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1567,14 +1539,15 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .gallery.title
+              home.gallery.title
             }
             onChange={(event) =>
               updateNested(
                 "gallery",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1583,15 +1556,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .gallery
+                home.gallery
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "gallery",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -1600,70 +1574,94 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home
-                .gallery
+              home.gallery
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "gallery",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home
-                .gallery
+              home.gallery
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "gallery",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
 
           <NumberField
-            label="Images shown"
+            label="Images shown from Gallery CMS"
             value={
-              form.home
-                .gallery
+              home.gallery
                 .displayCount
             }
+            min={1}
+            max={24}
             onChange={(value) =>
               updateNested(
                 "gallery",
-                "displayCount",
-                value
+                {
+                  displayCount:
+                    value,
+                }
               )
             }
+          />
+        </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="gallery"
+            label="Gallery Editorial Photos"
+            media={
+              home.gallery
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "gallery",
+                { media }
+              )
+            }
+            max={4}
           />
         </div>
       </Panel>
 
       <Panel
         title="Press Conferences Section"
-        description="The actual press conference records remain in the Press Conferences CMS. This controls the homepage presentation and count."
+        description="The real conference records and their own featured images remain managed in Press Conferences CMS. These settings control the homepage section and optional editorial photos."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .pressConferences
+              home.pressConferences
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "pressConferences",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1671,15 +1669,16 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .pressConferences
+              home.pressConferences
                 .title
             }
             onChange={(event) =>
               updateNested(
                 "pressConferences",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1688,15 +1687,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .pressConferences
+                home.pressConferences
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "pressConferences",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -1705,31 +1705,33 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home
-                .pressConferences
+              home.pressConferences
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "pressConferences",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home
-                .pressConferences
+              home.pressConferences
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "pressConferences",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1737,38 +1739,60 @@ export default function HomeSectionForm() {
           <NumberField
             label="Cards shown"
             value={
-              form.home
-                .pressConferences
+              home.pressConferences
                 .displayCount
             }
+            min={1}
+            max={12}
             onChange={(value) =>
               updateNested(
                 "pressConferences",
-                "displayCount",
-                value
+                {
+                  displayCount:
+                    value,
+                }
               )
             }
+          />
+        </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="pressConferences"
+            label="Press Conference Photos"
+            media={
+              home.pressConferences
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "pressConferences",
+                { media }
+              )
+            }
+            max={4}
           />
         </div>
       </Panel>
 
       <Panel
         title="Executive Committee Section"
-        description="The committee records remain in their own CMS. Control the homepage heading, CTA, visibility and card count here."
+        description="Member records remain in the Executive Committee CMS. This controls the homepage section heading, count, CTA and optional editorial photos."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .executiveCommittee
+              home.executiveCommittee
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "executiveCommittee",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1776,15 +1800,16 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .executiveCommittee
+              home.executiveCommittee
                 .title
             }
             onChange={(event) =>
               updateNested(
                 "executiveCommittee",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1793,15 +1818,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .executiveCommittee
+                home.executiveCommittee
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "executiveCommittee",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -1810,31 +1836,33 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home
-                .executiveCommittee
+              home.executiveCommittee
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "executiveCommittee",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home
-                .executiveCommittee
+              home.executiveCommittee
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "executiveCommittee",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1842,15 +1870,18 @@ export default function HomeSectionForm() {
           <NumberField
             label="Cards shown"
             value={
-              form.home
-                .executiveCommittee
+              home.executiveCommittee
                 .displayCount
             }
+            min={1}
+            max={12}
             onChange={(value) =>
               updateNested(
                 "executiveCommittee",
-                "displayCount",
-                value
+                {
+                  displayCount:
+                    value,
+                }
               )
             }
           />
@@ -1858,38 +1889,58 @@ export default function HomeSectionForm() {
           <Toggle
             label="Show View All button"
             checked={
-              form.home
-                .executiveCommittee
+              home.executiveCommittee
                 .showViewAll
             }
             onChange={(value) =>
               updateNested(
                 "executiveCommittee",
-                "showViewAll",
-                value
+                {
+                  showViewAll:
+                    value,
+                }
               )
             }
+          />
+        </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="executiveCommittee"
+            label="Executive Committee Photos"
+            media={
+              home.executiveCommittee
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "executiveCommittee",
+                { media }
+              )
+            }
+            max={4}
           />
         </div>
       </Panel>
 
       <Panel
         title="Office Bearers Section"
-        description="Control the homepage office bearer heading, CTA, visibility and card count."
+        description="Office bearer records and member photos remain in their own CMS. This controls the homepage section, CTA, card count and optional editorial photos."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .officeBearers
+              home.officeBearers
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "officeBearers",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1897,15 +1948,16 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .officeBearers
+              home.officeBearers
                 .title
             }
             onChange={(event) =>
               updateNested(
                 "officeBearers",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1914,15 +1966,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .officeBearers
+                home.officeBearers
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "officeBearers",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -1931,31 +1984,33 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              form.home
-                .officeBearers
+              home.officeBearers
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
                 "officeBearers",
-                "buttonLabel",
-                event.target.value
+                {
+                  buttonLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Button Href"
+            label="Button Route / Href"
             value={
-              form.home
-                .officeBearers
+              home.officeBearers
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
                 "officeBearers",
-                "buttonHref",
-                event.target.value
+                {
+                  buttonHref:
+                    event.target.value,
+                }
               )
             }
           />
@@ -1963,15 +2018,18 @@ export default function HomeSectionForm() {
           <NumberField
             label="Cards shown"
             value={
-              form.home
-                .officeBearers
+              home.officeBearers
                 .displayCount
             }
+            min={1}
+            max={12}
             onChange={(value) =>
               updateNested(
                 "officeBearers",
-                "displayCount",
-                value
+                {
+                  displayCount:
+                    value,
+                }
               )
             }
           />
@@ -1979,38 +2037,58 @@ export default function HomeSectionForm() {
           <Toggle
             label="Show View All button"
             checked={
-              form.home
-                .officeBearers
+              home.officeBearers
                 .showViewAll
             }
             onChange={(value) =>
               updateNested(
                 "officeBearers",
-                "showViewAll",
-                value
+                {
+                  showViewAll:
+                    value,
+                }
               )
             }
+          />
+        </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="officeBearers"
+            label="Office Bearers Photos"
+            media={
+              home.officeBearers
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "officeBearers",
+                { media }
+              )
+            }
+            max={4}
           />
         </div>
       </Panel>
 
       <Panel
         title="Membership CTA Section"
-        description="Edit the final call-to-action shown at the bottom of the homepage."
+        description="Control the final homepage call-to-action, both routes and the optional editorial photos used in the redesigned CTA."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              form.home
-                .membership
+              home.membership
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
                 "membership",
-                "eyebrow",
-                event.target.value
+                {
+                  eyebrow:
+                    event.target.value,
+                }
               )
             }
           />
@@ -2018,15 +2096,16 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              form.home
-                .membership
+              home.membership
                 .title
             }
             onChange={(event) =>
               updateNested(
                 "membership",
-                "title",
-                event.target.value
+                {
+                  title:
+                    event.target.value,
+                }
               )
             }
           />
@@ -2035,15 +2114,16 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                form.home
-                  .membership
+                home.membership
                   .description
               }
               onChange={(event) =>
                 updateNested(
                   "membership",
-                  "description",
-                  event.target.value
+                  {
+                    description:
+                      event.target.value,
+                  }
                 )
               }
             />
@@ -2052,15 +2132,33 @@ export default function HomeSectionForm() {
           <Field
             label="Primary Button Label"
             value={
-              form.home
-                .membership
+              home.membership
                 .primaryLabel
             }
             onChange={(event) =>
               updateNested(
                 "membership",
-                "primaryLabel",
-                event.target.value
+                {
+                  primaryLabel:
+                    event.target.value,
+                }
+              )
+            }
+          />
+
+          <Field
+            label="Primary Button Route / Href"
+            value={
+              home.membership
+                .primaryHref
+            }
+            onChange={(event) =>
+              updateNested(
+                "membership",
+                {
+                  primaryHref:
+                    event.target.value,
+                }
               )
             }
           />
@@ -2068,49 +2166,65 @@ export default function HomeSectionForm() {
           <Field
             label="Secondary Button Label"
             value={
-              form.home
-                .membership
+              home.membership
                 .secondaryLabel
             }
             onChange={(event) =>
               updateNested(
                 "membership",
-                "secondaryLabel",
-                event.target.value
+                {
+                  secondaryLabel:
+                    event.target.value,
+                }
               )
             }
           />
 
           <Field
-            label="Secondary Button Href"
+            label="Secondary Button Route / Href"
             value={
-              form.home
-                .membership
+              home.membership
                 .secondaryHref
             }
             onChange={(event) =>
               updateNested(
                 "membership",
-                "secondaryHref",
-                event.target.value
+                {
+                  secondaryHref:
+                    event.target.value,
+                }
               )
             }
           />
         </div>
+
+        <div className="mt-7">
+          <HomeMediaManager
+            section="membership"
+            label="Membership CTA Photos"
+            media={
+              home.membership
+                .media
+            }
+            onChange={(media) =>
+              updateNested(
+                "membership",
+                { media }
+              )
+            }
+            max={4}
+          />
+        </div>
       </Panel>
 
-      <div className="sticky bottom-4 z-20 flex items-center justify-between gap-4 rounded-2xl border border-blue-100 bg-white/95 p-4 shadow-xl backdrop-blur">
-        <p className="hidden text-sm text-slate-500 sm:block">
-          Save once to publish all homepage CMS changes.
-        </p>
-
+      <div className="sticky bottom-4 z-30 flex justify-end">
         <button
           type="submit"
           disabled={saving}
-          className="ml-auto rounded-xl bg-blue-600 px-6 py-3 font-bold text-white shadow-lg transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-full bg-[#171717] px-7 py-3.5 text-sm font-black text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saving
-            ? "Saving..."
+            ? "Saving Home Settings..."
             : "Save Home Settings"}
         </button>
       </div>
