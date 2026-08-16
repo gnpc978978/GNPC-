@@ -44,6 +44,7 @@ type AboutSettings = {
   heroDescription: string;
 
   image: string;
+  media: string[];
 
   heading: string;
   description: string;
@@ -96,6 +97,7 @@ const EMPTY_ABOUT: AboutSettings = {
   heroDescription: "",
 
   image: "",
+  media: [],
 
   heading: "",
   description: "",
@@ -210,6 +212,15 @@ function normalizeAbout(
       "string"
         ? data.image
         : "",
+
+    media:
+      Array.isArray(data?.media)
+        ? data.media.filter(
+            (item): item is string =>
+              typeof item === "string" &&
+              item.trim().length > 0
+          )
+        : [],
 
     presidentPhoto:
       typeof data?.presidentPhoto ===
@@ -721,6 +732,51 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* =====================================================
+          ADDITIONAL CMS ABOUT PHOTOS
+          ===================================================== */}
+
+      {content.media.length > 0 && (
+        <section className="relative overflow-hidden bg-[#f4ede2] px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
+          <div className="relative mx-auto max-w-7xl">
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.12,
+              }}
+              transition={{
+                duration: 0.7,
+              }}
+              className={[
+                "grid gap-4",
+                content.media.length === 1
+                  ? "lg:grid-cols-1"
+                  : "lg:grid-cols-2",
+              ].join(" ")}
+            >
+              {content.media
+                .slice(0, 2)
+                .map((image, index) => (
+                  <CMSImage
+                    key={`${image}-${index}`}
+                    src={image}
+                    alt={`About photo ${index + 1}`}
+                    className="aspect-[16/8] min-h-[220px] sm:min-h-[300px]"
+                  />
+                ))}
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* =====================================================
           MISSION / VISION
