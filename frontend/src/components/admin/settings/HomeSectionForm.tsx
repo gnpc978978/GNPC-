@@ -15,6 +15,8 @@ import {
   responseJson,
 } from "@/services/api";
 
+import BannerManager from "@/components/admin/BannerManager";
+
 import {
   defaultHomeSettings,
   HomeCard,
@@ -842,7 +844,7 @@ export default function HomeSectionForm() {
 
       <Panel
         title="Hero Section"
-        description="Edit homepage hero text, action labels, quick links and hero/about images. Hero banner slides continue to use the existing Homepage Banners CMS."
+        description="Edit the homepage hero content and quick links, then manage all carousel photos directly below. The carousel photos are separate CMS-managed media and can be added, reordered, replaced, hidden or deleted."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1032,71 +1034,51 @@ export default function HomeSectionForm() {
           </div>
         </div>
 
-        <div className="mt-7 grid gap-5 md:grid-cols-2">
-          <div>
-            <span className="mb-2 block text-sm font-semibold text-slate-700">
-              Hero Image Upload
-            </span>
+        <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50/60 p-5">
+          <div className="mb-5">
+            <h3 className="text-lg font-bold text-slate-900">
+              Hero Carousel Photos
+            </h3>
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-500">
+              Add multiple photos for the new homepage hero carousel.
+              Upload several images at once, reorder them, replace an image,
+              temporarily hide a slide, or delete it. Only active photos are
+              displayed on the public homepage.
+            </p>
+          </div>
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={setFile(
-                "heroImage"
-              )}
-              className="block w-full rounded-xl border border-slate-300 p-3"
-            />
+          <BannerManager />
+        </div>
 
-            {files.heroImage && (
-              <p className="mt-2 text-xs text-slate-500">
-                Selected:{" "}
-                {
-                  files
-                    .heroImage.name
-                }
-              </p>
-            )}
-
-            {form.heroImage && (
-              <img
-                src={
-                  form.heroImage
-                }
-                alt="Current hero"
-                className="mt-3 h-32 w-full rounded-xl object-cover"
-              />
-            )}
+        <div className="mt-7 rounded-2xl border border-slate-200 p-5">
+          <div className="mb-4">
+            <h3 className="font-bold text-slate-900">
+              About Section Image
+            </h3>
+            <p className="mt-1 text-sm text-slate-500">
+              This image remains separate from the hero carousel and is used by the homepage About section.
+            </p>
           </div>
 
           <div>
-            <span className="mb-2 block text-sm font-semibold text-slate-700">
-              About Image Upload
-            </span>
-
             <input
               type="file"
               accept="image/*"
               onChange={setFile(
                 "aboutImage"
               )}
-              className="block w-full rounded-xl border border-slate-300 p-3"
+              className="block w-full rounded-xl border border-slate-300 bg-white p-3"
             />
 
             {files.aboutImage && (
               <p className="mt-2 text-xs text-slate-500">
-                Selected:{" "}
-                {
-                  files
-                    .aboutImage.name
-                }
+                Selected: {files.aboutImage.name}
               </p>
             )}
 
             {form.aboutImage && (
               <img
-                src={
-                  form.aboutImage
-                }
+                src={form.aboutImage}
                 alt="Current about"
                 className="mt-3 h-32 w-full rounded-xl object-cover"
               />
