@@ -31,6 +31,7 @@ type AboutSettings = {
   heroDescription: string;
 
   image: string;
+  media: string[];
 
   heading: string;
   description: string;
@@ -68,7 +69,6 @@ type AboutSettings = {
   ctaDescription: string;
   ctaPrimaryLabel: string;
   ctaSecondaryLabel: string;
-  ctaSecondaryHref: string;
 };
 
 type AboutResponse = {
@@ -95,6 +95,7 @@ const defaultForm: AboutSettings =
       "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
 
     image: "",
+    media: [],
 
     heading:
       "Empowering Journalists & Strengthening Independent Media",
@@ -170,9 +171,6 @@ const defaultForm: AboutSettings =
 
     ctaSecondaryLabel:
       "Meet Our Office Bearers",
-
-    ctaSecondaryHref:
-      "/office-bearers",
   };
 
 function normalizeForm(
@@ -181,6 +179,15 @@ function normalizeForm(
   return {
     ...defaultForm,
     ...(data || {}),
+
+    media:
+      Array.isArray(data?.media)
+        ? data!.media!.filter(
+            (item): item is string =>
+              typeof item === "string" &&
+              item.trim().length > 0
+          )
+        : [],
 
     objectives:
       Array.isArray(
@@ -400,6 +407,11 @@ export default function AboutSectionForm() {
     uploadingPresident,
     setUploadingPresident,
   ] = useState(false);
+
+  const [
+    uploadingMedia,
+    setUploadingMedia,
+  ] = useState<number | null>(null);
 
   const loadSettings =
     async () => {
@@ -723,6 +735,85 @@ export default function AboutSectionForm() {
       }
     };
 
+  const uploadAdditionalMedia =
+    async (
+      index: number,
+      file: File
+    ) => {
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+        toast.error(
+          "Please select an image file."
+        );
+        return;
+      }
+
+      if (
+        file.size >
+        10 * 1024 * 1024
+      ) {
+        toast.error(
+          "Image must be smaller than 10 MB."
+        );
+        return;
+      }
+
+      try {
+        setUploadingMedia(index);
+
+        const body =
+          new FormData();
+
+        body.append(
+          "aboutMedia",
+          file
+        );
+
+        const response =
+          await authenticatedApiFetch(
+            "/settings/about/upload",
+            {
+              method: "POST",
+              body,
+            }
+          );
+
+        const result =
+          await responseJson<AboutResponse>(
+            response
+          );
+
+        if (result.data) {
+          setForm(
+            normalizeForm(
+              result.data
+            )
+          );
+        }
+
+        window.dispatchEvent(
+          new Event(
+            "about-settings-updated"
+          )
+        );
+
+        toast.success(
+          `About photo ${index + 1} uploaded successfully.`
+        );
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Unable to upload About photo."
+        );
+      } finally {
+        setUploadingMedia(null);
+      }
+    };
+
   const handleImageChange =
     (
       field:
@@ -869,6 +960,36 @@ export default function AboutSectionForm() {
               "image"
             )}
           />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {[0, 1].map((index) => (
+              <MediaUpload
+                key={index}
+                title={`Additional About Photo ${index + 1}`}
+                value={
+                  form.media?.[index] || ""
+                }
+                loading={
+                  uploadingMedia === index
+                }
+                onChange={(event) => {
+                  const file =
+                    event.target.files?.[0];
+
+                  event.target.value = "";
+
+                  if (!file) {
+                    return;
+                  }
+
+                  void uploadAdditionalMedia(
+                    index,
+                    file
+                  );
+                }}
+              />
+            ))}
+          </div>
         </div>
       </Section>
 
@@ -1184,17 +1305,6 @@ export default function AboutSectionForm() {
             onChange={updateField(
               "ctaSecondaryLabel"
             )}
-          />
-
-          <Field
-            label="Secondary Button Route"
-            value={
-              form.ctaSecondaryHref
-            }
-            onChange={updateField(
-              "ctaSecondaryHref"
-            )}
-            placeholder="/office-bearers"
           />
         </div>
       </Section>
