@@ -523,3 +523,9 @@ p {
 ::-webkit-scrollbar-thumb:hover {
   background: #7d8794;
 }
+
+
+/* Homepage editorial buttons */
+.gnpc-btn { text-wrap: nowrap; }
+.gnpc-btn span { min-width:0; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+:root { --gnpc-editorial-bg:#f4ede2; --gnpc-editorial-green:#839669; --gnpc-editorial-black:#171717; }
