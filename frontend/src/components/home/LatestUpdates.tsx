@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -14,11 +14,10 @@ import {
   type Variants,
 } from "framer-motion";
 
-import {
-  apiFetch,
-  responseJson,
-} from "@/services/api";
+import { apiFetch, responseJson } from "@/services/api";
 import Button from "@/components/ui/Button";
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+import { mergeHomeSettings } from "@/types/homeSettings";
 
 type LatestUpdate = {
   _id: string;
@@ -40,6 +39,22 @@ type LatestUpdatesResponse = {
   data?: LatestUpdate[];
 };
 
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 function formatDate(value?: string) {
   if (!value) {
     return "";
@@ -51,19 +66,14 @@ function formatDate(value?: string) {
     return "";
   }
 
-  return new Intl.DateTimeFormat(
-    "en-IN",
-    {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }
-  ).format(date);
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 }
 
-function getDetailHref(
-  item: LatestUpdate
-) {
+function getDetailHref(item: LatestUpdate) {
   const type = (
     item.type ||
     item.category ||
@@ -71,12 +81,8 @@ function getDetailHref(
   ).toLowerCase();
 
   if (
-    type.includes(
-      "press conference"
-    ) ||
-    type.includes(
-      "press-conference"
-    ) ||
+    type.includes("press conference") ||
+    type.includes("press-conference") ||
     type === "pressconference"
   ) {
     return `/press-conference/${encodeURIComponent(
@@ -84,9 +90,7 @@ function getDetailHref(
     )}`;
   }
 
-  if (
-    type.includes("announcement")
-  ) {
+  if (type.includes("announcement")) {
     return `/announcements/${encodeURIComponent(
       item.slug || item._id
     )}`;
@@ -103,26 +107,6 @@ function getDetailHref(
   )}`;
 }
 
-const cardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 25,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.65,
-      ease: [
-        0.22,
-        1,
-        0.36,
-        1,
-      ],
-    },
-  },
-};
-
 function UpdateImage({
   src,
   alt,
@@ -130,15 +114,14 @@ function UpdateImage({
   src?: string;
   alt: string;
 }) {
-  const [imageError, setImageError] =
-    useState(false);
+  const [imageError, setImageError] = useState(false);
 
   if (!src || imageError) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-[#ded0bb]">
         <Newspaper
           size={42}
-          strokeWidth={1.5}
+          strokeWidth={1.4}
           className="text-black/20"
         />
       </div>
@@ -150,24 +133,77 @@ function UpdateImage({
       src={src}
       alt={alt}
       fill
-      sizes="(min-width: 1024px) 38vw, 100vw"
-      onError={() =>
-        setImageError(true)
-      }
+      sizes="(min-width: 1024px) 40vw, 100vw"
+      onError={() => setImageError(true)}
       className="object-cover transition duration-700 group-hover:scale-[1.04]"
     />
   );
 }
 
+function CmsImage({
+  src,
+  alt,
+  className,
+}: {
+  src?: string;
+  alt: string;
+  className?: string;
+}) {
+  if (!src) {
+    return null;
+  }
+
+  return (
+    <div
+      className={[
+        "relative overflow-hidden rounded-[1.75rem] border-[6px] border-white bg-white shadow-[0_22px_55px_rgba(38,32,23,0.12)]",
+        className || "",
+      ].join(" ")}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 35vw, 100vw"
+        className="object-cover transition duration-700 hover:scale-[1.03]"
+      />
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5"
+      />
+    </div>
+  );
+}
+
+function SkeletonFeatured() {
+  return (
+    <div className="min-h-[430px] animate-pulse rounded-[2rem] bg-black/5 sm:min-h-[520px]" />
+  );
+}
+
+function SkeletonSecondary() {
+  return (
+    <div className="min-h-[220px] animate-pulse rounded-[2rem] bg-black/5" />
+  );
+}
+
 export default function LatestUpdates() {
-  const [items, setItems] =
-    useState<LatestUpdate[]>([]);
+  const { settings } = useWebsiteSettings();
 
-  const [loading, setLoading] =
-    useState(true);
+  const home = mergeHomeSettings(settings.home);
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const section = home.latestUpdates;
+
+  const [items, setItems] = useState<LatestUpdate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  /*
+   * ==========================================================
+   * LIVE UPDATE DATA
+   * ==========================================================
+   */
 
   useEffect(() => {
     let cancelled = false;
@@ -177,33 +213,21 @@ export default function LatestUpdates() {
         setLoading(true);
         setError(null);
 
-        const response =
-          await apiFetch(
-            "/latest-updates"
-          );
+        const response = await apiFetch("/latest-updates");
 
         const payload =
-          await responseJson<LatestUpdatesResponse>(
-            response
-          );
+          await responseJson<LatestUpdatesResponse>(response);
 
         if (cancelled) {
           return;
         }
 
-        const data =
-          Array.isArray(
-            payload.data
-          )
-            ? payload.data
-            : [];
+        const data = Array.isArray(payload.data)
+          ? payload.data
+          : [];
 
-        setItems(
-          data.slice(0, 3)
-        );
-      } catch (
-        requestError
-      ) {
+        setItems(data);
+      } catch (requestError) {
         if (cancelled) {
           return;
         }
@@ -211,8 +235,7 @@ export default function LatestUpdates() {
         setItems([]);
 
         setError(
-          requestError instanceof
-            Error
+          requestError instanceof Error
             ? requestError.message
             : "Unable to load latest updates."
         );
@@ -230,14 +253,46 @@ export default function LatestUpdates() {
     };
   }, []);
 
-  const first =
-    items[0];
+  /*
+   * ==========================================================
+   * CMS DISPLAY COUNT
+   * ==========================================================
+   */
 
-  const secondary =
-    items.slice(1, 3);
+  const displayCount = Math.max(
+    1,
+    section.displayCount || 3
+  );
+
+  const visibleItems = useMemo(
+    () => items.slice(0, displayCount),
+    [displayCount, items]
+  );
+
+  const featured = visibleItems[0];
+
+  const secondary = visibleItems.slice(1);
+
+  /*
+   * ==========================================================
+   * CMS SECTION PHOTOS
+   * ==========================================================
+   *
+   * These are independent from the actual Latest Update
+   * records. They are controlled from:
+   *
+   * Website Settings → Home → Latest Updates → Photos
+   */
+
+  const media = Array.isArray(section.media)
+    ? section.media.filter(Boolean)
+    : [];
 
   return (
-    <section className="relative overflow-hidden bg-[#f4ede2] py-16 text-[#171717] sm:py-24 lg:py-28">
+    <section
+      id="latest-updates"
+      className="relative overflow-hidden bg-[#f4ede2] py-16 text-[#171717] sm:py-24 lg:py-28"
+    >
       {/* =====================================================
           BACKGROUND
           ===================================================== */}
@@ -255,21 +310,20 @@ export default function LatestUpdates() {
           style={{
             backgroundImage:
               "radial-gradient(circle, rgba(23,23,23,0.14) 1px, transparent 1px)",
-            backgroundSize:
-              "24px 24px",
+            backgroundSize: "24px 24px",
           }}
         />
       </div>
 
       <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         {/* ===================================================
-            HEADER
+            CMS HEADER
             =================================================== */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 25,
+            y: 22,
           }}
           whileInView={{
             opacity: 1,
@@ -282,64 +336,76 @@ export default function LatestUpdates() {
           transition={{
             duration: 0.7,
           }}
-          className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between"
+          className="mx-auto max-w-[900px] text-center"
         >
-          <div className="max-w-[780px]">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-black/20 sm:w-12" />
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-black/20 sm:w-12" />
 
-              <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
-                <Sparkles
-                  size={11}
-                />
+            <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
+              <Sparkles size={11} />
 
-                Latest Updates
-              </span>
-            </div>
+              {section.eyebrow || "Latest Updates"}
+            </span>
 
-            <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">
-              News,
-              <br />
-              announcements &amp;
-              <br />
-              stories.
-            </h2>
-
-            <p className="mt-5 max-w-[650px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
-              Stay connected with the latest
-              announcements, events, press
-              releases and activities from
-              Greater Noida Press Club.
-            </p>
+            <span className="h-px w-8 bg-black/20 sm:w-12" />
           </div>
 
-          <Button
-            href="/latest-updates"
-            variant="outline"
-            size="lg"
-            className="group w-fit rounded-full border-black/15 bg-white/55"
-          >
-            View All Updates
+          <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">
+            {section.title}
+          </h2>
 
-            <ArrowRight
-              size={17}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Button>
+          {section.description && (
+            <p className="mx-auto mt-5 max-w-[700px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
+              {section.description}
+            </p>
+          )}
         </motion.div>
+
+        {/* ===================================================
+            CMS MEDIA
+            =================================================== */}
+
+        {media.length > 0 && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 24,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.12,
+            }}
+            transition={{
+              duration: 0.8,
+            }}
+            className="mt-12 grid gap-4 sm:mt-16 lg:grid-cols-2"
+          >
+            {media.slice(0, 2).map((image, index) => (
+              <CmsImage
+                key={`${image}-${index}`}
+                src={image}
+                alt={`${section.title} photo ${index + 1}`}
+                className="aspect-[16/7] min-h-[180px] sm:min-h-[220px]"
+              />
+            ))}
+          </motion.div>
+        )}
 
         {/* ===================================================
             LOADING
             =================================================== */}
 
         {loading && (
-          <div className="mt-12 grid gap-4 lg:mt-16 lg:grid-cols-[1.35fr_0.65fr]">
-            <div className="aspect-[16/10] animate-pulse rounded-[2rem] bg-black/5" />
+          <div className="mt-10 grid gap-4 lg:mt-12 lg:grid-cols-[1.35fr_0.65fr]">
+            <SkeletonFeatured />
 
             <div className="grid gap-4">
-              <div className="min-h-[220px] animate-pulse rounded-[2rem] bg-black/5" />
-
-              <div className="min-h-[220px] animate-pulse rounded-[2rem] bg-black/5" />
+              <SkeletonSecondary />
+              <SkeletonSecondary />
             </div>
           </div>
         )}
@@ -348,22 +414,21 @@ export default function LatestUpdates() {
             ERROR
             =================================================== */}
 
-        {!loading &&
-          error && (
-            <div
-              role="status"
-              className="mx-auto mt-12 max-w-2xl rounded-[2rem] border border-red-200 bg-red-50 px-6 py-12 text-center sm:mt-16"
-            >
-              <Newspaper
-                size={38}
-                className="mx-auto text-red-300"
-              />
+        {!loading && error && (
+          <div
+            role="status"
+            className="mx-auto mt-12 max-w-2xl rounded-[2rem] border border-red-200 bg-red-50 px-6 py-12 text-center"
+          >
+            <Newspaper
+              size={38}
+              className="mx-auto text-red-300"
+            />
 
-              <p className="mt-4 text-sm font-semibold text-red-700">
-                {error}
-              </p>
-            </div>
-          )}
+            <p className="mt-4 text-sm font-semibold text-red-700">
+              {error}
+            </p>
+          </div>
+        )}
 
         {/* ===================================================
             EMPTY
@@ -371,8 +436,8 @@ export default function LatestUpdates() {
 
         {!loading &&
           !error &&
-          items.length === 0 && (
-            <div className="mx-auto mt-12 max-w-2xl rounded-[2rem] border border-dashed border-black/15 bg-white/45 px-6 py-14 text-center sm:mt-16">
+          visibleItems.length === 0 && (
+            <div className="mx-auto mt-12 max-w-2xl rounded-[2rem] border border-dashed border-black/15 bg-white/45 px-6 py-14 text-center">
               <Newspaper
                 size={40}
                 className="mx-auto text-black/20"
@@ -383,19 +448,19 @@ export default function LatestUpdates() {
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-black/45">
-                New updates will appear here
-                when they are published.
+                New updates will appear here when they
+                are published.
               </p>
             </div>
           )}
 
         {/* ===================================================
-            BENTO CONTENT
+            LIVE UPDATE CONTENT
             =================================================== */}
 
         {!loading &&
           !error &&
-          first && (
+          featured && (
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -405,6 +470,7 @@ export default function LatestUpdates() {
               }}
               variants={{
                 hidden: {},
+
                 visible: {
                   transition: {
                     staggerChildren: 0.1,
@@ -422,71 +488,60 @@ export default function LatestUpdates() {
                 className="group relative min-h-[440px] overflow-hidden rounded-[2rem] border border-black/10 bg-[#171717] text-white shadow-[0_25px_70px_rgba(38,32,23,0.14)] sm:min-h-[540px]"
               >
                 <Link
-                  href={getDetailHref(
-                    first
-                  )}
+                  href={getDetailHref(featured)}
                   className="absolute inset-0 z-20"
-                  aria-label={`Read ${first.title}`}
+                  aria-label={`Read ${featured.title}`}
                 />
 
                 <div className="absolute inset-0">
                   <UpdateImage
                     src={
-                      first.featuredImage ||
-                      first.image
+                      featured.featuredImage ||
+                      featured.image
                     }
-                    alt={
-                      first.title
-                    }
+                    alt={featured.title}
                   />
                 </div>
 
-                {/* Image overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
-
-                <div className="absolute left-5 top-5 z-10 flex flex-wrap items-center gap-2 sm:left-7 sm:top-7">
+                <div className="absolute left-5 top-5 z-10 flex flex-wrap gap-2 sm:left-7 sm:top-7">
                   <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white backdrop-blur-md">
-                    Featured
-                  </span>
-
-                  <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white/70 backdrop-blur-md">
-                    {first.type ||
-                      first.category ||
+                    {featured.type ||
+                      featured.category ||
+                      section.eyebrow ||
                       "Update"}
                   </span>
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 z-10 p-5 sm:p-7 lg:p-9">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">
-                    {(first.publishedAt ||
-                      first.date ||
-                      first.createdAt) && (
-                      <>
-                        <CalendarDays
-                          size={13}
-                        />
+                  {(featured.publishedAt ||
+                    featured.date ||
+                    featured.createdAt) && (
+                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">
+                      <CalendarDays size={13} />
 
-                        {formatDate(
-                          first.publishedAt ||
-                            first.date ||
-                            first.createdAt
-                        )}
-                      </>
-                    )}
-                  </div>
+                      {formatDate(
+                        featured.publishedAt ||
+                          featured.date ||
+                          featured.createdAt
+                      )}
+                    </div>
+                  )}
 
-                  <h3 className="mt-3 max-w-[800px] text-2xl font-black leading-[1.02] tracking-[-0.04em] sm:text-3xl lg:text-[2.7rem]">
-                    {first.title}
+                  <h3 className="mt-3 max-w-[820px] text-2xl font-black leading-[1.02] tracking-[-0.04em] sm:text-3xl lg:text-[2.7rem]">
+                    {featured.title}
                   </h3>
 
-                  <p className="mt-3 line-clamp-2 max-w-[680px] text-xs leading-6 text-white/60 sm:text-sm sm:leading-7">
-                    {first.excerpt ||
-                      first.description ||
-                      "Read the latest update from Greater Noida Press Club."}
-                  </p>
+                  {(featured.excerpt ||
+                    featured.description) && (
+                    <p className="mt-3 line-clamp-2 max-w-[700px] text-xs leading-6 text-white/60 sm:text-sm sm:leading-7">
+                      {featured.excerpt ||
+                        featured.description}
+                    </p>
+                  )}
 
-                  <div className="mt-5 flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-white sm:text-sm">
+                  <div className="mt-5 flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-white">
                     Read Story
 
                     <ArrowRight
@@ -502,146 +557,152 @@ export default function LatestUpdates() {
                   ============================================= */}
 
               <div className="grid gap-4">
-                {secondary.map(
-                  (
-                    item,
-                    index
-                  ) => {
-                    const image =
-                      item.featuredImage ||
-                      item.image;
+                {secondary.map((item) => {
+                  const image =
+                    item.featuredImage ||
+                    item.image;
 
-                    const date =
-                      item.publishedAt ||
-                      item.date ||
-                      item.createdAt;
+                  const date =
+                    item.publishedAt ||
+                    item.date ||
+                    item.createdAt;
 
-                    return (
-                      <motion.article
-                        key={
-                          item._id
-                        }
-                        variants={
-                          cardVariants
-                        }
-                        className="group relative min-h-[220px] overflow-hidden rounded-[2rem] border border-black/10 bg-white/60 p-1 shadow-[0_18px_50px_rgba(38,32,23,0.08)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:bg-white"
-                      >
-                        <Link
-                          href={getDetailHref(
-                            item
-                          )}
-                          className="absolute inset-0 z-20"
-                          aria-label={`Read ${item.title}`}
-                        />
+                  return (
+                    <motion.article
+                      key={item._id}
+                      variants={cardVariants}
+                      className="group relative min-h-[220px] overflow-hidden rounded-[2rem] border border-black/10 bg-white/60 p-1 shadow-[0_18px_50px_rgba(38,32,23,0.08)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:bg-white"
+                    >
+                      <Link
+                        href={getDetailHref(item)}
+                        className="absolute inset-0 z-20"
+                        aria-label={`Read ${item.title}`}
+                      />
 
-                        <div className="relative h-full overflow-hidden rounded-[1.75rem]">
-                          {image ? (
-                            <div className="absolute inset-0">
-                              <UpdateImage
-                                src={
-                                  image
-                                }
-                                alt={
-                                  item.title
-                                }
-                              />
+                      <div className="relative h-full overflow-hidden rounded-[1.75rem]">
+                        {image ? (
+                          <div className="absolute inset-0">
+                            <UpdateImage
+                              src={image}
+                              alt={item.title}
+                            />
 
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                            </div>
-                          ) : (
-                            <div className="absolute inset-0 bg-[#ded0bb]">
-                              <div className="absolute right-5 top-5 text-black/15">
-                                <Newspaper
-                                  size={
-                                    70
-                                  }
-                                  strokeWidth={
-                                    1
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="relative z-10 flex min-h-[220px] flex-col justify-end p-5 sm:p-6">
-                            <div
-                              className={[
-                                "flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.14em]",
-                                image
-                                  ? "text-white/55"
-                                  : "text-black/40",
-                              ].join(
-                                " "
-                              )}
-                            >
-                              <span>
-                                {item.type ||
-                                  item.category ||
-                                  "Update"}
-                              </span>
-
-                              {date && (
-                                <>
-                                  <span className="h-1 w-1 rounded-full bg-current opacity-50" />
-
-                                  <span className="inline-flex items-center gap-1">
-                                    <CalendarDays
-                                      size={
-                                        12
-                                      }
-                                    />
-
-                                    {formatDate(
-                                      date
-                                    )}
-                                  </span>
-                                </>
-                              )}
-                            </div>
-
-                            <h3
-                              className={[
-                                "mt-2 line-clamp-2 text-lg font-black leading-[1.05] tracking-[-0.03em] sm:text-xl",
-                                image
-                                  ? "text-white"
-                                  : "text-[#171717]",
-                              ].join(
-                                " "
-                              )}
-                            >
-                              {
-                                item.title
-                              }
-                            </h3>
-
-                            <div
-                              className={[
-                                "mt-3 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em]",
-                                image
-                                  ? "text-white/75"
-                                  : "text-black/55",
-                              ].join(
-                                " "
-                              )}
-                            >
-                              Read More
-
-                              <ArrowRight
-                                size={
-                                  14
-                                }
-                                className="transition-transform duration-300 group-hover:translate-x-1"
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                          </div>
+                        ) : (
+                          <div className="absolute inset-0 bg-[#ded0bb]">
+                            <div className="absolute right-5 top-5 text-black/15">
+                              <Newspaper
+                                size={70}
+                                strokeWidth={1}
                               />
                             </div>
                           </div>
+                        )}
+
+                        <div className="relative z-10 flex min-h-[220px] flex-col justify-end p-5 sm:p-6">
+                          <div
+                            className={[
+                              "flex flex-wrap items-center gap-x-2 gap-y-2 text-[9px] font-black uppercase tracking-[0.14em]",
+                              image
+                                ? "text-white/55"
+                                : "text-black/40",
+                            ].join(" ")}
+                          >
+                            <span>
+                              {item.type ||
+                                item.category ||
+                                "Update"}
+                            </span>
+
+                            {date && (
+                              <>
+                                <span className="h-1 w-1 rounded-full bg-current opacity-50" />
+
+                                <span className="inline-flex items-center gap-1">
+                                  <CalendarDays size={12} />
+                                  {formatDate(date)}
+                                </span>
+                              </>
+                            )}
+                          </div>
+
+                          <h3
+                            className={[
+                              "mt-2 line-clamp-2 text-lg font-black leading-[1.05] tracking-[-0.03em] sm:text-xl",
+                              image
+                                ? "text-white"
+                                : "text-[#171717]",
+                            ].join(" ")}
+                          >
+                            {item.title}
+                          </h3>
+
+                          <div
+                            className={[
+                              "mt-3 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em]",
+                              image
+                                ? "text-white/75"
+                                : "text-black/55",
+                            ].join(" ")}
+                          >
+                            Read Story
+
+                            <ArrowRight
+                              size={14}
+                              className="transition-transform duration-300 group-hover:translate-x-1"
+                            />
+                          </div>
                         </div>
-                      </motion.article>
-                    );
-                  }
-                )}
+                      </div>
+                    </motion.article>
+                  );
+                })}
               </div>
             </motion.div>
           )}
+
+        {/* ===================================================
+            BOTTOM CMS CTA
+            =================================================== */}
+
+        {section.buttonLabel && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 16,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.4,
+            }}
+            transition={{
+              duration: 0.6,
+            }}
+            className="mt-10 flex justify-center sm:mt-12"
+          >
+            <Button
+              href={
+                section.buttonHref ||
+                "/latest-updates"
+              }
+              variant="outline"
+              size="lg"
+              className="group rounded-full border-black/15 bg-white/60"
+            >
+              {section.buttonLabel}
+
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Button>
+          </motion.div>
+        )}
       </div>
     </section>
   );
