@@ -62,7 +62,7 @@ export default function CTA() {
   return (
     <section
       id="membership"
-      className="relative overflow-hidden bg-[#171717] px-4 py-16 text-white sm:px-6 sm:py-24 lg:px-8 lg:py-28"
+      className="relative overflow-hidden bg-[#f4ede2] px-4 py-14 text-[#171717] sm:px-6 sm:py-20 lg:px-8 lg:py-24"
     >
       {/* =====================================================
           BACKGROUND
@@ -338,7 +338,7 @@ export default function CTA() {
                 href={
                   secondaryHref
                 }
-                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full border border-white/25 bg-white/[0.06] px-6 py-3.5 text-sm font-black text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
+                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full border border-white bg-white px-6 py-3.5 text-sm font-black text-[#171717] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-[#f7f2e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
               >
                 {secondaryLabel}
 
