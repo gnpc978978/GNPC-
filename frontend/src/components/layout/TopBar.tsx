@@ -48,38 +48,51 @@ export default function TopBar() {
 
     updateDateTime();
 
-    const timer = window.setInterval(updateDateTime, 1000);
+    const timer = window.setInterval(
+      updateDateTime,
+      1000
+    );
 
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearInterval(timer);
+    };
   }, []);
 
   const socialLinks = [
     {
       label: "Facebook",
-      href: settings.socialLinks?.facebook || "",
+      href:
+        settings.socialLinks?.facebook ||
+        "",
       icon: FaFacebookF,
     },
     {
       label: "Instagram",
-      href: settings.socialLinks?.instagram || "",
+      href:
+        settings.socialLinks?.instagram ||
+        "",
       icon: FaInstagram,
     },
     {
       label: "X",
-      href: settings.socialLinks?.twitter || "",
+      href:
+        settings.socialLinks?.twitter ||
+        "",
       icon: FaXTwitter,
     },
-  ].filter((item) => Boolean(item.href));
+  ].filter(
+    (item) => Boolean(item.href)
+  );
 
   return (
-    <div className="relative z-[110] w-full overflow-hidden border-b border-slate-200 bg-[#eef1f4] text-slate-700">
-      {/* subtle animated top line */}
+    <div className="relative z-[130] w-full overflow-hidden border-b border-slate-200/80 bg-[#eef1f4] text-slate-700">
+      {/* Top accent */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c8102e]/50 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c8102e]/60 to-transparent"
       />
 
-      <div className="mx-auto flex min-h-[42px] w-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
+      <div className="mx-auto flex min-h-[40px] w-full max-w-[1500px] items-center justify-between gap-3 px-3 sm:min-h-[42px] sm:px-5 lg:px-7 xl:px-9">
         {/* LEFT */}
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           {/* Location */}
@@ -96,13 +109,11 @@ export default function TopBar() {
             </span>
           </div>
 
-          {/* Divider */}
           <span
             aria-hidden="true"
             className="hidden h-5 w-px bg-slate-300 sm:block"
           />
 
-          {/* Established */}
           <span className="hidden text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 md:inline">
             Est. 2003
           </span>
@@ -114,7 +125,7 @@ export default function TopBar() {
 
         {/* RIGHT */}
         <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-          {/* Date */}
+          {/* DATE */}
           <div className="hidden items-center gap-2 lg:flex">
             <HiCalendarDays
               size={13}
@@ -127,10 +138,11 @@ export default function TopBar() {
             </span>
           </div>
 
-          {/* Time */}
+          {/* TIME */}
           <div className="group flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c8102e]/40" />
+
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c8102e]" />
             </span>
 
@@ -145,7 +157,7 @@ export default function TopBar() {
             </span>
           </div>
 
-          {/* Social */}
+          {/* SOCIAL */}
           {socialLinks.length > 0 && (
             <div className="hidden items-center gap-1 md:flex">
               {socialLinks.map(
