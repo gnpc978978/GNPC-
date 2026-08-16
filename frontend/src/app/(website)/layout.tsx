@@ -18,8 +18,6 @@ export default function WebsiteLayout({
 }: WebsiteLayoutProps) {
   const pathname = usePathname();
 
-  const isHomePage = pathname === "/";
-
   const isContactPage =
     pathname === "/contact" ||
     pathname.startsWith("/contact/");
@@ -92,41 +90,41 @@ export default function WebsiteLayout({
   }, []);
 
   return (
-    <div
-      className={[
-        "gnpc-public",
-        "min-h-screen",
-        "bg-white",
-        "text-slate-900",
-      ].join(" ")}
-    >
+    <div className="gnpc-public min-h-screen bg-white text-slate-900">
       {/* =====================================================
-          GLOBAL WEBSITE HEADER
+          FIXED GLOBAL WEBSITE HEADER
+
+          TOP BAR
+             ↓
+          NAVBAR
+             ↓
+          WEBSITE CONTENT
+
+          Both remain fixed together while scrolling.
           ===================================================== */}
 
-      <header
-        className={[
-          "z-[100] w-full",
-          isHomePage
-            ? "absolute inset-x-0 top-0"
-            : "fixed inset-x-0 top-0",
-        ].join(" ")}
-      >
-        {!isHomePage && <TopBar />}
+      <header className="fixed inset-x-0 top-0 z-[200] w-full">
+        {/* TOP BAR */}
+        <TopBar />
 
+        {/* NAVBAR */}
         <Navbar />
       </header>
 
       {/* =====================================================
-          HEADER SPACE
+          HEADER OFFSET
+
+          TopBar ≈ 42px
+          Navbar ≈ 76px
+          Total ≈ 118px
+
+          Keeps hero/content from going underneath the header.
           ===================================================== */}
 
-      {!isHomePage && (
-        <div
-          aria-hidden="true"
-          className="h-[114px]"
-        />
-      )}
+      <div
+        aria-hidden="true"
+        className="h-[108px] sm:h-[118px] lg:h-[120px]"
+      />
 
       {/* =====================================================
           MAIN WEBSITE CONTENT
