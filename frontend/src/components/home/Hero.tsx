@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -91,7 +90,7 @@ export default function Hero({
             <div className="relative rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-800/40 shadow-2xl backdrop-blur-sm aspect-[4/3]">
               <HeroCarousel
                 fallbackImage={heroImage}
-                alt={heroTitle || "Hero Banner Image"}
+                alt={heroTitle ?? title ?? "Hero Banner Image"}
               />
 
               {/* Dark cinematic overlay */}
