@@ -42,15 +42,50 @@ export interface IHomeSettings {
     }
   >;
 
-  hero: Record<string, unknown>;
-  about: Record<string, unknown>;
-  objectives: Record<string, unknown>;
-  latestUpdates: Record<string, unknown>;
-  gallery: Record<string, unknown>;
-  pressConferences: Record<string, unknown>;
-  executiveCommittee: Record<string, unknown>;
-  officeBearers: Record<string, unknown>;
-  membership: Record<string, unknown>;
+  hero: Record<
+    string,
+    unknown
+  >;
+
+  about: Record<
+    string,
+    unknown
+  >;
+
+  objectives: Record<
+    string,
+    unknown
+  >;
+
+  latestUpdates: Record<
+    string,
+    unknown
+  >;
+
+  gallery: Record<
+    string,
+    unknown
+  >;
+
+  pressConferences: Record<
+    string,
+    unknown
+  >;
+
+  executiveCommittee: Record<
+    string,
+    unknown
+  >;
+
+  officeBearers: Record<
+    string,
+    unknown
+  >;
+
+  membership: Record<
+    string,
+    unknown
+  >;
 }
 
 export type CmsPageKey =
@@ -62,86 +97,190 @@ export type CmsPageKey =
   | "executiveCommittee";
 
 export interface IPageSettings {
-  about: Record<string, unknown>;
-  gallery: Record<string, unknown>;
-  latestUpdates: Record<string, unknown>;
-  pressConference: Record<string, unknown>;
-  officeBearers: Record<string, unknown>;
-  executiveCommittee: Record<string, unknown>;
+  about: Record<
+    string,
+    unknown
+  >;
+
+  gallery: Record<
+    string,
+    unknown
+  >;
+
+  latestUpdates: Record<
+    string,
+    unknown
+  >;
+
+  pressConference: Record<
+    string,
+    unknown
+  >;
+
+  officeBearers: Record<
+    string,
+    unknown
+  >;
+
+  executiveCommittee: Record<
+    string,
+    unknown
+  >;
 }
 
-export const DEFAULT_PAGE_SETTINGS: IPageSettings = {
-  about: {
-    pageEyebrow: "About Greater Noida Press Club",
-    pageTitle: "About Us",
-    pageDescription: "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
-  },
-  gallery: {
-    pageEyebrow: "Media & Memories",
-    pageTitle: "Gallery",
-    pageDescription: "Explore recent events, press activities and memorable moments from Greater Noida Press Club.",
-    pageSize: 12,
-    showCategoryFilter: true,
-    showPagination: true,
-  },
-  latestUpdates: {
-    pageEyebrow: "News & Updates",
-    pageTitle: "Latest Updates",
-    pageDescription: "Stay informed with the latest press releases, announcements, events and press conferences from Greater Noida Press Club.",
-    showSearch: true,
-    showCalendar: true,
-    showSort: true,
-    pageSize: 12,
-    allTabLabel: "All",
-    pressReleasesTabLabel: "Press Releases",
-    announcementsTabLabel: "Announcements",
-    eventsTabLabel: "Events",
-    searchPlaceholder: "Search updates",
-    readMoreLabel: "Read More",
-  },
-  pressConference: {
-    pageEyebrow: "Media & Journalism",
-    pageTitle: "Press Conferences",
-    pageDescription: "Stay informed about media interactions, public briefings and official announcements from Greater Noida Press Club.",
-    pageSize: 12,
-    showPagination: false,
-  },
-  officeBearers: {
-    pageEyebrow: "Our People",
-    pageTitle: "Office Bearers",
-    pageDescription: "Meet the people leading Greater Noida Press Club.",
-    pageSize: 12,
-    showSearch: true,
-    showFilters: true,
-  },
-  executiveCommittee: {
-    pageEyebrow: "Our Strength",
-    pageTitle: "Executive Committee",
-    pageDescription: "Meet the executive committee of Greater Noida Press Club.",
-    pageSize: 100,
-    showSearch: true,
-    showFilters: true,
-  },
-};
+export const DEFAULT_PAGE_SETTINGS: IPageSettings =
+  {
+    about: {
+      pageEyebrow:
+        "About Greater Noida Press Club",
+
+      pageTitle:
+        "About Us",
+
+      pageDescription:
+        "Learn about Greater Noida Press Club, our mission, vision and commitment towards ethical journalism.",
+    },
+
+    gallery: {
+      pageEyebrow:
+        "Media & Memories",
+
+      pageTitle:
+        "Gallery",
+
+      pageDescription:
+        "Explore recent events, press activities and memorable moments from Greater Noida Press Club.",
+
+      pageSize: 12,
+
+      showCategoryFilter:
+        true,
+
+      showPagination:
+        true,
+    },
+
+    latestUpdates: {
+      pageEyebrow:
+        "News & Updates",
+
+      pageTitle:
+        "Latest Updates",
+
+      pageDescription:
+        "Stay informed with the latest press releases, announcements, events and press conferences from Greater Noida Press Club.",
+
+      showSearch:
+        true,
+
+      showCalendar:
+        true,
+
+      showSort:
+        true,
+
+      pageSize: 12,
+
+      allTabLabel:
+        "All",
+
+      pressReleasesTabLabel:
+        "Press Releases",
+
+      announcementsTabLabel:
+        "Announcements",
+
+      eventsTabLabel:
+        "Events",
+
+      searchPlaceholder:
+        "Search updates",
+
+      readMoreLabel:
+        "Read More",
+    },
+
+    pressConference: {
+      pageEyebrow:
+        "Media & Journalism",
+
+      pageTitle:
+        "Press Conferences",
+
+      pageDescription:
+        "Stay informed about media interactions, public briefings and official announcements from Greater Noida Press Club.",
+
+      pageSize: 12,
+
+      showPagination:
+        false,
+    },
+
+    officeBearers: {
+      pageEyebrow:
+        "Our People",
+
+      pageTitle:
+        "Office Bearers",
+
+      pageDescription:
+        "Meet the people leading Greater Noida Press Club.",
+
+      pageSize: 12,
+
+      showSearch:
+        true,
+
+      showFilters:
+        true,
+    },
+
+    executiveCommittee: {
+      pageEyebrow:
+        "Our Strength",
+
+      pageTitle:
+        "Executive Committee",
+
+      pageDescription:
+        "Meet the executive committee of Greater Noida Press Club.",
+
+      pageSize: 100,
+
+      showSearch:
+        true,
+
+      showFilters:
+        true,
+    },
+  };
 
 export interface IWebsiteSettings
   extends Document {
   siteName: string;
 
   heroTitle?: string;
+
   heroDescription?: string;
 
   email?: string;
+
   phone?: string;
+
   address?: string;
 
   whatsappNumber?: string;
+
   whatsappLabel?: string;
 
   logo?: string;
+
   favicon?: string;
+
   heroImage?: string;
+
   aboutImage?: string;
+
   membershipPdf?: string;
 
   socialLinks?: ISocialLinks;
@@ -153,6 +292,7 @@ export interface IWebsiteSettings
   pageSettings?: IPageSettings;
 
   createdAt: Date;
+
   updatedAt: Date;
 }
 
@@ -235,22 +375,33 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
 
       quickLinks: [
         {
-          label: "Press Releases",
-          href: "/press-releases",
+          label:
+            "Press Releases",
+
+          href:
+            "/press-releases",
         },
+
         {
-          label: "Press Conferences",
-          href: "/press-conference",
+          label:
+            "Press Conferences",
+
+          href:
+            "/press-conference",
         },
+
         {
           label: "Events",
-          href: "/events",
+
+          href:
+            "/events",
         },
       ],
     },
 
     about: {
-      eyebrow: "About Us",
+      eyebrow:
+        "About Us",
 
       title:
         "Greater Noida Press Club",
@@ -266,13 +417,16 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
 
       features: [],
 
-      showStats: true,
+      showStats:
+        true,
 
       statsLabels: [
         "Members",
         "Press Release",
         "Active Events",
       ],
+
+      media: [],
     },
 
     objectives: {
@@ -291,57 +445,73 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       buttonHref:
         "/about",
 
-      displayCount: 3,
+      displayCount:
+        3,
 
       cards: [
         {
           icon: "Newspaper",
+
           title:
             "Ethical Journalism",
+
           description:
             "Promoting responsible, transparent and truthful journalism with integrity.",
         },
 
         {
           icon: "Users",
+
           title:
             "Professional Networking",
+
           description:
             "Building a strong network among journalists and media professionals.",
         },
 
         {
           icon: "Mic",
+
           title:
             "Press Conferences",
+
           description:
             "Organizing press conferences, media interactions and public discussions.",
         },
 
         {
-          icon: "GraduationCap",
+          icon:
+            "GraduationCap",
+
           title:
             "Media Development",
+
           description:
             "Supporting skill development and knowledge sharing for journalists.",
         },
 
         {
           icon: "Award",
+
           title:
             "Recognition & Excellence",
+
           description:
             "Recognizing contributions and achievements in the field of journalism.",
         },
 
         {
           icon: "Images",
+
           title:
             "Media Documentation",
+
           description:
             "Preserving important events, activities and press club memories.",
         },
       ],
+
+      media: [],
     },
 
     latestUpdates: {
@@ -360,7 +530,10 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       buttonHref:
         "/latest-updates",
 
-      displayCount: 3,
+      displayCount:
+        3,
+
+      media: [],
     },
 
     gallery: {
@@ -379,7 +552,10 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       buttonHref:
         "/gallery",
 
-      displayCount: 3,
+      displayCount:
+        3,
+
+      media: [],
     },
 
     pressConferences: {
@@ -398,7 +574,10 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       buttonHref:
         "/press-conference",
 
-      displayCount: 3,
+      displayCount:
+        3,
+
+      media: [],
     },
 
     executiveCommittee: {
@@ -417,9 +596,13 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       buttonHref:
         "/committee",
 
-      displayCount: 3,
+      displayCount:
+        3,
 
-      showViewAll: true,
+      showViewAll:
+        true,
+
+      media: [],
     },
 
     officeBearers: {
@@ -438,9 +621,13 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       buttonHref:
         "/office-bearers",
 
-      displayCount: 3,
+      displayCount:
+        3,
 
-      showViewAll: true,
+      showViewAll:
+        true,
+
+      media: [],
     },
 
     membership: {
@@ -456,11 +643,16 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       primaryLabel:
         "Download Form",
 
+      primaryHref:
+        "/membership",
+
       secondaryLabel:
         "Contact Us",
 
       secondaryHref:
         "/contact",
+
+      media: [],
     },
   };
 
@@ -524,7 +716,10 @@ const SeoSchema =
       },
 
       keywords: {
-        type: [String],
+        type: [
+          String,
+        ],
+
         default: [],
       },
     },
@@ -625,30 +820,43 @@ const WebsiteSettingsSchema =
         default: () => ({}),
       },
 
+      /*
+       * Home is intentionally Mixed because the CMS is
+       * evolving and contains flexible nested section data.
+       *
+       * The normalized DEFAULT_HOME_SETTINGS above is returned
+       * through the controller to guarantee a complete shape.
+       */
+
       home: {
         type: Schema.Types.Mixed,
 
-        default: () =>
-          DEFAULT_HOME_SETTINGS,
+        default: () => ({
+          ...DEFAULT_HOME_SETTINGS,
+        }),
       },
 
       pageSettings: {
         type: Schema.Types.Mixed,
 
-        default: () =>
-          DEFAULT_PAGE_SETTINGS,
+        default: () => ({
+          ...DEFAULT_PAGE_SETTINGS,
+        }),
       },
     },
 
     {
-      timestamps: true,
+      timestamps:
+        true,
+
       collection:
         "website_settings",
     }
   );
 
 const WebsiteSettings: Model<IWebsiteSettings> =
-  mongoose.models.WebsiteSettings ||
+  mongoose.models
+    .WebsiteSettings ||
   mongoose.model<IWebsiteSettings>(
     "WebsiteSettings",
     WebsiteSettingsSchema
