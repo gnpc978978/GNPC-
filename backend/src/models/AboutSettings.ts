@@ -27,6 +27,7 @@ export interface IAboutSettings extends Document {
    * About introduction
    */
   image?: string;
+  media: string[];
   heading: string;
   description: string;
   secondaryDescription: string;
@@ -176,6 +177,11 @@ const AboutSettingsSchema =
         type: String,
         trim: true,
         default: "",
+      },
+
+      media: {
+        type: [String],
+        default: [],
       },
 
       heading: {
@@ -368,16 +374,16 @@ const AboutSettingsSchema =
         default: "Become a Member",
       },
 
-      ctaSecondaryLabel: {
-        type: String,
-        trim: true,
-        default: "Meet Our Office Bearers",
-      },
-
       ctaSecondaryHref: {
         type: String,
         trim: true,
         default: "/office-bearers",
+      },
+
+      ctaSecondaryLabel: {
+        type: String,
+        trim: true,
+        default: "Meet Our Office Bearers",
       },
     },
     {
