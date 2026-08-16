@@ -21,7 +21,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 24);
+      setScrolled(window.scrollY > 20);
     };
 
     handleScroll();
@@ -45,58 +45,91 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="mx-auto w-full max-w-[1500px] px-3 pt-3 sm:px-5 sm:pt-5 lg:px-7 lg:pt-6">
+      <div className="w-full px-2 sm:px-4 lg:px-6">
         <nav
           aria-label="Primary navigation"
           className={[
-            "relative z-[101] w-full",
+            "relative z-[120] mx-auto w-full max-w-[1500px]",
             "overflow-hidden",
-            "rounded-[1.5rem] sm:rounded-[2rem]",
-            "border",
-            "transition-all duration-500",
+            "rounded-b-[1.35rem] sm:rounded-b-[1.75rem]",
+            "border-x border-b",
+            "transition-all duration-300 ease-out",
             isHomePage
               ? scrolled
-                ? "border-white/30 bg-slate-950/75 text-white shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-2xl"
-                : "border-white/25 bg-white/10 text-white shadow-[0_16px_50px_rgba(0,0,0,0.10)] backdrop-blur-xl"
-              : "border-slate-200/80 bg-white/90 text-slate-900 shadow-[0_16px_45px_rgba(15,23,42,0.10)] backdrop-blur-xl",
+                ? [
+                    "border-white/15",
+                    "bg-slate-950/92",
+                    "text-white",
+                    "shadow-[0_16px_50px_rgba(0,0,0,0.30)]",
+                    "backdrop-blur-2xl",
+                  ].join(" ")
+                : [
+                    "border-white/20",
+                    "bg-slate-950/55",
+                    "text-white",
+                    "shadow-[0_12px_40px_rgba(0,0,0,0.18)]",
+                    "backdrop-blur-xl",
+                  ].join(" ")
+              : [
+                  "border-slate-200",
+                  "bg-white/96",
+                  "text-slate-900",
+                  "shadow-[0_12px_40px_rgba(15,23,42,0.12)]",
+                  "backdrop-blur-2xl",
+                ].join(" "),
           ].join(" ")}
         >
+          {/* Subtle top highlight */}
+          <div
+            aria-hidden="true"
+            className={[
+              "pointer-events-none absolute inset-x-0 top-0 h-px",
+              isHomePage
+                ? "bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                : "bg-gradient-to-r from-transparent via-blue-500/30 to-transparent",
+            ].join(" ")}
+          />
+
+          {/* Background glow */}
           <div
             aria-hidden="true"
             className={[
               "pointer-events-none absolute inset-0",
-              "bg-gradient-to-r",
               isHomePage
-                ? "from-white/10 via-transparent to-white/5"
-                : "from-blue-50/60 via-transparent to-slate-50/70",
+                ? "bg-gradient-to-r from-white/[0.06] via-transparent to-blue-400/[0.04]"
+                : "bg-gradient-to-r from-blue-50/50 via-transparent to-slate-50/70",
             ].join(" ")}
           />
 
-          <div className="relative flex min-h-[68px] items-center justify-between gap-4 px-3 sm:min-h-[76px] sm:px-5 lg:px-7">
+          <div className="relative flex min-h-[68px] items-center justify-between gap-3 px-3 sm:min-h-[76px] sm:px-5 lg:px-7">
             {/* LOGO */}
-
-            <div className="shrink-0 transition-transform duration-300 hover:-translate-y-0.5">
-              <Logo
-                variant={
-                  isHomePage && !scrolled
-                    ? "light"
-                    : "dark"
-                }
-              />
-            </div>
+            <Link
+              href="/"
+              aria-label="Greater Noida Press Club home"
+              className="shrink-0"
+            >
+              <div className="transition-transform duration-300 hover:-translate-y-0.5">
+                <Logo
+                  variant={
+                    isHomePage && !scrolled
+                      ? "light"
+                      : "dark"
+                  }
+                />
+              </div>
+            </Link>
 
             {/* DESKTOP NAVIGATION */}
-
             <div className="hidden flex-1 items-center justify-center xl:flex">
               <div
                 className={[
-                  "flex items-center gap-0.5",
+                  "flex items-center gap-1",
                   "rounded-full",
                   "border",
                   "p-1",
                   "backdrop-blur-xl",
                   isHomePage
-                    ? "border-white/15 bg-black/10"
+                    ? "border-white/10 bg-black/10"
                     : "border-slate-200 bg-slate-100/80",
                 ].join(" ")}
               >
@@ -114,8 +147,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* ADMIN CTA */}
-
+            {/* ADMIN */}
             <div className="hidden shrink-0 xl:block">
               <Link
                 href="/admin/login"
@@ -133,8 +165,22 @@ export default function Navbar() {
                   "focus-visible:ring-2",
                   "focus-visible:ring-offset-2",
                   isHomePage && !scrolled
-                    ? "border-white/30 bg-white text-slate-950 shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:bg-slate-50 focus-visible:ring-white"
-                    : "border-slate-200 bg-slate-950 text-white shadow-[0_8px_25px_rgba(15,23,42,0.18)] hover:bg-slate-800 focus-visible:ring-slate-900",
+                    ? [
+                        "border-white/25",
+                        "bg-white",
+                        "text-slate-950",
+                        "shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
+                        "hover:bg-slate-50",
+                        "focus-visible:ring-white",
+                      ].join(" ")
+                    : [
+                        "border-slate-200",
+                        "bg-slate-950",
+                        "text-white",
+                        "shadow-[0_8px_25px_rgba(15,23,42,0.18)]",
+                        "hover:bg-slate-800",
+                        "focus-visible:ring-slate-900",
+                      ].join(" "),
                 ].join(" ")}
               >
                 <span className="relative z-10">
@@ -155,7 +201,6 @@ export default function Navbar() {
             </div>
 
             {/* MOBILE MENU */}
-
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -168,8 +213,19 @@ export default function Navbar() {
                 "transition-all duration-300",
                 "xl:hidden",
                 isHomePage && !scrolled
-                  ? "border-white/25 bg-white/10 text-white backdrop-blur-xl hover:bg-white/20"
-                  : "border-slate-200 bg-slate-100 text-slate-900 hover:bg-white",
+                  ? [
+                      "border-white/20",
+                      "bg-white/10",
+                      "text-white",
+                      "backdrop-blur-xl",
+                      "hover:bg-white/20",
+                    ].join(" ")
+                  : [
+                      "border-slate-200",
+                      "bg-slate-100",
+                      "text-slate-900",
+                      "hover:bg-white",
+                    ].join(" "),
               ].join(" ")}
             >
               <HiBars3
