@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import {
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 
 import MembershipFormLink from "@/components/membership/MembershipFormLink";
 
@@ -26,7 +29,7 @@ export default function AboutCTA({
 
   const finalDescription =
     description?.trim() ||
-    "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence. Together we build a stronger voice for journalists.";
+    "Join a community dedicated to ethical journalism, professional growth, networking, and media excellence.";
 
   const finalPrimaryLabel =
     primaryLabel?.trim() ||
@@ -36,208 +39,96 @@ export default function AboutCTA({
     secondaryLabel?.trim() ||
     "Meet Our Office Bearers";
 
+  const finalSecondaryHref =
+    secondaryHref?.trim() ||
+    "/office-bearers";
+
   return (
-    <section className="px-4 pb-16 pt-8 sm:px-6 sm:pb-20 md:pb-28">
+    <section className="bg-[#f4ede2] px-4 pb-16 pt-4 sm:px-6 sm:pb-24 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div
-          className="
-            relative
-            overflow-hidden
-            rounded-[28px]
-            bg-gradient-to-br
-            from-blue-950
-            via-blue-800
-            to-blue-600
-            px-5
-            py-12
-            text-white
-            shadow-2xl
-            sm:px-8
-            md:rounded-[32px]
-            md:px-14
-            md:py-16
-            lg:px-20
-          "
-        >
+        <div className="relative overflow-hidden rounded-[2.5rem] border border-black/10 bg-[#59684e] text-white shadow-[0_30px_80px_rgba(38,32,23,0.14)]">
+          {/* Decorative shapes */}
+
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl"
+            className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full border border-white/10"
           />
 
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full bg-blue-300/20 blur-3xl"
+            className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/10"
           />
 
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_45%)]"
+            className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-black/10 blur-3xl"
           />
 
-          <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
-            <h2
-              className="
-                !m-0
-                !text-white
-                text-balance
-                text-3xl
-                font-black
-                leading-[1.08]
-                tracking-tight
-                sm:text-4xl
-                md:text-5xl
-                lg:text-6xl
-              "
-            >
+          <div className="relative mx-auto max-w-[980px] px-5 py-12 text-center sm:px-8 sm:py-16 lg:px-16 lg:py-20">
+            {/* Eyebrow */}
+
+            <div className="flex items-center justify-center gap-3">
+              <span className="h-px w-8 bg-white/30 sm:w-12" />
+
+              <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-white/50 sm:text-[10px]">
+                <Sparkles
+                  size={11}
+                />
+
+                Membership
+              </span>
+
+              <span className="h-px w-8 bg-white/30 sm:w-12" />
+            </div>
+
+            <h2 className="mx-auto mt-5 max-w-[850px] text-4xl font-black leading-[0.98] tracking-[-0.055em] text-white sm:text-5xl lg:text-[4.5rem]">
               {finalTitle}
             </h2>
 
             {finalDescription && (
-              <p
-                className="
-                  mx-auto
-                  mt-6
-                  max-w-3xl
-                  !text-blue-50
-                  text-base
-                  font-normal
-                  leading-7
-                  sm:text-lg
-                  sm:leading-8
-                  md:text-xl
-                "
-              >
-                {finalDescription}
+              <p className="mx-auto mt-6 max-w-[700px] text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
+                {
+                  finalDescription
+                }
               </p>
             )}
 
-            <div
-              className="
-                mt-9
-                flex
-                w-full
-                max-w-2xl
-                flex-col
-                items-stretch
-                justify-center
-                gap-4
-                sm:flex-row
-                sm:items-center
-              "
-            >
-              {/* =================================================
-                  MEMBERSHIP CTA
+            {/* Buttons */}
 
-                  Destination remains:
-                  GET /api/settings/membership-form
-
-                  MembershipFormLink resolves the API URL through
-                  the centralized API service.
-                  ================================================= */}
-
+            <div className="mx-auto mt-9 flex w-full max-w-[680px] flex-col gap-3 sm:flex-row">
               <MembershipFormLink
                 unavailableLabel={
                   finalPrimaryLabel
                 }
-                className="
-                  inline-flex
-                  min-h-14
-                  flex-1
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  !bg-white
-                  !text-blue-800
-                  px-6
-                  py-3.5
-                  text-base
-                  font-extrabold
-                  shadow-lg
-                  transition-all
-                  duration-200
-                  hover:-translate-y-1
-                  hover:!bg-blue-50
-                  hover:shadow-xl
-                  focus-visible:outline-none
-                  focus-visible:ring-2
-                  focus-visible:ring-white
-                  focus-visible:ring-offset-2
-                  focus-visible:ring-offset-blue-800
-                  sm:min-w-[220px]
-                "
-                unavailableClassName="
-                  inline-flex
-                  min-h-14
-                  flex-1
-                  cursor-not-allowed
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  !bg-white
-                  !text-blue-800
-                  px-6
-                  py-3.5
-                  text-base
-                  font-extrabold
-                  shadow-lg
-                  sm:min-w-[220px]
-                "
+                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.16)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2] hover:shadow-[0_22px_50px_rgba(0,0,0,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e]"
               >
-                {finalPrimaryLabel}
+                <span className="truncate">
+                  {
+                    finalPrimaryLabel
+                  }
+                </span>
 
-                <FaArrowRight
+                <ArrowRight
                   size={17}
-                  aria-hidden="true"
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
                 />
               </MembershipFormLink>
 
-              {/* =================================================
-                  OFFICE BEARERS
-
-                  This is an internal Next.js route, so use Link
-                  rather than a raw anchor.
-                  ================================================= */}
-
               <Link
-                href={secondaryHref}
-                className="
-                  inline-flex
-                  min-h-14
-                  flex-1
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  !border-2
-                  !border-white/60
-                  !bg-white
-                  !text-blue-800
-                  px-6
-                  py-3.5
-                  text-base
-                  font-extrabold
-                  shadow-lg
-                  transition-all
-                  duration-200
-                  hover:-translate-y-1
-                  hover:!border-white
-                  hover:!bg-blue-50
-                  hover:shadow-xl
-                  focus-visible:outline-none
-                  focus-visible:ring-2
-                  focus-visible:ring-white
-                  focus-visible:ring-offset-2
-                  focus-visible:ring-offset-blue-800
-                  sm:min-w-[220px]
-                "
+                href={
+                  finalSecondaryHref
+                }
+                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !border !border-white/30 !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e]"
               >
-                {finalSecondaryLabel}
+                <span className="truncate">
+                  {
+                    finalSecondaryLabel
+                  }
+                </span>
 
-                <FaArrowRight
+                <ArrowRight
                   size={17}
-                  aria-hidden="true"
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
             </div>
