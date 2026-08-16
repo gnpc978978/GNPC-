@@ -195,11 +195,12 @@ export default function Hero() {
             <MembershipFormLink
               className={[
                 buttonBase,
-                "bg-[#171717]",
-                "text-white",
-                "shadow-[0_12px_30px_rgba(23,23,23,0.18)]",
+                "bg-white",
+                "text-[#171717]",
+                "border border-black/10",
+                "shadow-[0_12px_30px_rgba(23,23,23,0.12)]",
                 "hover:-translate-y-0.5",
-                "hover:bg-[#2b2b2b]",
+                "hover:bg-[#f7f2e9]",
               ].join(" ")}
               unavailableClassName={[
                 buttonBase,
@@ -219,7 +220,7 @@ export default function Hero() {
 
               <span
                 aria-hidden="true"
-                className="absolute -left-[120%] top-0 h-full w-1/2 -skew-x-12 bg-white/20 transition-all duration-700 group-hover:left-[130%]"
+                className="absolute -left-[120%] top-0 h-full w-1/2 -skew-x-12 bg-black/5 transition-all duration-700 group-hover:left-[130%]"
               />
             </MembershipFormLink>
 
