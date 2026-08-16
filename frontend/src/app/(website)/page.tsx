@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import EventCalendar from "@/components/home/EventCalendar";
-import AnnouncementBanner from "@/components/home/AnnouncementBanner";
-import AdvertisementBanner from "@/components/home/AdvertisementBanner";
-import HeroBanner from "@/components/home/HeroBanner";
+import MainLayout from "../../components/layout/MainLayout";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import EventCalendar from "../../components/home/EventCalendar";
+import AnnouncementBanner from "../../components/home/AnnouncementBanner";
+import AdvertisementBanner from "../../components/home/AdvertisementBanner";
+import HeroBanner from "../../components/home/HeroBanner";
 import {
   Newspaper,
   Calendar,
