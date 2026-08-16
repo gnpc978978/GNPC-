@@ -24,13 +24,11 @@ export default function Hero() {
 
   const heroTitle =
     home.hero.title ||
-    settings.heroTitle ||
-    "Connecting Journalism, Media & Community";
+    settings.heroTitle;
 
   const heroDescription =
     home.hero.description ||
-    settings.heroDescription ||
-    "A professional platform for journalists, media professionals and the community of Greater Noida.";
+    settings.heroDescription;
 
   const heroImage =
     settings.heroImage || "/Logo.png";
