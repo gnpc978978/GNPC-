@@ -116,8 +116,8 @@ function ObjectiveCard({
         "p-5 shadow-[0_18px_45px_rgba(38,32,23,0.08)]",
         "transition-all duration-300",
         featured
-          ? "min-h-[390px] border-[#394631] bg-[#59684e] text-white sm:min-h-[460px] lg:min-h-[560px]"
-          : "min-h-[240px] border-black/10 bg-white/65 text-[#171717] backdrop-blur-md hover:bg-white sm:min-h-[260px]",
+          ? "min-h-[300px] border-[#394631] bg-[#59684e] text-white sm:min-h-[320px] lg:min-h-[360px]"
+          : "min-h-[190px] border-black/10 bg-white/65 text-[#171717] backdrop-blur-md hover:bg-white sm:min-h-[210px]",
         featured
           ? "sm:p-7"
           : "sm:p-6",
@@ -314,7 +314,7 @@ export default function Objectives() {
   return (
     <section
       id="objectives"
-      className="relative overflow-hidden bg-[#f4ede2] py-16 text-[#171717] sm:py-24 lg:py-28"
+      className="relative overflow-hidden bg-[#f4ede2] py-12 text-[#171717] sm:py-16 lg:py-20"
     >
       {/* =====================================================
           BACKGROUND
@@ -413,7 +413,7 @@ export default function Objectives() {
             transition={{
               duration: 0.8,
             }}
-            className="relative mt-12 grid gap-4 sm:mt-16 lg:grid-cols-[1.25fr_0.75fr]"
+            className="relative mt-8 grid gap-3 sm:mt-10 lg:grid-cols-[1.25fr_0.75fr]"
           >
             {/* Primary */}
 
@@ -485,7 +485,7 @@ export default function Objectives() {
               amount: 0.1,
             }}
             className={[
-              "mt-12 grid gap-4 sm:mt-16",
+              "mt-8 grid gap-3 sm:mt-10",
               visibleObjectives.length ===
                 1
                 ? "lg:grid-cols-1"
@@ -512,15 +512,6 @@ export default function Objectives() {
                     visibleObjectives.length >=
                       3
                   }
-                  {...(index ===
-                    0 &&
-                  visibleObjectives.length >=
-                    3
-                    ? {
-                        className:
-                          "",
-                      }
-                    : {})}
                 />
               )
             )}
@@ -555,7 +546,7 @@ export default function Objectives() {
             transition={{
               duration: 0.6,
             }}
-            className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12"
+            className="mt-7 flex flex-col items-center justify-center gap-3 sm:mt-12"
           >
             <Link
               href={
