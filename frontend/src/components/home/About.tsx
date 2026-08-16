@@ -5,11 +5,11 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
+  CalendarDays,
   Check,
   ImageOff,
-  Users,
   Newspaper,
-  CalendarDays,
+  Users,
 } from "lucide-react";
 import {
   useEffect,
@@ -20,28 +20,18 @@ import {
 import Button from "@/components/ui/Button";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import {
+  mergeHomeSettings,
+  type HomeSettings,
+} from "@/types/homeSettings";
+import {
   apiFetch,
   responseJson,
 } from "@/services/api";
-
-type AboutSettings = {
-  image?: string;
-  heading: string;
-  description: string;
-  features: string[];
-};
 
 type PublicStats = {
   members: number;
   pressReleases: number;
   events: number;
-};
-
-const emptyAbout: AboutSettings = {
-  image: "",
-  heading: "",
-  description: "",
-  features: [],
 };
 
 const emptyStats: PublicStats = {
@@ -76,11 +66,14 @@ function AnimatedNumber({
     const start =
       performance.now();
 
-    const duration = 1600;
+    const duration = 1500;
 
-    const update = (now: number) => {
+    const update = (
+      now: number
+    ) => {
       const progress = Math.min(
-        (now - start) / duration,
+        (now - start) /
+          duration,
         1
       );
 
@@ -92,7 +85,9 @@ function AnimatedNumber({
         );
 
       setDisplay(
-        Math.round(value * eased)
+        Math.round(
+          value * eased
+        )
       );
 
       if (progress < 1) {
@@ -120,7 +115,11 @@ function AnimatedNumber({
   );
 }
 
-function ImageBadge() {
+function ImageBadge({
+  siteName,
+}: {
+  siteName?: string;
+}) {
   return (
     <motion.div
       initial={{
@@ -145,27 +144,124 @@ function ImageBadge() {
       </p>
 
       <p className="mt-1 text-sm font-black sm:text-base">
-        Press Club
+        {siteName ||
+          "Press Club"}
       </p>
     </motion.div>
   );
 }
 
+function AboutStat({
+  value,
+  label,
+  icon: Icon,
+  href,
+  loading,
+  unavailable,
+}: {
+  value: number;
+  label: string;
+  icon: typeof Users;
+  href?: string;
+  loading: boolean;
+  unavailable: boolean;
+}) {
+  const content = (
+    <div className="px-2 py-5 sm:px-6 sm:py-7">
+      {loading ? (
+        <>
+          <div className="mx-auto h-8 w-16 animate-pulse rounded bg-black/5" />
+
+          <div className="mx-auto mt-3 h-4 w-20 animate-pulse rounded bg-black/5" />
+        </>
+      ) : unavailable ? (
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-black/40 sm:text-xs">
+            Statistics
+            unavailable
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#171717] text-white sm:h-10 sm:w-10">
+            <Icon
+              size={16}
+            />
+          </div>
+
+          <p className="mt-3 text-2xl font-black tracking-[-0.04em] text-black sm:text-4xl">
+            <AnimatedNumber
+              value={value}
+            />
+
+            <span className="text-[#c8102e]">
+              +
+            </span>
+          </p>
+
+          <p className="mt-1 text-[9px] font-black uppercase tracking-[0.12em] text-black/45 sm:text-xs">
+            {label}
+          </p>
+        </>
+      )}
+    </div>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="rounded-[1.5rem] transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div>
+      {content}
+    </div>
+  );
+}
+
 export default function About() {
-  const { settings } =
-    useWebsiteSettings();
+  const {
+    settings,
+  } = useWebsiteSettings();
 
-  const [about, setAbout] =
-    useState<AboutSettings>(
-      emptyAbout
+  /*
+   * ----------------------------------------------------------
+   * CMS HOME SETTINGS
+   * ----------------------------------------------------------
+   *
+   * IMPORTANT:
+   *
+   * The homepage About section now uses:
+   *
+   * Website Settings → Home → About
+   *
+   * as its source of truth.
+   *
+   * We no longer fetch /settings/about for this section.
+   */
+
+  const home: HomeSettings =
+    mergeHomeSettings(
+      settings.home
     );
 
-  const [stats, setStats] =
-    useState<PublicStats>(
-      emptyStats
-    );
+  const about =
+    home.about;
 
-  const [loading, setLoading] =
+  const [
+    stats,
+    setStats,
+  ] = useState<PublicStats>(
+    emptyStats
+  );
+
+  const [loadingStats, setLoadingStats] =
     useState(true);
 
   const [
@@ -178,128 +274,139 @@ export default function About() {
     setImageLoaded,
   ] = useState(false);
 
+  /*
+   * ----------------------------------------------------------
+   * PUBLIC STATISTICS
+   * ----------------------------------------------------------
+   *
+   * Numbers remain live API data.
+   * CMS controls:
+   *
+   * - whether statistics are shown
+   * - labels
+   */
+
   useEffect(() => {
     let cancelled = false;
 
-    Promise.allSettled([
-      apiFetch("/settings/about", {
-        cache: "no-store",
-      }).then((response) =>
-        responseJson<{
-          data?: AboutSettings;
-        }>(response)
-      ),
+    const loadStats =
+      async () => {
+        try {
+          setLoadingStats(true);
 
-      apiFetch(
-        "/dashboard/public-stats",
-        {
-          cache: "no-store",
-        }
-      ).then((response) =>
-        responseJson<{
-          success: boolean;
-          data: PublicStats;
-        }>(response)
-      ),
-    ])
-      .then(
-        ([
-          aboutResult,
-          statsResult,
-        ]) => {
-          if (cancelled) {
+          const response =
+            await apiFetch(
+              "/dashboard/public-stats",
+              {
+                cache:
+                  "no-store",
+              }
+            );
+
+          const payload =
+            await responseJson<{
+              success?: boolean;
+              data?: PublicStats;
+            }>(response);
+
+          if (
+            cancelled
+          ) {
             return;
           }
 
           if (
-            aboutResult.status ===
-            "fulfilled"
+            payload.success ===
+              false ||
+            !payload.data
           ) {
-            const data =
-              aboutResult.value.data;
-
-            if (data) {
-              setAbout({
-                ...emptyAbout,
-                ...data,
-                image:
-                  data.image ||
-                  settings.aboutImage ||
-                  "",
-                features:
-                  Array.isArray(
-                    data.features
-                  )
-                    ? data.features
-                    : [],
-              });
-            } else {
-              setAbout({
-                ...emptyAbout,
-                image:
-                  settings.aboutImage ||
-                  "",
-              });
-            }
-          } else if (
-            settings.aboutImage
-          ) {
-            setAbout({
-              ...emptyAbout,
-              image:
-                settings.aboutImage,
-            });
+            throw new Error(
+              "Statistics unavailable."
+            );
           }
 
-          if (
-            statsResult.status ===
-            "fulfilled"
-          ) {
-            setStatsUnavailable(
-              false
-            );
+          setStats({
+            ...emptyStats,
+            ...payload.data,
+          });
 
-            setStats({
-              ...emptyStats,
-              ...statsResult.value
-                .data,
-            });
-          } else {
+          setStatsUnavailable(
+            false
+          );
+        } catch (error) {
+          console.error(
+            "Failed to load public statistics:",
+            error
+          );
+
+          if (!cancelled) {
             setStatsUnavailable(
               true
             );
           }
+        } finally {
+          if (!cancelled) {
+            setLoadingStats(
+              false
+            );
+          }
         }
-      )
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
+      };
+
+    void loadStats();
 
     return () => {
       cancelled = true;
     };
-  }, [
-    settings.aboutImage,
-  ]);
+  }, []);
+
+  /*
+   * ----------------------------------------------------------
+   * CMS IMAGE
+   * ----------------------------------------------------------
+   *
+   * About image comes from:
+   *
+   * Website Settings → Home → About Image
+   */
+
+  const aboutImage =
+    settings.aboutImage ||
+    "";
+
+  /*
+   * ----------------------------------------------------------
+   * CMS STAT LABELS
+   * ----------------------------------------------------------
+   */
+
+  const statsLabels =
+    about.statsLabels;
 
   const statItems = [
     {
-      value: stats.members,
-      label: "Members",
+      value:
+        stats.members,
+      label:
+        statsLabels[0] ||
+        "Members",
       icon: Users,
       href: "/committee",
     },
     {
       value:
         stats.pressReleases,
-      label: "Press Releases",
+      label:
+        statsLabels[1] ||
+        "Press Releases",
       icon: Newspaper,
     },
     {
-      value: stats.events,
-      label: "Active Events",
+      value:
+        stats.events,
+      label:
+        statsLabels[2] ||
+        "Active Events",
       icon: CalendarDays,
     },
   ];
@@ -334,7 +441,7 @@ export default function About() {
 
       <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         {/* ===================================================
-            SECTION INTRO
+            CMS SECTION INTRO
             =================================================== */}
 
         <motion.div
@@ -368,7 +475,8 @@ export default function About() {
             />
 
             <span className="text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
-              About Us
+              {about.eyebrow ||
+                "About Us"}
             </span>
 
             <span
@@ -378,15 +486,16 @@ export default function About() {
           </div>
 
           <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.4rem]">
-            {settings.siteName ||
+            {about.title ||
+              settings.siteName ||
               "Greater Noida Press Club"}
           </h2>
 
-          <p className="mx-auto mt-5 max-w-[650px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
-            A stronger visual introduction
-            to the organisation, its people
-            and its work.
-          </p>
+          {about.description && (
+            <p className="mx-auto mt-5 max-w-[700px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
+              {about.description}
+            </p>
+          )}
         </motion.div>
 
         {/* ===================================================
@@ -437,9 +546,7 @@ export default function About() {
             />
 
             <div className="relative z-10 overflow-hidden rounded-[2rem] border-[7px] border-white bg-white shadow-[0_30px_80px_rgba(38,32,23,0.18)]">
-              {loading ? (
-                <div className="aspect-[6/5] animate-pulse bg-black/5" />
-              ) : about.image ? (
+              {aboutImage ? (
                 <motion.div
                   initial={{
                     opacity: 0,
@@ -456,13 +563,16 @@ export default function About() {
                   className="relative aspect-[6/5] overflow-hidden bg-black/5"
                 >
                   <Image
-                    src={about.image}
+                    src={
+                      aboutImage
+                    }
                     alt={
-                      about.heading ||
+                      about.title ||
                       settings.siteName ||
                       "Greater Noida Press Club"
                     }
                     fill
+                    priority={false}
                     sizes="(min-width: 1024px) 55vw, 100vw"
                     onLoad={() =>
                       setImageLoaded(
@@ -477,7 +587,11 @@ export default function About() {
                     className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-white/5"
                   />
 
-                  <ImageBadge />
+                  <ImageBadge
+                    siteName={
+                      settings.siteName
+                    }
+                  />
                 </motion.div>
               ) : (
                 <div className="relative flex aspect-[6/5] items-center justify-center bg-gradient-to-br from-[#e6d8c5] via-[#f4ede2] to-white">
@@ -492,12 +606,16 @@ export default function About() {
                     </p>
                   </div>
 
-                  <ImageBadge />
+                  <ImageBadge
+                    siteName={
+                      settings.siteName
+                    }
+                  />
                 </div>
               )}
             </div>
 
-            {/* Floating label */}
+            {/* Floating identity label */}
 
             <div className="absolute -bottom-5 right-3 z-20 rounded-2xl border border-black/10 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-md sm:-bottom-6 sm:right-6">
               <p className="text-[9px] font-black uppercase tracking-[0.18em] text-black/40">
@@ -511,7 +629,7 @@ export default function About() {
           </motion.div>
 
           {/* =================================================
-              CONTENT
+              CMS CONTENT
               ================================================= */}
 
           <motion.div
@@ -532,213 +650,167 @@ export default function About() {
               delay: 0.08,
               ease: [
                 0.22,
-                1,
+              1,
                 0.36,
                 1,
               ],
             }}
           >
-            {loading ? (
-              <div className="space-y-5">
-                <div className="h-12 w-4/5 animate-pulse rounded-2xl bg-black/5" />
+            <span className="inline-flex rounded-full border border-black/10 bg-white/55 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50 backdrop-blur-md">
+              {about.eyebrow ||
+                "Who We Are"}
+            </span>
 
-                <div className="h-5 w-full animate-pulse rounded bg-black/5" />
+            <h3 className="mt-5 max-w-[650px] text-3xl font-black leading-[1.02] tracking-[-0.045em] sm:text-4xl lg:text-[3.3rem]">
+              {about.title ||
+                settings.siteName ||
+                "Greater Noida Press Club"}
+            </h3>
 
-                <div className="h-5 w-11/12 animate-pulse rounded bg-black/5" />
+            <p className="mt-6 max-w-[650px] text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
+              {about.description ||
+                "Greater Noida Press Club is a professional platform supporting journalists, media professionals and the wider community."}
+            </p>
 
-                <div className="h-5 w-4/5 animate-pulse rounded bg-black/5" />
-              </div>
-            ) : (
-              <>
-                <span className="inline-flex rounded-full border border-black/10 bg-white/55 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50 backdrop-blur-md">
-                  Who We Are
-                </span>
+            {/* =================================================
+                CMS FEATURES
+                ================================================= */}
 
-                <h3 className="mt-5 max-w-[650px] text-3xl font-black leading-[1.02] tracking-[-0.045em] sm:text-4xl lg:text-[3.3rem]">
-                  {about.heading}
-                </h3>
+            {about.features
+              .length > 0 && (
+              <div className="mt-7 grid gap-3 sm:mt-9 sm:grid-cols-2">
+                {about.features.map(
+                  (
+                    feature,
+                    index
+                  ) => (
+                    <motion.div
+                      key={`${feature}-${index}`}
+                      initial={{
+                        opacity: 0,
+                        y: 10,
+                      }}
+                      whileInView={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      viewport={{
+                        once: true,
+                      }}
+                      transition={{
+                        duration:
+                          0.45,
+                        delay:
+                          index *
+                          0.06,
+                      }}
+                      className="group rounded-2xl border border-black/10 bg-white/55 p-4 backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:bg-white"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#171717] text-white">
+                          <Check
+                            size={14}
+                            strokeWidth={
+                              3
+                            }
+                          />
+                        </span>
 
-                <p className="mt-6 max-w-[650px] text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
-                  {about.description}
-                </p>
-
-                {about.features
-                  .length > 0 && (
-                  <div className="mt-7 grid gap-3 sm:mt-9 sm:grid-cols-2">
-                    {about.features.map(
-                      (
-                        feature,
-                        index
-                      ) => (
-                        <motion.div
-                          key={
+                        <p className="pt-0.5 text-xs font-bold leading-5 text-black/70 sm:text-sm">
+                          {
                             feature
                           }
-                          initial={{
-                            opacity: 0,
-                            y: 10,
-                          }}
-                          whileInView={{
-                            opacity: 1,
-                            y: 0,
-                          }}
-                          viewport={{
-                            once: true,
-                          }}
-                          transition={{
-                            duration: 0.45,
-                            delay:
-                              index *
-                              0.06,
-                          }}
-                          className="group rounded-2xl border border-black/10 bg-white/55 p-4 backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:bg-white"
-                        >
-                          <div className="flex items-start gap-3">
-                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#171717] text-white">
-                              <Check
-                                size={14}
-                                strokeWidth={
-                                  3
-                                }
-                              />
-                            </span>
-
-                            <p className="pt-0.5 text-xs font-bold leading-5 text-black/70 sm:text-sm">
-                              {feature}
-                            </p>
-                          </div>
-                        </motion.div>
-                      )
-                    )}
-                  </div>
+                        </p>
+                      </div>
+                    </motion.div>
+                  )
                 )}
+              </div>
+            )}
 
-                <div className="mt-8 sm:mt-10">
-                  <Button
-                    href="/about"
-                    variant="outline"
-                    size="lg"
-                    className="group rounded-full border-black/15 bg-white/50"
-                  >
-                    Learn More
+            {/* =================================================
+                CMS BUTTON
+                ================================================= */}
 
-                    <ArrowRight
-                      size={17}
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  </Button>
-                </div>
-              </>
+            {about.buttonLabel && (
+              <div className="mt-8 sm:mt-10">
+                <Button
+                  href={
+                    about.buttonHref ||
+                    "/about"
+                  }
+                  variant="outline"
+                  size="lg"
+                  className="group rounded-full border-black/15 bg-white/50"
+                >
+                  {about.buttonLabel}
+
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Button>
+              </div>
             )}
           </motion.div>
         </div>
 
         {/* ===================================================
-            STATS
+            CMS-CONTROLLED STATISTICS
             =================================================== */}
 
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.2,
-          }}
-          transition={{
-            duration: 0.7,
-          }}
-          className="mt-20 sm:mt-24"
-        >
-          <div className="rounded-[2rem] border border-black/10 bg-white/55 p-3 shadow-[0_20px_60px_rgba(38,32,23,0.08)] backdrop-blur-md sm:p-4">
-            <div className="grid grid-cols-3 divide-x divide-black/10">
-              {statItems.map(
-                (stat) => {
-                  const Icon =
-                    stat.icon;
-
-                  const content =
-                    loading ? (
-                      <div className="px-2 py-5 sm:px-6 sm:py-7">
-                        <div className="mx-auto h-8 w-16 animate-pulse rounded bg-black/5" />
-
-                        <div className="mx-auto mt-3 h-4 w-20 animate-pulse rounded bg-black/5" />
-                      </div>
-                    ) : statsUnavailable ? (
-                      <div className="px-2 py-5 sm:px-6 sm:py-7">
-                        <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-black/40 sm:text-xs">
-                          Statistics
-                          unavailable
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="px-2 py-5 sm:px-6 sm:py-7">
-                        <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#171717] text-white sm:h-10 sm:w-10">
-                          <Icon
-                            size={16}
-                          />
-                        </div>
-
-                        <p className="mt-3 text-2xl font-black tracking-[-0.04em] text-black sm:text-4xl">
-                          <AnimatedNumber
-                            value={
-                              stat.value
-                            }
-                          />
-                          <span className="text-[#c8102e]">
-                            +
-                          </span>
-                        </p>
-
-                        <p className="mt-1 text-[9px] font-black uppercase tracking-[0.12em] text-black/45 sm:text-xs">
-                          {
-                            stat.label
-                          }
-                        </p>
-                      </div>
-                    );
-
-                  if (
-                    stat.href
-                  ) {
-                    return (
-                      <Link
-                        key={
-                          stat.label
-                        }
-                        href={
-                          stat.href
-                        }
-                        className="rounded-[1.5rem] transition hover:bg-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
-                      >
-                        {
-                          content
-                        }
-                      </Link>
-                    );
-                  }
-
-                  return (
-                    <div
+        {about.showStats && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 25,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.7,
+            }}
+            className="mt-20 sm:mt-24"
+          >
+            <div className="rounded-[2rem] border border-black/10 bg-white/55 p-3 shadow-[0_20px_60px_rgba(38,32,23,0.08)] backdrop-blur-md sm:p-4">
+              <div className="grid grid-cols-3 divide-x divide-black/10">
+                {statItems.map(
+                  (stat) => (
+                    <AboutStat
                       key={
                         stat.label
                       }
-                    >
-                      {
-                        content
+                      value={
+                        stat.value
                       }
-                    </div>
-                  );
-                }
-              )}
+                      label={
+                        stat.label
+                      }
+                      icon={
+                        stat.icon
+                      }
+                      href={
+                        stat.href
+                      }
+                      loading={
+                        loadingStats
+                      }
+                      unavailable={
+                        statsUnavailable
+                      }
+                    />
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
       </div>
     </section>
   );
