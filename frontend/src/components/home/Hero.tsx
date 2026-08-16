@@ -1,101 +1,163 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
-import HeroCarousel from "./HeroCarousel";
+import { ChevronLeft, ChevronRight, Pause, Play, Sparkles, Newspaper } from "lucide-react";
 
-interface HeroProps {
-  title?: string;
-  subtitle?: string;
+interface HeroSlide {
+  _id: string;
+  title: string;
+  image?: string;
+  imageUrl?: string;
+  category?: string;
+  link?: string;
   description?: string;
-  primaryCtaText?: string;
-  primaryCtaLink?: string;
-  secondaryCtaText?: string;
-  secondaryCtaLink?: string;
-  heroImage?: string;
-  heroTitle?: string;
 }
 
-export default function Hero({
-  title = "Welcome to the Press Club",
-  subtitle = "Connecting Journalists & Media Professionals",
-  description = "Join a dynamic community dedicated to freedom of expression, professional growth, and impactful journalism across the region.",
-  primaryCtaText = "Become a Member",
-  primaryCtaLink = "/membership",
-  secondaryCtaText = "Latest News",
-  secondaryCtaLink = "/latest-updates",
-  heroImage = "/hero-placeholder.jpg",
-  heroTitle,
-}: HeroProps) {
+interface HeroProps {
+  slides?: HeroSlide[];
+  heroImage?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+}
+
+const HeroCarousel = ({
+  slides = [],
+  fallbackImage,
+  alt,
+}: {
+  slides?: HeroSlide[];
+  fallbackImage?: string;
+  alt: string;
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const displaySlides = slides.length > 0 ? slides : fallbackImage ? [{ _id: "fallback", title: alt, image: fallbackImage }] : [];
+
+  useEffect(() => {
+    if (!isPlaying || displaySlides.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % displaySlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isPlaying, displaySlides.length]);
+
+  if (displaySlides.length === 0) {
+    return (
+      <div className="w-full h-full bg-slate-900 flex items-center justify-center text-slate-400">
+        <Newspaper className="w-12 h-12 mb-2 opacity-50" />
+      </div>
+    );
+  }
+
+  const currentSlide = displaySlides[currentIndex];
+  const imgSrc = currentSlide.imageUrl || currentSlide.image || fallbackImage || "";
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-20 lg:py-28">
-      {/* Background ambient lighting effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="relative w-full h-full group overflow-hidden">
+      {imgSrc ? (
+        <Image
+          src={imgSrc}
+          alt={currentSlide.title || alt}
+          fill
+          priority
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+      ) : (
+        <div className="w-full h-full bg-slate-800" />
+      )}
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Text Column */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            {subtitle && (
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs sm:text-sm font-medium">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{subtitle}</span>
-              </div>
-            )}
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white">
-              {title}
-            </h1>
-
-            {description && (
-              <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                {description}
-              </p>
-            )}
-
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
-              {primaryCtaText && primaryCtaLink && (
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-6 rounded-lg shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
-                >
-                  <Link href={primaryCtaLink} className="flex items-center gap-2">
-                    {primaryCtaText}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </Button>
-              )}
-
-              {secondaryCtaText && secondaryCtaLink && (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-slate-700 bg-slate-800/50 hover:bg-slate-800 text-slate-200 border hover:text-white px-6 py-6 rounded-lg transition-all duration-200"
-                >
-                  <Link href={secondaryCtaLink}>
-                    {secondaryCtaText}
-                  </Link>
-                </Button>
-              )}
+      {displaySlides.length > 1 && (
+        <>
+          <button
+            onClick={() => setCurrentIndex((prev) => (prev - 1 + displaySlides.length) % displaySlides.length)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={() => setCurrentIndex((prev) => (prev + 1) % displaySlides.length)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+          <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm z-10">
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="text-white hover:text-amber-400 transition-colors"
+              aria-label={isPlaying ? "Pause carousel" : "Play carousel"}
+            >
+              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            </button>
+            <div className="flex gap-1.5">
+              {displaySlides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`h-2 rounded-full transition-all ${
+                    i === currentIndex ? "w-6 bg-amber-400" : "w-2 bg-white/50 hover:bg-white/80"
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
             </div>
           </div>
+        </>
+      )}
+    </div>
+  );
+};
 
-          {/* Right Image/Carousel Column */}
-          <div className="lg:col-span-5 w-full max-w-lg mx-auto lg:max-w-none">
-            <div className="relative rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-800/40 shadow-2xl backdrop-blur-sm aspect-[4/3]">
-              <HeroCarousel
-                fallbackImage={heroImage}
-                alt={heroTitle ?? title ?? "Hero Banner Image"}
-              />
+export default function Hero({
+  slides = [],
+  heroImage = "/hero-default.jpg",
+  heroTitle = "Greater Noida Press Club",
+  heroSubtitle = "The official voice and press media organization representing journalists and news professionals.",
+}: HeroProps) {
+  return (
+    <section className="relative w-full min-h-[500px] lg:min-h-[600px] bg-slate-950 text-white flex items-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <HeroCarousel
+          slides={slides}
+          fallbackImage={heroImage}
+          alt={heroTitle || "Hero Image"}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/40 to-transparent" />
+      </div>
 
-              {/* Dark cinematic overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
-            </div>
+      <div className="container relative z-10 mx-auto px-4 py-16 lg:py-24">
+        <div className="max-w-2xl space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium">
+            <Sparkles className="w-4 h-4" />
+            <span>Official Portal</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+            {heroTitle}
+          </h1>
+
+          <p className="text-lg sm:text-xl text-slate-300 font-normal leading-relaxed">
+            {heroSubtitle}
+          </p>
+
+          <div className="flex flex-wrap gap-4 pt-4">
+            <Link
+              href="/membership"
+              className="px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold transition-colors shadow-lg shadow-amber-500/20"
+            >
+              Become a Member
+            </Link>
+            <Link
+              href="/about"
+              className="px-6 py-3 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-white border border-slate-700 font-semibold backdrop-blur-sm transition-colors"
+            >
+              Learn More
+            </Link>
           </div>
         </div>
       </div>
