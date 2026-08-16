@@ -198,16 +198,14 @@ function HeroSection() {
   const home = mergeHomeSettings(settings.home);
 
   const buttonClass =
-    "group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/95 px-6 py-3.5 text-sm font-bold text-slate-900 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:px-7";
+    "group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white px-6 py-3.5 text-sm font-bold text-slate-900 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:px-7";
 
   return (
     <section className="relative min-h-[720px] overflow-hidden bg-slate-950 sm:min-h-[820px] lg:min-h-[900px]">
-      {/* Background image */}
+      {/* CMS-controlled hero image remains unchanged. */}
       <div className="absolute inset-0">
         <HeroCarousel
-          fallbackImage={
-            settings.heroImage || "/Logo.png"
-          }
+          fallbackImage={settings.heroImage || "/Logo.png"}
           alt={
             home.hero.title ||
             settings.siteName ||
@@ -216,138 +214,56 @@ function HeroSection() {
         />
       </div>
 
-      {/* Cinematic overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-900/25 to-slate-950/80" />
+      {/* Softer cinematic overlay: keeps the image visible while preserving text contrast. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/45 via-slate-900/15 to-slate-950/65" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.08)_48%,rgba(0,0,0,0.45)_100%)]" />
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.18)_45%,rgba(0,0,0,0.65)_100%)]" />
+      <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-24 h-96 w-96 rounded-full bg-cyan-300/10 blur-3xl" />
 
-      {/* Decorative glow */}
-      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-blue-400/20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-32 bottom-20 h-96 w-96 rounded-full bg-cyan-300/15 blur-3xl" />
-
-      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1500px] flex-col px-4 pb-10 pt-5 sm:px-8 sm:pb-12 sm:pt-8 lg:min-h-[900px] lg:px-10">
-        {/* Floating hero navigation-style bar
-            This is intentionally only the hero visual shell.
-            Actual site navbar remains untouched. */}
-        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between rounded-full border border-white/30 bg-white/10 px-4 py-3 shadow-2xl backdrop-blur-2xl sm:px-6 sm:py-3.5">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/90 shadow-lg sm:h-11 sm:w-11">
-              <Image
-                src="/Logo.png"
-                alt={
-                  settings.siteName ||
-                  "Greater Noida Press Club"
-                }
-                width={44}
-                height={44}
-                className="h-full w-full object-contain p-1.5"
-              />
-            </div>
-
-            <div className="hidden min-w-0 sm:block">
-              <p className="truncate text-sm font-extrabold tracking-tight text-white">
-                {settings.siteName ||
-                  "Greater Noida Press Club"}
-              </p>
-
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/65">
-                Media • Community • Connection
-              </p>
-            </div>
-          </div>
-
-          <div className="hidden items-center gap-8 lg:flex">
-            <Link
-              href="/"
-              className="text-sm font-semibold text-white transition hover:text-white/70"
-            >
-              Home
-            </Link>
-
-            <Link
-              href="/about"
-              className="text-sm font-semibold text-white/70 transition hover:text-white"
-            >
-              About
-            </Link>
-
-            <Link
-              href="/latest-updates"
-              className="text-sm font-semibold text-white/70 transition hover:text-white"
-            >
-              Updates
-            </Link>
-
-            <Link
-              href="/gallery"
-              className="text-sm font-semibold text-white/70 transition hover:text-white"
-            >
-              Gallery
-            </Link>
-          </div>
-
-          <Link
-            href="/membership"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-extrabold text-slate-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:px-5 sm:text-sm"
-          >
-            Get Started
-            <ArrowRight size={15} />
-          </Link>
-        </div>
-
-        {/* Hero content */}
-        <div className="flex flex-1 items-center justify-center py-14 sm:py-20 lg:py-24">
+      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1500px] items-center px-4 pb-12 pt-16 sm:min-h-[820px] sm:px-8 sm:pb-16 sm:pt-20 lg:min-h-[900px] lg:px-10">
+        {/*
+          IMPORTANT:
+          There is deliberately NO second navbar inside the hero.
+          The only public navbar is the fixed global Navbar in website/layout.tsx.
+        */}
+        <div className="w-full translate-y-10 sm:translate-y-14 lg:translate-y-16">
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
             className="mx-auto w-full max-w-5xl text-center"
           >
-            {/* Eyebrow */}
+            {/* Existing CMS eyebrow / identity fields — unchanged. */}
             <div className="mb-5 flex justify-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-xs font-bold text-white shadow-xl backdrop-blur-xl sm:text-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-bold text-white shadow-xl backdrop-blur-xl sm:text-sm">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef]">
                   <Newspaper size={13} />
                 </span>
-
                 {home.hero.identityLabel}
               </div>
             </div>
 
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/75 sm:text-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/85 drop-shadow-lg sm:text-sm">
               {home.hero.eyebrow}
             </p>
 
-            {/* IMPORTANT:
-                CMS title is untouched */}
-            <h1 className="mx-auto mt-5 max-w-5xl text-[2.7rem] font-medium leading-[0.98] tracking-[-0.055em] text-white drop-shadow-2xl sm:text-6xl md:text-7xl lg:text-[5.8rem] xl:text-[6.5rem]">
-              {home.hero.title ||
-                settings.heroTitle}
+            {/* CMS title — do not replace with hardcoded text. */}
+            <h1 className="mx-auto mt-5 max-w-5xl text-[2.65rem] font-medium leading-[1.02] tracking-[-0.055em] text-white drop-shadow-[0_8px_30px_rgba(0,0,0,0.45)] sm:text-6xl md:text-7xl lg:text-[5.8rem] xl:text-[6.5rem]">
+              {home.hero.title || settings.heroTitle}
             </h1>
 
-            {/* IMPORTANT:
-                CMS description is untouched */}
-            <p className="mx-auto mt-7 max-w-2xl text-sm leading-6 text-white/80 drop-shadow-lg sm:text-lg sm:leading-8">
-              {home.hero.description ||
-                settings.heroDescription}
+            {/* CMS description — do not replace with hardcoded text. */}
+            <p className="mx-auto mt-7 max-w-2xl text-sm leading-6 text-white/90 drop-shadow-lg sm:text-lg sm:leading-8">
+              {home.hero.description || settings.heroDescription}
             </p>
 
-            {/* CTA */}
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row">
               <MembershipFormLink
                 className={buttonClass}
                 unavailableClassName={`${buttonClass} cursor-not-allowed opacity-60`}
               >
                 {home.hero.primaryLabel}
-
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-white transition-transform duration-300 group-hover:translate-x-0.5">
                   <ArrowRight size={15} />
                 </span>
@@ -355,10 +271,9 @@ function HeroSection() {
 
               <Link
                 href="/latest-updates"
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/20 sm:px-7"
+                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-6 py-3.5 text-sm font-bold text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/25 sm:px-7"
               >
                 {home.hero.secondaryLabel}
-
                 <ArrowRight
                   size={18}
                   className="transition-transform group-hover:translate-x-1"
@@ -366,76 +281,27 @@ function HeroSection() {
               </Link>
             </div>
 
-            {/* Quick links */}
+            {/* Existing CMS quick links — e.g. Calendar — remain dynamic. */}
             {home.hero.quickLinks.length > 0 && (
-              <div className="mx-auto mt-9 flex max-w-2xl flex-wrap justify-center gap-2">
-                {home.hero.quickLinks.map(
-                  (item) => (
-                    <Link
-                      key={`${item.label}-${item.href}`}
-                      href={item.href || "/"}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/15 px-4 py-2 text-xs font-semibold text-white/75 backdrop-blur-md transition hover:bg-white/15 hover:text-white"
-                    >
-                      <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
-                      {item.label}
-                    </Link>
-                  )
-                )}
+              <div className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-2 sm:mt-9">
+                {home.hero.quickLinks.map((item) => (
+                  <Link
+                    key={`${item.label}-${item.href}`}
+                    href={item.href || "/"}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-md transition hover:bg-white/20 hover:text-white"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             )}
           </motion.div>
         </div>
-
-        {/* Floating bottom glass info */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.8,
-            delay: 0.3,
-          }}
-          className="flex justify-end"
-        >
-          <div className="hidden w-full max-w-sm rounded-3xl border border-white/20 bg-black/20 p-4 shadow-2xl backdrop-blur-xl sm:block">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/55">
-                  Greater Noida
-                </p>
-
-                <p className="mt-1 text-sm font-bold text-white">
-                  Press Club
-                </p>
-              </div>
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white">
-                <ArrowRight size={17} />
-              </div>
-            </div>
-
-            <div className="mt-4 h-px bg-white/10" />
-
-            <p className="mt-3 text-xs leading-5 text-white/60">
-              Connecting journalists, media professionals
-              and the community through credible
-              communication.
-            </p>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
 }
-
-/* =========================================================
-   ABOUT
-   ========================================================= */
 
 function AboutSection() {
   const { settings } = useWebsiteSettings();
