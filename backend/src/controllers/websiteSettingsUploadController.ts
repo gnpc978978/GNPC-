@@ -1,11 +1,18 @@
-import { Request, Response } from "express";
+import {
+  Request,
+  Response,
+} from "express";
 import mongoose from "mongoose";
 
 import WebsiteSettings from "../models/WebsiteSettings";
-import { deleteCloudinaryAssets } from "../utils/cloudinaryCleanup";
+
+import {
+  deleteCloudinaryAssets,
+} from "../utils/cloudinaryCleanup";
 
 const isDevelopment =
-  process.env.NODE_ENV !== "production";
+  process.env.NODE_ENV !==
+  "production";
 
 const errorMessage = (
   error: unknown,
@@ -43,8 +50,16 @@ const errorMessage = (
     : fallback;
 };
 
+/*
+ * Only these Home sections are allowed to receive
+ * Website Settings media uploads.
+ *
+ * Hero remains managed by the existing Banner CMS.
+ */
 const HOME_MEDIA_PATTERN =
   /^homeMedia_(about|objectives|latestUpdates|gallery|pressConferences|executiveCommittee|officeBearers|membership)_(\d+)$/;
+
+const MAX_MEDIA_PER_SECTION = 4;
 
 export const uploadSettingsFiles =
   async (
@@ -71,14 +86,20 @@ export const uploadSettingsFiles =
 
       const logo =
         fileFor("logo");
+
       const favicon =
         fileFor("favicon");
+
       const heroImage =
         fileFor("heroImage");
+
       const aboutImage =
         fileFor("aboutImage");
+
       const membershipPdf =
-        fileFor("membershipPdf");
+        fileFor(
+          "membershipPdf"
+        );
 
       if (logo?.path) {
         updateData.logo =
@@ -95,15 +116,25 @@ export const uploadSettingsFiles =
           heroImage.path;
       }
 
-      if (aboutImage?.path) {
+      if (
+        aboutImage?.path
+      ) {
         updateData.aboutImage =
           aboutImage.path;
       }
 
-      if (membershipPdf?.path) {
+      if (
+        membershipPdf?.path
+      ) {
         updateData.membershipPdf =
           membershipPdf.path;
       }
+
+      /*
+       * --------------------------------------------------------
+       * HOME SECTION MEDIA
+       * --------------------------------------------------------
+       */
 
       const homeMediaFiles: Array<{
         section: string;
@@ -111,7 +142,9 @@ export const uploadSettingsFiles =
         path: string;
       }> = [];
 
-      for (const file of files) {
+      for (
+        const file of files
+      ) {
         const match =
           HOME_MEDIA_PATTERN.exec(
             file.fieldname
@@ -121,48 +154,147 @@ export const uploadSettingsFiles =
           continue;
         }
 
+        const section =
+          match[1];
+
+        const index =
+          Number(match[2]);
+
+        if (
+          !Number.isInteger(
+            index
+          ) ||
+          index < 0 ||
+          index >=
+            MAX_MEDIA_PER_SECTION
+        ) {
+          return res
+            .status(400)
+            .json({
+              success:
+                false,
+
+              message:
+                `Invalid media position for ${section}.`,
+            });
+        }
+
         homeMediaFiles.push({
-          section: match[1],
-          index: Number(
-            match[2]
-          ),
-          path: file.path,
+          section,
+          index,
+          path:
+            file.path,
         });
+      }
+
+      /*
+       * Reject unsupported dynamic file fields.
+       *
+       * This prevents .any() from becoming an unrestricted
+       * website-settings file mutation endpoint.
+       */
+
+      const unsupportedFields =
+        files.filter(
+          (file) => {
+            const knownScalar =
+              [
+                "logo",
+                "favicon",
+                "heroImage",
+                "aboutImage",
+                "membershipPdf",
+              ].includes(
+                file.fieldname
+              );
+
+            const knownHomeMedia =
+              HOME_MEDIA_PATTERN.test(
+                file.fieldname
+              );
+
+            return (
+              !knownScalar &&
+              !knownHomeMedia
+            );
+          }
+        );
+
+      if (
+        unsupportedFields.length >
+        0
+      ) {
+        return res
+          .status(400)
+          .json({
+            success:
+              false,
+
+            message:
+              "One or more uploaded fields are not supported by Website Settings.",
+          });
       }
 
       if (
         Object.keys(
           updateData
         ).length === 0 &&
-        homeMediaFiles.length === 0
+        homeMediaFiles.length ===
+          0
       ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "No supported file was provided.",
-        });
+        return res
+          .status(400)
+          .json({
+            success:
+              false,
+
+            message:
+              "No supported file was provided.",
+          });
+      }
+
+      let settings =
+        await WebsiteSettings.findOne();
+
+      if (!settings) {
+        settings =
+          new WebsiteSettings();
       }
 
       const previousSettings =
-        await WebsiteSettings.findOne();
+        settings.toObject();
+
+      /*
+       * --------------------------------------------------------
+       * HOME MEDIA MERGE
+       * --------------------------------------------------------
+       */
 
       const previousHome =
-        (previousSettings?.home ||
-          {}) as Record<
+        (
+          settings.home ||
+          {}
+        ) as Record<
           string,
           unknown
         >;
 
-      const nextHome = {
+      const nextHome: Record<
+        string,
+        unknown
+      > = {
         ...previousHome,
       };
 
-      for (const item of homeMediaFiles) {
+      for (
+        const item of homeMediaFiles
+      ) {
         const currentSection =
           (
             nextHome[
               item.section
-            ] || {}
+            ] ||
+            {}
           ) as Record<
             string,
             unknown
@@ -173,94 +305,150 @@ export const uploadSettingsFiles =
             currentSection.media
           )
             ? [
-                ...(currentSection.media as string[]),
+                ...(
+                  currentSection.media as string[]
+                ),
               ]
             : [];
+
+        /*
+         * Expand to the requested position.
+         */
+
+        while (
+          currentMedia.length <=
+          item.index
+        ) {
+          currentMedia.push(
+            ""
+          );
+        }
 
         currentMedia[
           item.index
         ] = item.path;
 
+        /*
+         * Normalize empty values.
+         */
+
         currentSection.media =
-          currentMedia.filter(
-            (value) =>
-              typeof value ===
-                "string" &&
-              value.trim()
-                .length > 0
-          );
+          currentMedia
+            .filter(
+              (
+                value
+              ) =>
+                typeof value ===
+                  "string" &&
+                value
+                  .trim()
+                  .length >
+                  0
+            )
+            .slice(
+              0,
+              MAX_MEDIA_PER_SECTION
+            );
 
         nextHome[
           item.section
-        ] = currentSection;
+        ] =
+          currentSection;
       }
 
-      const setOperations: Record<
-        string,
-        unknown
-      > = {
-        ...updateData,
-      };
+      /*
+       * --------------------------------------------------------
+       * SAVE
+       * --------------------------------------------------------
+       */
 
       if (
-        homeMediaFiles.length > 0
+        Object.keys(
+          updateData
+        ).length > 0
       ) {
-        setOperations.home =
-          nextHome;
+        Object.assign(
+          settings,
+          updateData
+        );
       }
 
-      const settings =
-        await WebsiteSettings.findOneAndUpdate(
-          {},
-          {
-            $set: setOperations,
+      if (
+        homeMediaFiles.length >
+        0
+      ) {
+        settings.home =
+          nextHome as typeof settings.home;
+      }
+
+      await settings.save();
+
+      /*
+       * --------------------------------------------------------
+       * CLEAN UP REPLACED SCALAR ASSETS
+       *
+       * Section media order/remove operations are handled by
+       * the JSON settings endpoint. We don't delete those here
+       * because this endpoint only adds/uploads new media.
+       * --------------------------------------------------------
+       */
+
+      await deleteCloudinaryAssets(
+        [
+          updateData.logo
+            ? previousSettings.logo
+            : undefined,
+
+          updateData.favicon
+            ? previousSettings.favicon
+            : undefined,
+
+          updateData.heroImage
+            ? previousSettings.heroImage
+            : undefined,
+
+          updateData.aboutImage
+            ? previousSettings.aboutImage
+            : undefined,
+
+          updateData.membershipPdf
+            ? previousSettings.membershipPdf
+            : undefined,
+        ]
+      );
+
+      return res
+        .status(200)
+        .json({
+          success:
+            true,
+
+          message:
+            "Settings files uploaded successfully.",
+
+          data: {
+            ...settings.toObject(),
+            home:
+              settings.home,
           },
-          {
-            returnDocument:
-              "after",
-            upsert: true,
-            runValidators: true,
-            setDefaultsOnInsert:
-              true,
-          }
-        );
-
-      await deleteCloudinaryAssets([
-        updateData.logo
-          ? previousSettings?.logo
-          : undefined,
-        updateData.favicon
-          ? previousSettings?.favicon
-          : undefined,
-        updateData.heroImage
-          ? previousSettings?.heroImage
-          : undefined,
-        updateData.aboutImage
-          ? previousSettings?.aboutImage
-          : undefined,
-        updateData.membershipPdf
-          ? previousSettings?.membershipPdf
-          : undefined,
-      ]);
-
-      return res.status(200).json({
-        success: true,
-        message:
-          "Settings files uploaded successfully.",
-        data: settings,
-      });
+        });
     } catch (error) {
       console.error(
         "Website Settings Update Error:",
         error
       );
 
-      return res.status(500).json({
-        success: false,
-        message: errorMessage(
-          error,
-          "File upload failed."
-        ),
-      });
+      return res
+        .status(500)
+        .json({
+          success:
+            false,
+
+          message:
+            errorMessage(
+              error,
+              "File upload failed."
+            ),
+        });
     }
   };
