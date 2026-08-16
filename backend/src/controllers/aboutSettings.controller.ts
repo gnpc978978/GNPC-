@@ -43,6 +43,7 @@ const STRING_FIELDS = [
   "ctaDescription",
   "ctaPrimaryLabel",
   "ctaSecondaryLabel",
+  "ctaSecondaryHref",
 ] as const;
 
 type AboutListItem = {
