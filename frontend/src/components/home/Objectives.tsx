@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -17,8 +18,13 @@ import {
   type Variants,
 } from "framer-motion";
 
-import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
-import { mergeHomeSettings } from "@/types/homeSettings";
+import {
+  useWebsiteSettings,
+} from "@/context/WebsiteSettingsContext";
+
+import {
+  mergeHomeSettings,
+} from "@/types/homeSettings";
 
 type ObjectiveIconName =
   | "Newspaper"
@@ -64,13 +70,15 @@ function getIcon(
 const cardVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 25,
+    y: 22,
   },
+
   visible: {
     opacity: 1,
     y: 0,
+
     transition: {
-      duration: 0.65,
+      duration: 0.6,
       ease: [
         0.22,
         1,
@@ -84,13 +92,11 @@ const cardVariants: Variants = {
 function ObjectiveCard({
   objective,
   index,
-  className = "",
-  dark = false,
+  featured = false,
 }: {
   objective: ObjectiveCard;
   index: number;
-  className?: string;
-  dark?: boolean;
+  featured?: boolean;
 }) {
   const Icon = getIcon(
     objective.icon
@@ -101,105 +107,161 @@ function ObjectiveCard({
       variants={cardVariants}
       whileHover={{
         y: -5,
-        transition: {
-          duration: 0.25,
-        },
+      }}
+      transition={{
+        duration: 0.25,
       }}
       className={[
-        "group relative overflow-hidden rounded-[1.75rem] border p-5 shadow-[0_18px_45px_rgba(38,32,23,0.08)] transition-shadow duration-300 sm:p-7",
-        dark
-          ? "border-[#394631] bg-[#59684e] text-white hover:shadow-[0_25px_65px_rgba(38,32,23,0.18)]"
-          : "border-black/10 bg-white/60 text-[#171717] backdrop-blur-md hover:bg-white hover:shadow-[0_25px_65px_rgba(38,32,23,0.12)]",
-        className,
+        "group relative overflow-hidden rounded-[1.75rem] border",
+        "p-5 shadow-[0_18px_45px_rgba(38,32,23,0.08)]",
+        "transition-all duration-300",
+        featured
+          ? "min-h-[390px] border-[#394631] bg-[#59684e] text-white sm:min-h-[460px] lg:min-h-[560px]"
+          : "min-h-[240px] border-black/10 bg-white/65 text-[#171717] backdrop-blur-md hover:bg-white sm:min-h-[260px]",
+        featured
+          ? "sm:p-7"
+          : "sm:p-6",
       ].join(" ")}
     >
-      {/* Decorative shape */}
+      {/* Decorative circle */}
 
       <div
         aria-hidden="true"
         className={[
-          "pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full blur-2xl transition duration-500 group-hover:scale-125",
-          dark
+          "pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl",
+          "transition duration-500 group-hover:scale-125",
+          featured
             ? "bg-white/10"
             : "bg-[#d8c7af]/30",
         ].join(" ")}
       />
 
-      <div className="relative z-10 flex h-full flex-col">
-        {/* Number */}
+      {/* Number */}
 
-        <div className="flex items-start justify-between gap-4">
-          <div
-            className={[
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-105",
-              dark
-                ? "bg-white/15 text-white"
-                : "bg-[#f4ede2] text-[#171717]",
-            ].join(" ")}
-          >
-            <Icon
-              size={20}
-              strokeWidth={2}
-            />
-          </div>
-
-          <span
-            className={[
-              "text-[9px] font-black uppercase tracking-[0.18em]",
-              dark
-                ? "text-white/45"
-                : "text-black/30",
-            ].join(" ")}
-          >
-            {String(index + 1).padStart(
-              2,
-              "0"
-            )}
-          </span>
-        </div>
-
-        {/* Content */}
-
-        <div className="mt-auto pt-12 sm:pt-16">
-          <h3
-            className={[
-              "max-w-[500px] text-xl font-black leading-[1.05] tracking-[-0.035em] sm:text-2xl",
-              dark
-                ? "text-white"
-                : "text-[#171717]",
-            ].join(" ")}
-          >
-            {objective.title}
-          </h3>
-
-          <p
-            className={[
-              "mt-3 max-w-[520px] text-xs leading-6 sm:text-sm sm:leading-7",
-              dark
-                ? "text-white/65"
-                : "text-black/50",
-            ].join(" ")}
-          >
-            {objective.description}
-          </p>
-
-          <div
-            className={[
-              "mt-5 h-px w-10 transition-all duration-300 group-hover:w-16",
-              dark
-                ? "bg-white/30"
-                : "bg-black/15",
-            ].join(" ")}
+      <div className="relative z-10 flex items-start justify-between">
+        <div
+          className={[
+            "flex h-11 w-11 items-center justify-center rounded-2xl",
+            "transition-transform duration-300 group-hover:scale-105",
+            featured
+              ? "bg-white/15 text-white"
+              : "bg-[#f4ede2] text-[#171717]",
+          ].join(" ")}
+        >
+          <Icon
+            size={20}
+            strokeWidth={2}
           />
         </div>
+
+        <span
+          className={[
+            "text-[9px] font-black uppercase tracking-[0.18em]",
+            featured
+              ? "text-white/40"
+              : "text-black/30",
+          ].join(" ")}
+        >
+          {String(index + 1).padStart(
+            2,
+            "0"
+          )}
+        </span>
       </div>
+
+      {/* Content */}
+
+      <div className="relative z-10 mt-14">
+        <h3
+          className={[
+            "max-w-[520px] font-black leading-[1.04] tracking-[-0.04em]",
+            featured
+              ? "text-2xl sm:text-3xl lg:text-[2.7rem]"
+              : "text-xl sm:text-2xl",
+          ].join(" ")}
+        >
+          {objective.title}
+        </h3>
+
+        <p
+          className={[
+            "mt-3 max-w-[560px] text-xs leading-6 sm:text-sm sm:leading-7",
+            featured
+              ? "text-white/65"
+              : "text-black/50",
+          ].join(" ")}
+        >
+          {objective.description}
+        </p>
+
+        <div
+          className={[
+            "mt-5 h-px w-10 transition-all duration-300 group-hover:w-16",
+            featured
+              ? "bg-white/30"
+              : "bg-black/15",
+          ].join(" ")}
+        />
+      </div>
+
+      {/* Feature card visual detail */}
+
+      {featured && (
+        <div
+          aria-hidden="true"
+          className="absolute bottom-5 right-5 h-24 w-24 rounded-full border border-white/10 sm:bottom-7 sm:right-7 sm:h-32 sm:w-32"
+        />
+      )}
     </motion.article>
   );
 }
 
+function MediaFrame({
+  src,
+  alt,
+  className,
+  priority = false,
+}: {
+  src?: string;
+  alt: string;
+  className?: string;
+  priority?: boolean;
+}) {
+  if (!src) {
+    return null;
+  }
+
+  return (
+    <div
+      className={[
+        "relative overflow-hidden rounded-[1.75rem] border-[6px] border-white bg-white",
+        "shadow-[0_25px_65px_rgba(38,32,23,0.14)]",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority={priority}
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        className="object-cover transition duration-700 hover:scale-[1.035]"
+      />
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5"
+      />
+    </div>
+  );
+}
+
 export default function Objectives() {
-  const { settings } =
-    useWebsiteSettings();
+  const {
+    settings,
+  } = useWebsiteSettings();
 
   const home =
     mergeHomeSettings(
@@ -216,28 +278,38 @@ export default function Objectives() {
       ? objectiveSettings.cards
       : [];
 
-  const displayCount =
-    Math.max(
-      1,
-      Math.min(
-        objectiveSettings.displayCount ||
-          objectives.length,
-        objectives.length
-      )
-    );
+  const visibleCount =
+    objectiveSettings.displayCount >
+    0
+      ? Math.min(
+          objectiveSettings.displayCount,
+          objectives.length
+        )
+      : objectives.length;
 
   const visibleObjectives =
     objectives.slice(
       0,
-      displayCount
+      visibleCount
     );
 
-  /*
-   * The bento layout uses the first
-   * card as the large feature card.
-   * Remaining CMS cards populate the
-   * smaller cards.
-   */
+  const media =
+    Array.isArray(
+      objectiveSettings.media
+    )
+      ? objectiveSettings.media.filter(
+          Boolean
+        )
+      : [];
+
+  const primaryImage =
+    media[0];
+
+  const secondaryImage =
+    media[1];
+
+  const tertiaryImage =
+    media[2];
 
   return (
     <section
@@ -252,7 +324,7 @@ export default function Objectives() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute -right-40 top-10 h-[28rem] w-[28rem] rounded-full bg-white/70 blur-3xl" />
+        <div className="absolute -right-40 top-0 h-[28rem] w-[28rem] rounded-full bg-white/70 blur-3xl" />
 
         <div className="absolute -left-40 bottom-0 h-[24rem] w-[24rem] rounded-full bg-[#d8c7af]/30 blur-3xl" />
 
@@ -269,7 +341,7 @@ export default function Objectives() {
 
       <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         {/* ===================================================
-            HEADING
+            HEADER
             =================================================== */}
 
         <motion.div
@@ -287,12 +359,6 @@ export default function Objectives() {
           }}
           transition={{
             duration: 0.7,
-            ease: [
-              0.22,
-              1,
-              0.36,
-              1,
-            ],
           }}
           className="mx-auto max-w-[900px] text-center"
         >
@@ -318,14 +384,85 @@ export default function Objectives() {
           </h2>
 
           {objectiveSettings.description && (
-            <p className="mx-auto mt-5 max-w-[700px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
-              {objectiveSettings.description}
+            <p className="mx-auto mt-5 max-w-[720px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
+              {
+                objectiveSettings.description
+              }
             </p>
           )}
         </motion.div>
 
         {/* ===================================================
-            BENTO GRID
+            OPTIONAL CMS PHOTOS
+            =================================================== */}
+
+        {media.length > 0 && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 25,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.15,
+            }}
+            transition={{
+              duration: 0.8,
+            }}
+            className="relative mt-12 grid gap-4 sm:mt-16 lg:grid-cols-[1.25fr_0.75fr]"
+          >
+            {/* Primary */}
+
+            {primaryImage && (
+              <MediaFrame
+                src={primaryImage}
+                alt={
+                  objectiveSettings.title ||
+                  "Objectives"
+                }
+                priority
+                className="aspect-[16/8] min-h-[250px] sm:min-h-[320px] lg:aspect-auto lg:min-h-[360px]"
+              />
+            )}
+
+            {/* Secondary images */}
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {secondaryImage && (
+                <MediaFrame
+                  src={
+                    secondaryImage
+                  }
+                  alt={
+                    objectiveSettings.title ||
+                    "Objectives"
+                  }
+                  className="aspect-[16/7] min-h-[150px] sm:min-h-[170px] lg:min-h-[172px]"
+                />
+              )}
+
+              {tertiaryImage && (
+                <MediaFrame
+                  src={
+                    tertiaryImage
+                  }
+                  alt={
+                    objectiveSettings.title ||
+                    "Objectives"
+                  }
+                  className="aspect-[16/7] min-h-[150px] sm:min-h-[170px] lg:min-h-[172px]"
+                />
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* ===================================================
+            BENTO OBJECTIVES
             =================================================== */}
 
         {visibleObjectives.length >
@@ -333,9 +470,11 @@ export default function Objectives() {
           <motion.div
             variants={{
               hidden: {},
+
               visible: {
                 transition: {
-                  staggerChildren: 0.08,
+                  staggerChildren:
+                    0.08,
                 },
               },
             }}
@@ -343,94 +482,47 @@ export default function Objectives() {
             whileInView="visible"
             viewport={{
               once: true,
-              amount: 0.12,
+              amount: 0.1,
             }}
-            className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2"
+            className={[
+              "mt-12 grid gap-4 sm:mt-16",
+              visibleObjectives.length ===
+                1
+                ? "lg:grid-cols-1"
+                : visibleObjectives.length ===
+                    2
+                  ? "lg:grid-cols-2"
+                  : "lg:grid-cols-4 lg:grid-rows-2",
+            ].join(" ")}
           >
-            {/* =================================================
-                CARD 1 — LARGE FEATURE
-                ================================================= */}
-
-            {visibleObjectives[0] && (
-              <ObjectiveCard
-                objective={
-                  visibleObjectives[0]
-                }
-                index={0}
-                dark
-                className="min-h-[390px] sm:min-h-[430px] lg:col-span-2 lg:row-span-2"
-              />
-            )}
-
-            {/* =================================================
-                CARD 2
-                ================================================= */}
-
-            {visibleObjectives[1] && (
-              <ObjectiveCard
-                objective={
-                  visibleObjectives[1]
-                }
-                index={1}
-                className="min-h-[230px] sm:min-h-[250px]"
-              />
-            )}
-
-            {/* =================================================
-                CARD 3
-                ================================================= */}
-
-            {visibleObjectives[2] && (
-              <ObjectiveCard
-                objective={
-                  visibleObjectives[2]
-                }
-                index={2}
-                className="min-h-[230px] sm:min-h-[250px]"
-              />
-            )}
-
-            {/* =================================================
-                CARD 4
-                ================================================= */}
-
-            {visibleObjectives[3] && (
-              <ObjectiveCard
-                objective={
-                  visibleObjectives[3]
-                }
-                index={3}
-                className="min-h-[230px] sm:min-h-[250px]"
-              />
-            )}
-
-            {/* =================================================
-                CARD 5
-                ================================================= */}
-
-            {visibleObjectives[4] && (
-              <ObjectiveCard
-                objective={
-                  visibleObjectives[4]
-                }
-                index={4}
-                className="min-h-[230px] sm:min-h-[250px]"
-              />
-            )}
-
-            {/* =================================================
-                CARD 6
-                ================================================= */}
-
-            {visibleObjectives[5] && (
-              <ObjectiveCard
-                objective={
-                  visibleObjectives[5]
-                }
-                index={5}
-                dark
-                className="min-h-[230px] sm:min-h-[250px]"
-              />
+            {visibleObjectives.map(
+              (
+                objective,
+                index
+              ) => (
+                <ObjectiveCard
+                  key={`${objective.title}-${index}`}
+                  objective={
+                    objective
+                  }
+                  index={index}
+                  featured={
+                    index ===
+                      0 &&
+                    visibleObjectives.length >=
+                      3
+                  }
+                  {...(index ===
+                    0 &&
+                  visibleObjectives.length >=
+                    3
+                    ? {
+                        className:
+                          "",
+                      }
+                    : {})}
+                />
+              )
             )}
           </motion.div>
         ) : (
@@ -443,7 +535,7 @@ export default function Objectives() {
         )}
 
         {/* ===================================================
-            CTA
+            BOTTOM CTA
             =================================================== */}
 
         {objectiveSettings.buttonLabel && (
@@ -463,7 +555,7 @@ export default function Objectives() {
             transition={{
               duration: 0.6,
             }}
-            className="mt-10 flex justify-center sm:mt-12"
+            className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12"
           >
             <Link
               href={
