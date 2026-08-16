@@ -1,13 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
   MapPin,
   Mic2,
-  Play,
+  Sparkles,
 } from "lucide-react";
 import {
   motion,
@@ -17,7 +18,18 @@ import {
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import PageHero from "@/components/ui/PageHero";
-import type { PressConferencePageSettings } from "@/types/pageSettings";
+
+import type {
+  PressConferencePageSettings,
+} from "@/types/pageSettings";
+
+import {
+  mergeHomeSettings,
+} from "@/types/homeSettings";
+
+import {
+  useWebsiteSettings,
+} from "@/context/WebsiteSettingsContext";
 
 type PressConference = {
   _id: string;
@@ -30,38 +42,70 @@ type PressConference = {
   createdAt?: string;
 };
 
-function formatDate(value?: string) {
-  if (!value) {
-    return "Recent update";
-  }
+type HomePressConferenceSettings = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  buttonLabel: string;
+  buttonHref: string;
+  displayCount: number;
+  media?: string[];
+};
 
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Recent update";
-  }
-
-  return new Intl.DateTimeFormat("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(date);
-}
+type Props = {
+  latestOnly?: boolean;
+  settings?: PressConferencePageSettings;
+};
 
 const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 24,
   },
+
   visible: {
     opacity: 1,
     y: 0,
+
     transition: {
       duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [
+        0.22,
+        1,
+        0.36,
+        1,
+      ],
     },
   },
 };
+
+function formatDate(
+  value?: string
+) {
+  if (!value) {
+    return "Recent update";
+  }
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return "Recent update";
+  }
+
+  return new Intl.DateTimeFormat(
+    "en-IN",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }
+  ).format(date);
+}
 
 function ConferenceImage({
   src,
@@ -83,11 +127,42 @@ function ConferenceImage({
   }
 
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
-      className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+      fill
+      sizes="(min-width: 1024px) 50vw, 100vw"
+      className="object-cover transition duration-700 group-hover:scale-[1.04]"
     />
+  );
+}
+
+function CmsMedia({
+  src,
+  alt,
+}: {
+  src?: string;
+  alt: string;
+}) {
+  if (!src) {
+    return null;
+  }
+
+  return (
+    <div className="group relative aspect-[16/7] overflow-hidden rounded-[1.75rem] border-[6px] border-white bg-white shadow-[0_22px_55px_rgba(38,32,23,0.12)]">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        className="object-cover transition duration-700 group-hover:scale-[1.035]"
+      />
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5"
+      />
+    </div>
   );
 }
 
@@ -98,63 +173,84 @@ function ConferenceCard({
   item: PressConference;
   featured?: boolean;
 }) {
-  const date = item.date || item.createdAt;
+  const date =
+    item.date ||
+    item.createdAt;
 
   return (
     <motion.article
-      variants={cardVariants}
+      variants={
+        cardVariants
+      }
       className={[
         "group relative overflow-hidden rounded-[2rem] border shadow-[0_20px_60px_rgba(38,32,23,0.10)]",
         featured
-          ? "min-h-[500px] border-white/10 bg-[#171717] text-white"
+          ? "min-h-[500px] border-white/10 bg-[#171717] text-white sm:min-h-[560px]"
           : "min-h-[300px] border-black/10 bg-white/60 text-[#171717] backdrop-blur-md",
       ].join(" ")}
     >
-      {/* Image */}
+      {/* ===================================================
+          IMAGE
+          =================================================== */}
 
       <div className="absolute inset-0 overflow-hidden">
         <ConferenceImage
-          src={item.featuredImage}
-          alt={item.title}
+          src={
+            item.featuredImage
+          }
+          alt={
+            item.title
+          }
         />
       </div>
 
-      {/* Overlay */}
+      {/* ===================================================
+          OVERLAY
+          =================================================== */}
 
       <div
         className={[
           "absolute inset-0",
           featured
             ? "bg-gradient-to-t from-black via-black/45 to-black/5"
-            : "bg-gradient-to-t from-black/85 via-black/25 to-transparent",
+            : "bg-gradient-to-t from-black/90 via-black/25 to-transparent",
         ].join(" ")}
       />
 
-      {/* Category */}
+      {/* ===================================================
+          CATEGORY
+          =================================================== */}
 
       <div className="absolute left-5 top-5 z-10 sm:left-7 sm:top-7">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white backdrop-blur-md">
           <Mic2 size={11} />
+
           Press Conference
         </span>
       </div>
 
-      {/* Content */}
+      {/* ===================================================
+          CONTENT
+          =================================================== */}
 
-      <div className="relative z-10 flex min-h-full flex-col justify-end p-5 sm:p-7">
+      <div className="relative z-10 flex h-full min-h-[inherit] flex-col justify-end p-5 sm:p-7">
         <div className="max-w-[760px]">
           {/* Meta */}
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/60">
             <span className="inline-flex items-center gap-1.5">
               <CalendarDays size={13} />
-              {formatDate(date)}
+
+              {formatDate(
+                date
+              )}
             </span>
 
             <span className="hidden h-1 w-1 rounded-full bg-white/30 sm:block" />
 
             <span className="inline-flex items-center gap-1.5">
               <MapPin size={13} />
+
               {item.venue ||
                 "Greater Noida Press Club"}
             </span>
@@ -162,7 +258,7 @@ function ConferenceCard({
 
           {/* Title */}
 
-          <h2
+          <h3
             className={[
               "mt-3 font-black leading-[1.02] tracking-[-0.045em]",
               featured
@@ -171,26 +267,28 @@ function ConferenceCard({
             ].join(" ")}
           >
             {item.title}
-          </h2>
+          </h3>
 
           {/* Description */}
 
-          <p className="mt-3 line-clamp-3 max-w-[720px] text-xs leading-6 text-white/60 sm:text-sm sm:leading-7">
-            {item.description ||
-              item.content ||
-              "Read the latest press conference update."}
-          </p>
+          {(item.description ||
+            item.content) && (
+            <p className="mt-3 line-clamp-3 max-w-[720px] text-xs leading-6 text-white/60 sm:text-sm sm:leading-7">
+              {item.description ||
+                item.content}
+            </p>
+          )}
 
-          {/* Action */}
+          {/* Individual route */}
 
           <Link
             href={`/press-conference/${item._id}`}
             className="relative z-30 mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-black text-[#171717] transition duration-300 hover:-translate-y-0.5 hover:bg-[#f4ede2]"
           >
             View Details
+
             <ArrowRight
               size={15}
-              className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
         </div>
@@ -202,132 +300,286 @@ function ConferenceCard({
 export default function PressConferenceList({
   latestOnly = false,
   settings,
-}: {
-  latestOnly?: boolean;
-  settings?: PressConferencePageSettings;
-}) {
-  const [items, setItems] = useState<
+}: Props) {
+  const {
+    settings: websiteSettings,
+  } =
+    useWebsiteSettings();
+
+  const home =
+    mergeHomeSettings(
+      websiteSettings.home
+    );
+
+  /*
+   * ==========================================================
+   * CMS SOURCE
+   * ==========================================================
+   *
+   * Homepage:
+   * Website Settings → Home → Press Conferences
+   *
+   * Full page:
+   * Existing PressConferencePageSettings
+   */
+
+  const homeSection =
+    home.pressConferences as HomePressConferenceSettings;
+
+  const [
+    items,
+    setItems,
+  ] = useState<
     PressConference[]
   >([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const pageSize = latestOnly
-    ? 3
-    : Math.max(
-        1,
-        Math.min(
-          100,
-          Number(settings?.pageSize) || 12
+  const [
+    error,
+    setError,
+  ] = useState<
+    string | null
+  >(null);
+
+  /*
+   * ==========================================================
+   * DISPLAY COUNT
+   * ==========================================================
+   */
+
+  const pageSize =
+    latestOnly
+      ? Math.max(
+          1,
+          Math.min(
+            12,
+            Number(
+              homeSection.displayCount
+            ) || 3
+          )
         )
-      );
+      : Math.max(
+          1,
+          Math.min(
+            100,
+            Number(
+              settings?.pageSize
+            ) || 12
+          )
+        );
+
+  /*
+   * ==========================================================
+   * LIVE DATA
+   * ==========================================================
+   */
 
   useEffect(() => {
-    let cancelled = false;
+    let cancelled =
+      false;
 
-    const load = async () => {
-      try {
-        const response = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_API_URL ||
-            ""
-          }/api/press-conferences`,
-          {
-            method: "GET",
-            cache: "no-store",
+    const load =
+      async () => {
+        try {
+          setLoading(
+            true
+          );
+
+          setError(
+            null
+          );
+
+          const apiUrl =
+            process.env
+              .NEXT_PUBLIC_API_URL ||
+            "";
+
+          const response =
+            await fetch(
+              `${apiUrl}/api/press-conferences`,
+              {
+                method:
+                  "GET",
+                cache:
+                  "no-store",
+              }
+            );
+
+          if (
+            !response.ok
+          ) {
+            throw new Error(
+              "Failed to load press conferences."
+            );
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(
-            "Failed to load press conferences."
-          );
-        }
+          const result =
+            (await response.json()) as {
+              data?: PressConference[];
+            };
 
-        const data =
-          (await response.json()) as {
-            data?: PressConference[];
-          };
+          if (
+            cancelled
+          ) {
+            return;
+          }
 
-        if (!cancelled) {
+          const data =
+            Array.isArray(
+              result.data
+            )
+              ? result.data
+              : [];
+
           setItems(
-            Array.isArray(data.data)
-              ? data.data.slice(
-                  0,
-                  pageSize
-                )
-              : []
+            data.slice(
+              0,
+              pageSize
+            )
           );
-        }
-      } catch (error) {
-        console.error(
-          "Failed to load press conferences:",
-          error
-        );
+        } catch (
+          requestError
+        ) {
+          console.error(
+            "Failed to load press conferences:",
+            requestError
+          );
 
-        if (!cancelled) {
-          setItems([]);
+          if (
+            !cancelled
+          ) {
+            setItems(
+              []
+            );
+
+            setError(
+              requestError instanceof
+                Error
+                ? requestError.message
+                : "Unable to load press conferences."
+            );
+          }
+        } finally {
+          if (
+            !cancelled
+          ) {
+            setLoading(
+              false
+            );
+          }
         }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
+      };
 
     void load();
 
     return () => {
-      cancelled = true;
+      cancelled =
+        true;
     };
   }, [pageSize]);
 
-  const title = latestOnly
-    ? "Latest Press Conference"
-    : settings?.pageTitle ||
-      "Press Conferences";
+  /*
+   * ==========================================================
+   * CMS VALUES
+   * ==========================================================
+   */
 
-  const description = latestOnly
-    ? "The latest media interaction and official briefing from Greater Noida Press Club."
-    : settings?.pageDescription ||
-      "Stay informed about media interactions, public briefings and official announcements from Greater Noida Press Club.";
+  const title =
+    latestOnly
+      ? homeSection.title ||
+        "Latest Press Conference"
+      : settings?.pageTitle ||
+        "Press Conferences";
+
+  const description =
+    latestOnly
+      ? homeSection.description ||
+        "The latest media interaction and official briefing from Greater Noida Press Club."
+      : settings?.pageDescription ||
+        "Stay informed about media interactions, public briefings and official announcements from Greater Noida Press Club.";
+
+  const eyebrow =
+    latestOnly
+      ? homeSection.eyebrow ||
+        "Media & Journalism"
+      : settings?.pageEyebrow ||
+        "Media & Journalism";
+
+  const buttonLabel =
+    latestOnly
+      ? homeSection.buttonLabel
+      : undefined;
+
+  const buttonHref =
+    latestOnly
+      ? homeSection.buttonHref ||
+        "/press-conference"
+      : "/press-conference";
+
+  /*
+   * ==========================================================
+   * CMS SECTION PHOTOS
+   * ==========================================================
+   */
+
+  const media =
+    latestOnly &&
+    Array.isArray(
+      homeSection.media
+    )
+      ? homeSection.media.filter(
+          Boolean
+        )
+      : [];
+
+  const visibleMedia =
+    useMemo(
+      () =>
+        media.slice(
+          0,
+          4
+        ),
+      [media]
+    );
 
   return (
     <main className="bg-[#f4ede2] text-[#171717]">
       {/* =====================================================
-          FULL PAGE HERO
+          FULL PRESS CONFERENCE PAGE HERO
           ===================================================== */}
 
       {!latestOnly && (
         <PageHero
           eyebrow={
-            settings?.pageEyebrow ||
-            "Media & Journalism"
+            eyebrow
           }
-          title={title}
-          description={description}
+          title={
+            title
+          }
+          description={
+            description
+          }
         />
       )}
 
       {/* =====================================================
-          CONTENT
+          SECTION
           ===================================================== */}
 
-      <section
-        className={
-          latestOnly
-            ? "relative overflow-hidden bg-[#f4ede2] py-16 sm:py-24 lg:py-28"
-            : "relative overflow-hidden bg-[#f4ede2] py-16 sm:py-24"
-        }
-      >
-        {/* Background */}
+      <section className="relative overflow-hidden bg-[#f4ede2] py-16 sm:py-24 lg:py-28">
+        {/* ===================================================
+            BACKGROUND
+            =================================================== */}
 
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
         >
-          <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-white/60 blur-3xl" />
+          <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-white/65 blur-3xl" />
 
           <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#d8c7af]/30 blur-3xl" />
 
@@ -351,7 +603,7 @@ export default function PressConferenceList({
             <motion.div
               initial={{
                 opacity: 0,
-                y: 20,
+                y: 22,
               }}
               whileInView={{
                 opacity: 1,
@@ -364,97 +616,163 @@ export default function PressConferenceList({
               transition={{
                 duration: 0.7,
               }}
-              className="relative mb-12 flex flex-col gap-7 lg:mb-16 lg:flex-row lg:items-end lg:justify-between"
+              className="relative mx-auto max-w-[900px] text-center"
             >
-              <div className="max-w-[780px]">
-                <div className="flex items-center gap-3">
-                  <span className="h-px w-8 bg-black/20 sm:w-12" />
+              <div className="flex items-center justify-center gap-3">
+                <span className="h-px w-8 bg-black/20 sm:w-12" />
 
-                  <span className="text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
-                    Media & Journalism
-                  </span>
-                </div>
+                <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
+                  <Sparkles
+                    size={11}
+                  />
 
-                <h1 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">
-                  Latest
-                  <br />
-                  press conference.
-                </h1>
+                  {
+                    eyebrow
+                  }
+                </span>
 
-                <p className="mt-5 max-w-[650px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
-                  {description}
-                </p>
+                <span className="h-px w-8 bg-black/20 sm:w-12" />
               </div>
 
-              <Button
-                href="/press-conference"
-                variant="outline"
-                size="lg"
-                className="group w-fit rounded-full border-black/15 bg-white/55"
-              >
-                View All
+              <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">
+                {
+                  title
+                }
+              </h2>
 
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </Button>
+              {description && (
+                <p className="mx-auto mt-5 max-w-[700px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
+                  {
+                    description
+                  }
+                </p>
+              )}
             </motion.div>
           )}
+
+          {/* =================================================
+              CMS PHOTOS
+              ================================================= */}
+
+          {latestOnly &&
+            visibleMedia.length >
+              0 && (
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.15,
+                }}
+                transition={{
+                  duration:
+                    0.8,
+                }}
+                className={[
+                  "relative mt-12 grid gap-4 sm:mt-16",
+                  visibleMedia.length ===
+                    1
+                    ? "lg:grid-cols-1"
+                    : "lg:grid-cols-2",
+                ].join(" ")}
+              >
+                {visibleMedia.map(
+                  (
+                    image,
+                    index
+                  ) => (
+                    <CmsMedia
+                      key={`${image}-${index}`}
+                      src={
+                        image
+                      }
+                      alt={`${title} photo ${
+                        index +
+                        1
+                      }`}
+                    />
+                  )
+                )}
+              </motion.div>
+            )}
 
           {/* =================================================
               LOADING
               ================================================= */}
 
           {loading && (
-            <div className="relative grid gap-4 lg:grid-cols-2">
-              {[1, 2, 3].map(
-                (item) => (
-                  <div
-                    key={item}
-                    className={[
-                      "animate-pulse rounded-[2rem] bg-black/5",
-                      item === 1
-                        ? "min-h-[500px] lg:row-span-2"
-                        : "min-h-[240px]",
-                    ].join(" ")}
-                  />
-                )
-              )}
+            <div className="relative mt-12 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
+              <div className="min-h-[500px] animate-pulse rounded-[2rem] bg-black/5" />
+
+              <div className="grid gap-4">
+                <div className="min-h-[240px] animate-pulse rounded-[2rem] bg-black/5" />
+
+                <div className="min-h-[240px] animate-pulse rounded-[2rem] bg-black/5" />
+              </div>
             </div>
           )}
+
+          {/* =================================================
+              ERROR
+              ================================================= */}
+
+          {!loading &&
+            error && (
+              <div className="relative mt-12 rounded-[2rem] border border-red-200 bg-red-50 px-6 py-14 text-center">
+                <Mic2
+                  size={40}
+                  className="mx-auto text-red-300"
+                />
+
+                <p className="mt-4 text-sm font-semibold text-red-700">
+                  {
+                    error
+                  }
+                </p>
+              </div>
+            )}
 
           {/* =================================================
               EMPTY
               ================================================= */}
 
           {!loading &&
-            items.length === 0 && (
-              <div className="relative rounded-[2rem] border border-dashed border-black/15 bg-white/45 px-6 py-16 text-center">
+            !error &&
+            items.length ===
+              0 && (
+              <div className="relative mt-12 rounded-[2rem] border border-dashed border-black/15 bg-white/45 px-6 py-16 text-center">
                 <Mic2
                   size={40}
                   className="mx-auto text-black/20"
                 />
 
-                <h2 className="mt-5 text-xl font-black tracking-[-0.03em]">
-                  No press conferences available
-                </h2>
+                <h3 className="mt-5 text-xl font-black tracking-[-0.03em]">
+                  No press conferences
+                  available
+                </h3>
 
                 <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-black/45">
-                  No press conferences have
-                  been published yet. Please
-                  check back later for new
-                  media updates.
+                  No press conferences
+                  have been published
+                  yet.
                 </p>
               </div>
             )}
 
           {/* =================================================
-              CARDS
+              PRESS CONFERENCE CONTENT
               ================================================= */}
 
           {!loading &&
-            items.length > 0 && (
+            !error &&
+            items.length >
+              0 && (
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -464,32 +782,40 @@ export default function PressConferenceList({
                 }}
                 variants={{
                   hidden: {},
+
                   visible: {
                     transition: {
-                      staggerChildren: 0.1,
+                      staggerChildren:
+                        0.1,
                     },
                   },
                 }}
                 className={
                   latestOnly
-                    ? "relative grid gap-4 lg:grid-cols-[1.3fr_0.7fr]"
-                    : "relative grid gap-5 md:grid-cols-2"
+                    ? "relative mt-12 grid gap-4 lg:mt-16 lg:grid-cols-[1.3fr_0.7fr]"
+                    : "relative mt-8 grid gap-5 md:mt-12 md:grid-cols-2"
                 }
               >
                 {latestOnly ? (
                   <>
                     {items[0] && (
                       <ConferenceCard
-                        item={items[0]}
+                        item={
+                          items[0]
+                        }
                         featured
                       />
                     )}
 
                     <div className="grid gap-4">
                       {items
-                        .slice(1, 3)
+                        .slice(
+                          1
+                        )
                         .map(
-                          (item) => (
+                          (
+                            item
+                          ) => (
                             <ConferenceCard
                               key={
                                 item._id
@@ -504,16 +830,64 @@ export default function PressConferenceList({
                   </>
                 ) : (
                   items.map(
-                    (item) => (
+                    (
+                      item
+                    ) => (
                       <ConferenceCard
                         key={
                           item._id
                         }
-                        item={item}
+                        item={
+                          item
+                        }
                       />
                     )
                   )
                 )}
+              </motion.div>
+            )}
+
+          {/* =================================================
+              BOTTOM CMS CTA
+              ================================================= */}
+
+          {latestOnly &&
+            buttonLabel && (
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 16,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.4,
+                }}
+                transition={{
+                  duration: 0.6,
+                }}
+                className="mt-10 flex justify-center sm:mt-12"
+              >
+                <Button
+                  href={
+                    buttonHref
+                  }
+                  variant="outline"
+                  size="lg"
+                  className="group rounded-full border-black/15 bg-white/60"
+                >
+                  {
+                    buttonLabel
+                  }
+
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Button>
               </motion.div>
             )}
         </Container>
