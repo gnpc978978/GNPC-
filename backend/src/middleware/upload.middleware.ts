@@ -1,6 +1,7 @@
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import type { Request } from "express";
+
 import cloudinary from "../config/cloudinary";
 
 const allowedFileExtensions =
@@ -43,7 +44,8 @@ const createStorage = (
   });
 
 const createUploader = (
-  folder: string
+  folder: string,
+  files = 10
 ) =>
   multer({
     storage:
@@ -52,7 +54,8 @@ const createUploader = (
     limits: {
       fileSize:
         10 * 1024 * 1024,
-      files: 10,
+
+      files,
     },
 
     fileFilter: (
@@ -74,7 +77,11 @@ const createUploader = (
         extensionAllowed &&
         mimeAllowed
       ) {
-        callback(null, true);
+        callback(
+          null,
+          true
+        );
+
         return;
       }
 
@@ -117,7 +124,8 @@ export const sponsorUpload =
 
 export const websiteSettingsUpload =
   createUploader(
-    "website-settings"
+    "website-settings",
+    20
   );
 
 export const aboutSettingsUpload =
