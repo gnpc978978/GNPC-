@@ -1,15 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-} from "lucide-react";
-import {
-  PointerEvent,
   useEffect,
   useMemo,
   useState,
@@ -23,21 +16,96 @@ type Props = {
   alt: string;
 };
 
+type PhotoPosition = {
+  x: number;
+  y: number;
+  rotate: number;
+  scale: number;
+  zIndex: number;
+};
+
+const positions: PhotoPosition[] = [
+  {
+    x: -520,
+    y: 42,
+    rotate: -12,
+    scale: 0.86,
+    zIndex: 1,
+  },
+  {
+    x: -390,
+    y: 25,
+    rotate: -8,
+    scale: 0.9,
+    zIndex: 2,
+  },
+  {
+    x: -260,
+    y: 10,
+    rotate: -5,
+    scale: 0.94,
+    zIndex: 3,
+  },
+  {
+    x: -130,
+    y: 0,
+    rotate: -2,
+    scale: 0.98,
+    zIndex: 4,
+  },
+  {
+    x: 0,
+    y: -5,
+    rotate: 0,
+    scale: 1,
+    zIndex: 8,
+  },
+  {
+    x: 130,
+    y: 0,
+    rotate: 2,
+    scale: 0.98,
+    zIndex: 4,
+  },
+  {
+    x: 260,
+    y: 10,
+    rotate: 5,
+    scale: 0.94,
+    zIndex: 3,
+  },
+  {
+    x: 390,
+    y: 25,
+    rotate: 8,
+    scale: 0.9,
+    zIndex: 2,
+  },
+  {
+    x: 520,
+    y: 42,
+    rotate: 12,
+    scale: 0.86,
+    zIndex: 1,
+  },
+];
+
+function getVisibleOnMobile(index: number, total: number) {
+  const center = (total - 1) / 2;
+
+  return Math.abs(index - center) <= 1;
+}
+
 export default function HeroCarousel({
   fallbackImage,
   alt,
 }: Props) {
-  const [banners, setBanners] = useState<Banner[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [startX, setStartX] = useState<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const [banners, setBanners] = useState<
+    Banner[]
+  >([]);
 
-  /*
-   * ============================================================
-   * LOAD CMS BANNERS FIRST
-   * ============================================================
-   */
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -51,17 +119,20 @@ export default function HeroCarousel({
         }
 
         const activeBanners = data
-          .filter((banner) => banner.active)
+          .filter(
+            (banner) => banner.active
+          )
           .sort(
             (a, b) =>
-              (a.order ?? 0) - (b.order ?? 0)
+              (a.order ?? 0) -
+              (b.order ?? 0)
           );
 
         setBanners(activeBanners);
       } catch (error) {
         if (mounted) {
           console.error(
-            "Unable to load hero banners:",
+            "Unable to load hero photos:",
             error
           );
 
@@ -69,7 +140,7 @@ export default function HeroCarousel({
         }
       } finally {
         if (mounted) {
-          setIsLoading(false);
+          setLoading(false);
         }
       }
     };
@@ -81,21 +152,12 @@ export default function HeroCarousel({
     };
   }, []);
 
-  /*
-   * ============================================================
-   * SLIDES
-   *
-   * IMPORTANT:
-   * fallbackImage is ONLY used AFTER CMS loading finishes.
-   * ============================================================
-   */
-
-  const slides = useMemo(() => {
+  const photos = useMemo(() => {
     if (banners.length > 0) {
-      return banners;
+      return banners.slice(0, 9);
     }
 
-    if (!isLoading && fallbackImage) {
+    if (!loading && fallbackImage) {
       return [
         {
           _id: "fallback",
@@ -111,317 +173,241 @@ export default function HeroCarousel({
   }, [
     banners,
     fallbackImage,
-    isLoading,
+    loading,
   ]);
 
-  /*
-   * ============================================================
-   * KEEP ACTIVE INDEX VALID
-   * ============================================================
-   */
-
-  /*
-   * ============================================================
-   * AUTO PLAY
-   * ============================================================
-   */
-
-  useEffect(() => {
-    if (
-      slides.length < 2 ||
-      isPaused
-    ) {
-      return;
-    }
-
-    const interval = window.setInterval(() => {
-      setActiveIndex(
-        (current) =>
-          (current + 1) % slides.length
-      );
-    }, 5000);
-
-    return () => {
-      window.clearInterval(interval);
-    };
-  }, [
-    slides.length,
-    isPaused,
-  ]);
-
-  /*
-   * ============================================================
-   * NAVIGATION
-   * ============================================================
-   */
-
-  const showSlide = (index: number) => {
-    if (slides.length < 2) {
-      return;
-    }
-
-    setActiveIndex(
-      (index + slides.length) %
-        slides.length
-    );
-  };
-
-  /*
-   * ============================================================
-   * SWIPE
-   * ============================================================
-   */
-
-  const handlePointerDown = (
-    event: PointerEvent<HTMLDivElement>
-  ) => {
-    setStartX(event.clientX);
-  };
-
-  const handlePointerUp = (
-    event: PointerEvent<HTMLDivElement>
-  ) => {
-    if (
-      startX === null ||
-      slides.length < 2
-    ) {
-      setStartX(null);
-      return;
-    }
-
-    const distance =
-      event.clientX - startX;
-
-    if (Math.abs(distance) > 45) {
-      showSlide(
-        activeIndex +
-          (distance < 0 ? 1 : -1)
-      );
-    }
-
-    setStartX(null);
-  };
-
-  /*
-   * ============================================================
-   * LOADING STATE
-   *
-   * No fallback image is rendered here.
-   * ============================================================
-   */
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <div
-        className={[
-          "flex",
-          "h-full",
-          "min-h-[290px]",
-          "items-center",
-          "justify-center",
-          "bg-[#061f35]",
-          "sm:min-h-0",
-        ].join(" ")}
-        aria-label="Loading hero banners"
-      >
-        <div className="flex flex-col items-center gap-3">
-          <div
-            className={[
-              "h-8",
-              "w-8",
-              "animate-spin",
-              "rounded-full",
-              "border-2",
-              "border-white/20",
-              "border-t-white",
-            ].join(" ")}
-          />
-
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
-            Loading
-          </span>
-        </div>
+      <div className="relative mx-auto h-[255px] w-full max-w-[1250px] sm:h-[330px] md:h-[370px] lg:h-[410px]">
+        <div className="absolute inset-x-0 bottom-0 h-[220px] animate-pulse rounded-[2rem] bg-black/5 sm:h-[290px]" />
       </div>
     );
   }
 
-  /*
-   * ============================================================
-   * NO CMS DATA + NO FALLBACK
-   * ============================================================
-   */
-
-  if (slides.length === 0) {
+  if (photos.length === 0) {
     return (
-      <div className="flex h-full min-h-[290px] items-center justify-center bg-gradient-to-br from-[#0f4c81] to-[#07111d] p-8 text-center sm:min-h-0">
+      <div className="mx-auto flex h-[220px] max-w-[700px] items-center justify-center rounded-[2rem] border border-black/10 bg-white/50 text-center sm:h-[280px]">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-blue-200">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-black/40">
             GNPC
           </p>
 
-          <p className="mt-3 text-xl font-bold text-white sm:text-2xl">
-            Greater Noida Press Club
-          </p>
-
-          <p className="mt-2 text-sm text-blue-100/80">
-            Journalism. Integrity. Community.
+          <p className="mt-2 text-sm font-semibold text-black/60">
+            Add hero photos from the CMS
           </p>
         </div>
       </div>
     );
   }
 
-  const safeActiveIndex = activeIndex % slides.length;
-  const activeSlide = slides[safeActiveIndex] ?? slides[0];
+  /*
+   * ============================================================
+   * SINGLE PHOTO FALLBACK
+   * ============================================================
+   */
 
-  return (
-    <div
-      className="group relative h-full w-full touch-pan-y select-none overflow-hidden"
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={() =>
-        setStartX(null)
-      }
-      onMouseEnter={() =>
-        setIsPaused(true)
-      }
-      onMouseLeave={() =>
-        setIsPaused(false)
-      }
-    >
-      <AnimatePresence mode="wait">
+  if (photos.length === 1) {
+    const photo = photos[0];
+
+    return (
+      <div className="mx-auto flex h-[300px] w-full max-w-[430px] items-center justify-center sm:h-[360px]">
         <motion.div
-          key={activeSlide._id}
           initial={{
             opacity: 0,
-            scale: 1.025,
+            y: 20,
+            rotate: -2,
           }}
           animate={{
             opacity: 1,
-            scale: 1,
+            y: 0,
+            rotate: -2,
           }}
-          exit={{
-            opacity: 0,
-            scale: 1.01,
+          whileHover={{
+            y: -8,
+            rotate: 0,
+            scale: 1.02,
           }}
           transition={{
-            duration: 0.75,
-            ease: "easeOut",
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
           }}
-          className="absolute inset-0"
+          className="relative h-[260px] w-[185px] overflow-hidden rounded-[1.35rem] border-[7px] border-white bg-white shadow-[0_25px_60px_rgba(38,32,23,0.18)] sm:h-[315px] sm:w-[225px]"
         >
           <Image
-            src={activeSlide.image}
+            src={photo.image}
             alt={alt}
             fill
-            priority={safeActiveIndex === 0}
-            sizes="(min-width: 1280px) 55vw, (min-width: 1024px) 50vw, 100vw"
+            priority
+            sizes="225px"
             className="object-cover"
           />
         </motion.div>
-      </AnimatePresence>
+      </div>
+    );
+  }
 
-      {/* Image gradient */}
+  /*
+   * ============================================================
+   * PHOTO FAN
+   * ============================================================
+   */
+
+  const displayCount = Math.min(
+    photos.length,
+    positions.length
+  );
+
+  const visiblePhotos =
+    photos.slice(0, displayCount);
+
+  return (
+    <div
+      className={[
+        "relative mx-auto",
+        "h-[270px]",
+        "w-full",
+        "overflow-hidden",
+        "sm:h-[340px]",
+        "md:h-[375px]",
+        "lg:h-[420px]",
+        "lg:overflow-visible",
+      ].join(" ")}
+    >
+      {/* Soft ground shadow */}
+
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-slate-950/10"
+        className="absolute bottom-8 left-1/2 h-12 w-[70%] -translate-x-1/2 rounded-[50%] bg-black/10 blur-2xl sm:bottom-10"
       />
 
-      {slides.length > 1 && (
-        <>
-          {/* Previous */}
-          <button
-            type="button"
-            onClick={() =>
-              showSlide(activeIndex - 1)
-            }
-            aria-label="Previous hero banner"
-            className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-slate-950/55 text-white opacity-0 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-slate-950/80 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white group-hover:opacity-100 sm:left-5"
-          >
-            <ChevronLeft
-              size={20}
-              aria-hidden="true"
-            />
-          </button>
+      {/* Perspective frame */}
 
-          {/* Next */}
-          <button
-            type="button"
-            onClick={() =>
-              showSlide(activeIndex + 1)
-            }
-            aria-label="Next hero banner"
-            className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-slate-950/55 text-white opacity-0 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-slate-950/80 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white group-hover:opacity-100 sm:right-5"
-          >
-            <ChevronRight
-              size={20}
-              aria-hidden="true"
-            />
-          </button>
+      <div
+        className="absolute inset-x-0 bottom-0 top-0"
+        style={{
+          perspective:
+            "1400px",
+        }}
+      >
+        {visiblePhotos.map(
+          (photo, index) => {
+            const position =
+              positions[index];
 
-          {/* Bottom controls */}
-          <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between gap-4 sm:bottom-5 sm:left-5 sm:right-5">
-            {/* Indicators */}
-            <div className="flex items-center gap-1.5">
-              {slides.map(
-                (slide, index) => (
-                  <button
-                    key={slide._id}
-                    type="button"
-                    onClick={() =>
-                      showSlide(index)
-                    }
-                    aria-label={`Show hero banner ${
-                      index + 1
-                    }`}
-                    aria-current={
-                      index === safeActiveIndex
-                    }
-                    className="group/dot flex h-5 items-center"
-                  >
-                    <span
-                      className={`block h-1.5 rounded-full transition-all duration-300 ${
-                        index === safeActiveIndex
-                          ? "w-8 bg-white"
-                          : "w-2.5 bg-white/50 group-hover/dot:bg-white/80"
-                      }`}
-                    />
-                  </button>
-                )
-              )}
-            </div>
+            const isMobileVisible =
+              getVisibleOnMobile(
+                index,
+                visiblePhotos.length
+              );
 
-            {/* Pause / play */}
-            <button
-              type="button"
-              onClick={() =>
-                setIsPaused(
-                  (current) => !current
-                )
-              }
-              aria-label={
-                isPaused
-                  ? "Play hero carousel"
-                  : "Pause hero carousel"
-              }
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-slate-950/50 text-white backdrop-blur-md transition hover:bg-slate-950/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-            >
-              {isPaused ? (
-                <Play
-                  size={13}
-                  fill="currentColor"
-                  aria-hidden="true"
+            return (
+              <motion.div
+                key={photo._id}
+                initial={{
+                  opacity: 0,
+                  x: position.x,
+                  y: position.y + 35,
+                  rotate: position.rotate,
+                  scale:
+                    position.scale *
+                    0.94,
+                }}
+                animate={{
+                  opacity:
+                    isMobileVisible
+                      ? 1
+                      : 1,
+                  x: position.x,
+                  y: position.y,
+                  rotate:
+                    position.rotate,
+                  scale:
+                    position.scale,
+                }}
+                whileHover={{
+                  y: position.y - 14,
+                  rotate: 0,
+                  scale:
+                    position.scale +
+                    0.045,
+                  zIndex: 20,
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay:
+                    index * 0.055,
+                  ease: [
+                    0.22,
+                    1,
+                    0.36,
+                    1,
+                  ],
+                }}
+                className={[
+                  "absolute left-1/2 top-[30px]",
+                  "h-[205px] w-[140px]",
+                  "origin-bottom",
+                  "overflow-hidden",
+                  "rounded-[1.15rem]",
+                  "border-[6px] border-white",
+                  "bg-white",
+                  "shadow-[0_25px_55px_rgba(38,32,23,0.17)]",
+                  "transition-shadow duration-300",
+                  "sm:top-[20px]",
+                  "sm:h-[270px]",
+                  "sm:w-[185px]",
+                  "md:h-[295px]",
+                  "md:w-[200px]",
+                  "lg:h-[325px]",
+                  "lg:w-[220px]",
+                  !isMobileVisible
+                    ? "hidden sm:block"
+                    : "",
+                ].join(" ")}
+                style={{
+                  marginLeft:
+                    "-70px",
+                  zIndex:
+                    position.zIndex,
+                }}
+              >
+                <Image
+                  src={photo.image}
+                  alt={`${alt} — photo ${
+                    index + 1
+                  }`}
+                  fill
+                  priority={index < 3}
+                  sizes="220px"
+                  className="object-cover"
                 />
-              ) : (
-                <Pause
-                  size={13}
+
+                {/* Image overlay */}
+
+                <div
                   aria-hidden="true"
+                  className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5"
                 />
-              )}
-            </button>
-          </div>
-        </>
-      )}
+
+                {/* Photo number */}
+
+                <div className="absolute bottom-2.5 left-2.5 flex h-6 min-w-6 items-center justify-center rounded-full bg-black/55 px-2 text-[8px] font-bold text-white backdrop-blur-md">
+                  {String(
+                    index + 1
+                  ).padStart(2, "0")}
+                </div>
+              </motion.div>
+            );
+          }
+        )}
+      </div>
+
+      {/* Center highlight */}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[12px] z-[7] h-[4px] w-16 -translate-x-1/2 rounded-full bg-[#c8102e] sm:top-[4px]"
+      />
     </div>
   );
 }
