@@ -81,7 +81,7 @@ export default function AboutCTA({
               <span className="h-px w-8 bg-white/30 sm:w-12" />
             </div>
 
-            <h2 className="mx-auto mt-5 max-w-[850px] text-4xl font-black leading-[0.98] tracking-[-0.055em] text-white sm:text-5xl lg:text-[4.5rem]">
+            <h2 className="mx-auto mt-5 max-w-[850px] text-4xl font-black leading-[1.02] tracking-[-0.045em] text-white sm:text-5xl lg:text-[4.5rem]">
               {finalTitle}
             </h2>
 
@@ -100,7 +100,7 @@ export default function AboutCTA({
                 unavailableLabel={
                   finalPrimaryLabel
                 }
-                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.16)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2] hover:shadow-[0_22px_50px_rgba(0,0,0,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.16)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2]"
               >
                 <span className="truncate">
                   {
@@ -118,7 +118,7 @@ export default function AboutCTA({
                 href={
                   finalSecondaryHref
                 }
-                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !border !border-white/30 !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !border !border-white/30 !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2]"
               >
                 <span className="truncate">
                   {
