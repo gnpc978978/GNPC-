@@ -37,6 +37,10 @@ type LatestUpdate = {
 type LatestUpdatesResponse = {
   success?: boolean;
   data?: LatestUpdate[];
+  pressReleases?: LatestUpdate[];
+  announcements?: LatestUpdate[];
+  events?: LatestUpdate[];
+  pressConferences?: LatestUpdate[];
 };
 
 const cardVariants: Variants = {
@@ -213,7 +217,7 @@ export default function LatestUpdates() {
         setLoading(true);
         setError(null);
 
-        const response = await apiFetch("/latest-updates");
+        const response = await apiFetch("/latest-updates", { cache: "no-store" });
 
         const payload =
           await responseJson<LatestUpdatesResponse>(response);
@@ -222,11 +226,56 @@ export default function LatestUpdates() {
           return;
         }
 
-        const data = Array.isArray(payload.data)
+        const normalizedData = Array.isArray(payload.data) && payload.data.length > 0
           ? payload.data
-          : [];
+          : [
+              ...(Array.isArray(payload.pressReleases)
+                ? payload.pressReleases.map((item) => ({
+                    ...item,
+                    type: item.type || "Press Release",
+                    featuredImage: item.featuredImage || item.image,
+                  }))
+                : []),
+              ...(Array.isArray(payload.announcements)
+                ? payload.announcements.map((item) => ({
+                    ...item,
+                    type: item.type || "Announcement",
+                    featuredImage: item.featuredImage || item.image,
+                  }))
+                : []),
+              ...(Array.isArray(payload.events)
+                ? payload.events.map((item) => ({
+                    ...item,
+                    type: item.type || "Event",
+                    featuredImage: item.featuredImage || item.image,
+                  }))
+                : []),
+              ...(Array.isArray(payload.pressConferences)
+                ? payload.pressConferences.map((item) => ({
+                    ...item,
+                    type: item.type || "Press Conference",
+                  }))
+                : []),
+            ];
 
-        setItems(data);
+        const uniqueItems = Array.from(
+          new Map(
+            normalizedData
+              .filter((item) => item?._id)
+              .map((item) => [`${item.type || "update"}:${item._id}`, item])
+          ).values()
+        ).sort((a, b) => {
+          const getTime = (item: LatestUpdate) => {
+            const value =
+              item.publishedAt || item.date || item.createdAt;
+            const time = value ? new Date(value).getTime() : 0;
+            return Number.isNaN(time) ? 0 : time;
+          };
+
+          return getTime(b) - getTime(a);
+        });
+
+        setItems(uniqueItems);
       } catch (requestError) {
         if (cancelled) {
           return;
