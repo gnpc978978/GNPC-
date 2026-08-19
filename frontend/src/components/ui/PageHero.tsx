@@ -1,4 +1,4 @@
-"use client";
+]"use client";
 
 import Link from "next/link";
 import { ArrowLeft, ChevronRight } from "lucide-react";
@@ -28,7 +28,7 @@ export default function PageHero({
   description,
   breadcrumbs = [],
   actions,
-  align = "left",
+  align = "center",
   className = "",
 }: PageHeroProps) {
   const { settings } = useWebsiteSettings();
@@ -55,8 +55,8 @@ export default function PageHero({
         "relative",
         "overflow-hidden",
         "border-b",
-        "border-slate-200",
-        "bg-white",
+        "border-black/5",
+        "bg-[#f4ede2]",
         className,
       ].join(" ")}
     >
@@ -72,7 +72,7 @@ export default function PageHero({
             h-[28rem]
             w-[28rem]
             rounded-full
-            bg-blue-50
+            bg-white/70
             blur-3xl
           "
         />
@@ -85,7 +85,7 @@ export default function PageHero({
             h-[26rem]
             w-[26rem]
             rounded-full
-            bg-slate-100
+            bg-[#d8c7af]/30
             blur-3xl
           "
         />
@@ -158,10 +158,10 @@ export default function PageHero({
                         font-medium
                         text-slate-500
                         transition-colors
-                        hover:text-[#155eef]
+                        hover:text-[#171717]
                         focus-visible:outline-none
                         focus-visible:ring-2
-                        focus-visible:ring-[#155eef]
+                        focus-visible:ring-[#839669]
                         focus-visible:ring-offset-2
                       "
                     >
@@ -205,7 +205,7 @@ export default function PageHero({
                 h-0.5
                 w-8
                 rounded-full
-                bg-[#155eef]
+                bg-[#171717]
               "
             />
 
@@ -215,7 +215,7 @@ export default function PageHero({
                 font-extrabold
                 uppercase
                 tracking-[0.18em]
-                text-[#155eef]
+                text-[#171717]
                 sm:text-sm
               "
             >
@@ -307,21 +307,30 @@ export default function PageHero({
           <Link
             href="/"
             className="
+              gnpc-btn
               mt-7
               inline-flex
               min-h-11
               items-center
               gap-2
-              rounded-lg
-              px-2
+              rounded-full
+              border
+              border-black/10
+              bg-white/70
+              px-5
+              py-3
               text-sm
-              font-semibold
-              text-slate-500
-              transition-colors
-              hover:text-[#155eef]
+              font-extrabold
+              text-[#171717]
+              shadow-[0_10px_28px_rgba(23,23,23,0.08)]
+              transition-all
+              duration-300
+              hover:-translate-y-0.5
+              hover:bg-white
+              hover:shadow-[0_16px_36px_rgba(23,23,23,0.12)]
               focus-visible:outline-none
               focus-visible:ring-2
-              focus-visible:ring-[#155eef]
+              focus-visible:ring-[#839669]
               focus-visible:ring-offset-2
             "
           >
