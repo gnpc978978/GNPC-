@@ -31,6 +31,10 @@ import {
   useWebsiteSettings,
 } from "@/context/WebsiteSettingsContext";
 
+import {
+  getPressConferences,
+} from "@/services/pressConferenceService";
+
 type PressConference = {
   _id: string;
   title: string;
@@ -379,106 +383,50 @@ export default function PressConferenceList({
    */
 
   useEffect(() => {
-    let cancelled =
-      false;
+    let cancelled = false;
 
-    const load =
-      async () => {
-        try {
-          setLoading(
-            true
-          );
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-          setError(
-            null
-          );
+        const data = await getPressConferences();
 
-          const apiUrl =
-            process.env
-              .NEXT_PUBLIC_API_URL ||
-            "";
-
-          const response =
-            await fetch(
-              `${apiUrl}/api/press-conferences`,
-              {
-                method:
-                  "GET",
-                cache:
-                  "no-store",
-              }
-            );
-
-          if (
-            !response.ok
-          ) {
-            throw new Error(
-              "Failed to load press conferences."
-            );
-          }
-
-          const result =
-            (await response.json()) as {
-              data?: PressConference[];
-            };
-
-          if (
-            cancelled
-          ) {
-            return;
-          }
-
-          const data =
-            Array.isArray(
-              result.data
-            )
-              ? result.data
-              : [];
-
-          setItems(
-            data.slice(
-              0,
-              pageSize
-            )
-          );
-        } catch (
-          requestError
-        ) {
-          console.error(
-            "Failed to load press conferences:",
-            requestError
-          );
-
-          if (
-            !cancelled
-          ) {
-            setItems(
-              []
-            );
-
-            setError(
-              requestError instanceof
-                Error
-                ? requestError.message
-                : "Unable to load press conferences."
-            );
-          }
-        } finally {
-          if (
-            !cancelled
-          ) {
-            setLoading(
-              false
-            );
-          }
+        if (cancelled) {
+          return;
         }
-      };
+
+        setItems(
+          (Array.isArray(data) ? data : []).slice(
+            0,
+            pageSize
+          )
+        );
+      } catch (requestError) {
+        console.error(
+          "Failed to load press conferences:",
+          requestError
+        );
+
+        if (!cancelled) {
+          setItems([]);
+          setError(
+            requestError instanceof Error
+              ? requestError.message
+              : "Unable to load press conferences."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
 
     void load();
 
     return () => {
-      cancelled =
-        true;
+      cancelled = true;
     };
   }, [pageSize]);
 
