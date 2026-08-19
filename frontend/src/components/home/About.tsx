@@ -466,7 +466,7 @@ export default function About() {
               1,
             ],
           }}
-          className="mx-auto max-w-[900px] text-center"
+          className="gnpc-section-heading mx-auto max-w-[900px] text-center"
         >
           <div className="flex items-center justify-center gap-3">
             <span
