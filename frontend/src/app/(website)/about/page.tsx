@@ -312,7 +312,7 @@ function SectionIntro({
   eyebrow,
   title,
   description,
-  centered = false,
+  centered = true,
 }: {
   eyebrow?: string;
   title: string;
@@ -321,11 +321,10 @@ function SectionIntro({
 }) {
   return (
     <div
-      className={
-        centered
-          ? "mx-auto max-w-4xl text-center"
-          : "max-w-3xl"
-      }
+      className={[
+        "gnpc-section-heading mx-auto max-w-4xl",
+        centered ? "text-center" : "text-left",
+      ].join(" ")}
     >
       {eyebrow && (
         <div
@@ -968,12 +967,22 @@ export default function AboutPage() {
       {(content.presidentName ||
         content.presidentMessage ||
         content.presidentPhoto) && (
-        <section className="relative overflow-hidden bg-white px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+        <section className="relative overflow-hidden bg-[#f4ede2] px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <div className="relative mx-auto max-w-7xl">
+            <SectionIntro
+              eyebrow="President's Message"
+              title={content.presidentName || "President's Message"}
+              description={
+                content.presidentDesignation ||
+                "A message from the President of Greater Noida Press Club."
+              }
+              centered
+            />
+
             <motion.div
               initial={{
                 opacity: 0,
-                y: 24,
+                y: 20,
               }}
               whileInView={{
                 opacity: 1,
@@ -986,77 +995,57 @@ export default function AboutPage() {
               transition={{
                 duration: 0.7,
               }}
-              className="overflow-hidden rounded-[2rem] border border-black/10 bg-[#171717] text-white shadow-[0_30px_75px_rgba(38,32,23,0.16)]"
+              className="mx-auto mt-10 max-w-6xl overflow-hidden rounded-[2rem] border border-black/10 bg-white shadow-[0_24px_65px_rgba(38,32,23,0.10)] sm:mt-12"
             >
-              <div className="grid items-center lg:grid-cols-[0.42fr_0.58fr]">
-                <div className="relative min-h-[360px] overflow-hidden bg-[#262626] sm:min-h-[450px] lg:min-h-[520px]">
+              <div className="grid items-stretch lg:grid-cols-[340px_1fr]">
+                <div className="relative min-h-[320px] overflow-hidden bg-[#e8dfd1] sm:min-h-[380px]">
                   {content.presidentPhoto ? (
                     <Image
-                      src={
-                        content.presidentPhoto
-                      }
-                      alt={
-                        content.presidentName ||
-                        "President"
-                      }
+                      src={content.presidentPhoto}
+                      alt={content.presidentName || "President"}
                       fill
-                      sizes="(min-width: 1024px) 42vw, 100vw"
-                      className="object-cover"
+                      sizes="(min-width: 1024px) 340px, 100vw"
+                      className="object-cover transition duration-700 hover:scale-[1.02]"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white/10 text-4xl font-black text-white/60">
-                        {content.presidentName
-                          ?.charAt(
-                            0
-                          )
-                          ?.toUpperCase() ||
-                          "P"}
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#59684e] text-4xl font-black text-white">
+                        {content.presidentName?.charAt(0)?.toUpperCase() || "P"}
                       </div>
                     </div>
                   )}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:bg-gradient-to-r" />
+                  <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 to-transparent" />
 
-                  <div className="absolute bottom-6 left-6 right-6 z-10 sm:bottom-8 sm:left-8 sm:right-8">
-                    <p className="text-[9px] font-black uppercase tracking-[0.18em] text-white/45">
+                  <div className="absolute bottom-5 left-5 right-5 z-10 sm:bottom-6 sm:left-6 sm:right-6">
+                    <p className="text-[9px] font-black uppercase tracking-[0.18em] text-white/70">
                       President
                     </p>
-
                     {content.presidentName && (
-                      <p className="mt-1 text-xl font-black tracking-[-0.03em]">
-                        {
-                          content.presidentName
-                        }
+                      <p className="mt-1 text-lg font-black tracking-[-0.02em] text-white sm:text-xl">
+                        {content.presidentName}
                       </p>
                     )}
-
                     {content.presidentDesignation && (
-                      <p className="mt-1 text-xs text-white/50">
-                        {
-                          content.presidentDesignation
-                        }
+                      <p className="mt-1 text-xs font-medium text-white/75">
+                        {content.presidentDesignation}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="p-6 sm:p-9 lg:p-14">
-                  <div className="inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-white/45">
+                <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-12">
+                  <div className="inline-flex w-fit items-center rounded-full border border-black/10 bg-[#f4ede2] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50">
                     President's Message
                   </div>
 
                   {content.presidentMessage && (
-                    <blockquote className="mt-6 text-xl font-black leading-[1.18] tracking-[-0.035em] text-white sm:text-2xl lg:text-[2.5rem]">
-                      “
-                      {
-                        content.presidentMessage
-                      }
-                      ”
+                    <blockquote className="mt-6 max-w-3xl whitespace-pre-line text-base font-medium leading-7 tracking-[-0.01em] text-[#30352f] sm:text-lg sm:leading-8 lg:text-xl lg:leading-8">
+                      “{content.presidentMessage}”
                     </blockquote>
                   )}
 
-                  <div className="mt-8 h-px w-12 bg-white/20" />
+                  <div className="mt-7 h-px w-12 bg-[#59684e]/35" />
                 </div>
               </div>
             </motion.div>
