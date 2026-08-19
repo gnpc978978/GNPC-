@@ -53,7 +53,7 @@ export default function Hero() {
     "Journalism • Media • Community";
 
   const buttonBase = [
-    "group relative inline-flex items-center justify-center",
+    "gnpc-btn group relative inline-flex items-center justify-center",
     "gap-2 overflow-hidden",
     "rounded-full",
     "px-5 py-3",
