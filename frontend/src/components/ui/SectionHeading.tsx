@@ -44,7 +44,7 @@ export default function SectionHeading({
               "min-w-0",
               "max-w-4xl",
               isCentered
-                ? "lg:text-left"
+                ? "text-center"
                 : "text-left",
             ].join(" ")}
           >
@@ -73,7 +73,10 @@ export default function SectionHeading({
             </h2>
 
             {description && (
-              <p className="mt-5 max-w-2xl text-base leading-7 text-[#697582] sm:text-lg sm:leading-8">
+              <p className={[
+                "mt-5 max-w-2xl text-base leading-7 text-[#697582] sm:text-lg sm:leading-8",
+                isCentered ? "mx-auto" : "",
+              ].join(" ")}>
                 {description}
               </p>
             )}
