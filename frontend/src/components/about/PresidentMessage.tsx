@@ -125,9 +125,25 @@ export default function PresidentMessage() {
   }
 
   return (
-    <section className="bg-white py-14 sm:py-20">
+    <section className="bg-[#f4ede2] py-14 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid items-center gap-10 lg:grid-cols-[320px_1fr] lg:gap-14">
+        <div className="gnpc-section-heading">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-black/45">
+            President's Message
+          </p>
+          {name && (
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#171717] sm:text-4xl">
+              {name}
+            </h2>
+          )}
+          {designation && (
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-black/50 sm:text-base">
+              {designation}
+            </p>
+          )}
+        </div>
+
+        <div className="mx-auto mt-10 grid max-w-6xl items-center overflow-hidden rounded-[2rem] border border-black/10 bg-white shadow-[0_24px_65px_rgba(38,32,23,0.10)] lg:grid-cols-[320px_1fr] lg:gap-0">
           {image ? (
             <div className="overflow-hidden rounded-3xl bg-slate-100">
               <img
@@ -142,25 +158,9 @@ export default function PresidentMessage() {
           ) : null}
 
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">
-              President's Message
-            </p>
-
-            {name && (
-              <h2 className="mt-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
-                {name}
-              </h2>
-            )}
-
-            {designation && (
-              <p className="mt-2 font-semibold text-slate-500">
-                {designation}
-              </p>
-            )}
-
             {message && (
-              <div className="mt-6 whitespace-pre-line text-base leading-8 text-slate-600">
-                {message}
+              <div className="whitespace-pre-line text-base font-medium leading-7 text-[#30352f] sm:text-lg sm:leading-8">
+                “{message}”
               </div>
             )}
           </div>
