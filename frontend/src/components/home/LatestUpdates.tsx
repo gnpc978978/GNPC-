@@ -336,7 +336,7 @@ export default function LatestUpdates() {
           transition={{
             duration: 0.7,
           }}
-          className="mx-auto max-w-[900px] text-center"
+          className="gnpc-section-heading mx-auto max-w-[900px] text-center"
         >
           <div className="flex items-center justify-center gap-3">
             <span className="h-px w-8 bg-black/20 sm:w-12" />
