@@ -196,7 +196,7 @@ export default function CTA() {
                   0.65,
                 delay: 0.08,
               }}
-              className="mx-auto mt-5 max-w-[850px] text-4xl font-black leading-[0.96] tracking-[-0.055em] text-white sm:text-5xl lg:text-[5rem]"
+              className="mx-auto mt-5 max-w-[850px] text-4xl font-black leading-[1.02] tracking-[-0.045em] text-white sm:text-5xl lg:text-[4.4rem]"
             >
               {title}
             </motion.h2>
@@ -319,7 +319,7 @@ export default function CTA() {
                 unavailableLabel={
                   primaryLabel
                 }
-                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-black text-[#171717] shadow-[0_18px_45px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f4ede2] hover:shadow-[0_24px_55px_rgba(0,0,0,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-black text-[#171717] shadow-[0_18px_45px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f4ede2] hover:shadow-[0_24px_55px_rgba(0,0,0,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
                 unavailableClassName="inline-flex min-h-14 flex-1 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-white/60 px-6 py-3.5 text-sm font-black text-[#171717] opacity-70 sm:min-w-[230px]"
               >
                 {primaryLabel}
@@ -338,7 +338,7 @@ export default function CTA() {
                 href={
                   secondaryHref
                 }
-                className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full border border-white bg-white px-6 py-3.5 text-sm font-black text-[#171717] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-[#f7f2e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full border border-white bg-white px-6 py-3.5 text-sm font-black text-[#171717] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-[#f7f2e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
               >
                 {secondaryLabel}
 
