@@ -69,7 +69,14 @@ export const getPressConferences =
   > => {
     const response =
       await apiFetch(
-        "/press-conferences"
+        "/press-conferences",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+          cache: "no-store",
+        }
       );
 
     const payload =
