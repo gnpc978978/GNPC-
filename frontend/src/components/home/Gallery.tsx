@@ -43,6 +43,8 @@ type GalleryItem = {
   image?: string;
   imageUrl?: string;
   url?: string;
+  coverImage?: string;
+  images?: string[];
 
   category?: string;
   description?: string;
@@ -51,6 +53,7 @@ type GalleryItem = {
 type GalleryResponse = {
   success?: boolean;
   data?: GalleryItem[];
+  gallery?: GalleryItem[];
 };
 
 const itemVariants: Variants = {
@@ -82,6 +85,8 @@ function getImageSrc(
     item.image ||
     item.imageUrl ||
     item.url ||
+    item.coverImage ||
+    (Array.isArray(item.images) ? item.images[0] : "") ||
     ""
   );
 }
@@ -277,7 +282,14 @@ export default function Gallery() {
 
         const response =
           await apiFetch(
-            "/gallery"
+            "/gallery",
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+              },
+              cache: "no-store",
+            }
           );
 
         const payload =
@@ -292,13 +304,17 @@ export default function Gallery() {
         }
 
         const data =
-          Array.isArray(
-            payload.data
-          )
-            ? payload.data
-            : [];
+          Array.isArray(payload.gallery)
+            ? payload.gallery
+            : Array.isArray(payload.data)
+              ? payload.data
+              : [];
 
-        setItems(data);
+        setItems(
+          data.filter(
+            (item) => item && item.status !== "inactive"
+          )
+        );
       } catch (
         requestError
       ) {
