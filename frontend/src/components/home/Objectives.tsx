@@ -314,7 +314,7 @@ export default function Objectives() {
   return (
     <section
       id="objectives"
-      className="relative overflow-hidden bg-[#f4ede2] py-12 text-[#171717] sm:py-16 lg:py-20"
+      className="relative overflow-hidden bg-[#f4ede2] py-10 text-[#171717] sm:py-14 lg:py-16"
     >
       {/* =====================================================
           BACKGROUND
@@ -360,7 +360,7 @@ export default function Objectives() {
           transition={{
             duration: 0.7,
           }}
-          className="mx-auto max-w-[900px] text-center"
+          className="gnpc-section-heading mx-auto max-w-[900px] text-center"
         >
           <div className="flex items-center justify-center gap-3">
             <span
@@ -413,7 +413,7 @@ export default function Objectives() {
             transition={{
               duration: 0.8,
             }}
-            className="relative mt-8 grid gap-3 sm:mt-10 lg:grid-cols-[1.25fr_0.75fr]"
+            className="relative mt-7 grid gap-3 sm:mt-8 lg:grid-cols-[1.25fr_0.75fr]"
           >
             {/* Primary */}
 
@@ -553,7 +553,7 @@ export default function Objectives() {
                 objectiveSettings.buttonHref ||
                 "/about"
               }
-              className="group inline-flex items-center gap-2 rounded-full bg-[#171717] px-6 py-3.5 text-sm font-black text-white shadow-[0_14px_35px_rgba(23,23,23,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#2a2a2a]"
+              className="gnpc-btn group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-black text-[#171717] shadow-[0_10px_28px_rgba(23,23,23,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f7f2e9]"
             >
               {objectiveSettings.buttonLabel}
 
