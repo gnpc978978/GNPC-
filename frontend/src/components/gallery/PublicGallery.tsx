@@ -362,13 +362,13 @@ export default function PublicGallery({
             )}
           </div>
 
-          <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({
               length: 8,
             }).map((_, index) => (
               <div
                 key={index}
-                className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-slate-100"
+                className="overflow-hidden rounded-xl bg-slate-100"
               >
                 <div
                   className={`animate-pulse ${
@@ -408,7 +408,7 @@ export default function PublicGallery({
           <button
             type="button"
             onClick={loadGallery}
-            className="mt-5 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+            className="mt-5 rounded-lg bg-[#155eef] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004eeb]"
           >
             Try Again
           </button>
@@ -448,7 +448,7 @@ export default function PublicGallery({
                       className={[
                         "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200",
                         active
-                          ? "bg-slate-900 text-white shadow-sm"
+                          ? "bg-[#155eef] text-white shadow-sm"
                           : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900",
                       ].join(" ")}
                     >
@@ -491,7 +491,7 @@ export default function PublicGallery({
                   MASONRY PHOTO GRID
                   ================================================= */}
 
-              <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {visiblePhotos.map(
                   (photo, index) => {
                     const globalIndex =
@@ -508,15 +508,15 @@ export default function PublicGallery({
                             globalIndex
                           )
                         }
-                        className="group relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl bg-slate-100 text-left outline-none ring-offset-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-slate-900"
+                        className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 text-left outline-none ring-offset-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#155eef]"
                       >
-                        <div className="relative overflow-hidden">
+                        <div className="relative aspect-[4/3] overflow-hidden">
                           <Image
                             src={photo.src}
                             alt={photo.title}
                             width={900}
                             height={700}
-                            className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                             sizes="
                               (max-width: 640px) 100vw,
                               (max-width: 1024px) 50vw,
@@ -647,7 +647,7 @@ export default function PublicGallery({
                               "h-10 min-w-10 rounded-xl px-3 text-sm font-semibold transition",
                               page ===
                               pageNumber
-                                ? "bg-slate-900 text-white"
+                                ? "bg-[#155eef] text-white"
                                 : "text-slate-600 hover:bg-slate-100",
                             ].join(
                               " "

@@ -327,6 +327,10 @@ p {
   background-color: var(--gnpc-background) !important;
 }
 
+.gnpc-public .bg-\[\#59684e\] {
+  background-color: var(--gnpc-primary-dark) !important;
+}
+
 .gnpc-public .bg-\[\#171717\] {
   background-color: var(--gnpc-primary-dark) !important;
 }
@@ -342,8 +346,16 @@ p {
 }
 
 .gnpc-public .bg-\[\#e6d8c5\],
-.gnpc-public .bg-\[\#e2d7c8\] {
+.gnpc-public .bg-\[\#e2d7c8\],
+.gnpc-public .bg-\[\#ded0bb\],
+.gnpc-public .bg-\[\#ded0bd\],
+.gnpc-public .bg-\[\#d9cbb7\] {
   background-color: #dbeafe !important;
+}
+
+.gnpc-public .bg-\[\#d8c7af\]\/30,
+.gnpc-public .bg-\[\#d8c7af\]\/45 {
+  background-color: rgba(191, 219, 254, 0.55) !important;
 }
 
 .gnpc-public .hover\:bg-\[\#f4ede2\]:hover,

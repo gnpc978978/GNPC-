@@ -172,10 +172,8 @@ function CmsMedia({
 
 function ConferenceCard({
   item,
-  featured = false,
 }: {
   item: PressConference;
-  featured?: boolean;
 }) {
   const date =
     item.date ||
@@ -186,18 +184,13 @@ function ConferenceCard({
       variants={
         cardVariants
       }
-      className={[
-        "group relative overflow-hidden rounded-[2rem] border shadow-[0_20px_60px_rgba(38,32,23,0.10)]",
-        featured
-          ? "min-h-[500px] border-white/10 bg-[#171717] text-white sm:min-h-[560px]"
-          : "min-h-[300px] border-black/10 bg-white/60 text-[#171717] backdrop-blur-md",
-      ].join(" ")}
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
     >
       {/* ===================================================
           IMAGE
           =================================================== */}
 
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="relative aspect-[16/9] overflow-hidden bg-blue-50">
         <ConferenceImage
           src={
             item.featuredImage
@@ -209,39 +202,17 @@ function ConferenceCard({
       </div>
 
       {/* ===================================================
-          OVERLAY
-          =================================================== */}
-
-      <div
-        className={[
-          "absolute inset-0",
-          featured
-            ? "bg-gradient-to-t from-black via-black/45 to-black/5"
-            : "bg-gradient-to-t from-black/90 via-black/25 to-transparent",
-        ].join(" ")}
-      />
-
-      {/* ===================================================
-          CATEGORY
-          =================================================== */}
-
-      <div className="absolute left-5 top-5 z-10 sm:left-7 sm:top-7">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white backdrop-blur-md">
-          <Mic2 size={11} />
-
-          Press Conference
-        </span>
-      </div>
-
-      {/* ===================================================
           CONTENT
           =================================================== */}
 
-      <div className="relative z-10 flex h-full min-h-[inherit] flex-col justify-end p-5 sm:p-7">
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="max-w-[760px]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#155eef]">
+            <Mic2 size={13} /> Press Conference
+          </span>
           {/* Meta */}
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/60">
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-slate-500">
             <span className="inline-flex items-center gap-1.5">
               <CalendarDays size={13} />
 
@@ -250,7 +221,7 @@ function ConferenceCard({
               )}
             </span>
 
-            <span className="hidden h-1 w-1 rounded-full bg-white/30 sm:block" />
+            <span className="hidden h-1 w-1 rounded-full bg-slate-300 sm:block" />
 
             <span className="inline-flex items-center gap-1.5">
               <MapPin size={13} />
@@ -264,10 +235,8 @@ function ConferenceCard({
 
           <h3
             className={[
-              "mt-3 font-black leading-[1.02] tracking-[-0.045em]",
-              featured
-                ? "text-3xl sm:text-4xl lg:text-[3rem]"
-                : "text-2xl sm:text-[2rem]",
+              "mt-3 font-bold leading-tight tracking-[-0.025em] text-slate-950",
+              "text-xl sm:text-2xl",
             ].join(" ")}
           >
             {item.title}
@@ -277,7 +246,7 @@ function ConferenceCard({
 
           {(item.description ||
             item.content) && (
-            <p className="mt-3 line-clamp-3 max-w-[720px] text-xs leading-6 text-white/60 sm:text-sm sm:leading-7">
+            <p className="mt-3 line-clamp-3 max-w-[720px] text-sm leading-6 text-slate-600">
               {item.description ||
                 item.content}
             </p>
@@ -285,10 +254,7 @@ function ConferenceCard({
 
           {/* Individual route */}
 
-          <Link
-            href={`/press-conference/${item._id}`}
-            className="relative z-30 mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-xs font-black text-[#171717] transition duration-300 hover:-translate-y-0.5 hover:bg-[#f4ede2]"
-          >
+          <Link href={`/press-conference/${item._id}`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#155eef] transition hover:text-[#004eeb]">
             View Details
 
             <ArrowRight
@@ -747,12 +713,7 @@ export default function PressConferenceList({
                 {latestOnly ? (
                   <>
                     {items[0] && (
-                      <ConferenceCard
-                        item={
-                          items[0]
-                        }
-                        featured
-                      />
+                      <ConferenceCard item={items[0]} />
                     )}
 
                     <div className="grid gap-4">

@@ -55,13 +55,13 @@ export default function Hero() {
   const buttonBase = [
     "gnpc-btn group relative inline-flex items-center justify-center",
     "gap-2 overflow-hidden",
-    "rounded-full",
+    "rounded-xl",
     "px-5 py-3",
     "text-sm font-bold",
     "transition-all duration-300",
     "focus-visible:outline-none",
     "focus-visible:ring-2",
-    "focus-visible:ring-[#172033]",
+    "focus-visible:ring-[#155eef]",
     "focus-visible:ring-offset-2",
     "sm:px-6 sm:py-3.5",
   ].join(" ");
@@ -69,7 +69,7 @@ export default function Hero() {
   return (
     <section
       aria-labelledby="gnpc-hero-title"
-      className="relative overflow-hidden bg-[#f4ede2] text-[#171717]"
+      className="relative overflow-hidden bg-[#eff6ff] text-slate-950"
     >
       {/* =====================================================
           BACKGROUND
@@ -81,13 +81,13 @@ export default function Hero() {
       >
         <div className="absolute -left-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-white/70 blur-3xl" />
 
-        <div className="absolute -bottom-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-[#ded0bd]/40 blur-3xl" />
+        <div className="absolute -bottom-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-blue-100/70 blur-3xl" />
 
         <div
           className="absolute inset-0 opacity-[0.16]"
           style={{
             backgroundImage:
-              "radial-gradient(circle, rgba(23,23,23,0.12) 1px, transparent 1px)",
+              "radial-gradient(circle, rgba(21,94,239,0.16) 1px, transparent 1px)",
             backgroundSize: "24px 24px",
           }}
         />
@@ -97,7 +97,7 @@ export default function Hero() {
           HERO CONTENT
           ===================================================== */}
 
-      <div className="relative mx-auto w-full max-w-[1500px] px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-16 md:px-8 lg:px-10 lg:pb-12 lg:pt-20 xl:px-12">
+      <div className="relative mx-auto w-full max-w-[1280px] px-4 pb-8 pt-10 sm:px-6 sm:pb-10 sm:pt-14 md:px-8 lg:px-10 lg:pb-12 lg:pt-16">
         <motion.div
           initial={{
             opacity: 0,
@@ -118,16 +118,16 @@ export default function Hero() {
           <div className="flex items-center justify-center gap-3">
             <span
               aria-hidden="true"
-              className="h-px w-8 bg-[#171717]/30 sm:w-12"
+              className="h-px w-8 bg-blue-300 sm:w-12"
             />
 
-            <span className="text-[9px] font-extrabold uppercase tracking-[0.25em] text-[#171717]/55 sm:text-[10px]">
+            <span className="text-[9px] font-extrabold uppercase tracking-[0.25em] text-[#155eef] sm:text-[10px]">
               {eyebrow}
             </span>
 
             <span
               aria-hidden="true"
-              className="h-px w-8 bg-[#171717]/30 sm:w-12"
+              className="h-px w-8 bg-blue-300 sm:w-12"
             />
           </div>
 
@@ -146,9 +146,9 @@ export default function Hero() {
               delay: 0.15,
               duration: 0.5,
             }}
-            className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-black/55 backdrop-blur-md sm:text-[10px]"
+            className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-slate-600 sm:text-[10px]"
           >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#172033] text-white">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#155eef] text-white">
               <Newspaper size={10} />
             </span>
 
@@ -159,7 +159,7 @@ export default function Hero() {
 
           <h1
             id="gnpc-hero-title"
-            className="mx-auto mt-6 max-w-[900px] text-[2.7rem] font-black leading-[0.96] tracking-[-0.055em] text-[#151515] sm:text-5xl md:text-6xl lg:text-[4.7rem] xl:text-[5.6rem]"
+            className="mx-auto mt-6 max-w-[900px] text-[2.6rem] font-black leading-[1.02] tracking-[-0.045em] text-slate-950 sm:text-5xl md:text-6xl lg:text-[4.5rem]"
           >
             {heroTitle}
           </h1>
@@ -178,13 +178,13 @@ export default function Hero() {
               duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mx-auto mt-6 h-1 rounded-full bg-[#c8102e]"
+            className="mx-auto mt-5 h-1 rounded-full bg-[#155eef]"
           />
 
           {/* Description */}
 
           {heroDescription && (
-            <p className="mx-auto mt-6 max-w-[650px] text-sm leading-6 text-[#171717]/55 sm:text-base sm:leading-7">
+            <p className="mx-auto mt-5 max-w-[650px] text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
               {heroDescription}
             </p>
           )}
@@ -195,18 +195,18 @@ export default function Hero() {
             <MembershipFormLink
               className={[
                 buttonBase,
-                "bg-white",
-                "text-[#171717]",
-                "border border-black/10",
-                "shadow-[0_12px_30px_rgba(23,23,23,0.12)]",
+                "bg-[#155eef]",
+                "text-white",
+                "border border-[#155eef]",
+                "shadow-sm",
                 "hover:-translate-y-0.5",
-                "hover:bg-[#f7f2e9]",
+                "hover:bg-[#004eeb]",
               ].join(" ")}
               unavailableClassName={[
                 buttonBase,
                 "cursor-not-allowed",
-                "bg-black/10",
-                "text-black/40",
+                "bg-slate-200",
+                "text-slate-500",
               ].join(" ")}
             >
               <span className="relative z-10">
@@ -231,12 +231,12 @@ export default function Hero() {
   }
   className={[
     buttonBase,
-    "border border-black/10",
-    "bg-white/55",
-    "text-[#171717]",
+    "border border-[#155eef]",
+    "bg-white",
+    "text-[#155eef]",
     "backdrop-blur-md",
     "hover:-translate-y-0.5",
-    "hover:bg-white",
+    "hover:bg-blue-50",
     "hover:shadow-sm",
   ].join(" ")}
 >
@@ -270,7 +270,7 @@ export default function Hero() {
             duration: 1,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="relative mx-auto mt-10 w-full max-w-[1450px] sm:mt-12 lg:mt-14"
+            className="relative mx-auto mt-8 w-full max-w-[1180px] sm:mt-10 lg:mt-12"
         >
           <HeroCarousel
             fallbackImage={heroImage}
@@ -296,16 +296,16 @@ export default function Hero() {
               delay: 0.7,
               duration: 0.6,
             }}
-            className="mx-auto mt-7 flex max-w-[850px] flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-black/10 pt-5"
+            className="mx-auto mt-7 flex max-w-[850px] flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-blue-100 pt-5"
           >
             {home.hero.quickLinks.map(
               (item, index) => (
                 <Link
                   key={`${item.label}-${item.href}`}
                   href={item.href || "/"}
-                  className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-black/45 transition-colors duration-300 hover:text-black sm:text-xs"
+                  className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 transition-colors duration-300 hover:text-[#155eef] sm:text-xs"
                 >
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-black/10 bg-white/40 transition-all duration-300 group-hover:border-black/20 group-hover:bg-white">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-blue-100 bg-white transition-all duration-300 group-hover:border-blue-200 group-hover:bg-blue-50">
                     {index % 2 === 0 ? (
                       <Newspaper size={11} />
                     ) : (
@@ -332,7 +332,7 @@ export default function Hero() {
 
       <div
         aria-hidden="true"
-        className="h-5 bg-[#f4ede2]"
+        className="h-5 bg-[#eff6ff]"
       />
     </section>
   );

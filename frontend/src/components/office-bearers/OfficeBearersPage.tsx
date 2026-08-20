@@ -89,7 +89,7 @@ export default function OfficeBearersPage({
       <div className="mx-auto max-w-7xl px-6">
         {/* Filters */}
         {(settings?.showSearch !== false || settings?.showFilters !== false) && (
-        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           {settings?.showSearch !== false && (
           <label className="relative block">
             <span className="sr-only">
@@ -110,7 +110,7 @@ export default function OfficeBearersPage({
           )}
 
           {settings?.showFilters !== false && (
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <select
               value={organization}
               onChange={(event) =>

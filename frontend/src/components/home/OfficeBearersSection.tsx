@@ -1,20 +1,95 @@
 "use client";
-import Image from "next/image";
+
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, Users } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePublicMembers } from "@/hooks/useMembers";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import { mergeHomeSettings } from "@/types/homeSettings";
-export default function OfficeBearersSection(){
- const {settings}=useWebsiteSettings(); const section=mergeHomeSettings(settings.home).officeBearers; const count=Math.max(1,Math.min(12,Number(section.displayCount)||4)); const {data,isLoading,isError}=usePublicMembers(1,count); const ref=useRef<HTMLDivElement>(null); const [prev,setPrev]=useState(false); const [next,setNext]=useState(true);
- const update=useCallback(()=>{const n=ref.current;if(!n)return;setPrev(n.scrollLeft>4);setNext(n.scrollLeft+n.clientWidth<n.scrollWidth-4);},[]);
- useEffect(()=>{update();const n=ref.current;if(!n)return;const r=new ResizeObserver(update);r.observe(n);return()=>r.disconnect();},[update,data?.data?.length]);
- const move=(d:-1|1)=>{const n=ref.current;if(!n)return;n.scrollBy({left:d*Math.max(n.clientWidth*.82,260),behavior:"smooth"});setTimeout(update,450)}; const members=data?.data||[];
- return <section className="relative overflow-hidden bg-[#f4ede2] py-14 text-[#171717] sm:py-20 lg:py-24"><div aria-hidden="true" className="pointer-events-none absolute inset-0"><div className="absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-white/70 blur-3xl"/><div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#839669]/15 blur-3xl"/></div><div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
- <motion.div initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.25}} transition={{duration:.7}} className="gnpc-section-heading mx-auto max-w-[900px] text-center"><div className="flex items-center justify-center gap-3"><span className="h-px w-8 bg-black/20 sm:w-12"/><span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]"><Sparkles size={11}/>{section.eyebrow||"Our People"}</span><span className="h-px w-8 bg-black/20 sm:w-12"/></div><h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">{section.title||"Office Bearers"}</h2>{section.description&&<p className="mx-auto mt-5 max-w-[700px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">{section.description}</p>}</motion.div>
- <div className="mt-10 sm:mt-14">{isLoading?<div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{Array.from({length:Math.min(count,4)}).map((_,i)=><div key={i} className="aspect-[4/5] animate-pulse rounded-[1.75rem] bg-black/5"/>)}</div>:isError?<div className="rounded-[2rem] border border-red-200 bg-red-50 px-6 py-14 text-center"><Users className="mx-auto text-red-300" size={36}/><p className="mt-4 text-sm font-semibold text-red-700">Office bearers are unavailable right now.</p></div>:members.length===0?<div className="rounded-[2rem] border border-dashed border-black/15 bg-white/50 px-6 py-14 text-center"><Users className="mx-auto text-black/20" size={36}/><p className="mt-4 text-sm font-semibold text-black/45">No office bearers have been published yet.</p></div>:<div ref={ref} onScroll={update} className="-mx-4 grid snap-x snap-mandatory grid-flow-col auto-cols-[78%] gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] sm:-mx-6 sm:auto-cols-[46%] sm:px-6 md:auto-cols-[31%] lg:-mx-0 lg:auto-cols-[23%] lg:px-0 [&::-webkit-scrollbar]:hidden">{members.map((m,i)=><motion.article key={m._id} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.5,delay:i*.06}} className="snap-start"><Link href={`/office-bearers/${m._id}`} className="group block h-full overflow-hidden rounded-[1.75rem] border border-black/10 bg-white shadow-[0_18px_45px_rgba(38,32,23,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(38,32,23,0.13)]"><div className="relative aspect-[4/4.7] overflow-hidden bg-[#e2d7c8]">{m.photo?<Image src={m.photo} alt={m.fullName} fill sizes="(min-width:1024px) 23vw, (min-width:768px) 31vw, 78vw" className="object-cover transition duration-700 group-hover:scale-[1.045]"/>:<div className="flex h-full items-center justify-center text-6xl font-black text-black/15">{m.fullName?.charAt(0)||"G"}</div>}<div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 to-transparent"/><span className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/35 px-2.5 py-1.5 text-[8px] font-black tracking-[0.15em] text-white backdrop-blur-md">{String(i+1).padStart(2,"0")}</span></div><div className="p-4 sm:p-5"><h3 className="line-clamp-1 text-base font-black tracking-[-0.02em] text-[#171717] sm:text-lg">{m.fullName}</h3><p className="mt-1 line-clamp-1 text-xs font-bold text-[#839669] sm:text-sm">{m.designation||"Office Bearer"}</p><p className="mt-1 line-clamp-1 text-xs text-black/45">{m.organization||"Greater Noida Press Club"}</p></div></Link></motion.article>)}</div>}</div>
- {members.length>0&&<div className="mt-5 flex items-center justify-between gap-4"><div className="flex gap-2"><button type="button" onClick={()=>move(-1)} disabled={!prev} className="gnpc-icon-btn inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-[#171717] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f7f2e9] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-30"><ChevronLeft size={18}/></button><button type="button" onClick={()=>move(1)} disabled={!next} className="gnpc-icon-btn inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-[#171717] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f7f2e9] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-30"><ChevronRight size={18}/></button></div><span className="text-[9px] font-black uppercase tracking-[0.18em] text-black/30">Swipe to explore</span></div>}
- {section.showViewAll&&section.buttonLabel&&<div className="mt-8 flex justify-center sm:mt-10"><Link href={section.buttonHref||"/office-bearers"} className="gnpc-btn group inline-flex min-h-12 min-w-[11.5rem] items-center justify-center gap-2 whitespace-nowrap rounded-full border border-black/10 bg-white px-6 py-3.5 text-sm font-extrabold leading-none text-[#171717] shadow-[0_10px_28px_rgba(23,23,23,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#fbf8f2]"><span className="truncate">{section.buttonLabel}</span><ArrowRight size={17}/></Link></div>}</div></section>
+import PersonCard from "@/components/ui/PersonCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
+
+export default function OfficeBearersSection() {
+  const { settings } = useWebsiteSettings();
+  const section = mergeHomeSettings(settings.home).officeBearers;
+  const count = Math.max(1, Math.min(12, Number(section.displayCount) || 4));
+  const { data, isLoading, isError } = usePublicMembers(1, count);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canGoBack, setCanGoBack] = useState(false);
+  const [canGoForward, setCanGoForward] = useState(true);
+  const members = data?.data || [];
+
+  const updateControls = useCallback(() => {
+    const node = carouselRef.current;
+    if (!node) return;
+    setCanGoBack(node.scrollLeft > 4);
+    setCanGoForward(node.scrollLeft + node.clientWidth < node.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateControls();
+    const node = carouselRef.current;
+    if (!node) return;
+    const observer = new ResizeObserver(updateControls);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [updateControls, members.length]);
+
+  const move = (direction: -1 | 1) => {
+    const node = carouselRef.current;
+    if (!node) return;
+    node.scrollBy({ left: direction * Math.max(node.clientWidth * 0.82, 260), behavior: "smooth" });
+    window.setTimeout(updateControls, 400);
+  };
+
+  return (
+    <section className="bg-slate-50 py-14 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          badge={section.eyebrow || "Our People"}
+          title={section.title || "Office Bearers"}
+          description={section.description}
+          action={section.showViewAll && section.buttonLabel ? <Button href={section.buttonHref || "/office-bearers"} variant="outline">{section.buttonLabel}<ArrowRight size={16} /></Button> : undefined}
+        />
+
+        <div className="mt-9 sm:mt-11">
+          {isLoading ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: Math.min(count, 4) }).map((_, index) => <div key={index} className="aspect-[4/5] animate-pulse rounded-xl bg-slate-200" />)}
+            </div>
+          ) : isError ? (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-6 py-12 text-center">
+              <Users className="mx-auto text-red-400" size={34} />
+              <p className="mt-3 text-sm font-semibold text-red-700">Office bearers are unavailable right now.</p>
+            </div>
+          ) : members.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+              <Users className="mx-auto text-slate-400" size={34} />
+              <p className="mt-3 text-sm font-semibold text-slate-600">No office bearers have been published yet.</p>
+            </div>
+          ) : (
+            <div ref={carouselRef} onScroll={updateControls} className="-mx-4 grid snap-x snap-mandatory grid-flow-col auto-cols-[86%] gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] sm:-mx-6 sm:auto-cols-[47%] sm:px-6 md:auto-cols-[31%] lg:mx-0 lg:auto-cols-[calc((100%_-_3rem)/4)] lg:px-0 [&::-webkit-scrollbar]:hidden">
+              {members.map((member, index) => (
+                <motion.div key={member._id} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.3, delay: index * 0.04 }} className="snap-start">
+                  <PersonCard href={`/office-bearers/${member._id}`} name={member.fullName} photo={member.photo} designation={member.designation} organization={member.organization} state={member.state} />
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {members.length > 1 && (
+          <div className="mt-5 flex items-center justify-between gap-4">
+            <div className="flex gap-2">
+              <button type="button" onClick={() => move(-1)} disabled={!canGoBack} aria-label="Previous office bearers" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"><ChevronLeft size={18} /></button>
+              <button type="button" onClick={() => move(1)} disabled={!canGoForward} aria-label="Next office bearers" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"><ChevronRight size={18} /></button>
+            </div>
+            <Link href="/office-bearers" className="text-sm font-semibold text-[#155eef] transition hover:text-[#004eeb]">View all office bearers</Link>
+          </div>
+        )}
+      </div>
+    </section>
+  );
 }

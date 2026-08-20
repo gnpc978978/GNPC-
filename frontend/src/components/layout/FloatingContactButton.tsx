@@ -62,17 +62,17 @@ export default function FloatingContactButton() {
       className="
         group
         fixed
-        bottom-5
+        bottom-4
         right-4
         z-50
         inline-flex
-        min-h-12
+        min-h-11
         items-center
         gap-2
         rounded-full
         bg-[#25D366]
-        px-4
-        py-3
+        px-3.5
+        py-2.5
         text-sm
         font-bold
         text-white
@@ -80,17 +80,17 @@ export default function FloatingContactButton() {
         shadow-black/20
         transition-all
         duration-300
-        hover:-translate-y-1
+        hover:-translate-y-0.5
         hover:bg-[#1ebe5d]
         hover:shadow-xl
         focus-visible:outline-none
         focus-visible:ring-2
         focus-visible:ring-[#25D366]
         focus-visible:ring-offset-2
-        sm:bottom-6
+        sm:bottom-5
         sm:right-6
-        sm:px-5
-        sm:py-3.5
+        sm:px-4
+        sm:py-3
       "
     >
       <span
