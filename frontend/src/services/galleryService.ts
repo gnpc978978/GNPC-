@@ -17,15 +17,25 @@ type GalleryMutationResponse = {
 
 export const getGallery =
   async (): Promise<Gallery[]> => {
-    const response =
-      await apiFetch("/gallery");
+    const response = await apiFetch("/gallery", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
 
-    const result =
-      await responseJson<{
-        gallery: Gallery[];
-      }>(response);
+    const result = await responseJson<{
+      success?: boolean;
+      gallery?: Gallery[];
+      data?: Gallery[];
+    }>(response);
 
-    return result.gallery || [];
+    return Array.isArray(result.gallery)
+      ? result.gallery
+      : Array.isArray(result.data)
+        ? result.data
+        : [];
   };
 
 export const createGallery = async (
