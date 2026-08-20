@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
 
 import MembershipFormLink from "@/components/membership/MembershipFormLink";
+import Button from "@/components/ui/Button";
 
 type AboutCTAProps = {
   title?: string;
@@ -114,11 +114,10 @@ export default function AboutCTA({
                 />
               </MembershipFormLink>
 
-              <Link
-                href={
-                  finalSecondaryHref
-                }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl !border !border-white/30 !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#0b3b83] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:!bg-blue-50"
+              <Button
+                href={finalSecondaryHref}
+                variant="inverse"
+                className="flex-1 border-white/30"
               >
                 <span className="truncate">
                   {
@@ -128,9 +127,9 @@ export default function AboutCTA({
 
                 <ArrowRight
                   size={17}
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0"
                 />
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   ArrowRight,
   CheckCircle2,
@@ -13,6 +12,7 @@ import {
 } from "framer-motion";
 
 import MembershipFormLink from "@/components/membership/MembershipFormLink";
+import Button from "@/components/ui/Button";
 
 import {
   useWebsiteSettings,
@@ -334,19 +334,18 @@ export default function CTA() {
                   SECONDARY — CMS ROUTE
                   ================================================= */}
 
-              <Link
-                href={
-                  secondaryHref
-                }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-white bg-white px-6 py-3.5 text-sm font-black text-[#0b3b83] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b3b83] sm:min-w-[230px]"
+              <Button
+                href={secondaryHref}
+                variant="inverse"
+                className="flex-1 border-white sm:min-w-[230px]"
               >
                 {secondaryLabel}
 
                 <ArrowRight
                   size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0"
                 />
-              </Link>
+              </Button>
             </motion.div>
 
             {/* =================================================

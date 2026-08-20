@@ -1222,7 +1222,7 @@ export default function LatestUpdatesPage() {
     ]);
 
   const updates =
-    useMemo(() => {
+    (() => {
       const source: Array<
         Update & {
           type: UpdateType;
@@ -1311,13 +1311,7 @@ export default function LatestUpdatesPage() {
           0,
           Math.max(1, Math.min(100, Number(pageSettings.pageSize) || 12))
         );
-    }, [
-      feed,
-      query,
-      sortOrder,
-      tab,
-      pageSettings.pageSize,
-    ]);
+    })();
 
   const selectTab = (
     value: Tab
@@ -1600,4 +1594,3 @@ export default function LatestUpdatesPage() {
     </main>
   );
 }
-

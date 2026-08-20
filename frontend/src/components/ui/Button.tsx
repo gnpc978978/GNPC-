@@ -45,19 +45,19 @@ const baseClasses = [
   "group",
   "relative",
   "inline-flex",
-  "min-h-12",
+  "max-w-full",
+  "min-h-11",
   "min-w-0",
   "items-center",
   "justify-center",
   "gap-2",
   "whitespace-nowrap",
-  "shrink-0",
   "select-none",
   "overflow-hidden",
-  "rounded-xl",
+  "rounded-lg",
   "border",
-  "px-6",
-  "py-3.5",
+  "px-5",
+  "py-3",
   "text-sm",
   "font-extrabold",
   "leading-none",
@@ -65,9 +65,9 @@ const baseClasses = [
   "transition-all",
   "duration-300",
   "ease-out",
-  "shadow-[0_10px_28px_rgba(23,23,23,0.10)]",
+  "shadow-[0_6px_18px_rgba(15,23,42,0.10)]",
   "hover:-translate-y-0.5",
-  "hover:shadow-[0_16px_36px_rgba(23,23,23,0.15)]",
+  "hover:shadow-[0_12px_24px_rgba(15,23,42,0.14)]",
   "focus-visible:outline-none",
   "focus-visible:ring-2",
   "focus-visible:ring-[#155eef]",
@@ -131,12 +131,12 @@ export default function Button(
   const content = loading ? (
     <>
       <LoadingIndicator />
-      <span className="truncate">
+      <span className="min-w-0 truncate whitespace-nowrap">
         {loadingText}
       </span>
     </>
   ) : (
-    <span className="relative z-10 inline-flex min-w-0 items-center gap-2 truncate">
+    <span className="relative z-10 inline-flex min-w-0 max-w-full items-center justify-center gap-2 whitespace-nowrap [&>svg]:shrink-0 [&>span]:min-w-0 [&>span]:truncate">
       {children}
     </span>
   );

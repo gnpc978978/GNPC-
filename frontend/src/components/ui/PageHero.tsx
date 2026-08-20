@@ -24,7 +24,7 @@ export default function PageHero({
   eyebrow,
   title,
   description,
-  breadcrumbs = [],
+  breadcrumbs: _breadcrumbs = [],
   actions,
   align = "center",
   className = "",
@@ -105,24 +105,16 @@ export default function PageHero({
       <div
         className={[
           "relative",
-          "mx-auto",
-          "max-w-7xl",
-          "px-4",
-          "py-10",
-          "sm:px-6",
-          "sm:py-12",
-          "lg:px-8",
-          "lg:py-16",
-          "xl:py-20",
-          centered ? "text-center" : "text-left",
+          "gnpc-container",
+          "py-12 sm:py-14 lg:py-16",
         ].join(" ")}
       >
-        {resolvedEyebrow && (
+        <div className={["gnpc-text-composition", "relative", centered ? "mx-auto items-center text-center" : "items-start text-left"].join(" ")}>
+          {resolvedEyebrow && (
           <div
             className={[
-              "flex",
-              "items-center",
-              "gap-3",
+            "gnpc-composition-eyebrow",
+            "gap-3",
               centered
                 ? "justify-center"
                 : "justify-start",
@@ -139,14 +131,7 @@ export default function PageHero({
             />
 
             <span
-              className="
-                text-xs
-                font-extrabold
-                uppercase
-                tracking-[0.18em]
-                text-[#155eef]
-                sm:text-sm
-              "
+              className="gnpc-composition-eyebrow-text"
             >
               {resolvedEyebrow}
             </span>
@@ -171,16 +156,7 @@ export default function PageHero({
             resolvedEyebrow
               ? "mt-4"
               : "mt-0",
-            "max-w-4xl",
-            "text-[2.15rem]",
-            "font-black",
-            "leading-[1.08]",
-            "tracking-[-0.035em]",
-            "text-[#101828]",
-            "sm:text-4xl",
-            "md:text-5xl",
-            "lg:text-[3.5rem]",
-            centered ? "mx-auto" : "",
+            "gnpc-page-title",
           ].join(" ")}
         >
           {resolvedTitle}
@@ -202,14 +178,7 @@ export default function PageHero({
               ease: "easeOut",
             }}
             className={[
-              "mt-5",
-              "max-w-2xl",
-              "text-base",
-              "leading-7",
-              "text-slate-600",
-              "sm:text-lg",
-              "sm:leading-8",
-              centered ? "mx-auto" : "",
+              "gnpc-composition-description",
             ].join(" ")}
           >
             {resolvedDescription}
@@ -219,7 +188,7 @@ export default function PageHero({
         {actions && (
           <div
             className={[
-              "mt-7",
+            "mt-7",
               "flex",
               "flex-wrap",
               "gap-3",
@@ -231,6 +200,7 @@ export default function PageHero({
             {actions}
           </div>
         )}
+        </div>
 
       </div>
     </section>

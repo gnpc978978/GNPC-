@@ -11,7 +11,6 @@ import {
   Mic,
   Newspaper,
   Users,
-  type LucideIcon,
 } from "lucide-react";
 import {
   motion,
@@ -26,45 +25,34 @@ import {
   mergeHomeSettings,
 } from "@/types/homeSettings";
 
-type ObjectiveIconName =
-  | "Newspaper"
-  | "Users"
-  | "Mic"
-  | "GraduationCap"
-  | "Award"
-  | "Images";
-
 type ObjectiveCard = {
   icon?: string;
   title: string;
   description: string;
 };
 
-const iconMap: Record<
-  ObjectiveIconName,
-  LucideIcon
-> = {
-  Newspaper,
-  Users,
-  Mic,
-  GraduationCap,
-  Award,
-  Images,
-};
+function ObjectiveIcon({ name }: { name?: string }) {
+  const props = {
+    size: 20,
+    strokeWidth: 2,
+  };
 
-function getIcon(
-  name?: string
-): LucideIcon {
-  if (
-    name &&
-    name in iconMap
-  ) {
-    return iconMap[
-      name as ObjectiveIconName
-    ];
+  switch (name) {
+    case "Newspaper":
+      return <Newspaper {...props} />;
+    case "Users":
+      return <Users {...props} />;
+    case "Mic":
+      return <Mic {...props} />;
+    case "GraduationCap":
+      return <GraduationCap {...props} />;
+    case "Award":
+      return <Award {...props} />;
+    case "Images":
+      return <Images {...props} />;
+    default:
+      return <BookOpen {...props} />;
   }
-
-  return BookOpen;
 }
 
 const cardVariants: Variants = {
@@ -98,10 +86,6 @@ function ObjectiveCard({
   index: number;
   featured?: boolean;
 }) {
-  const Icon = getIcon(
-    objective.icon
-  );
-
   return (
     <motion.article
       variants={cardVariants}
@@ -148,10 +132,7 @@ function ObjectiveCard({
               : "bg-blue-50 text-[#155eef]",
           ].join(" ")}
         >
-          <Icon
-            size={20}
-            strokeWidth={2}
-          />
+          <ObjectiveIcon name={objective.icon} />
         </div>
 
         <span

@@ -10,6 +10,7 @@ import {
 
 import HeroCarousel from "@/components/home/HeroCarousel";
 import MembershipFormLink from "@/components/membership/MembershipFormLink";
+import Button from "@/components/ui/Button";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import { mergeHomeSettings } from "@/types/homeSettings";
 
@@ -53,17 +54,10 @@ export default function Hero() {
     "Journalism • Media • Community";
 
   const buttonBase = [
-    "gnpc-btn group relative inline-flex items-center justify-center",
-    "gap-2 overflow-hidden",
-    "rounded-xl",
-    "px-5 py-3",
-    "text-sm font-bold",
-    "transition-all duration-300",
-    "focus-visible:outline-none",
-    "focus-visible:ring-2",
-    "focus-visible:ring-[#155eef]",
-    "focus-visible:ring-offset-2",
-    "sm:px-6 sm:py-3.5",
+    "gnpc-btn group relative inline-flex max-w-full min-h-11 items-center justify-center",
+    "gap-2 overflow-hidden whitespace-nowrap rounded-lg px-5 py-3",
+    "text-sm font-extrabold leading-none transition-all duration-300",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2",
   ].join(" ");
 
   return (
@@ -224,29 +218,14 @@ export default function Hero() {
               />
             </MembershipFormLink>
 
-           <Link
-  href={
-    home.hero.quickLinks[0]?.href ||
-    "/latest-updates"
-  }
-  className={[
-    buttonBase,
-    "border border-[#155eef]",
-    "bg-white",
-    "text-[#155eef]",
-    "backdrop-blur-md",
-    "hover:-translate-y-0.5",
-    "hover:bg-blue-50",
-    "hover:shadow-sm",
-  ].join(" ")}
->
-  <span>{secondaryLabel}</span>
-
-  <ArrowRight
-    size={16}
-    className="transition-transform duration-300 group-hover:translate-x-1"
-  />
-</Link>
+            <Button
+              href={home.hero.quickLinks[0]?.href || "/latest-updates"}
+              variant="outline"
+              className="backdrop-blur-md"
+            >
+              <span>{secondaryLabel}</span>
+              <ArrowRight size={16} />
+            </Button>
           </div>
         </motion.div>
 

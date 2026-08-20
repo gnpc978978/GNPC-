@@ -153,6 +153,7 @@ h6 {
   color: var(--gnpc-text);
 
   letter-spacing: -0.035em;
+  text-wrap: balance;
 }
 
 p {
@@ -269,6 +270,83 @@ p {
   border-radius: 999px;
 
   background: var(--gnpc-accent);
+}
+
+/* =========================================================
+   TEXT COMPOSITION
+   ========================================================= */
+
+.gnpc-text-composition {
+  display: flex;
+  width: min(100%, 48rem);
+  flex-direction: column;
+}
+
+.gnpc-composition-eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  color: var(--gnpc-primary);
+}
+
+.gnpc-composition-eyebrow-text {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gnpc-page-title,
+.gnpc-section-title {
+  max-width: 100%;
+  color: var(--gnpc-text);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.gnpc-page-title {
+  margin-top: 1rem;
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+.gnpc-section-title {
+  margin-top: 0.875rem;
+}
+
+.gnpc-composition-description {
+  width: min(100%, 42rem);
+  margin-top: 1rem;
+  color: var(--gnpc-text-secondary);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.gnpc-text-composition.items-center .gnpc-composition-description {
+  text-align: center;
+}
+
+.gnpc-text-composition.items-start .gnpc-composition-description {
+  text-align: left;
+}
+
+@media (max-width: 639px) {
+  .gnpc-text-composition {
+    width: 100%;
+  }
+
+  .gnpc-page-title {
+    font-size: clamp(2.1rem, 11vw, 2.75rem);
+    line-height: 1.1;
+  }
+
+  .gnpc-composition-description {
+    margin-top: 0.875rem;
+    line-height: 1.6;
+  }
 }
 
 
@@ -621,98 +699,41 @@ p {
 }
 
 
-/* Homepage editorial buttons */
-.gnpc-btn { text-wrap: nowrap; }
-.gnpc-btn span { min-width:0; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-:root { --gnpc-editorial-bg:#f4ede2; --gnpc-editorial-green:#839669; --gnpc-editorial-black:#171717; }
-
-
-/* =========================================================
-   GNPC EDITORIAL PUBLIC UI — GLOBAL CONSISTENCY
-   ========================================================= */
-
-:root {
-  --gnpc-editorial-bg: #f4ede2;
-  --gnpc-editorial-surface: #ffffff;
-  --gnpc-editorial-ink: #171717;
-  --gnpc-editorial-muted: rgba(23, 23, 23, 0.52);
-  --gnpc-editorial-green: #59684e;
-  --gnpc-editorial-green-light: #839669;
-  --gnpc-editorial-border: rgba(23, 23, 23, 0.10);
-  --gnpc-editorial-shadow: 0 18px 45px rgba(38, 32, 23, 0.08);
-}
-
+/* Public-page safeguards for third-party/CMS content that still uses legacy markup. */
 .gnpc-public {
-  background: var(--gnpc-editorial-bg);
-  color: var(--gnpc-editorial-ink);
+  background: var(--gnpc-background);
+  color: var(--gnpc-text);
 }
 
 .gnpc-public .gnpc-btn {
-  min-height: 3rem;
-  min-width: 11.5rem;
-  border-radius: 999px;
-  border: 1px solid var(--gnpc-editorial-border);
-  background: #fff;
-  color: var(--gnpc-editorial-ink);
-  box-shadow: 0 10px 28px rgba(23, 23, 23, 0.10);
-  transition:
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 300ms ease,
-    border-color 300ms ease;
-}
-
-.gnpc-public .gnpc-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  background: #f7f2e9;
-  border-color: rgba(23, 23, 23, 0.16);
-  box-shadow: 0 18px 42px rgba(23, 23, 23, 0.14);
-}
-
-.gnpc-public .gnpc-btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.gnpc-public .gnpc-btn:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 3px rgba(131, 150, 105, 0.28),
-    0 14px 34px rgba(23, 23, 23, 0.12);
+  text-wrap: nowrap;
 }
 
 .gnpc-public .gnpc-btn svg {
   flex: 0 0 auto;
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--gnpc-transition-fast);
 }
 
 .gnpc-public .gnpc-btn:hover svg {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
-/* All section intros share the homepage editorial rhythm. */
 .gnpc-public .gnpc-section-heading {
-  width: min(100%, 900px);
+  width: min(100%, 48rem);
   margin-inline: auto;
   text-align: center;
 }
 
 .gnpc-public .gnpc-section-heading > p {
+  width: min(100%, 42rem);
   margin-inline: auto;
-  max-width: 720px;
+  text-wrap: pretty;
 }
 
-/* Avoid accidental full-viewport gaps caused by empty/loading content. */
 .gnpc-public section {
   scroll-margin-top: 120px;
 }
 
 .gnpc-public .gnpc-section-tight {
   padding-block: clamp(3.5rem, 6vw, 5.5rem);
-}
-
-@media (max-width: 767px) {
-  .gnpc-public .gnpc-btn {
-    min-width: 10.5rem;
-    min-height: 2.875rem;
-  }
 }

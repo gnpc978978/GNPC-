@@ -24,7 +24,7 @@ export default function Container({
           ? "max-w-6xl"
           : size === "full"
             ? "max-w-none"
-            : "max-w-[1440px]";
+            : "max-w-[1280px]";
 
   return (
     <Component
