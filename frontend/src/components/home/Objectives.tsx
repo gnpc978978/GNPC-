@@ -116,8 +116,8 @@ function ObjectiveCard({
         "p-5 shadow-[0_18px_45px_rgba(38,32,23,0.08)]",
         "transition-all duration-300",
         featured
-          ? "min-h-[300px] border-[#394631] bg-[#59684e] text-white sm:min-h-[320px] lg:min-h-[360px]"
-          : "min-h-[190px] border-black/10 bg-white/65 text-[#171717] backdrop-blur-md hover:bg-white sm:min-h-[210px]",
+          ? "min-h-[260px] border-[#0b3b83] bg-[#0b3b83] text-white sm:min-h-[300px] lg:min-h-[320px]"
+          : "min-h-[190px] border-slate-200 bg-white text-slate-900 shadow-sm hover:border-blue-200 sm:min-h-[210px]",
         featured
           ? "sm:p-7"
           : "sm:p-6",
@@ -132,7 +132,7 @@ function ObjectiveCard({
           "transition duration-500 group-hover:scale-125",
           featured
             ? "bg-white/10"
-            : "bg-[#d8c7af]/30",
+            : "bg-blue-100/70",
         ].join(" ")}
       />
 
@@ -145,7 +145,7 @@ function ObjectiveCard({
             "transition-transform duration-300 group-hover:scale-105",
             featured
               ? "bg-white/15 text-white"
-              : "bg-[#f4ede2] text-[#171717]",
+              : "bg-blue-50 text-[#155eef]",
           ].join(" ")}
         >
           <Icon
@@ -159,7 +159,7 @@ function ObjectiveCard({
             "text-[9px] font-black uppercase tracking-[0.18em]",
             featured
               ? "text-white/40"
-              : "text-black/30",
+              : "text-slate-400",
           ].join(" ")}
         >
           {String(index + 1).padStart(
@@ -188,7 +188,7 @@ function ObjectiveCard({
             "mt-3 max-w-[560px] text-xs leading-6 sm:text-sm sm:leading-7",
             featured
               ? "text-white/65"
-              : "text-black/50",
+              : "text-slate-600",
           ].join(" ")}
         >
           {objective.description}
@@ -199,7 +199,7 @@ function ObjectiveCard({
             "mt-5 h-px w-10 transition-all duration-300 group-hover:w-16",
             featured
               ? "bg-white/30"
-              : "bg-black/15",
+              : "bg-blue-200",
           ].join(" ")}
         />
       </div>

@@ -640,7 +640,7 @@ export default function AboutPage() {
                 }
               </h2>
 
-              {content.description && (
+              {content.description && content.description.trim().toLowerCase() !== "hello" && (
                 <p className="mt-6 max-w-2xl text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
                   {
                     content.description
@@ -845,7 +845,7 @@ export default function AboutPage() {
 
             <motion.article
               variants={itemVariants}
-              className="group relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#59684e] p-6 text-white sm:p-8"
+              className="group relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b3b83] p-6 text-white sm:p-8"
             >
               <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white/10 blur-2xl transition group-hover:scale-125" />
 
@@ -1009,7 +1009,7 @@ export default function AboutPage() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#59684e] text-4xl font-black text-white">
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#0b3b83] text-4xl font-black text-white">
                         {content.presidentName?.charAt(0)?.toUpperCase() || "P"}
                       </div>
                     </div>
@@ -1045,7 +1045,7 @@ export default function AboutPage() {
                     </blockquote>
                   )}
 
-                  <div className="mt-7 h-px w-12 bg-[#59684e]/35" />
+                  <div className="mt-7 h-px w-12 bg-blue-200" />
                 </div>
               </div>
             </motion.div>

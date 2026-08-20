@@ -44,9 +44,9 @@ export default function AboutCTA({
     "/office-bearers";
 
   return (
-    <section className="bg-[#f4ede2] px-4 pb-16 pt-4 sm:px-6 sm:pb-24 lg:px-8">
+    <section className="bg-slate-50 px-4 pb-16 pt-4 sm:px-6 sm:pb-24 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-black/10 bg-[#59684e] text-white shadow-[0_30px_80px_rgba(38,32,23,0.14)]">
+        <div className="relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b3b83] text-white shadow-[0_18px_45px_rgba(15,59,131,0.18)]">
           {/* Decorative shapes */}
 
           <div
@@ -100,7 +100,7 @@ export default function AboutCTA({
                 unavailableLabel={
                   finalPrimaryLabel
                 }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.16)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#0b3b83] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:!bg-blue-50"
               >
                 <span className="truncate">
                   {
@@ -118,7 +118,7 @@ export default function AboutCTA({
                 href={
                   finalSecondaryHref
                 }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full !border !border-white/30 !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#171717] shadow-[0_16px_40px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#f4ede2]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl !border !border-white/30 !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#0b3b83] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:!bg-blue-50"
               >
                 <span className="truncate">
                   {

@@ -118,7 +118,7 @@ export default function CTA() {
               1,
             ],
           }}
-          className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#59684e] shadow-[0_35px_90px_rgba(0,0,0,0.22)]"
+          className="relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b3b83] shadow-[0_18px_45px_rgba(15,59,131,0.18)]"
         >
           {/* =================================================
               DECORATIVE CIRCLES
@@ -319,7 +319,7 @@ export default function CTA() {
                 unavailableLabel={
                   primaryLabel
                 }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-black text-[#171717] shadow-[0_18px_45px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f4ede2] hover:shadow-[0_24px_55px_rgba(0,0,0,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-black text-[#0b3b83] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b3b83] sm:min-w-[230px]"
                 unavailableClassName="inline-flex min-h-14 flex-1 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-white/60 px-6 py-3.5 text-sm font-black text-[#171717] opacity-70 sm:min-w-[230px]"
               >
                 {primaryLabel}
@@ -338,7 +338,7 @@ export default function CTA() {
                 href={
                   secondaryHref
                 }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full border border-white bg-white px-6 py-3.5 text-sm font-black text-[#171717] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-[#f7f2e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#59684e] sm:min-w-[230px]"
+                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-white bg-white px-6 py-3.5 text-sm font-black text-[#0b3b83] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b3b83] sm:min-w-[230px]"
               >
                 {secondaryLabel}
 
