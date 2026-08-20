@@ -146,14 +146,15 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="bg-slate-50 py-16">
-      <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-lg">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-slate-900">
+    <section className="bg-slate-50 py-14 sm:py-20">
+      <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+        <div className="mb-7 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#155eef]">Contact GNPC</p>
+          <h2 className="mt-2 text-3xl font-bold text-slate-950">
             Send Us a Message
           </h2>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
             Fill out the form below and our
             team will get back to you as soon
             as possible.
@@ -161,15 +162,15 @@ export default function ContactForm() {
         </div>
 
         <form
-          className="space-y-6"
+          className="space-y-5"
           onSubmit={handleSubmit}
           noValidate
         >
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             <div>
               <label
                 htmlFor="contact-name"
-                className="mb-2 block font-medium text-slate-700"
+                className="mb-2 block text-sm font-semibold text-slate-700"
               >
                 Full Name
               </label>
@@ -187,7 +188,7 @@ export default function ContactForm() {
                 type="text"
                 placeholder="Enter your name"
                 autoComplete="name"
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                className="w-full px-4 py-3 text-sm"
                 disabled={submitting}
               />
             </div>
@@ -195,7 +196,7 @@ export default function ContactForm() {
             <div>
               <label
                 htmlFor="contact-email"
-                className="mb-2 block font-medium text-slate-700"
+                className="mb-2 block text-sm font-semibold text-slate-700"
               >
                 Email Address
               </label>
@@ -213,7 +214,7 @@ export default function ContactForm() {
                 type="email"
                 placeholder="Enter your email"
                 autoComplete="email"
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                className="w-full px-4 py-3 text-sm"
                 disabled={submitting}
               />
             </div>
@@ -222,7 +223,7 @@ export default function ContactForm() {
           <div>
             <label
               htmlFor="contact-subject"
-              className="mb-2 block font-medium text-slate-700"
+                className="mb-2 block text-sm font-semibold text-slate-700"
             >
               Subject
             </label>
@@ -239,7 +240,7 @@ export default function ContactForm() {
               }
               type="text"
               placeholder="Subject"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full px-4 py-3 text-sm"
               disabled={submitting}
             />
           </div>
@@ -247,7 +248,7 @@ export default function ContactForm() {
           <div>
             <label
               htmlFor="contact-message"
-              className="mb-2 block font-medium text-slate-700"
+                className="mb-2 block text-sm font-semibold text-slate-700"
             >
               Message
             </label>
@@ -264,7 +265,7 @@ export default function ContactForm() {
               }
               rows={6}
               placeholder="Write your message..."
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="min-h-36 w-full px-4 py-3 text-sm"
               disabled={submitting}
             />
           </div>
@@ -277,11 +278,11 @@ export default function ContactForm() {
                   ? "alert"
                   : "status"
               }
-              className={`rounded-lg p-3 text-sm ${
+              className={`rounded-lg border p-3 text-sm ${
                 feedback.type ===
                 "success"
-                  ? "bg-green-50 text-green-700"
-                  : "bg-red-50 text-red-700"
+                  ? "border-green-200 bg-green-50 text-green-700"
+                  : "border-red-200 bg-red-50 text-red-700"
               }`}
             >
               {feedback.message}

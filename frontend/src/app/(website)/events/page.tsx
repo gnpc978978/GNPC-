@@ -101,7 +101,7 @@ export default function EventsPage() {
       />
 
       <Container>
-        <section className="py-14 sm:py-20">
+        <section className="py-12 sm:py-16">
           {loading && (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {Array.from({
@@ -109,7 +109,7 @@ export default function EventsPage() {
               }).map((_, index) => (
                 <div
                   key={index}
-                  className="animate-pulse overflow-hidden rounded-2xl border border-slate-200"
+                  className="animate-pulse overflow-hidden rounded-xl border border-slate-200"
                 >
                   <div className="aspect-[16/9] bg-slate-200" />
 
@@ -126,7 +126,7 @@ export default function EventsPage() {
           )}
 
           {!loading && error && (
-            <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
               <h2 className="text-xl font-bold text-red-900">
                 Unable to load events
               </h2>
@@ -140,7 +140,7 @@ export default function EventsPage() {
           {!loading &&
             !error &&
             events.length === 0 && (
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-12 text-center">
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center">
                 <h2 className="text-xl font-bold text-slate-900">
                   No events available
                 </h2>
@@ -167,7 +167,7 @@ export default function EventsPage() {
                         href={`/events/${encodeURIComponent(
                           identifier
                         )}`}
-                        className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                        className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
                       >
                         {event.banner ? (
                           <img
