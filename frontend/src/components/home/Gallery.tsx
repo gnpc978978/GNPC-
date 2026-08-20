@@ -48,6 +48,7 @@ type GalleryItem = {
 
   category?: string;
   description?: string;
+  status?: "active" | "inactive";
 };
 
 type GalleryResponse = {
