@@ -5,102 +5,126 @@ import PressRelease from "../models/pressRelease.model";
 import PressConference from "../models/PressConference";
 
 const toTime = (value: unknown): number => {
-  if (!value) return 0;
+    if (!value) return 0;
 
-  const time = new Date(String(value)).getTime();
-  return Number.isNaN(time) ? 0 : time;
+    const time = new Date(String(value)).getTime();
+
+    return Number.isNaN(time) ? 0 : time;
 };
 
-export const getLatestUpdates = async (_req: Request, res: Response) => {
-  try {
-    const active = { isActive: { $ne: false } };
+export const getLatestUpdates = async (
+    _req: Request,
+    res: Response
+) => {
+    try {
+        const active = {
+            isActive: {
+                $ne: false,
+            },
+        };
 
-    const [
-      pressReleases,
-      announcements,
-      events,
-      pressConferences,
-    ] = await Promise.all([
-      PressRelease.find({
-        ...active,
-        status: "PUBLISHED",
-      })
-        .sort({ publishedAt: -1, createdAt: -1 })
-        .lean(),
+        const [
+            pressReleases,
+            announcements,
+            events,
+            pressConferences,
+        ] = await Promise.all([
+            PressRelease.find({
+                ...active,
+                status: "PUBLISHED",
+            })
+                .sort({
+                    publishedAt: -1,
+                    createdAt: -1,
+                })
+                .lean(),
 
-      Announcement.find({
-        ...active,
-        status: "Published",
-      })
-        .sort({ createdAt: -1 })
-        .lean(),
+            Announcement.find({
+                ...active,
+                status: "Published",
+            })
+                .sort({
+                    createdAt: -1,
+                })
+                .lean(),
 
-      Event.find({
-        ...active,
-        status: "published",
-      })
-        .sort({ date: -1, createdAt: -1 })
-        .lean(),
+            Event.find({
+                ...active,
+                status: "published",
+            })
+                .sort({
+                    date: -1,
+                    createdAt: -1,
+                })
+                .lean(),
 
-      PressConference.find()
-        .sort({ date: -1, createdAt: -1 })
-        .lean(),
-    ]);
+            PressConference.find()
+                .sort({
+                    date: -1,
+                    createdAt: -1,
+                })
+                .lean(),
+        ]);
 
-    const data = [
-      ...pressReleases.map((item) => ({
-        ...item,
-        type: "Press Release",
-        image: item.image || "",
-        featuredImage: item.image || "",
-        publishedAt: item.publishedAt || item.createdAt,
-      })),
+        const data = [
+            ...pressReleases.map((item) => ({
+                ...item,
+                type: "Press Release",
+                image: item.image || "",
+                featuredImage: item.image || "",
+                publishedAt: item.publishedAt || item.createdAt,
+            })),
 
-      ...announcements.map((item) => ({
-        ...item,
-        type: "Announcement",
-        image: item.image || "",
-        featuredImage: item.image || "",
-        publishedAt: item.createdAt,
-      })),
+            ...announcements.map((item) => ({
+                ...item,
+                type: "Announcement",
+                image: item.image || "",
+                featuredImage: item.image || "",
+                publishedAt: item.createdAt,
+            })),
 
-      ...events.map((item) => ({
-        ...item,
-        type: "Event",
-        image: item.banner || "",
-        featuredImage: item.banner || "",
-        publishedAt: item.date || item.createdAt,
-      })),
+            ...events.map((item) => ({
+                ...item,
+                type: "Event",
+                image: item.banner || "",
+                featuredImage: item.banner || "",
+                publishedAt: item.date || item.createdAt,
+            })),
 
-      ...pressConferences.map((item) => ({
-        ...item,
-        type: "Press Conference",
-        image: item.featuredImage || "",
-        publishedAt: item.date || item.createdAt,
-      })),
-    ].sort(
-      (a, b) => toTime(b.publishedAt) - toTime(a.publishedAt)
-    );
+            ...pressConferences.map((item) => ({
+                ...item,
+                type: "Press Conference",
+                image: item.featuredImage || "",
+                publishedAt: item.date || item.createdAt,
+            })),
+        ].sort(
+            (a, b) =>
+                toTime(b.publishedAt) -
+                toTime(a.publishedAt)
+        );
 
-    return res.status(200).json({
-      success: true,
-      data,
-      pressReleases,
-      announcements,
-      events,
-      pressConferences,
-    });
-  } catch (error) {
-    console.error("Get Latest Updates Error:", error);
+        return res.status(200).json({
+            success: true,
+            data,
+            pressReleases,
+            announcements,
+            events,
+            pressConferences,
+        });
+    } catch (error) {
+        console.error(
+            "Get Latest Updates Error:",
+            error
+        );
 
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch latest updates",
-      data: [],
-      pressReleases: [],
-      announcements: [],
-      events: [],
-      pressConferences: [],
-    });
-  }
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch latest updates",
+            data: [],
+            pressReleases: [],
+            announcements: [],
+            events: [],
+            pressConferences: [],
+        });
+    }
 };
