@@ -46,7 +46,7 @@ const baseClasses = [
   "relative",
   "inline-flex",
   "min-h-12",
-  "min-w-[11.5rem]",
+  "min-w-0",
   "items-center",
   "justify-center",
   "gap-2",
@@ -54,7 +54,7 @@ const baseClasses = [
   "shrink-0",
   "select-none",
   "overflow-hidden",
-  "rounded-full",
+  "rounded-xl",
   "border",
   "px-6",
   "py-3.5",
@@ -70,7 +70,7 @@ const baseClasses = [
   "hover:shadow-[0_16px_36px_rgba(23,23,23,0.15)]",
   "focus-visible:outline-none",
   "focus-visible:ring-2",
-  "focus-visible:ring-[#839669]",
+  "focus-visible:ring-[#155eef]",
   "focus-visible:ring-offset-2",
   "disabled:pointer-events-none",
   "disabled:cursor-not-allowed",
@@ -78,24 +78,24 @@ const baseClasses = [
 ].join(" ");
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "min-h-10 min-w-[9.5rem] px-4 py-2.5 text-xs",
-  md: "min-h-11 min-w-[10.5rem] px-5 py-3 text-sm",
-  lg: "min-h-12 min-w-[11.5rem] px-6 py-3.5 text-sm",
+  sm: "min-h-10 px-4 py-2.5 text-xs",
+  md: "min-h-11 px-5 py-3 text-sm",
+  lg: "min-h-12 px-6 py-3.5 text-sm",
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "border-black/10 bg-white text-[#171717] hover:bg-[#f7f2e9]",
+    "border-[#155eef] bg-[#155eef] text-white hover:border-[#004eeb] hover:bg-[#004eeb]",
   outline:
-    "border-black/10 bg-white/75 text-[#171717] backdrop-blur-md hover:border-black/15 hover:bg-white",
+    "border-[#155eef] bg-white text-[#155eef] hover:bg-blue-50",
   soft:
-    "border-white/20 bg-white/90 text-[#171717] backdrop-blur-md hover:bg-white",
+    "border-blue-100 bg-blue-50 text-[#0b3b83] hover:bg-blue-100",
   inverse:
-    "border-white/10 bg-white text-[#171717] hover:bg-[#f7f2e9]",
+    "border-white bg-white text-[#0b3b83] hover:bg-blue-50",
   danger:
-    "border-red-200 bg-white text-red-600 hover:border-red-300 hover:bg-red-50",
+    "border-red-600 bg-red-600 text-white hover:border-red-700 hover:bg-red-700",
   ghost:
-    "border-black/10 bg-white/70 text-[#171717] hover:bg-white",
+    "border-transparent bg-transparent text-[#155eef] shadow-none hover:bg-blue-50",
 };
 
 function LoadingIndicator() {

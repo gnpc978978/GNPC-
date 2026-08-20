@@ -6,27 +6,27 @@
    ========================================================= */
 
 :root {
-  --gnpc-primary: #26364a;
-  --gnpc-primary-hover: #1c2939;
-  --gnpc-primary-dark: #172033;
+  --gnpc-primary: #155eef;
+  --gnpc-primary-hover: #004eeb;
+  --gnpc-primary-dark: #0b3b83;
 
-  --gnpc-accent: #c8102e;
-  --gnpc-accent-dark: #a50d25;
+  --gnpc-accent: #155eef;
+  --gnpc-accent-dark: #004eeb;
 
-  --gnpc-background: #f3f4f6;
-  --gnpc-background-warm: #f0f1f2;
+  --gnpc-background: #f8fafc;
+  --gnpc-background-warm: #f1f5f9;
 
   --gnpc-surface: #ffffff;
-  --gnpc-surface-soft: #e9ecef;
-  --gnpc-surface-muted: #e5e7eb;
+  --gnpc-surface-soft: #f1f5f9;
+  --gnpc-surface-muted: #e2e8f0;
 
-  --gnpc-text: #172033;
-  --gnpc-text-secondary: #475467;
-  --gnpc-text-muted: #667085;
-  --gnpc-text-subtle: #98a2b3;
+  --gnpc-text: #0f172a;
+  --gnpc-text-secondary: #334155;
+  --gnpc-text-muted: #64748b;
+  --gnpc-text-subtle: #94a3b8;
 
-  --gnpc-border: #d9dde3;
-  --gnpc-border-strong: #c7ccd4;
+  --gnpc-border: #e2e8f0;
+  --gnpc-border-strong: #cbd5e1;
 
   --gnpc-success: #15803d;
   --gnpc-warning: #b45309;
@@ -51,7 +51,7 @@
   --gnpc-shadow-hover:
     0 22px 50px rgba(15, 23, 42, 0.16);
 
-  --gnpc-container: 1440px;
+  --gnpc-container: 1280px;
 
   --gnpc-section-spacing: clamp(
     4rem,
@@ -95,8 +95,8 @@ body {
     ),
     linear-gradient(
       180deg,
-      #f4f5f6 0%,
-      #eef0f2 100%
+      #f8fafc 0%,
+      #f1f5f9 100%
     );
 
   color: var(--gnpc-text);
@@ -232,11 +232,11 @@ p {
 }
 
 .gnpc-section-muted {
-  background: #eceff1;
+  background: var(--gnpc-background);
 }
 
 .gnpc-section-blue {
-  background: #e8edf2;
+  background: #eff6ff;
 }
 
 
@@ -314,11 +314,49 @@ p {
 }
 
 .gnpc-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-3px);
 
-  border-color: #c9ced6;
+  border-color: #bfdbfe;
 
   box-shadow: var(--gnpc-shadow-hover);
+}
+
+/* Public pages still contain a few legacy utility colours. Keep their CMS
+   content intact while mapping those colours into the shared GNPC palette. */
+.gnpc-public .bg-\[\#f4ede2\] {
+  background-color: var(--gnpc-background) !important;
+}
+
+.gnpc-public .bg-\[\#171717\] {
+  background-color: var(--gnpc-primary-dark) !important;
+}
+
+.gnpc-public .text-\[\#171717\],
+.gnpc-public .text-\[\#18222d\] {
+  color: var(--gnpc-text) !important;
+}
+
+.gnpc-public .text-\[\#839669\],
+.gnpc-public .text-\[\#17324d\] {
+  color: var(--gnpc-primary) !important;
+}
+
+.gnpc-public .bg-\[\#e6d8c5\],
+.gnpc-public .bg-\[\#e2d7c8\] {
+  background-color: #dbeafe !important;
+}
+
+.gnpc-public .hover\:bg-\[\#f4ede2\]:hover,
+.gnpc-public .hover\:bg-\[\#f7f2e9\]:hover,
+.gnpc-public .hover\:bg-\[\#fbf8f2\]:hover {
+  background-color: #eff6ff !important;
+}
+
+.gnpc-btn {
+  align-items: center;
+  border-radius: var(--gnpc-radius-md);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 
@@ -476,8 +514,8 @@ p {
     background:
       linear-gradient(
         180deg,
-        #f4f5f6 0%,
-        #eef0f2 100%
+        #f8fafc 0%,
+        #f1f5f9 100%
       );
   }
 

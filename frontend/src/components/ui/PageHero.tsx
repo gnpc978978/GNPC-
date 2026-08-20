@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
@@ -55,8 +53,8 @@ export default function PageHero({
         "relative",
         "overflow-hidden",
         "border-b",
-        "border-black/5",
-        "bg-[#f4ede2]",
+        "border-blue-100",
+        "bg-[#eff6ff]",
         className,
       ].join(" ")}
     >
@@ -85,7 +83,7 @@ export default function PageHero({
             h-[26rem]
             w-[26rem]
             rounded-full
-            bg-[#d8c7af]/30
+            bg-blue-200/40
             blur-3xl
           "
         />
@@ -119,75 +117,6 @@ export default function PageHero({
           centered ? "text-center" : "text-left",
         ].join(" ")}
       >
-        {breadcrumbs.length > 0 && (
-          <nav
-            aria-label="Breadcrumb"
-            className={[
-              "mb-6",
-              "flex",
-              "flex-wrap",
-              "items-center",
-              "gap-1.5",
-              "text-sm",
-              centered
-                ? "justify-center"
-                : "justify-start",
-            ].join(" ")}
-          >
-            {breadcrumbs.map((breadcrumb, index) => {
-              const last =
-                index === breadcrumbs.length - 1;
-
-              return (
-                <div
-                  key={`${breadcrumb.label}-${index}`}
-                  className="flex items-center gap-1.5"
-                >
-                  {index > 0 && (
-                    <ChevronRight
-                      size={15}
-                      aria-hidden="true"
-                      className="text-slate-400"
-                    />
-                  )}
-
-                  {breadcrumb.href && !last ? (
-                    <Link
-                      href={breadcrumb.href}
-                      className="
-                        font-medium
-                        text-slate-500
-                        transition-colors
-                        hover:text-[#171717]
-                        focus-visible:outline-none
-                        focus-visible:ring-2
-                        focus-visible:ring-[#839669]
-                        focus-visible:ring-offset-2
-                      "
-                    >
-                      {breadcrumb.label}
-                    </Link>
-                  ) : (
-                    <span
-                      aria-current={
-                        last ? "page" : undefined
-                      }
-                      className={[
-                        "font-semibold",
-                        last
-                          ? "text-[#101828]"
-                          : "text-slate-500",
-                      ].join(" ")}
-                    >
-                      {breadcrumb.label}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
-        )}
-
         {resolvedEyebrow && (
           <div
             className={[
@@ -205,7 +134,7 @@ export default function PageHero({
                 h-0.5
                 w-8
                 rounded-full
-                bg-[#171717]
+                bg-[#155eef]
               "
             />
 
@@ -215,7 +144,7 @@ export default function PageHero({
                 font-extrabold
                 uppercase
                 tracking-[0.18em]
-                text-[#171717]
+                text-[#155eef]
                 sm:text-sm
               "
             >
@@ -303,45 +232,6 @@ export default function PageHero({
           </div>
         )}
 
-        {breadcrumbs.length === 0 && (
-          <Link
-            href="/"
-            className="
-              gnpc-btn
-              mt-7
-              inline-flex
-              min-h-11
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-black/10
-              bg-white/70
-              px-5
-              py-3
-              text-sm
-              font-extrabold
-              text-[#171717]
-              shadow-[0_10px_28px_rgba(23,23,23,0.08)]
-              transition-all
-              duration-300
-              hover:-translate-y-0.5
-              hover:bg-white
-              hover:shadow-[0_16px_36px_rgba(23,23,23,0.12)]
-              focus-visible:outline-none
-              focus-visible:ring-2
-              focus-visible:ring-[#839669]
-              focus-visible:ring-offset-2
-            "
-          >
-            <ArrowLeft
-              size={16}
-              aria-hidden="true"
-            />
-
-            Back to Home
-          </Link>
-        )}
       </div>
     </section>
   );

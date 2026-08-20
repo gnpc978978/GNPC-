@@ -26,7 +26,7 @@ export default function Navbar() {
       <div className="w-full px-2 sm:px-4 lg:px-6">
         <nav
           aria-label="Primary navigation"
-          className="relative z-[120] mx-auto w-full max-w-[1500px] overflow-hidden rounded-b-[1.35rem] border-x border-b border-slate-200 bg-white text-slate-900 shadow-[0_12px_40px_rgba(15,23,42,0.12)] sm:rounded-b-[1.75rem]"
+          className="relative z-[120] mx-auto w-full max-w-[1280px] overflow-hidden rounded-b-2xl border-x border-b border-slate-200 bg-white text-slate-900 shadow-[0_10px_30px_rgba(15,23,42,0.10)]"
         >
           <div className="relative flex min-h-[68px] items-center justify-between gap-3 px-3 sm:min-h-[76px] sm:px-5 lg:px-7">
             {/* LOGO */}
@@ -63,7 +63,7 @@ export default function Navbar() {
             <div className="hidden shrink-0 xl:block">
               <Link
                 href="/admin/login"
-                className="group/admin relative inline-flex h-11 items-center justify-center gap-2 overflow-hidden rounded-full border border-[#0f4c81] bg-[#0f4c81] px-5 text-xs font-extrabold tracking-[0.08em] text-white shadow-[0_8px_25px_rgba(15,76,129,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0b3d68] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f4c81] focus-visible:ring-offset-2"
+                className="group/admin relative inline-flex h-11 items-center justify-center gap-2 overflow-hidden rounded-xl border border-[#155eef] bg-[#155eef] px-5 text-xs font-extrabold tracking-[0.06em] text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#004eeb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2"
               >
                 <span className="relative z-10">
                   Admin Login

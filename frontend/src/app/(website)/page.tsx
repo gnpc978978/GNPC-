@@ -62,7 +62,7 @@ export default function Home() {
     const wrapperClass =
       section.background ===
       "slate"
-        ? "bg-[#f4ede2]"
+        ? "bg-slate-50"
         : "bg-white";
 
     switch (key) {

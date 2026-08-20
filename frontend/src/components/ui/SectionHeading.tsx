@@ -52,12 +52,10 @@ export default function SectionHeading({
               <div className="mb-4 flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="relative h-[3px] w-12 overflow-hidden rounded-full bg-[#c8102e]"
-                >
-                  <span className="absolute inset-y-0 left-0 w-1/2 bg-[#c49a3a]" />
-                </span>
+                  className="h-[3px] w-10 rounded-full bg-[#155eef]"
+                />
 
-                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#17324d]">
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#155eef]">
                   {badge}
                 </span>
               </div>
@@ -65,7 +63,7 @@ export default function SectionHeading({
 
             <h2
               className={[
-                "font-black leading-[1.02] tracking-[-0.045em] text-[#18222d]",
+                "font-black leading-[1.08] tracking-[-0.035em] text-slate-950",
                 headingSize,
               ].join(" ")}
             >
@@ -74,7 +72,7 @@ export default function SectionHeading({
 
             {description && (
               <p className={[
-                "mt-5 max-w-2xl text-base leading-7 text-[#697582] sm:text-lg sm:leading-8",
+                "mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8",
                 isCentered ? "mx-auto" : "",
               ].join(" ")}>
                 {description}
@@ -106,10 +104,10 @@ export default function SectionHeading({
             >
               <span
                 aria-hidden="true"
-                className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#c8102e] to-[#c49a3a]"
+                className="h-[3px] w-10 rounded-full bg-[#155eef]"
               />
 
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#17324d]">
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#155eef]">
                 {badge}
               </span>
             </div>
@@ -117,7 +115,7 @@ export default function SectionHeading({
 
           <h2
             className={[
-              "font-black leading-[1.02] tracking-[-0.045em] text-[#18222d]",
+                "font-black leading-[1.08] tracking-[-0.035em] text-slate-950",
               headingSize,
             ].join(" ")}
           >
@@ -127,7 +125,7 @@ export default function SectionHeading({
           {description && (
             <p
               className={[
-                "mt-5 max-w-3xl text-base leading-7 text-[#697582] sm:text-lg sm:leading-8",
+                "mt-4 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8",
                 isCentered
                   ? "mx-auto"
                   : "",
