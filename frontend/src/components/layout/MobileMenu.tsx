@@ -116,7 +116,7 @@ export default function MobileMenu({
                 "bg-gradient-to-r",
                 "from-[#0f4c81]",
                 "via-[#155eef]",
-                "to-[#c8102e]",
+                "to-[#155eef]",
               ].join(" ")}
             />
 
@@ -158,9 +158,9 @@ export default function MobileMenu({
                   "transition-all",
                   "duration-300",
                   "hover:rotate-90",
-                  "hover:border-[#c8102e]/30",
-                  "hover:bg-red-50",
-                  "hover:text-[#c8102e]",
+                  "hover:border-[#155eef]/30",
+                  "hover:bg-blue-50",
+                  "hover:text-[#155eef]",
                   "focus-visible:outline-none",
                   "focus-visible:ring-2",
                   "focus-visible:ring-[#155eef]",
@@ -192,7 +192,7 @@ export default function MobileMenu({
               <div className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full bg-[#c8102e]"
+                  className="h-1.5 w-1.5 rounded-full bg-[#155eef]"
                 />
 
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#155eef]">

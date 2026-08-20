@@ -359,6 +359,52 @@ p {
   line-height: 1.2;
 }
 
+/* Shared public and CMS controls. These rules deliberately style only
+   presentation; individual form, filter, and table behavior is unchanged. */
+.gnpc-public :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-color: var(--gnpc-border-strong);
+  border-radius: var(--gnpc-radius-md);
+  color: var(--gnpc-text);
+  background-color: var(--gnpc-surface);
+}
+
+.gnpc-public :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus {
+  border-color: var(--gnpc-primary);
+  box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.14);
+  outline: none;
+}
+
+.gnpc-public input::placeholder,
+.gnpc-public textarea::placeholder {
+  color: var(--gnpc-text-subtle);
+  opacity: 1;
+}
+
+.gnpc-public table {
+  border-color: var(--gnpc-border);
+  color: var(--gnpc-text-secondary);
+}
+
+.gnpc-public thead {
+  background: var(--gnpc-surface-soft);
+  color: var(--gnpc-text);
+}
+
+.gnpc-public th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.gnpc-public tr {
+  border-color: var(--gnpc-border);
+}
+
+.gnpc-public tr:hover {
+  background: #f8fbff;
+}
+
 
 /* =========================================================
    IMAGE INTERACTION

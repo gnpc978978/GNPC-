@@ -37,14 +37,14 @@ export default function NavLink({
         "focus-visible:ring-offset-2",
         light
           ? "focus-visible:ring-white"
-          : "focus-visible:ring-slate-900",
+          : "focus-visible:ring-[#155eef]",
         active
           ? light
             ? "text-white"
             : "text-slate-950"
           : light
             ? "text-white/70 hover:text-white"
-            : "text-slate-500 hover:text-slate-950",
+            : "text-slate-600 hover:text-[#155eef]",
       ].join(" ")}
     >
       <span
@@ -54,7 +54,7 @@ export default function NavLink({
           "transition-all duration-300",
           light
             ? "bg-white/15"
-            : "bg-white shadow-sm",
+            : "bg-blue-50 shadow-sm",
           active || "group-hover:opacity-100",
           active
             ? "scale-100 opacity-100"
@@ -76,7 +76,7 @@ export default function NavLink({
             "rounded-full",
             light
               ? "bg-white"
-              : "bg-[#c8102e]",
+              : "bg-[#155eef]",
           ].join(" ")}
         />
       )}

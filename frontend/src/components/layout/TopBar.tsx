@@ -85,19 +85,19 @@ export default function TopBar() {
   );
 
   return (
-    <div className="relative z-[130] w-full overflow-hidden border-b border-slate-200/80 bg-[#eef1f4] text-slate-700">
+    <div className="relative z-[130] w-full overflow-hidden border-b border-blue-100 bg-slate-50 text-slate-700">
       {/* Top accent */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c8102e]/60 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#155eef]/60 to-transparent"
       />
 
-      <div className="mx-auto flex min-h-[40px] w-full max-w-[1500px] items-center justify-between gap-3 px-3 sm:min-h-[42px] sm:px-5 lg:px-7 xl:px-9">
+      <div className="mx-auto flex min-h-[40px] w-full max-w-[1280px] items-center justify-between gap-3 px-3 sm:min-h-[42px] sm:px-5 lg:px-7 xl:px-9">
         {/* LEFT */}
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           {/* Location */}
           <div className="group flex shrink-0 items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#c8102e] shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#155eef] shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md">
               <FaMapMarkerAlt
                 size={10}
                 aria-hidden="true"
@@ -129,7 +129,7 @@ export default function TopBar() {
           <div className="hidden items-center gap-2 lg:flex">
             <HiCalendarDays
               size={13}
-              className="text-[#c8102e]"
+              className="text-[#155eef]"
               aria-hidden="true"
             />
 
@@ -141,9 +141,9 @@ export default function TopBar() {
           {/* TIME */}
           <div className="group flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c8102e]/40" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#155eef]/40" />
 
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c8102e]" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#155eef]" />
             </span>
 
             <HiClock
@@ -179,12 +179,12 @@ export default function TopBar() {
                       "transition-all duration-300",
                       "hover:-translate-y-1",
                       "hover:border-slate-300",
-                      "hover:bg-slate-900",
+                      "hover:bg-[#0b3b83]",
                       "hover:text-white",
                       "hover:shadow-lg",
                       "focus-visible:outline-none",
                       "focus-visible:ring-2",
-                      "focus-visible:ring-[#c8102e]",
+                      "focus-visible:ring-[#155eef]",
                     ].join(" ")}
                   >
                     <Icon
