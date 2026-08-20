@@ -2,25 +2,18 @@ import mongoose, { Schema, Document } from "mongoose";
 
 
 export interface IPressRelease extends Document {
+    title: string;
+    slug: string;
+    content: string;
+    category: string;
+    status: "DRAFT" | "PUBLISHED";
+    image?: string;
+    publishedAt?: Date;
+    isActive?: boolean;
+    createdBy: mongoose.Types.ObjectId;
 
-    title:string;
-
-    slug:string;
-
-    content:string;
-
-    category:string;
-
-    status:"DRAFT" | "PUBLISHED";
-
-    image?:string;
-
-    publishedAt?:Date;
-
-    isActive?:boolean;
-
-    createdBy:mongoose.Types.ObjectId;
-
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 
