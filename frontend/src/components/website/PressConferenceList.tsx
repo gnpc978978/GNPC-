@@ -184,13 +184,13 @@ function ConferenceCard({
       variants={
         cardVariants
       }
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md"
     >
       {/* ===================================================
           IMAGE
           =================================================== */}
 
-      <div className="relative aspect-[16/9] overflow-hidden bg-blue-50">
+      <div className="relative aspect-[16/9] overflow-hidden bg-[#f7f2e6]">
         <ConferenceImage
           src={
             item.featuredImage
@@ -207,7 +207,7 @@ function ConferenceCard({
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="max-w-[760px]">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#155eef]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#d4b06a]">
             <Mic2 size={13} /> Press Conference
           </span>
           {/* Meta */}
@@ -254,7 +254,7 @@ function ConferenceCard({
 
           {/* Individual route */}
 
-          <Link href={`/press-conference/${item._id}`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#155eef] transition hover:text-[#004eeb]">
+          <Link href={`/press-conference/${item._id}`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#d4b06a] transition hover:text-[#b08a3e]">
             View Details
 
             <ArrowRight
@@ -461,7 +461,7 @@ export default function PressConferenceList({
     );
 
   return (
-    <main className="bg-[#f4ede2] text-[#171717]">
+    <main className="bg-[#f4f7fb] text-[#171717]">
       {/* =====================================================
           FULL PRESS CONFERENCE PAGE HERO
           ===================================================== */}
@@ -484,7 +484,7 @@ export default function PressConferenceList({
           SECTION
           ===================================================== */}
 
-      <section className="relative overflow-hidden bg-[#f4ede2] py-16 sm:py-24 lg:py-28">
+      <section className="relative overflow-hidden bg-[#f4f7fb] py-16 sm:py-24 lg:py-28">
         {/* ===================================================
             BACKGROUND
             =================================================== */}
@@ -495,7 +495,7 @@ export default function PressConferenceList({
         >
           <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-white/65 blur-3xl" />
 
-          <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#d8c7af]/30 blur-3xl" />
+          <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#b8c7d8]/30 blur-3xl" />
 
           <div
             className="absolute inset-0 opacity-[0.1]"
