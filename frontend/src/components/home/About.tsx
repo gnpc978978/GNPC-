@@ -733,22 +733,21 @@ export default function About() {
                 ================================================= */}
 
             {about.buttonLabel && (
-              <div className="mt-8 sm:mt-10">
+              <div className="mt-6 sm:mt-7">
                 <Button
                   href={
                     about.buttonHref ||
                     "/about"
                   }
                   variant="outline"
-                  size="lg"
-                  className="group rounded-full border-black/15 bg-white/50"
+                  size="md"
+                  className="group"
                 >
-                  {about.buttonLabel}
+                  {about.buttonLabel.trim().toLowerCase() === "explore"
+                    ? "Learn More About GNPC"
+                    : about.buttonLabel}
 
-                  <ArrowRight
-                    size={17}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
+                  <ArrowRight size={17} />
                 </Button>
               </div>
             )}
