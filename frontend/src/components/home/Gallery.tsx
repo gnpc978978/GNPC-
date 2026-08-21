@@ -111,7 +111,7 @@ function GalleryPlaceholder({
   return (
     <div
       className={[
-        "flex h-full w-full items-center justify-center bg-[#ded0bb]",
+        "flex h-full w-full items-center justify-center bg-[#dbe4ed]",
         large
           ? "min-h-[320px]"
           : "",
@@ -380,7 +380,7 @@ export default function Gallery() {
   return (
     <section
       id="gallery"
-      className="relative overflow-hidden bg-[#f4ede2] py-16 text-[#171717] sm:py-24 lg:py-28"
+      className="relative overflow-hidden bg-[#f8fafc] py-16 text-[#171717] sm:py-24 lg:py-28"
     >
       {/* =====================================================
           BACKGROUND
@@ -392,7 +392,7 @@ export default function Gallery() {
       >
         <div className="absolute -right-40 top-0 h-[30rem] w-[30rem] rounded-full bg-white/70 blur-3xl" />
 
-        <div className="absolute -left-40 bottom-0 h-[26rem] w-[26rem] rounded-full bg-[#d8c7af]/30 blur-3xl" />
+        <div className="absolute -left-40 bottom-0 h-[26rem] w-[26rem] rounded-full bg-[#b8c7d8]/30 blur-3xl" />
 
         <div
           className="absolute inset-0 opacity-[0.1]"
@@ -637,8 +637,7 @@ export default function Gallery() {
                 "/gallery"
               }
               variant="outline"
-              size="lg"
-              className="group rounded-full border-black/15 bg-white/60"
+              size="md"
             >
               {section.buttonLabel.trim().toLowerCase() === "explore" ||
               section.buttonLabel.trim().toLowerCase() === "view gallery"
