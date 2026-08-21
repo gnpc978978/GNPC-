@@ -44,9 +44,9 @@ export default function AboutCTA({
     "/office-bearers";
 
   return (
-    <section className="bg-slate-50 px-4 pb-16 pt-4 sm:px-6 sm:pb-24 lg:px-8">
+    <section className="bg-[#f4f7fb] px-4 pb-16 pt-4 sm:px-6 sm:pb-24 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b3b83] text-white shadow-[0_18px_45px_rgba(15,59,131,0.18)]">
+        <div className="relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b1f3a] text-white shadow-[0_18px_45px_rgba(15,59,131,0.18)]">
           {/* Decorative shapes */}
 
           <div
@@ -100,7 +100,7 @@ export default function AboutCTA({
                 unavailableLabel={
                   finalPrimaryLabel
                 }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl !bg-white !px-6 !py-3.5 !text-sm !font-black !text-[#0b3b83] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:!bg-blue-50"
+                className="gnpc-btn gnpc-btn-primary flex-1"
               >
                 <span className="truncate">
                   {
