@@ -629,7 +629,7 @@ export default function Gallery() {
             transition={{
               duration: 0.6,
             }}
-            className="mt-10 flex justify-center sm:mt-12"
+            className="mt-6 flex justify-center sm:mt-8"
           >
             <Button
               href={
@@ -640,12 +640,12 @@ export default function Gallery() {
               size="lg"
               className="group rounded-full border-black/15 bg-white/60"
             >
-              {section.buttonLabel}
+              {section.buttonLabel.trim().toLowerCase() === "explore" ||
+              section.buttonLabel.trim().toLowerCase() === "view gallery"
+                ? "View Full Gallery"
+                : section.buttonLabel}
 
-              <ArrowRight
-                size={17}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <ArrowRight size={17} />
             </Button>
           </motion.div>
         )}
