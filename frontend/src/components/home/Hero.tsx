@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -53,12 +52,7 @@ export default function Hero() {
     home.hero.identityLabel ||
     "Journalism • Media • Community";
 
-  const buttonBase = [
-    "gnpc-btn group relative inline-flex max-w-full min-h-11 items-center justify-center",
-    "gap-2 overflow-hidden whitespace-nowrap rounded-lg px-5 py-3",
-    "text-sm font-extrabold leading-none transition-all duration-300",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2",
-  ].join(" ");
+
 
   return (
     <section
@@ -187,35 +181,11 @@ export default function Hero() {
 
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MembershipFormLink
-              className={[
-                buttonBase,
-                "bg-[#155eef]",
-                "text-white",
-                "border border-[#155eef]",
-                "shadow-sm",
-                "hover:-translate-y-0.5",
-                "hover:bg-[#004eeb]",
-              ].join(" ")}
-              unavailableClassName={[
-                buttonBase,
-                "cursor-not-allowed",
-                "bg-slate-200",
-                "text-slate-500",
-              ].join(" ")}
+              className="gnpc-btn group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#155eef] bg-[#155eef] px-5 py-3 text-sm font-bold leading-none text-white shadow-[0_6px_18px_rgba(21,94,239,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#004eeb] hover:bg-[#004eeb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2"
+              unavailableClassName="gnpc-btn inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-100 px-5 py-3 text-sm font-bold leading-none text-slate-500"
             >
-              <span className="relative z-10">
-                {primaryLabel}
-              </span>
-
-              <ArrowRight
-                size={16}
-                className="relative z-10 transition-transform duration-300 group-hover:translate-x-1"
-              />
-
-              <span
-                aria-hidden="true"
-                className="absolute -left-[120%] top-0 h-full w-1/2 -skew-x-12 bg-black/5 transition-all duration-700 group-hover:left-[130%]"
-              />
+              {primaryLabel}
+              <ArrowRight size={16} />
             </MembershipFormLink>
 
             <Button
