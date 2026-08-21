@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -51,7 +50,14 @@ export default function OfficeBearersSection() {
           badge={section.eyebrow || "Our People"}
           title={section.title || "Office Bearers"}
           description={section.description}
-          action={section.showViewAll && section.buttonLabel ? <Button href={section.buttonHref || "/office-bearers"} variant="outline">{section.buttonLabel}<ArrowRight size={16} /></Button> : undefined}
+          action={section.showViewAll ? (
+            <Button href={section.buttonHref || "/office-bearers"} variant="outline">
+              {section.buttonLabel?.trim().toLowerCase() === "explore"
+                ? "View All"
+                : section.buttonLabel || "View All"}
+              <ArrowRight size={16} />
+            </Button>
+          ) : undefined}
         />
 
         <div className="mt-9 sm:mt-11">
@@ -81,12 +87,25 @@ export default function OfficeBearersSection() {
         </div>
 
         {members.length > 1 && (
-          <div className="mt-5 flex items-center justify-between gap-4">
-            <div className="flex gap-2">
-              <button type="button" onClick={() => move(-1)} disabled={!canGoBack} aria-label="Previous office bearers" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"><ChevronLeft size={18} /></button>
-              <button type="button" onClick={() => move(1)} disabled={!canGoForward} aria-label="Next office bearers" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"><ChevronRight size={18} /></button>
-            </div>
-            <Link href="/office-bearers" className="text-sm font-semibold text-[#155eef] transition hover:text-[#004eeb]">View all office bearers</Link>
+          <div className="mt-5 flex justify-start gap-2 lg:justify-end">
+            <button
+              type="button"
+              onClick={() => move(-1)}
+              disabled={!canGoBack}
+              aria-label="Previous office bearers"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => move(1)}
+              disabled={!canGoForward}
+              aria-label="Next office bearers"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
         )}
       </div>
