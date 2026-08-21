@@ -443,20 +443,20 @@ export default function UpdateDetailsPage({
         ]}
       />
 
-      <section className="bg-slate-50 py-8 sm:py-12 lg:py-16">
+      <section className="bg-[#f4f7fb] py-8 sm:py-12 lg:py-16">
         <Container>
           <article className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-100 px-5 py-4 sm:px-8">
               <Link
                 href="/latest-updates"
-                className="inline-flex items-center text-sm font-bold text-[#155eef] transition-colors hover:text-[#0f4c81]"
+                className="inline-flex items-center text-sm font-bold text-[#d4b06a] transition-colors hover:text-[#0f4c81]"
               >
                 ← Back to latest updates
               </Link>
             </div>
 
             <div className="px-5 pb-7 pt-7 sm:px-8 sm:pb-9 sm:pt-9">
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#155eef]">
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#d4b06a]">
                 {item.category ||
                   label}
               </p>
@@ -469,7 +469,7 @@ export default function UpdateDetailsPage({
                 <span className="inline-flex items-center gap-2">
                   <CalendarDays
                     size={17}
-                    className="shrink-0 text-[#155eef]"
+                    className="shrink-0 text-[#d4b06a]"
                     aria-hidden="true"
                   />
 
@@ -484,7 +484,7 @@ export default function UpdateDetailsPage({
                   <span className="inline-flex min-w-0 items-center gap-2">
                     <MapPin
                       size={17}
-                      className="shrink-0 text-[#155eef]"
+                      className="shrink-0 text-[#d4b06a]"
                       aria-hidden="true"
                     />
 
