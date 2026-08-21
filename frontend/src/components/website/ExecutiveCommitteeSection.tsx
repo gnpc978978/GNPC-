@@ -194,12 +194,17 @@ export default function ExecutiveCommitteeSection({
         homeSection.description ||
         "Meet the Executive Committee of Greater Noida Press Club.";
 
-  const resolvedButtonLabel =
+  const rawButtonLabel =
     isDirectory
       ? "View All"
       : buttonLabel ||
         homeSection.buttonLabel ||
         "View All";
+
+  const resolvedButtonLabel =
+    rawButtonLabel.trim().toLowerCase() === "explore"
+      ? "View All Members"
+      : rawButtonLabel;
 
   const resolvedButtonHref =
     isDirectory
@@ -870,17 +875,15 @@ export default function ExecutiveCommitteeSection({
                 duration:
                   0.6,
               }}
-              className="mt-10 flex justify-center sm:mt-12"
+              className="mt-6 flex justify-center sm:mt-8"
             >
-              <Button href={resolvedButtonHref}>
-                {
-                  resolvedButtonLabel
-                }
-
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
+              <Button
+                href={resolvedButtonHref}
+                variant="outline"
+                size="md"
+              >
+                {resolvedButtonLabel}
+                <ArrowRight size={17} />
               </Button>
             </motion.div>
           )}
