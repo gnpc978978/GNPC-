@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 
 export default function ContactCTA() {
   return (
-    <section className="bg-blue-700 py-14 sm:py-16">
+    <section className="bg-[#0b1f3a] py-14 sm:py-16">
       <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
         <h2 className="text-3xl font-bold text-white sm:text-4xl">
           Ready to Connect With Us?
