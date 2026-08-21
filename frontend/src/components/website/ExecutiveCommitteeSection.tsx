@@ -418,7 +418,7 @@ export default function ExecutiveCommitteeSection({
 
   if (isDirectory) {
     return (
-      <section className="bg-slate-50 py-12 text-slate-900 sm:py-16 lg:py-20">
+      <section className="bg-[#f4f7fb] py-12 text-slate-900 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Filters */}
 
@@ -700,7 +700,7 @@ export default function ExecutiveCommitteeSection({
    */
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 py-16 text-slate-900 sm:py-20 lg:py-24">
+    <section className="relative overflow-hidden bg-[#f4f7fb] py-16 text-slate-900 sm:py-20 lg:py-24">
       {/* =====================================================
           BACKGROUND
           ===================================================== */}
@@ -709,9 +709,9 @@ export default function ExecutiveCommitteeSection({
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-blue-100/70 blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-[#f0e5c9]/70 blur-3xl" />
 
-        <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-blue-50 blur-3xl" />
+        <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#f7f2e6] blur-3xl" />
 
         <div
           className="absolute inset-0 opacity-[0.06]"
@@ -750,7 +750,7 @@ export default function ExecutiveCommitteeSection({
           <div className="flex items-center justify-center gap-3">
             <span className="h-px w-8 bg-blue-200 sm:w-12" />
 
-            <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-[#155eef] sm:text-[10px]">
+            <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-[#d4b06a] sm:text-[10px]">
               <Sparkles
                 size={11}
               />
