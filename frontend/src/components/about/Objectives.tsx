@@ -34,14 +34,14 @@ const objectives = [
 
 export default function Objectives() {
   return (
-    <section className="bg-slate-50 py-12 sm:py-20">
+    <section className="bg-[#f4f7fb] py-12 sm:py-20">
       <div className="mx-auto max-w-7xl px-6">
 
 
         {/* Heading */}
         <div className="text-center">
 
-          <span className="inline-flex rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-widest text-blue-700">
+          <span className="inline-flex rounded-full bg-[#f0e5c9] px-4 py-2 text-sm font-semibold uppercase tracking-widest text-[#9a7631]">
             Our Objectives
           </span>
 
@@ -68,11 +68,11 @@ export default function Objectives() {
 
             <div
               key={index}
-              className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-3 hover:border-blue-200 hover:shadow-xl"
+              className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-3 hover:border-[#d4b06a]/50 hover:shadow-xl"
             >
 
 
-              <div className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-3xl text-white transition duration-300 group-hover:scale-110">
+              <div className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0b1f3a] text-3xl text-white transition duration-300 group-hover:scale-110">
 
                 {item.icon}
 
