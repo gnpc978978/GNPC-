@@ -146,10 +146,10 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="bg-slate-50 py-14 sm:py-20">
+    <section className="bg-[#f4f7fb] py-14 sm:py-20">
       <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
         <div className="mb-7 text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#155eef]">Contact GNPC</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#d4b06a]">Contact GNPC</p>
           <h2 className="mt-2 text-3xl font-bold text-slate-950">
             Send Us a Message
           </h2>
