@@ -9,6 +9,7 @@ import { navigation } from "@/data/navigation";
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
+import Button from "@/components/ui/Button";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -61,25 +62,15 @@ export default function Navbar() {
 
             {/* ADMIN */}
             <div className="hidden shrink-0 xl:block">
-              <Link
+              <Button
                 href="/admin/login"
-                className="group/admin relative inline-flex h-11 items-center justify-center gap-2 overflow-hidden rounded-xl border border-[#155eef] bg-[#155eef] px-5 text-xs font-extrabold tracking-[0.06em] text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#004eeb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2"
+                variant="primary"
+                size="md"
+                className="text-xs tracking-[0.06em]"
               >
-                <span className="relative z-10">
-                  Admin Login
-                </span>
-
-                <HiArrowUpRight
-                  size={16}
-                  className="relative z-10 transition-transform duration-300 group-hover/admin:translate-x-0.5 group-hover/admin:-translate-y-0.5"
-                  aria-hidden="true"
-                />
-
-                <span
-                  aria-hidden="true"
-                  className="absolute -left-[80%] top-0 h-full w-1/2 skew-x-[-20deg] bg-white/20 transition-all duration-700 group-hover/admin:left-[130%]"
-                />
-              </Link>
+                Admin Login
+                <HiArrowUpRight size={16} aria-hidden="true" />
+              </Button>
             </div>
 
             {/* MOBILE MENU */}
