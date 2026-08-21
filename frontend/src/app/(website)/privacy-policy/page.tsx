@@ -3,7 +3,7 @@ import PageHero from "@/components/ui/PageHero";
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="bg-white">
+    <main className="bg-[#f8fafc]">
       <PageHero
         eyebrow="Legal"
         title="Privacy Policy"
