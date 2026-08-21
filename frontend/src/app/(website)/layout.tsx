@@ -103,7 +103,7 @@ export default function WebsiteLayout({
           Both remain fixed together while scrolling.
           ===================================================== */}
 
-      <header className="fixed inset-x-0 top-0 z-[200] w-full">
+      <header className="gnpc-site-header fixed inset-x-0 top-0 z-[200] w-full">
         {/* TOP BAR */}
         <TopBar />
 
