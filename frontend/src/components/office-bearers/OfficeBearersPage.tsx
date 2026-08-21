@@ -85,7 +85,7 @@ export default function OfficeBearersPage({
   const totalPages = Math.max(1, Math.ceil(allMembers.length / pageSize));
 
   return (
-    <section className="min-h-screen bg-slate-50 py-12 sm:py-16 lg:py-20">
+    <section className="min-h-screen bg-[#f4f7fb] py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Filters */}
         {(settings?.showSearch !== false || settings?.showFilters !== false) && (
@@ -104,7 +104,7 @@ export default function OfficeBearersPage({
                 )
               }
               placeholder="Search by name, organization, designation, or email"
-              className="w-full rounded-xl border border-slate-200 py-3 pl-4 pr-4 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 py-3 pl-4 pr-4 outline-none transition focus:border-[#d4b06a] focus:ring-4 focus:ring-[#d4b06a]/20"
             />
           </label>
           )}
@@ -271,7 +271,7 @@ export default function OfficeBearersPage({
         ) : (
           <div className="mt-10 rounded-2xl bg-white py-16 text-center text-slate-500 shadow-sm">
             <SearchX
-              className="mx-auto h-12 w-12 text-blue-600"
+              className="mx-auto h-12 w-12 text-[#b08a3e]"
               aria-hidden="true"
             />
 
