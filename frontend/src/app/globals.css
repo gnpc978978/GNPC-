@@ -1,214 +1,192 @@
-@import "tailwindcss";
+"use client";
 
-:root {
-  --gnpc-ink: #111827;
-  --gnpc-ink-soft: #273449;
-  --gnpc-navy: #0b1f3a;
-  --gnpc-navy-2: #102d50;
-  --gnpc-gold: #c9a45c;
-  --gnpc-gold-soft: #e8d7ad;
-  --gnpc-cream: #f6f1e8;
-  --gnpc-paper: #fbfaf7;
-  --gnpc-surface: #ffffff;
-  --gnpc-muted: #6b7280;
-  --gnpc-border: #e5dfd2;
-  --gnpc-danger: #b42318;
-  --gnpc-container: 1320px;
-  --gnpc-radius: 22px;
-  --gnpc-shadow: 0 18px 60px rgba(17, 24, 39, .10);
-  --gnpc-shadow-lg: 0 30px 90px rgba(11, 31, 58, .16);
-  --gnpc-ease: cubic-bezier(.22,1,.36,1);
+import About from "@/components/home/About";
+import CTA from "@/components/home/CTA";
+import Gallery from "@/components/home/Gallery";
+import Hero from "@/components/home/Hero";
+import LatestUpdates from "@/components/home/LatestUpdates";
+import Objectives from "@/components/home/Objectives";
+import OfficeBearersSection from "@/components/home/OfficeBearersSection";
+import PressConference from "@/components/home/PressConference";
+import ExecutiveCommitteeSection from "@/components/website/ExecutiveCommitteeSection";
+
+import {
+  mergeHomeSettings,
+  type HomeSectionKey,
+} from "@/types/homeSettings";
+
+import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+
+export default function Home() {
+  const { settings } =
+    useWebsiteSettings();
+
+  const home =
+    mergeHomeSettings(
+      settings.home
+    );
+
+  const orderedSections =
+    (
+      Object.keys(
+        home.sections
+      ) as HomeSectionKey[]
+    )
+      .filter(
+        (key) =>
+          home.sections[key]
+            .enabled
+      )
+      .sort(
+        (a, b) =>
+          home.sections[a].order -
+          home.sections[b].order
+      );
+
+  const renderSection = (
+    key: HomeSectionKey
+  ) => {
+    const section =
+      home.sections[key];
+
+    /*
+     * Keep the CMS background setting
+     * available to every homepage section.
+     *
+     * Individual redesigned components
+     * can still use their own visual system,
+     * but the CMS remains the source of truth
+     * for section visibility/order.
+     */
+
+    const wrapperClass = [
+      "gnpc-section-shell",
+      section.background === "slate"
+        ? "gnpc-shell-muted"
+        : "gnpc-shell-paper",
+    ].join(" ");
+
+    switch (key) {
+      case "hero":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <Hero />
+          </div>
+        );
+
+      case "about":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <About />
+          </div>
+        );
+
+      case "objectives":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <Objectives />
+          </div>
+        );
+
+      case "latestUpdates":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <LatestUpdates />
+          </div>
+        );
+
+      case "gallery":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <Gallery />
+          </div>
+        );
+
+      case "pressConferences":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <PressConference />
+          </div>
+        );
+
+      case "executiveCommittee":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <ExecutiveCommitteeSection
+              limit={
+                home
+                  .executiveCommittee
+                  .displayCount
+              }
+              showViewAll={
+                home
+                  .executiveCommittee
+                  .showViewAll
+              }
+              title={
+                home
+                  .executiveCommittee
+                  .title
+              }
+              settings={
+                settings.pageSettings
+                  ?.executiveCommittee
+              }
+            />
+          </div>
+        );
+
+      case "officeBearers":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <OfficeBearersSection />
+          </div>
+        );
+
+      case "membership":
+        return (
+          <div
+            key={key}
+            className={wrapperClass}
+          >
+            <CTA />
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      {orderedSections.map(
+        renderSection
+      )}
+    </>
+  );
 }
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: var(--gnpc-ink);
-  background:
-    radial-gradient(circle at 10% 0%, rgba(201,164,92,.10), transparent 28rem),
-    radial-gradient(circle at 90% 18%, rgba(11,31,58,.07), transparent 32rem),
-    var(--gnpc-paper);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-img { display:block; max-width:100%; }
-a { color:inherit; text-decoration:none; }
-button { cursor:pointer; }
-button, a { -webkit-tap-highlight-color: transparent; }
-button:disabled { cursor:not-allowed; }
-
-h1,h2,h3,h4,h5,h6 {
-  margin:0;
-  color:var(--gnpc-ink);
-  letter-spacing:-.045em;
-  text-wrap:balance;
-}
-p { margin:0; }
-
-::selection { background:var(--gnpc-gold); color:var(--gnpc-navy); }
-:focus-visible { outline:2px solid var(--gnpc-gold); outline-offset:3px; }
-
-.gnpc-container {
-  width:100%;
-  max-width:var(--gnpc-container);
-  margin-inline:auto;
-  padding-inline:1rem;
-}
-@media (min-width:640px){.gnpc-container{padding-inline:1.5rem}}
-@media (min-width:1024px){.gnpc-container{padding-inline:2.5rem}}
-@media (min-width:1280px){.gnpc-container{padding-inline:3rem}}
-
-.gnpc-public {
-  min-height:100vh;
-  background:
-    linear-gradient(180deg, rgba(251,250,247,.94), rgba(246,241,232,.86));
-  color:var(--gnpc-ink);
-}
-
-.gnpc-section {
-  position:relative;
-  padding-block:clamp(4rem,7vw,7.5rem);
-}
-.gnpc-section-white { background:rgba(255,255,255,.78); }
-.gnpc-section-muted { background:linear-gradient(180deg,#f6f1e8,#fbfaf7); }
-.gnpc-section-blue { background:linear-gradient(135deg,#0b1f3a,#17395f); }
-
-.gnpc-section::before {
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background-image:linear-gradient(rgba(11,31,58,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(11,31,58,.025) 1px,transparent 1px);
-  background-size:56px 56px;
-  mask-image:linear-gradient(to bottom,black,transparent 90%);
-}
-
-.gnpc-eyebrow,
-.gnpc-composition-eyebrow {
-  display:inline-flex;
-  align-items:center;
-  gap:.7rem;
-  color:var(--gnpc-gold);
-  font-size:.68rem;
-  font-weight:900;
-  line-height:1;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-}
-.gnpc-eyebrow::before,
-.gnpc-composition-eyebrow > span:first-child {
-  background:currentColor !important;
-}
-
-.gnpc-text-composition { display:flex; width:min(100%,52rem); flex-direction:column; }
-.gnpc-composition-eyebrow-text { font-size:.68rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
-.gnpc-page-title,.gnpc-section-title {
-  color:var(--gnpc-ink);
-  font-weight:900;
-  line-height:1.02;
-  letter-spacing:-.055em;
-}
-.gnpc-page-title { margin-top:1rem; font-size:clamp(2.6rem,6vw,5.3rem); }
-.gnpc-composition-description {
-  width:min(100%,44rem);
-  margin-top:1.25rem;
-  color:var(--gnpc-muted);
-  font-size:clamp(1rem,1.5vw,1.18rem);
-  line-height:1.75;
-}
-.gnpc-text-composition.items-center .gnpc-composition-description{text-align:center}
-.gnpc-text-composition.items-start .gnpc-composition-description{text-align:left}
-
-.gnpc-card {
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(17,24,39,.09);
-  border-radius:var(--gnpc-radius);
-  background:rgba(255,255,255,.86);
-  box-shadow:var(--gnpc-shadow);
-  backdrop-filter:blur(18px);
-  transition:transform .45s var(--gnpc-ease),box-shadow .45s var(--gnpc-ease),border-color .3s ease;
-}
-.gnpc-card:hover { transform:translateY(-6px); box-shadow:var(--gnpc-shadow-lg); border-color:rgba(201,164,92,.42); }
-
-.gnpc-btn {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:.55rem;
-  min-height:44px;
-  padding:.8rem 1.15rem;
-  border-radius:14px;
-  font-weight:800;
-  line-height:1;
-  transition:transform .3s var(--gnpc-ease),box-shadow .3s var(--gnpc-ease),background-color .3s ease,border-color .3s ease;
-}
-.gnpc-btn:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(11,31,58,.14); }
-.gnpc-btn svg { transition:transform .3s var(--gnpc-ease); }
-.gnpc-btn:hover svg { transform:translateX(3px); }
-
-.gnpc-image-wrap { overflow:hidden; }
-.gnpc-image-wrap img { transition:transform .8s var(--gnpc-ease),filter .5s ease; }
-.gnpc-image-wrap:hover img { transform:scale(1.06); }
-
-.gnpc-public :is(input:not([type=checkbox]):not([type=radio]),select,textarea) {
-  border:1px solid var(--gnpc-border);
-  border-radius:14px;
-  background:rgba(255,255,255,.92);
-  color:var(--gnpc-ink);
-  transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease;
-}
-.gnpc-public :is(input:not([type=checkbox]):not([type=radio]),select,textarea):focus {
-  border-color:var(--gnpc-gold);
-  box-shadow:0 0 0 4px rgba(201,164,92,.15);
-  outline:none;
-}
-.gnpc-public input::placeholder,.gnpc-public textarea::placeholder{color:#9ca3af}
-
-.gnpc-public section { scroll-margin-top:128px; }
-
-.gnpc-public .border-blue-100,.gnpc-public .border-slate-200,.gnpc-public .border-slate-100 { border-color:rgba(17,24,39,.09) !important; }
-.gnpc-public .text-blue-500,.gnpc-public .text-blue-600,.gnpc-public .text-\[\#155eef\] { color:var(--gnpc-gold) !important; }
-.gnpc-public .bg-blue-50,.gnpc-public .bg-slate-50 { background-color:#f6f1e8 !important; }
-.gnpc-public .text-slate-900,.gnpc-public .text-slate-800 { color:var(--gnpc-ink) !important; }
-.gnpc-public .text-slate-600,.gnpc-public .text-slate-500 { color:var(--gnpc-muted) !important; }
-
-@keyframes gnpc-reveal { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-.gnpc-reveal { animation:gnpc-reveal .7s var(--gnpc-ease) both; }
-
-@media (max-width:767px){
-  .gnpc-section{padding-block:3.8rem}
-  .gnpc-page-title{font-size:clamp(2.35rem,12vw,3.4rem)}
-}
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-}
-::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:#ece7dd}
-::-webkit-scrollbar-thumb{background:#a79a84;border:2px solid #ece7dd;border-radius:999px}
-::-webkit-scrollbar-thumb:hover{background:#806f54}
-
-.gnpc-section-shell{position:relative;overflow:hidden}
-.gnpc-shell-paper{background:linear-gradient(180deg,#fbfaf7 0%,#fff 45%,#f7f2e9 100%)}
-.gnpc-shell-muted{background:linear-gradient(180deg,#f1eadf 0%,#fbfaf7 100%)}
-.gnpc-shell-paper:nth-child(even){background:linear-gradient(180deg,#fff 0%,#f6f1e8 100%)}
-.gnpc-section-shell > section{position:relative}
-.gnpc-section-shell > section::after{content:"";position:absolute;right:-9rem;top:15%;width:20rem;height:20rem;border-radius:50%;background:radial-gradient(circle,rgba(201,164,92,.10),transparent 68%);pointer-events:none}
-
-/* Legacy public palette translated into the new GNPC art direction. */
-.gnpc-public .bg-\[\#0b3b83\]{background-color:var(--gnpc-navy)!important}
-.gnpc-public .bg-\[\#0f4c81\]{background-color:var(--gnpc-navy-2)!important}
-.gnpc-public .bg-\[\#eff6ff\]{background-color:#f3eee5!important}
-.gnpc-public .bg-\[\#f4ede2\]{background-color:#f6f1e8!important}
-.gnpc-public .border-\[\#0b3b83\]{border-color:rgba(11,31,58,.7)!important}
-.gnpc-public .border-blue-900{border-color:rgba(11,31,58,.7)!important}
-.gnpc-public .text-\[\#0b3b83\],.gnpc-public .text-\[\#0f4c81\]{color:var(--gnpc-navy)!important}
-.gnpc-public .text-\[\#155eef\]{color:var(--gnpc-gold)!important}
-.gnpc-public .bg-\[\#ded0bb\],.gnpc-public .bg-\[\#d8c7af\]\/30,.gnpc-public .bg-\[\#d8c7af\]\/45{background-color:#e8dfd0!important}
-.gnpc-public .hover\:bg-\[\#0b3b83\]:hover{background-color:#17395f!important}
-.gnpc-public .hover\:text-\[\#155eef\]:hover{color:var(--gnpc-gold)!important}
