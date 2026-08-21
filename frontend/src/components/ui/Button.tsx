@@ -36,10 +36,14 @@ type LinkElementProps = BaseProps &
     href: string;
   };
 
-export type ButtonProps =
-  | ButtonElementProps
-  | LinkElementProps;
+export type ButtonProps = ButtonElementProps | LinkElementProps;
 
+/**
+ * GNPC public CTA system.
+ *
+ * Keep the actual geometry here so every CTA that uses <Button />
+ * has the same height, radius, typography, icon spacing and motion.
+ */
 const baseClasses = [
   "gnpc-btn",
   "group",
@@ -53,21 +57,17 @@ const baseClasses = [
   "gap-2",
   "whitespace-nowrap",
   "select-none",
-  "overflow-hidden",
-  "rounded-lg",
+  "rounded-xl",
   "border",
   "px-5",
   "py-3",
   "text-sm",
-  "font-extrabold",
+  "font-bold",
   "leading-none",
   "tracking-[-0.01em]",
   "transition-all",
-  "duration-300",
+  "duration-200",
   "ease-out",
-  "shadow-[0_6px_18px_rgba(15,23,42,0.10)]",
-  "hover:-translate-y-0.5",
-  "hover:shadow-[0_12px_24px_rgba(15,23,42,0.14)]",
   "focus-visible:outline-none",
   "focus-visible:ring-2",
   "focus-visible:ring-[#155eef]",
@@ -75,6 +75,10 @@ const baseClasses = [
   "disabled:pointer-events-none",
   "disabled:cursor-not-allowed",
   "disabled:opacity-50",
+  "[&_svg]:shrink-0",
+  "[&_svg]:transition-transform",
+  "[&_svg]:duration-200",
+  "hover:[&_svg]:translate-x-0.5",
 ].join(" ");
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -85,17 +89,17 @@ const sizeClasses: Record<ButtonSize, string> = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "border-[#155eef] bg-[#155eef] text-white hover:border-[#004eeb] hover:bg-[#004eeb]",
+    "border-[#155eef] bg-[#155eef] text-white shadow-[0_6px_18px_rgba(21,94,239,0.18)] hover:-translate-y-0.5 hover:border-[#004eeb] hover:bg-[#004eeb] hover:shadow-[0_10px_24px_rgba(21,94,239,0.24)]",
   outline:
-    "border-[#155eef] bg-white text-[#155eef] hover:bg-blue-50",
+    "border-slate-300 bg-white text-slate-900 shadow-sm hover:-translate-y-0.5 hover:border-[#155eef] hover:bg-blue-50 hover:text-[#0b3b83] hover:shadow-md",
   soft:
-    "border-blue-100 bg-blue-50 text-[#0b3b83] hover:bg-blue-100",
+    "border-blue-100 bg-blue-50 text-[#0b3b83] shadow-sm hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-100 hover:shadow-md",
   inverse:
-    "border-white bg-white text-[#0b3b83] hover:bg-blue-50",
+    "border-white bg-white text-[#0b3b83] shadow-[0_6px_18px_rgba(0,0,0,0.10)] hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-[0_10px_24px_rgba(0,0,0,0.14)]",
   danger:
-    "border-red-600 bg-red-600 text-white hover:border-red-700 hover:bg-red-700",
+    "border-red-600 bg-red-600 text-white shadow-sm hover:-translate-y-0.5 hover:border-red-700 hover:bg-red-700 hover:shadow-md",
   ghost:
-    "border-transparent bg-transparent text-[#155eef] shadow-none hover:bg-blue-50",
+    "border-transparent bg-transparent text-[#155eef] shadow-none hover:bg-blue-50 hover:text-[#0b3b83]",
 };
 
 function LoadingIndicator() {
@@ -107,9 +111,7 @@ function LoadingIndicator() {
   );
 }
 
-export default function Button(
-  props: ButtonProps
-) {
+export default function Button(props: ButtonProps) {
   const {
     children,
     variant = "primary",
