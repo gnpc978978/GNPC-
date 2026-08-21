@@ -527,21 +527,20 @@ export default function Objectives() {
             transition={{
               duration: 0.6,
             }}
-            className="mt-7 flex flex-col items-center justify-center gap-3 sm:mt-12"
+            className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8"
           >
             <Link
               href={
                 objectiveSettings.buttonHref ||
                 "/about"
               }
-              className="gnpc-btn group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-black text-[#171717] shadow-[0_10px_28px_rgba(23,23,23,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f7f2e9]"
+              className="gnpc-btn group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white bg-white px-5 py-3 text-sm font-bold text-[#171717] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4ede2]"
             >
-              {objectiveSettings.buttonLabel}
+              {objectiveSettings.buttonLabel.trim().toLowerCase() === "learn more"
+                ? "View All Objectives"
+                : objectiveSettings.buttonLabel}
 
-              <ArrowRight
-                size={17}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <ArrowRight size={17} />
             </Link>
           </motion.div>
         )}
