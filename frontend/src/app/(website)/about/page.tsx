@@ -239,7 +239,7 @@ function normalizeAbout(
 
 function PageSkeleton() {
   return (
-    <main className="min-h-screen bg-[#f4ede2]">
+    <main className="min-h-screen bg-[#f4f7fb]">
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl animate-pulse">
           <div className="h-4 w-48 rounded bg-black/5" />
@@ -274,7 +274,7 @@ function ErrorState({
   onRetry: () => void;
 }) {
   return (
-    <main className="flex min-h-[65vh] items-center justify-center bg-[#f4ede2] px-4 py-16 sm:px-6">
+    <main className="flex min-h-[65vh] items-center justify-center bg-[#f4f7fb] px-4 py-16 sm:px-6">
       <div className="w-full max-w-xl rounded-[2rem] border border-black/10 bg-white/65 p-7 text-center shadow-[0_20px_55px_rgba(38,32,23,0.08)] backdrop-blur-md sm:p-10">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#171717] text-white">
           <RefreshCw
@@ -430,7 +430,7 @@ function ItemIcon({
     icons[index % icons.length];
 
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#f4ede2] text-[#171717]">
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#f4f7fb] text-[#171717]">
       <Icon
         size={20}
         strokeWidth={2}
@@ -565,7 +565,7 @@ export default function AboutPage() {
   }
 
   return (
-    <main className="bg-[#f4ede2] text-[#171717]">
+    <main className="bg-[#f4f7fb] text-[#171717]">
       {/* =====================================================
           PAGE HERO
           ===================================================== */}
@@ -599,7 +599,7 @@ export default function AboutPage() {
           INTRO
           ===================================================== */}
 
-      <section className="relative overflow-hidden bg-[#f4ede2] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <section className="relative overflow-hidden bg-[#f4f7fb] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-40 top-0 h-[26rem] w-[26rem] rounded-full bg-white/70 blur-3xl"
@@ -607,7 +607,7 @@ export default function AboutPage() {
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-40 right-0 h-[26rem] w-[26rem] rounded-full bg-[#d8c7af]/30 blur-3xl"
+          className="pointer-events-none absolute -bottom-40 right-0 h-[26rem] w-[26rem] rounded-full bg-[#b8c7d8]/30 blur-3xl"
         />
 
         <div className="relative mx-auto max-w-7xl">
@@ -704,7 +704,7 @@ export default function AboutPage() {
               }}
               className="relative"
             >
-              <div className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] bg-[#d8c7af]/45" />
+              <div className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] bg-[#b8c7d8]/45" />
 
               <CMSImage
                 src={
@@ -737,7 +737,7 @@ export default function AboutPage() {
           ===================================================== */}
 
       {content.media.length > 0 && (
-        <section className="relative overflow-hidden bg-[#f4ede2] px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
+        <section className="relative overflow-hidden bg-[#f4f7fb] px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
           <div className="relative mx-auto max-w-7xl">
             <motion.div
               initial={{
@@ -781,7 +781,7 @@ export default function AboutPage() {
           MISSION / VISION
           ===================================================== */}
 
-      <section className="relative overflow-hidden bg-white px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <section className="relative overflow-hidden bg-[#f8fafc] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
         <div className="relative mx-auto max-w-7xl">
           <SectionIntro
             eyebrow={
@@ -818,7 +818,7 @@ export default function AboutPage() {
           >
             <motion.article
               variants={itemVariants}
-              className="group relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#f4ede2] p-6 sm:p-8"
+              className="group relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#f4f7fb] p-6 sm:p-8"
             >
               <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white/70 blur-2xl transition group-hover:scale-125" />
 
@@ -845,7 +845,7 @@ export default function AboutPage() {
 
             <motion.article
               variants={itemVariants}
-              className="group relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b3b83] p-6 text-white sm:p-8"
+              className="group relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b1f3a] p-6 text-white sm:p-8"
             >
               <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white/10 blur-2xl transition group-hover:scale-125" />
 
@@ -879,7 +879,7 @@ export default function AboutPage() {
 
       {content.objectives
         .length > 0 && (
-        <section className="relative overflow-hidden bg-[#f4ede2] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+        <section className="relative overflow-hidden bg-[#f4f7fb] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
           <div className="relative mx-auto max-w-7xl">
             <SectionIntro
               eyebrow={
@@ -951,7 +951,7 @@ export default function AboutPage() {
                       </div>
                     </div>
 
-                    <div className="absolute -bottom-12 -right-12 h-28 w-28 rounded-full bg-[#d8c7af]/20 blur-2xl transition duration-500 group-hover:scale-125" />
+                    <div className="absolute -bottom-12 -right-12 h-28 w-28 rounded-full bg-[#b8c7d8]/20 blur-2xl transition duration-500 group-hover:scale-125" />
                   </motion.article>
                 )
               )}
@@ -967,7 +967,7 @@ export default function AboutPage() {
       {(content.presidentName ||
         content.presidentMessage ||
         content.presidentPhoto) && (
-        <section className="relative overflow-hidden bg-[#f4ede2] px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <section className="relative overflow-hidden bg-[#f4f7fb] px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <div className="relative mx-auto max-w-7xl">
             <SectionIntro
               eyebrow="President's Message"
@@ -995,21 +995,23 @@ export default function AboutPage() {
               transition={{
                 duration: 0.7,
               }}
-              className="mx-auto mt-10 max-w-6xl overflow-hidden rounded-[2rem] border border-black/10 bg-white shadow-[0_24px_65px_rgba(38,32,23,0.10)] sm:mt-12"
+              className="mx-auto mt-10 max-w-6xl overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-[0_28px_80px_rgba(7,26,46,0.12)] sm:mt-12"
             >
-              <div className="grid items-stretch lg:grid-cols-[340px_1fr]">
-                <div className="relative min-h-[320px] overflow-hidden bg-[#e8dfd1] sm:min-h-[380px]">
+              <div className="grid items-stretch lg:grid-cols-[360px_1fr]">
+                <div className="relative min-h-[360px] overflow-hidden bg-[#e8eef4] sm:min-h-[440px] lg:min-h-[500px]">
                   {content.presidentPhoto ? (
-                    <Image
-                      src={content.presidentPhoto}
-                      alt={content.presidentName || "President"}
-                      fill
-                      sizes="(min-width: 1024px) 340px, 100vw"
-                      className="object-cover transition duration-700 hover:scale-[1.02]"
-                    />
+                    <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6">
+                      <Image
+                        src={content.presidentPhoto}
+                        alt={content.presidentName || "President"}
+                        fill
+                        sizes="(min-width: 1024px) 360px, 100vw"
+                        className="object-contain object-center p-3 sm:p-5"
+                      />
+                    </div>
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#0b3b83] text-4xl font-black text-white">
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#0b1f3a] text-4xl font-black text-white">
                         {content.presidentName?.charAt(0)?.toUpperCase() || "P"}
                       </div>
                     </div>
@@ -1035,7 +1037,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-12">
-                  <div className="inline-flex w-fit items-center rounded-full border border-black/10 bg-[#f4ede2] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50">
+                  <div className="inline-flex w-fit items-center rounded-full border border-black/10 bg-[#f4f7fb] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50">
                     President's Message
                   </div>
 
@@ -1059,7 +1061,7 @@ export default function AboutPage() {
 
       {content.reasons
         .length > 0 && (
-        <section className="relative overflow-hidden bg-[#f4ede2] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+        <section className="relative overflow-hidden bg-[#f4f7fb] px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
           <div className="relative mx-auto max-w-7xl">
             <SectionIntro
               eyebrow={
