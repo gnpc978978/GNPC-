@@ -57,7 +57,7 @@ const baseClasses = [
   "gap-2",
   "whitespace-nowrap",
   "select-none",
-  "rounded-xl",
+  "rounded-[0.9rem]",
   "border",
   "px-5",
   "py-3",
@@ -69,9 +69,6 @@ const baseClasses = [
   "duration-200",
   "ease-out",
   "focus-visible:outline-none",
-  "focus-visible:ring-2",
-  "focus-visible:ring-[#155eef]",
-  "focus-visible:ring-offset-2",
   "disabled:pointer-events-none",
   "disabled:cursor-not-allowed",
   "disabled:opacity-50",
@@ -89,17 +86,17 @@ const sizeClasses: Record<ButtonSize, string> = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "border-[#155eef] bg-[#155eef] text-white shadow-[0_6px_18px_rgba(21,94,239,0.18)] hover:-translate-y-0.5 hover:border-[#004eeb] hover:bg-[#004eeb] hover:shadow-[0_10px_24px_rgba(21,94,239,0.24)]",
+    "border-[#d4b06a] bg-[#d4b06a] text-[#071a2e] shadow-[0_10px_28px_rgba(212,176,106,0.24)] hover:-translate-y-0.5 hover:border-[#e2c27d] hover:bg-[#e2c27d] hover:shadow-[0_15px_38px_rgba(212,176,106,0.30)]",
   outline:
-    "border-slate-300 bg-white text-slate-900 shadow-sm hover:-translate-y-0.5 hover:border-[#155eef] hover:bg-blue-50 hover:text-[#0b3b83] hover:shadow-md",
+    "border-[#b9c5d2] bg-white/85 text-[#0b1728] shadow-[0_8px_22px_rgba(7,26,46,0.06)] hover:-translate-y-0.5 hover:border-[#d4b06a] hover:bg-white hover:text-[#0b1728]",
   soft:
-    "border-blue-100 bg-blue-50 text-[#0b3b83] shadow-sm hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-100 hover:shadow-md",
+    "border-[#d8e1ea] bg-[#eaf0f6] text-[#0b1f3a] shadow-sm hover:-translate-y-0.5 hover:border-[#d4b06a]/60 hover:bg-white hover:shadow-md",
   inverse:
-    "border-white bg-white text-[#0b3b83] shadow-[0_6px_18px_rgba(0,0,0,0.10)] hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-[0_10px_24px_rgba(0,0,0,0.14)]",
+    "border-white/80 bg-white text-[#071a2e] shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 hover:border-[#e2c27d] hover:bg-[#e2c27d] hover:text-[#071a2e]",
   danger:
     "border-red-600 bg-red-600 text-white shadow-sm hover:-translate-y-0.5 hover:border-red-700 hover:bg-red-700 hover:shadow-md",
   ghost:
-    "border-transparent bg-transparent text-[#155eef] shadow-none hover:bg-blue-50 hover:text-[#0b3b83]",
+    "border-transparent bg-transparent text-[#0b1f3a] shadow-none hover:bg-[#eaf0f6] hover:text-[#071a2e]",
 };
 
 function LoadingIndicator() {
