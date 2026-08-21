@@ -14,7 +14,7 @@ export default function MobileMenu({open,setOpen}:{open:boolean;setOpen:React.Di
   <motion.aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Navigation menu" initial={{x:"100%"}} animate={{x:0}} exit={{x:"100%"}} transition={{type:"spring",damping:30,stiffness:280}} className="fixed bottom-0 right-0 top-0 z-[999] flex w-full max-w-[430px] flex-col overflow-hidden border-l border-white/10 bg-[#0b1f3a] text-white shadow-[-30px_0_80px_rgba(0,0,0,.3)] xl:hidden">
    <div className="h-1 bg-gradient-to-r from-[#c9a45c] via-[#e8d7ad] to-[#c9a45c]"/>
    <div className="flex items-center justify-between border-b border-white/10 px-5 py-5 sm:px-7">
-    <Link href="/" onClick={()=>setOpen(false)} className="rounded-xl bg-white p-2"><Logo/></Link>
+    <Logo/>
     <button type="button" onClick={()=>setOpen(false)} aria-label="Close navigation menu" className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[.06] transition hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#0b1f3a]"><HiXMark size={24}/></button>
    </div>
    <div className="border-b border-white/10 bg-white/[.03] px-5 py-5 sm:px-7"><p className="text-[10px] font-black uppercase tracking-[.22em] text-[#c9a45c]">Greater Noida Press Club</p><p className="mt-2 text-sm font-semibold leading-6 text-white/55">Journalism, media and community — connected through GNPC.</p></div>

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HiArrowUpRight, HiBars3 } from "react-icons/hi2";
 import { navigation } from "@/data/navigation";
@@ -23,11 +22,7 @@ export default function Navbar() {
         <nav aria-label="Primary navigation" className="relative z-[120] mx-auto w-full max-w-[1320px] overflow-hidden rounded-[0_0_24px_24px] border border-white/10 bg-[#0b1f3a]/95 text-white shadow-[0_18px_50px_rgba(11,31,58,.24)] backdrop-blur-2xl">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45c] to-transparent" />
           <div className="flex min-h-[70px] items-center justify-between gap-4 px-4 sm:min-h-[78px] sm:px-6 lg:px-8">
-            <Link href="/" aria-label="Greater Noida Press Club home" className="shrink-0">
-              <div className="rounded-xl bg-white px-2.5 py-1.5 transition-transform duration-300 hover:-translate-y-0.5">
-                <Logo variant="dark" />
-              </div>
-            </Link>
+            <Logo variant="gold" />
 
             <div className="hidden flex-1 items-center justify-center xl:flex">
               <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-white/[0.06] p-1">

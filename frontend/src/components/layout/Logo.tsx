@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 
 type LogoProps = {
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "gold";
 };
 
 export default function Logo({
@@ -26,6 +26,9 @@ export default function Logo({
   const isDark =
     variant === "dark";
 
+  const isGold =
+    variant === "gold";
+
   return (
     <Link
       href="/"
@@ -40,6 +43,9 @@ export default function Logo({
         "focus-visible:ring-2",
         "focus-visible:ring-[#0f4c81]",
         "focus-visible:ring-offset-2",
+        isDark
+          ? "focus-visible:ring-offset-white"
+          : "focus-visible:ring-offset-[#0b1f3a]",
       ].join(" ")}
     >
       {/* Logo */}
@@ -57,9 +63,7 @@ export default function Logo({
           "border",
           "border-slate-200",
           "bg-white",
-          isDark
-            ? ""
-            : "border-white/20",
+          isDark ? "" : "border-white/20",
         ].join(" ")}
       >
         <Image
@@ -88,7 +92,9 @@ export default function Logo({
             "sm:text-[16px]",
             isDark
               ? "text-slate-900 group-hover:text-[#0f4c81]"
-              : "text-white",
+              : isGold
+                ? "text-[#e8d7ad] group-hover:text-[#f0dfb7]"
+                : "text-white",
             "transition-colors",
             "duration-200",
           ].join(" ")}
@@ -106,7 +112,9 @@ export default function Logo({
             "tracking-[0.16em]",
             isDark
               ? "text-slate-400"
-              : "text-white/60",
+              : isGold
+                ? "text-[#d4b06a]/80"
+                : "text-white/60",
           ].join(" ")}
         >
           GNPC · Greater Noida
