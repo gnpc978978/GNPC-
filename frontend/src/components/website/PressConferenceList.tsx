@@ -786,7 +786,7 @@ export default function PressConferenceList({
                   }
                   variant="outline"
                   size="lg"
-                  className="group rounded-full border-black/15 bg-white/60"
+                  className="border-[#b9c5d2] bg-white"
                 >
                   {
                     buttonLabel

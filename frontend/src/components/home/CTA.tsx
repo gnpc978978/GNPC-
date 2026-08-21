@@ -317,8 +317,8 @@ export default function CTA() {
 
               <MembershipFormLink
                 unavailableLabel={primaryLabel}
-                className="gnpc-btn group flex-1"
-                unavailableClassName="gnpc-btn flex-1 cursor-not-allowed border border-white/30 bg-white/15 text-white/55"
+                className="gnpc-btn gnpc-btn-md group flex-1"
+                unavailableClassName="gnpc-btn gnpc-btn-md flex-1 cursor-not-allowed border border-white/30 bg-white/15 text-white/55"
               >
                 {primaryLabel}
                 <ArrowRight size={17} />
@@ -327,6 +327,7 @@ export default function CTA() {
               <Button
                 href={secondaryHref}
                 variant="outline"
+                size="md"
                 className="flex-1 border-white bg-transparent text-white hover:border-white hover:bg-white hover:text-[#0b1f3a] focus-visible:ring-white focus-visible:ring-offset-[#0b1f3a]"
               >
                 {secondaryLabel}

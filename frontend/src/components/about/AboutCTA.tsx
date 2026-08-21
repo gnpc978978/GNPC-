@@ -100,7 +100,7 @@ export default function AboutCTA({
                 unavailableLabel={
                   finalPrimaryLabel
                 }
-                className="gnpc-btn gnpc-btn-primary flex-1"
+                className="gnpc-btn gnpc-btn-md gnpc-btn-primary flex-1"
               >
                 <span className="truncate">
                   {
@@ -117,6 +117,7 @@ export default function AboutCTA({
               <Button
                 href={finalSecondaryHref}
                 variant="inverse"
+                size="md"
                 className="flex-1 border-white/30"
               >
                 <span className="truncate">

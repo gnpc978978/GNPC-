@@ -182,8 +182,8 @@ export default function Hero() {
 
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MembershipFormLink
-              className="gnpc-btn gnpc-btn-primary group flex-1"
-              unavailableClassName="gnpc-btn inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-100 px-5 py-3 text-sm font-bold leading-none text-slate-500"
+              className="gnpc-btn gnpc-btn-md gnpc-btn-primary group flex-1"
+              unavailableClassName="gnpc-btn gnpc-btn-md inline-flex flex-1 items-center justify-center border border-slate-300 bg-slate-100 text-slate-500"
             >
               {primaryLabel}
               <ArrowRight size={16} />
@@ -192,6 +192,8 @@ export default function Hero() {
             <Button
               href={home.hero.quickLinks[0]?.href || "/latest-updates"}
               variant="outline"
+              size="md"
+              className="flex-1"
             >
               <span>{secondaryLabel}</span>
               <ArrowRight size={16} />

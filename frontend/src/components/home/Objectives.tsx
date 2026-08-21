@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   ArrowRight,
   Award,
@@ -16,6 +15,8 @@ import {
   motion,
   type Variants,
 } from "framer-motion";
+
+import Button from "@/components/ui/Button";
 
 import {
   useWebsiteSettings,
@@ -529,19 +530,20 @@ export default function Objectives() {
             }}
             className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8"
           >
-            <Link
+            <Button
               href={
                 objectiveSettings.buttonHref ||
                 "/about"
               }
-              className="gnpc-btn gnpc-btn-secondary group inline-flex min-h-11"
+              variant="outline"
+              size="md"
             >
               {objectiveSettings.buttonLabel.trim().toLowerCase() === "learn more"
                 ? "View All Objectives"
                 : objectiveSettings.buttonLabel}
 
               <ArrowRight size={17} />
-            </Link>
+            </Button>
           </motion.div>
         )}
       </div>

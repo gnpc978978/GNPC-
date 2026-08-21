@@ -14,7 +14,7 @@ export default function ContactCTA() {
         </p>
 
         <div className="mt-7 flex justify-center">
-          <Button href="/" variant="inverse" size="lg">Back to Home</Button>
+          <Button href="/" variant="inverse" size="md">Back to Home</Button>
         </div>
       </div>
     </section>
