@@ -19,7 +19,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="w-full px-3 sm:px-5 lg:px-7">
+      <div className="gnpc-nav-frame w-full">
         <nav aria-label="Primary navigation" className="relative z-[120] mx-auto w-full max-w-[1320px] overflow-hidden rounded-[0_0_24px_24px] border border-white/10 bg-[#0b1f3a]/95 text-white shadow-[0_18px_50px_rgba(11,31,58,.24)] backdrop-blur-2xl">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45c] to-transparent" />
           <div className="flex min-h-[70px] items-center justify-between gap-4 px-4 sm:min-h-[78px] sm:px-6 lg:px-8">
