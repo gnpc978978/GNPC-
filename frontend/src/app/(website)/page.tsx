@@ -59,11 +59,12 @@ export default function Home() {
      * for section visibility/order.
      */
 
-    const wrapperClass =
-      section.background ===
-      "slate"
-        ? "bg-slate-50"
-        : "bg-white";
+    const wrapperClass = [
+      "gnpc-section-shell",
+      section.background === "slate"
+        ? "gnpc-shell-muted"
+        : "gnpc-shell-paper",
+    ].join(" ");
 
     switch (key) {
       case "hero":
