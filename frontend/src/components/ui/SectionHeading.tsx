@@ -48,7 +48,7 @@ export default function SectionHeading({
         >
           <span
             aria-hidden="true"
-            className="h-0.5 w-8 rounded-full bg-[#155eef]"
+            className="h-0.5 w-8 rounded-full bg-[#d4b06a]"
           />
           <span className="gnpc-composition-eyebrow-text">
             {badge}
