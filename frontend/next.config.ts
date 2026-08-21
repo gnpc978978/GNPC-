@@ -3,7 +3,10 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: path.resolve(__dirname),
+    // Vercel traces from the repository root. Keeping Turbopack on the same
+    // root avoids the production-build warning and makes local/CI resolution
+    // consistent without changing any application routes or runtime behavior.
+    root: path.resolve(__dirname, ".."),
   },
 
   images: {

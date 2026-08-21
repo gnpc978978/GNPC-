@@ -18,7 +18,7 @@ export default function TopBar() {
       setDate(now.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"}));
     };
     update();
-    const timer=window.setInterval(update,1000);
+    const timer=window.setInterval(update,60_000);
     return ()=>window.clearInterval(timer);
   },[]);
 
@@ -31,7 +31,7 @@ export default function TopBar() {
   return (
     <div className="relative z-[130] w-full overflow-hidden border-b border-white/10 bg-[#07172b] text-white/80">
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#c9a45c]/70 to-transparent"/>
-      <div className="mx-auto flex min-h-[38px] w-full max-w-[1320px] items-center justify-between gap-3 px-4 sm:min-h-[40px] sm:px-6 lg:px-8">
+      <div className="gnpc-container flex min-h-[38px] items-center justify-between gap-3 sm:min-h-[40px]">
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           <div className="flex items-center gap-2">
             <FaMapMarkerAlt size={10} className="text-[#c9a45c]" aria-hidden="true"/>

@@ -33,7 +33,7 @@ export default function Footer() {
     <footer className="relative overflow-hidden bg-[#07172b] text-white">
       <div className="absolute -right-32 top-0 h-96 w-96 rounded-full bg-[#c9a45c]/10 blur-3xl"/>
       <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-[#17395f]/50 blur-3xl"/>
-      <div className="relative mx-auto max-w-[1320px] px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <div className="gnpc-container relative py-14 sm:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_.7fr_.8fr_1fr] lg:gap-16">
           <div>
             <Link href="/" aria-label={`${siteName} home`} className="inline-flex rounded-2xl bg-white p-3 shadow-2xl"><Logo/></Link>
@@ -59,7 +59,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="relative border-t border-white/10">
-        <div className="mx-auto flex max-w-[1320px] flex-col gap-3 px-4 py-5 text-xs text-white/45 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+        <div className="gnpc-container flex flex-col gap-3 py-5 text-xs text-white/45 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>

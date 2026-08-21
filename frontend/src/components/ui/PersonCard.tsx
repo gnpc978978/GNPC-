@@ -27,7 +27,7 @@ export default function PersonCard({
 }: PersonCardProps) {
   const content = (
     <>
-      <div className="relative aspect-[4/3] overflow-hidden bg-blue-50">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#edf2f7]">
         {photo ? (
           <Image
             src={photo}
@@ -37,7 +37,7 @@ export default function PersonCard({
             className="object-cover transition duration-300 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-blue-50 to-slate-100 text-[#d4b06a]">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#edf2f7] to-[#f7f2e6] text-[#9a7631]">
             <UserRound size={44} strokeWidth={1.5} aria-hidden="true" />
             <span className="text-sm font-bold">{name.charAt(0)}</span>
           </div>
@@ -46,7 +46,7 @@ export default function PersonCard({
 
       <div className="min-w-0 p-4 sm:p-5">
         <h3 className="line-clamp-1 text-base font-bold text-slate-950 sm:text-lg">{name}</h3>
-        <p className="mt-1 line-clamp-1 text-sm font-semibold text-[#d4b06a]">{designation || "GNPC Member"}</p>
+        <p className="mt-1 line-clamp-1 text-sm font-semibold text-[#9a7631]">{designation || "GNPC Member"}</p>
         {(organization || state) && (
           <p className="mt-1 line-clamp-1 text-sm text-slate-600">
             {[organization, state].filter(Boolean).join(" · ")}
@@ -56,13 +56,13 @@ export default function PersonCard({
         {(email || phone) && (
           <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-sm text-slate-600">
             {email && (
-              <a href={`mailto:${email}`} className="flex min-w-0 items-center gap-2 transition hover:text-[#d4b06a]">
+              <a href={`mailto:${email}`} className="flex min-w-0 items-center gap-2 transition hover:text-[#9a7631]">
                 <Mail size={15} className="shrink-0" aria-hidden="true" />
                 <span className="truncate">{email}</span>
               </a>
             )}
             {phone && (
-              <a href={`tel:${phone}`} className="flex min-w-0 items-center gap-2 transition hover:text-[#d4b06a]">
+              <a href={`tel:${phone}`} className="flex min-w-0 items-center gap-2 transition hover:text-[#9a7631]">
                 <Phone size={15} className="shrink-0" aria-hidden="true" />
                 <span className="truncate">{phone}</span>
               </a>
@@ -73,7 +73,7 @@ export default function PersonCard({
     </>
   );
 
-  const className = "group block h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md";
+  const className = "group block h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/60 hover:shadow-md";
 
   return href ? <Link href={href} className={className}>{content}</Link> : <article className={className}>{content}</article>;
 }

@@ -86,7 +86,7 @@ export default function Hero() {
           HERO CONTENT
           ===================================================== */}
 
-      <div className="relative mx-auto w-full max-w-[1280px] px-4 pb-8 pt-10 sm:px-6 sm:pb-10 sm:pt-14 md:px-8 lg:px-10 lg:pb-12 lg:pt-16">
+      <div className="gnpc-container relative pb-8 pt-10 sm:pb-10 sm:pt-14 lg:pb-12 lg:pt-16">
         <motion.div
           initial={{
             opacity: 0,
@@ -219,7 +219,7 @@ export default function Hero() {
             duration: 1,
             ease: [0.22, 1, 0.36, 1],
           }}
-            className="relative mx-auto mt-8 w-full max-w-[1380px] sm:mt-10 lg:mt-12"
+            className="relative mx-auto mt-8 w-full max-w-[1240px] sm:mt-10 lg:mt-12"
         >
           <HeroCarousel
             fallbackImage={heroImage}
