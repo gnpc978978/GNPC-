@@ -414,7 +414,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#f4ede2] py-16 text-[#171717] sm:py-24 lg:py-28"
+      className="relative overflow-hidden bg-[#f8fafc] py-16 text-[#171717] sm:py-24 lg:py-28"
     >
       {/* =====================================================
           BACKGROUND
@@ -426,7 +426,7 @@ export default function About() {
       >
         <div className="absolute -left-40 top-20 h-[25rem] w-[25rem] rounded-full bg-white/70 blur-3xl" />
 
-        <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#d8c7af]/35 blur-3xl" />
+        <div className="absolute -bottom-40 right-0 h-[28rem] w-[28rem] rounded-full bg-[#b8c7d8]/35 blur-3xl" />
 
         <div
           className="absolute inset-0 opacity-[0.12]"
@@ -535,7 +535,7 @@ export default function About() {
 
             <div
               aria-hidden="true"
-              className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] border border-black/5 bg-[#d8c7af]/45 sm:-bottom-7 sm:-left-7"
+              className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] border border-black/5 bg-[#b8c7d8]/45 sm:-bottom-7 sm:-left-7"
             />
 
             {/* Decorative top card */}
@@ -594,7 +594,7 @@ export default function About() {
                   />
                 </motion.div>
               ) : (
-                <div className="relative flex aspect-[6/5] items-center justify-center bg-gradient-to-br from-[#e6d8c5] via-[#f4ede2] to-white">
+                <div className="relative flex aspect-[6/5] items-center justify-center bg-gradient-to-br from-[#e6d8c5] via-[#f4f7fb] to-white">
                   <div className="text-center text-black/40">
                     <ImageOff
                       className="mx-auto"
@@ -741,7 +741,6 @@ export default function About() {
                   }
                   variant="outline"
                   size="md"
-                  className="group"
                 >
                   {about.buttonLabel.trim().toLowerCase() === "explore"
                     ? "Learn More About GNPC"
