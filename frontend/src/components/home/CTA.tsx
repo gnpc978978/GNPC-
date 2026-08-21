@@ -62,7 +62,7 @@ export default function CTA() {
   return (
     <section
       id="membership"
-      className="relative overflow-hidden bg-[#f4ede2] px-4 py-14 text-[#171717] sm:px-6 sm:py-20 lg:px-8 lg:py-24"
+      className="relative overflow-hidden bg-[#edf3f8] px-4 py-14 text-[#171717] sm:px-6 sm:py-20 lg:px-8 lg:py-24"
     >
       {/* =====================================================
           BACKGROUND
@@ -118,7 +118,7 @@ export default function CTA() {
               1,
             ],
           }}
-          className="relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b3b83] shadow-[0_18px_45px_rgba(15,59,131,0.18)]"
+          className="relative overflow-hidden rounded-xl border border-blue-900 bg-[#0b1f3a] shadow-[0_18px_45px_rgba(15,59,131,0.18)]"
         >
           {/* =================================================
               DECORATIVE CIRCLES
@@ -327,7 +327,7 @@ export default function CTA() {
               <Button
                 href={secondaryHref}
                 variant="outline"
-                className="flex-1 border-white bg-transparent text-white hover:border-white hover:bg-white hover:text-[#0b3b83] focus-visible:ring-white focus-visible:ring-offset-[#0b3b83]"
+                className="flex-1 border-white bg-transparent text-white hover:border-white hover:bg-white hover:text-[#0b1f3a] focus-visible:ring-white focus-visible:ring-offset-[#0b1f3a]"
               >
                 {secondaryLabel}
                 <ArrowRight size={17} />
