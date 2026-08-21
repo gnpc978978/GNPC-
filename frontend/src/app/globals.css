@@ -1,192 +1,162 @@
-"use client";
+@import "tailwindcss";
 
-import About from "@/components/home/About";
-import CTA from "@/components/home/CTA";
-import Gallery from "@/components/home/Gallery";
-import Hero from "@/components/home/Hero";
-import LatestUpdates from "@/components/home/LatestUpdates";
-import Objectives from "@/components/home/Objectives";
-import OfficeBearersSection from "@/components/home/OfficeBearersSection";
-import PressConference from "@/components/home/PressConference";
-import ExecutiveCommitteeSection from "@/components/website/ExecutiveCommitteeSection";
+:root {
+  --gnpc-ink: #10243d;
+  --gnpc-ink-soft: #29415d;
+  --gnpc-navy: #071a2e;
+  --gnpc-navy-2: #0d2945;
+  --gnpc-gold: #c9a45c;
+  --gnpc-gold-soft: #e8d4a8;
+  --gnpc-paper: #f6f1e7;
+  --gnpc-paper-2: #fbf8f1;
+  --gnpc-mist: #e9eef2;
+  --gnpc-white: #fffdf8;
+  --gnpc-line: rgba(16, 36, 61, .12);
+}
 
-import {
-  mergeHomeSettings,
-  type HomeSectionKey,
-} from "@/types/homeSettings";
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--gnpc-paper);
+  color: var(--gnpc-ink);
+  font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+*, *::before, *::after { box-sizing: border-box; }
+::selection { background: var(--gnpc-gold); color: var(--gnpc-navy); }
 
-import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
+a { text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
 
-export default function Home() {
-  const { settings } =
-    useWebsiteSettings();
+.gnpc-public {
+  min-height: 100vh;
+  overflow-x: clip;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(201,164,92,.12), transparent 26rem),
+    radial-gradient(circle at 92% 30%, rgba(13,41,69,.08), transparent 30rem),
+    var(--gnpc-paper);
+}
 
-  const home =
-    mergeHomeSettings(
-      settings.home
-    );
+.gnpc-container {
+  width: min(100% - 2rem, 1240px);
+  margin-inline: auto;
+}
+@media (min-width: 640px) { .gnpc-container { width: min(100% - 3rem, 1240px); } }
+@media (min-width: 1024px) { .gnpc-container { width: min(100% - 5rem, 1240px); } }
 
-  const orderedSections =
-    (
-      Object.keys(
-        home.sections
-      ) as HomeSectionKey[]
-    )
-      .filter(
-        (key) =>
-          home.sections[key]
-            .enabled
-      )
-      .sort(
-        (a, b) =>
-          home.sections[a].order -
-          home.sections[b].order
-      );
+.gnpc-section-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.gnpc-shell-paper {
+  background:
+    linear-gradient(180deg, rgba(255,253,248,.96), rgba(246,241,231,.98));
+}
+.gnpc-shell-muted {
+  background:
+    linear-gradient(135deg, #e7edf1 0%, #f4f0e7 55%, #e9eef2 100%);
+}
 
-  const renderSection = (
-    key: HomeSectionKey
-  ) => {
-    const section =
-      home.sections[key];
+.gnpc-section-title,
+.gnpc-section-heading {
+  color: var(--gnpc-ink);
+  letter-spacing: -.035em;
+  font-weight: 800;
+}
+.gnpc-section-title { font-size: clamp(2rem, 4vw, 4rem); line-height: .98; }
+.gnpc-section-heading { font-size: clamp(1.7rem, 3vw, 2.75rem); line-height: 1; }
 
-    /*
-     * Keep the CMS background setting
-     * available to every homepage section.
-     *
-     * Individual redesigned components
-     * can still use their own visual system,
-     * but the CMS remains the source of truth
-     * for section visibility/order.
-     */
+.gnpc-page-title {
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: .92;
+  letter-spacing: -.055em;
+  font-weight: 800;
+}
+.gnpc-hero-title {
+  font-size: clamp(2.75rem, 7vw, 7rem);
+  line-height: .88;
+  letter-spacing: -.06em;
+  font-weight: 850;
+}
 
-    const wrapperClass = [
-      "gnpc-section-shell",
-      section.background === "slate"
-        ? "gnpc-shell-muted"
-        : "gnpc-shell-paper",
-    ].join(" ");
+.gnpc-text-composition {
+  display: flex;
+  max-width: 850px;
+  flex-direction: column;
+  gap: 1rem;
+}
+.gnpc-composition-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  color: var(--gnpc-gold);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.gnpc-composition-eyebrow::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+}
+.gnpc-composition-eyebrow-text { color: inherit; }
+.gnpc-composition-description {
+  max-width: 680px;
+  color: var(--gnpc-ink-soft);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.75;
+}
 
-    switch (key) {
-      case "hero":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <Hero />
-          </div>
-        );
+.gnpc-card {
+  border: 1px solid var(--gnpc-line);
+  border-radius: 1.25rem;
+  background: rgba(255,253,248,.78);
+  box-shadow: 0 18px 60px rgba(7,26,46,.08);
+  backdrop-filter: blur(16px);
+}
+.gnpc-card-hover {
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.gnpc-card-hover:hover {
+  transform: translateY(-5px);
+  border-color: rgba(201,164,92,.5);
+  box-shadow: 0 24px 70px rgba(7,26,46,.14);
+}
 
-      case "about":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <About />
-          </div>
-        );
+.gnpc-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  border-radius: 999px;
+  padding: .7rem 1.15rem;
+  font-weight: 750;
+  transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
+}
+.gnpc-btn:hover { transform: translateY(-2px); }
+.gnpc-btn-md { min-height: 3rem; padding-inline: 1.35rem; }
+.gnpc-btn-primary {
+  background: var(--gnpc-gold);
+  color: var(--gnpc-navy);
+  box-shadow: 0 10px 30px rgba(201,164,92,.25);
+}
+.gnpc-btn-primary:hover { background: #d7b873; box-shadow: 0 14px 36px rgba(201,164,92,.32); }
+.gnpc-btn-secondary {
+  border: 1px solid rgba(16,36,61,.18);
+  background: rgba(255,253,248,.7);
+  color: var(--gnpc-ink);
+}
+.gnpc-btn-secondary:hover { border-color: var(--gnpc-gold); background: var(--gnpc-white); }
 
-      case "objectives":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <Objectives />
-          </div>
-        );
-
-      case "latestUpdates":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <LatestUpdates />
-          </div>
-        );
-
-      case "gallery":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <Gallery />
-          </div>
-        );
-
-      case "pressConferences":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <PressConference />
-          </div>
-        );
-
-      case "executiveCommittee":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <ExecutiveCommitteeSection
-              limit={
-                home
-                  .executiveCommittee
-                  .displayCount
-              }
-              showViewAll={
-                home
-                  .executiveCommittee
-                  .showViewAll
-              }
-              title={
-                home
-                  .executiveCommittee
-                  .title
-              }
-              settings={
-                settings.pageSettings
-                  ?.executiveCommittee
-              }
-            />
-          </div>
-        );
-
-      case "officeBearers":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <OfficeBearersSection />
-          </div>
-        );
-
-      case "membership":
-        return (
-          <div
-            key={key}
-            className={wrapperClass}
-          >
-            <CTA />
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <>
-      {orderedSections.map(
-        renderSection
-      )}
-    </>
-  );
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
 }
