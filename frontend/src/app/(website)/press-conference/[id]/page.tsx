@@ -106,7 +106,7 @@ export default function PressConferenceDetailsPage() {
   if (error || !item) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a7631]">
           Press Conference
         </p>
 
@@ -121,7 +121,7 @@ export default function PressConferenceDetailsPage() {
 
         <Link
           href="/press-conference"
-          className="mt-6 inline-block text-blue-700"
+          className="mt-6 inline-block text-[#9a7631]"
         >
           ← Back to Press Conferences
         </Link>
@@ -137,12 +137,12 @@ export default function PressConferenceDetailsPage() {
     <main className="mx-auto max-w-4xl px-6 py-16 sm:py-24">
       <Link
         href="/press-conference"
-        className="text-sm font-semibold text-blue-700"
+        className="text-sm font-semibold text-[#9a7631]"
       >
         ← All Press Conferences
       </Link>
 
-      <p className="mt-8 text-sm font-semibold text-blue-700">
+      <p className="mt-8 text-sm font-semibold text-[#9a7631]">
         PRESS CONFERENCE
       </p>
 
