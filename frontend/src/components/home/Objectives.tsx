@@ -100,8 +100,8 @@ function ObjectiveCard({
         "p-5 shadow-[0_18px_45px_rgba(38,32,23,0.08)]",
         "transition-all duration-300",
         featured
-          ? "min-h-[260px] border-[#0b3b83] bg-[#0b3b83] text-white sm:min-h-[300px] lg:min-h-[320px]"
-          : "min-h-[190px] border-slate-200 bg-white text-slate-900 shadow-sm hover:border-blue-200 sm:min-h-[210px]",
+          ? "min-h-[260px] border-[#0b1f3a] bg-[#0b1f3a] text-white sm:min-h-[300px] lg:min-h-[320px]"
+          : "min-h-[190px] border-slate-200 bg-white text-slate-900 shadow-sm hover:border-[#d4b06a]/50 sm:min-h-[210px]",
         featured
           ? "sm:p-7"
           : "sm:p-6",
@@ -116,7 +116,7 @@ function ObjectiveCard({
           "transition duration-500 group-hover:scale-125",
           featured
             ? "bg-white/10"
-            : "bg-blue-100/70",
+            : "bg-[#f0e5c9]/70",
         ].join(" ")}
       />
 
@@ -129,7 +129,7 @@ function ObjectiveCard({
             "transition-transform duration-300 group-hover:scale-105",
             featured
               ? "bg-white/15 text-white"
-              : "bg-blue-50 text-[#155eef]",
+              : "bg-[#f7f2e6] text-[#d4b06a]",
           ].join(" ")}
         >
           <ObjectiveIcon name={objective.icon} />
@@ -295,7 +295,7 @@ export default function Objectives() {
   return (
     <section
       id="objectives"
-      className="relative overflow-hidden bg-[#f4ede2] py-10 text-[#171717] sm:py-14 lg:py-16"
+      className="relative overflow-hidden bg-[#eaf0f6] py-10 text-[#171717] sm:py-14 lg:py-16"
     >
       {/* =====================================================
           BACKGROUND
@@ -307,7 +307,7 @@ export default function Objectives() {
       >
         <div className="absolute -right-40 top-0 h-[28rem] w-[28rem] rounded-full bg-white/70 blur-3xl" />
 
-        <div className="absolute -left-40 bottom-0 h-[24rem] w-[24rem] rounded-full bg-[#d8c7af]/30 blur-3xl" />
+        <div className="absolute -left-40 bottom-0 h-[24rem] w-[24rem] rounded-full bg-[#b8c7d8]/30 blur-3xl" />
 
         <div
           className="absolute inset-0 opacity-[0.11]"
@@ -534,7 +534,7 @@ export default function Objectives() {
                 objectiveSettings.buttonHref ||
                 "/about"
               }
-              className="gnpc-btn group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white bg-white px-5 py-3 text-sm font-bold text-[#171717] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4ede2]"
+              className="gnpc-btn gnpc-btn-secondary group inline-flex min-h-11"
             >
               {objectiveSettings.buttonLabel.trim().toLowerCase() === "learn more"
                 ? "View All Objectives"
