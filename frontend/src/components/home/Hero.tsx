@@ -58,7 +58,7 @@ export default function Hero() {
   return (
     <section
       aria-labelledby="gnpc-hero-title"
-      className="relative overflow-hidden bg-[#eff6ff] text-slate-950"
+      className="gnpc-hero relative overflow-hidden text-white"
     >
       {/* =====================================================
           BACKGROUND
@@ -68,15 +68,15 @@ export default function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="absolute -left-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-white/70 blur-3xl" />
+        <div className="absolute -left-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-[#d4b06a]/10 blur-3xl" />
 
-        <div className="absolute -bottom-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-blue-100/70 blur-3xl" />
+        <div className="absolute -bottom-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-[#2f789d]/20 blur-3xl" />
 
         <div
           className="absolute inset-0 opacity-[0.16]"
           style={{
             backgroundImage:
-              "radial-gradient(circle, rgba(21,94,239,0.16) 1px, transparent 1px)",
+              "radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px)",
             backgroundSize: "24px 24px",
           }}
         />
@@ -104,19 +104,19 @@ export default function Hero() {
         >
           {/* Eyebrow */}
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="gnpc-hero-copy flex items-center justify-center gap-3">
             <span
               aria-hidden="true"
-              className="h-px w-8 bg-blue-300 sm:w-12"
+              className="gnpc-hero-line h-px w-8 sm:w-12"
             />
 
-            <span className="text-[9px] font-extrabold uppercase tracking-[0.25em] text-[#155eef] sm:text-[10px]">
+            <span className="text-[9px] font-extrabold uppercase tracking-[0.25em] text-[#d4b06a] sm:text-[10px]">
               {eyebrow}
             </span>
 
             <span
               aria-hidden="true"
-              className="h-px w-8 bg-blue-300 sm:w-12"
+              className="gnpc-hero-line h-px w-8 sm:w-12"
             />
           </div>
 
@@ -135,9 +135,9 @@ export default function Hero() {
               delay: 0.15,
               duration: 0.5,
             }}
-            className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-slate-600 sm:text-[10px]"
+            className="gnpc-hero-pill mx-auto mt-5 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px]"
           >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#155eef] text-white">
+            <span className="gnpc-hero-icon flex h-5 w-5 items-center justify-center rounded-full">
               <Newspaper size={10} />
             </span>
 
@@ -148,7 +148,7 @@ export default function Hero() {
 
           <h1
             id="gnpc-hero-title"
-            className="mx-auto mt-6 max-w-[900px] text-[2.6rem] font-black leading-[1.02] tracking-[-0.045em] text-slate-950 sm:text-5xl md:text-6xl lg:text-[4.5rem]"
+            className="gnpc-hero-copy mx-auto mt-6 max-w-[900px] text-[2.6rem] font-black leading-[1.02] tracking-[-0.045em] text-white sm:text-5xl md:text-6xl lg:text-[4.5rem]"
           >
             {heroTitle}
           </h1>
@@ -167,13 +167,13 @@ export default function Hero() {
               duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mx-auto mt-5 h-1 rounded-full bg-[#155eef]"
+            className="mx-auto mt-5 h-1 rounded-full bg-[#d4b06a]"
           />
 
           {/* Description */}
 
           {heroDescription && (
-            <p className="mx-auto mt-5 max-w-[650px] text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+            <p className="gnpc-hero-muted mx-auto mt-5 max-w-[650px] text-sm leading-6 sm:text-base sm:leading-7">
               {heroDescription}
             </p>
           )}
@@ -182,7 +182,7 @@ export default function Hero() {
 
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <MembershipFormLink
-              className="gnpc-btn group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#155eef] bg-[#155eef] px-5 py-3 text-sm font-bold leading-none text-white shadow-[0_6px_18px_rgba(21,94,239,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#004eeb] hover:bg-[#004eeb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#155eef] focus-visible:ring-offset-2"
+              className="gnpc-btn gnpc-btn-primary group flex-1"
               unavailableClassName="gnpc-btn inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-100 px-5 py-3 text-sm font-bold leading-none text-slate-500"
             >
               {primaryLabel}
@@ -192,7 +192,6 @@ export default function Hero() {
             <Button
               href={home.hero.quickLinks[0]?.href || "/latest-updates"}
               variant="outline"
-              className="backdrop-blur-md"
             >
               <span>{secondaryLabel}</span>
               <ArrowRight size={16} />
@@ -246,16 +245,16 @@ export default function Hero() {
               delay: 0.7,
               duration: 0.6,
             }}
-            className="mx-auto mt-7 flex max-w-[850px] flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-blue-100 pt-5"
+            className="gnpc-hero-links mx-auto mt-7 flex max-w-[850px] flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t pt-5"
           >
             {home.hero.quickLinks.map(
               (item, index) => (
                 <Link
                   key={`${item.label}-${item.href}`}
                   href={item.href || "/"}
-                  className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 transition-colors duration-300 hover:text-[#155eef] sm:text-xs"
+                  className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55 transition-colors duration-300 hover:text-[#e2c27d] sm:text-xs"
                 >
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-blue-100 bg-white transition-all duration-300 group-hover:border-blue-200 group-hover:bg-blue-50">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/15 bg-white/[.06] transition-all duration-300 group-hover:border-[#d4b06a]/60 group-hover:bg-[#d4b06a]/10">
                     {index % 2 === 0 ? (
                       <Newspaper size={11} />
                     ) : (
@@ -282,7 +281,7 @@ export default function Hero() {
 
       <div
         aria-hidden="true"
-        className="h-5 bg-[#eff6ff]"
+        className="h-5 bg-transparent"
       />
     </section>
   );
