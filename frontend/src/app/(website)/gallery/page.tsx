@@ -12,7 +12,7 @@ export default function GalleryPage() {
   ).gallery;
 
   return (
-    <main className="bg-white">
+    <main className="bg-[#f8fafc]">
       <PageHero
         eyebrow={pageSettings.pageEyebrow}
         title={pageSettings.pageTitle}
@@ -27,4 +27,3 @@ export default function GalleryPage() {
     </main>
   );
 }
-
