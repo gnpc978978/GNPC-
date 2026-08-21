@@ -316,35 +316,21 @@ export default function CTA() {
                   ================================================= */}
 
               <MembershipFormLink
-                unavailableLabel={
-                  primaryLabel
-                }
-                className="gnpc-btn group inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-black text-[#0b3b83] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b3b83] sm:min-w-[230px]"
-                unavailableClassName="inline-flex min-h-14 flex-1 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-white/60 px-6 py-3.5 text-sm font-black text-[#171717] opacity-70 sm:min-w-[230px]"
+                unavailableLabel={primaryLabel}
+                className="gnpc-btn group flex-1"
+                unavailableClassName="gnpc-btn flex-1 cursor-not-allowed border border-white/30 bg-white/15 text-white/55"
               >
                 {primaryLabel}
-
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
+                <ArrowRight size={17} />
               </MembershipFormLink>
-
-              {/* =================================================
-                  SECONDARY — CMS ROUTE
-                  ================================================= */}
 
               <Button
                 href={secondaryHref}
-                variant="inverse"
-                className="flex-1 border-white sm:min-w-[230px]"
+                variant="outline"
+                className="flex-1 border-white bg-transparent text-white hover:border-white hover:bg-white hover:text-[#0b3b83] focus-visible:ring-white focus-visible:ring-offset-[#0b3b83]"
               >
                 {secondaryLabel}
-
-                <ArrowRight
-                  size={17}
-                  className="shrink-0"
-                />
+                <ArrowRight size={17} />
               </Button>
             </motion.div>
 
