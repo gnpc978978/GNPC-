@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="bg-slate-50 py-16 sm:py-20">
+    <main className="bg-[#f4f7fb] py-16 sm:py-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-10">
           <div className="mb-10">
-            <p className="text-sm font-semibold uppercase tracking-wider text-blue-700">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[#9a7631]">
               Greater Noida Press Club
             </p>
 
