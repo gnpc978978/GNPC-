@@ -4,7 +4,7 @@ export default function ContactHero() {
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-slate-950" />
 
       <div className="relative mx-auto max-w-7xl px-6 text-center">
-        <span className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+        <span className="rounded-full bg-[#0b1f3a] px-4 py-2 text-sm font-semibold text-white">
           Contact Us
         </span>
 
