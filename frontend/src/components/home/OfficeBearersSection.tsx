@@ -44,14 +44,14 @@ export default function OfficeBearersSection() {
   };
 
   return (
-    <section className="bg-slate-50 py-14 sm:py-20 lg:py-24">
+    <section className="bg-[#f8fafc] py-14 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <SectionHeading
           badge={section.eyebrow || "Our People"}
           title={section.title || "Office Bearers"}
           description={section.description}
           action={section.showViewAll ? (
-            <Button href={section.buttonHref || "/office-bearers"} variant="outline">
+            <Button href={section.buttonHref || "/office-bearers"} variant="outline" size="md">
               {section.buttonLabel?.trim().toLowerCase() === "explore"
                 ? "View All"
                 : section.buttonLabel || "View All"}
@@ -93,7 +93,7 @@ export default function OfficeBearersSection() {
               onClick={() => move(-1)}
               disabled={!canGoBack}
               aria-label="Previous office bearers"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-[#d4b06a]/50 hover:text-[#d4b06a] disabled:cursor-not-allowed disabled:opacity-35"
             >
               <ChevronLeft size={18} />
             </button>
@@ -102,7 +102,7 @@ export default function OfficeBearersSection() {
               onClick={() => move(1)}
               disabled={!canGoForward}
               aria-label="Next office bearers"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-[#d4b06a]/50 hover:text-[#d4b06a] disabled:cursor-not-allowed disabled:opacity-35"
             >
               <ChevronRight size={18} />
             </button>
