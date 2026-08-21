@@ -1,6 +1,6 @@
 export default function ContactMap() {
   return (
-    <section className="bg-white py-16">
+    <section className="bg-[#f8fafc] py-16">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-slate-900">
