@@ -375,8 +375,8 @@ function Skeletons() {
 
 function EmptyState() {
   return (
-    <div className="rounded-3xl border border-dashed border-blue-200 bg-white px-6 py-20 text-center shadow-sm">
-      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50 text-blue-700">
+    <div className="rounded-3xl border border-dashed border-[#d4b06a]/50 bg-white px-6 py-20 text-center shadow-sm">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#f7f2e6] text-[#9a7631]">
         <Sparkles size={36} />
       </div>
 
@@ -579,7 +579,7 @@ function UpdatesCalendar({
       <div className="mb-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-blue-700">
+            <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-[#9a7631]">
               Schedule
             </p>
 
@@ -620,8 +620,8 @@ function UpdatesCalendar({
                     "rounded-full px-4 py-2 text-sm font-bold transition",
                     dateFilter ===
                     value
-                      ? "bg-blue-700 text-white shadow-md"
-                      : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-blue-50 hover:text-blue-700",
+                      ? "bg-[#0b1f3a] text-white shadow-md"
+                      : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-[#f7f2e6] hover:text-[#9a7631]",
                   ].join(
                     " "
                   )}
@@ -643,7 +643,7 @@ function UpdatesCalendar({
                 previousMonth
               }
               aria-label="Previous month"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-600 transition hover:bg-blue-50 hover:text-blue-700"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-600 transition hover:bg-[#f7f2e6] hover:text-[#9a7631]"
             >
               <ChevronLeft
                 size={20}
@@ -660,7 +660,7 @@ function UpdatesCalendar({
                 onClick={
                   goToToday
                 }
-                className="mt-1 text-xs font-bold text-blue-700 hover:underline"
+                className="mt-1 text-xs font-bold text-[#9a7631] hover:underline"
               >
                 Today
               </button>
@@ -672,7 +672,7 @@ function UpdatesCalendar({
                 nextMonth
               }
               aria-label="Next month"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-600 transition hover:bg-blue-50 hover:text-blue-700"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-600 transition hover:bg-[#f7f2e6] hover:text-[#9a7631]"
             >
               <ChevronRight
                 size={20}
@@ -742,12 +742,12 @@ function UpdatesCalendar({
                       }
                       className={[
                         "relative min-w-0 min-h-[68px] overflow-hidden border-b border-r border-slate-100 p-1 text-left transition sm:min-h-[92px] sm:p-2",
-                        "hover:bg-blue-50",
+                        "hover:bg-[#f7f2e6]",
                         !isCurrentMonth
                           ? "bg-slate-50/60 text-slate-300"
                           : "text-slate-700",
                         isSelected
-                          ? "bg-blue-50 ring-2 ring-inset ring-blue-500"
+                          ? "bg-[#f7f2e6] ring-2 ring-inset ring-[#d4b06a]"
                           : "",
                       ].join(
                         " "
@@ -757,7 +757,7 @@ function UpdatesCalendar({
                         className={[
                           "flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold sm:h-8 sm:w-8 sm:text-sm",
                           isToday
-                            ? "bg-blue-700 text-white"
+                            ? "bg-[#0b1f3a] text-white"
                             : "",
                         ].join(
                           " "
@@ -784,7 +784,7 @@ function UpdatesCalendar({
                                     "block max-w-full truncate rounded px-1 py-1 text-[8px] font-bold leading-none sm:px-1.5 sm:text-[10px]",
                                     item.type ===
                                     "event"
-                                      ? "bg-blue-100 text-blue-800"
+                                      ? "bg-[#f0e5c9] text-[#7c5e25]"
                                       : "bg-purple-100 text-purple-800",
                                   ].join(
                                     " "
@@ -817,7 +817,7 @@ function UpdatesCalendar({
 
           <div className="flex flex-wrap gap-4 border-t border-slate-100 px-4 py-4 sm:px-6">
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-              <span className="h-3 w-3 rounded-full bg-blue-500" />
+              <span className="h-3 w-3 rounded-full bg-[#d4b06a]" />
               Events
             </div>
 
@@ -831,7 +831,7 @@ function UpdatesCalendar({
         <div className="min-w-0 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-blue-700">
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#9a7631]">
                 {selectedDate
                   ? "Selected Date"
                   : "Schedule"}
@@ -854,7 +854,7 @@ function UpdatesCalendar({
                     null
                   )
                 }
-                className="shrink-0 text-xs font-bold text-slate-500 hover:text-blue-700"
+                className="shrink-0 text-xs font-bold text-slate-500 hover:text-[#9a7631]"
               >
                 Clear
               </button>
@@ -882,7 +882,7 @@ function UpdatesCalendar({
                     href={
                       item.href
                     }
-                    className="group block rounded-2xl border border-slate-200 p-4 transition hover:border-blue-200 hover:bg-blue-50/50"
+                    className="group block rounded-2xl border border-slate-200 p-4 transition hover:border-[#d4b06a]/50 hover:bg-[#f7f2e6]/50"
                   >
                     <div className="flex min-w-0 gap-3 sm:gap-4">
                       <div
@@ -890,7 +890,7 @@ function UpdatesCalendar({
                           "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
                           item.type ===
                           "event"
-                            ? "bg-blue-100 text-blue-700"
+                            ? "bg-[#f0e5c9] text-[#9a7631]"
                             : "bg-purple-100 text-purple-700",
                         ].join(
                           " "
@@ -908,7 +908,7 @@ function UpdatesCalendar({
                               "text-[10px] font-extrabold uppercase tracking-wide",
                               item.type ===
                               "event"
-                                ? "text-blue-700"
+                                ? "text-[#9a7631]"
                                 : "text-purple-700",
                             ].join(
                               " "
@@ -927,7 +927,7 @@ function UpdatesCalendar({
                           </span>
                         </div>
 
-                        <h4 className="mt-1 line-clamp-2 text-sm font-extrabold text-slate-900 group-hover:text-blue-700">
+                        <h4 className="mt-1 line-clamp-2 text-sm font-extrabold text-slate-900 group-hover:text-[#9a7631]">
                           {
                             item.title
                           }
@@ -950,7 +950,7 @@ function UpdatesCalendar({
 
                       <ChevronRight
                         size={18}
-                        className="mt-1 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-700"
+                        className="mt-1 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#9a7631]"
                       />
                     </div>
                   </Link>
@@ -1356,7 +1356,7 @@ export default function LatestUpdatesPage() {
         ]}
       />
 
-      <section className="min-h-screen bg-slate-50 py-14 sm:py-20">
+      <section className="min-h-screen bg-[#f4f7fb] py-14 sm:py-20">
       <Container>
         <div className="flex flex-col gap-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap gap-2">
@@ -1376,8 +1376,8 @@ export default function LatestUpdatesPage() {
                   className={[
                     "rounded-full px-4 py-2.5 text-sm font-bold transition",
                     tab === value
-                      ? "bg-blue-700 text-white shadow-lg shadow-blue-700/20"
-                      : "text-slate-600 hover:bg-blue-50 hover:text-blue-700",
+                      ? "bg-[#0b1f3a] text-white shadow-lg shadow-blue-700/20"
+                      : "text-slate-600 hover:bg-[#f7f2e6] hover:text-[#9a7631]",
                   ].join(
                     " "
                   )}
@@ -1408,7 +1408,7 @@ export default function LatestUpdatesPage() {
                   )
                 }
                 placeholder={pageSettings.searchPlaceholder}
-                className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 sm:w-60"
+                className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-[#d4b06a] focus:ring-4 focus:ring-[#d4b06a]/20 sm:w-60"
               />
             </label>
             )}
@@ -1426,7 +1426,7 @@ export default function LatestUpdatesPage() {
                     | "oldest"
                 )
               }
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500"
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#d4b06a]"
             >
               <option value="newest">
                 Newest first
@@ -1528,14 +1528,14 @@ export default function LatestUpdatesPage() {
                             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center text-blue-700">
+                          <div className="flex h-full items-center justify-center text-[#9a7631]">
                             <FileText
                               size={48}
                             />
                           </div>
                         )}
 
-                        <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-blue-800 shadow-sm">
+                        <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-[#7c5e25] shadow-sm">
                           {item.category ||
                             typeLabels[
                               item.type
@@ -1547,7 +1547,7 @@ export default function LatestUpdatesPage() {
                         <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                           <CalendarDays
                             size={16}
-                            className="text-blue-600"
+                            className="text-[#b08a3e]"
                           />
 
                           {formatDate(
@@ -1572,7 +1572,7 @@ export default function LatestUpdatesPage() {
                             item.slug ||
                               item._id
                           )}`}
-                          className="mt-6 inline-flex items-center gap-1 text-sm font-extrabold text-blue-700 transition group-hover:gap-2"
+                          className="mt-6 inline-flex items-center gap-1 text-sm font-extrabold text-[#9a7631] transition group-hover:gap-2"
                         >
                           {pageSettings.readMoreLabel}
                           <ChevronRight
