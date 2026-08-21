@@ -85,7 +85,7 @@ export default function PressReleasesPage() {
   }, []);
 
   return (
-    <main className="bg-white">
+    <main className="bg-[#f8fafc]">
       <PageHero
         eyebrow="News & Updates"
         title="Press Releases"
@@ -96,7 +96,7 @@ export default function PressReleasesPage() {
         ]}
       />
 
-      <section className="bg-slate-50 px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      <section className="bg-[#f4f7fb] px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <Container>
           {loading && (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -141,7 +141,7 @@ export default function PressReleasesPage() {
                         />
                       </div>
                     ) : (
-                      <div className="flex aspect-[16/9] items-center justify-center bg-slate-100 text-blue-600">
+                      <div className="flex aspect-[16/9] items-center justify-center bg-slate-100 text-[#b08a3e]">
                         <FileText size={34} aria-hidden="true" />
                       </div>
                     )}
@@ -167,7 +167,7 @@ export default function PressReleasesPage() {
 
                       <Link
                         href={href}
-                        className="mt-5 inline-flex min-h-10 items-center gap-2 text-sm font-bold text-blue-700 transition hover:text-blue-900"
+                        className="mt-5 inline-flex min-h-10 items-center gap-2 text-sm font-bold text-[#9a7631] transition hover:text-[#071a2e]"
                       >
                         Read Press Release
                         <ArrowRight size={16} aria-hidden="true" />
