@@ -238,7 +238,7 @@ export const defaultHomeSettings: HomeSettings = {
       "Greater Noida Press Club is a professional organization dedicated to supporting journalists, promoting ethical journalism, and providing a strong platform for media professionals.",
 
     buttonLabel:
-      "Learn More",
+      "Learn More About GNPC",
 
     buttonHref:
       "/about",
@@ -267,7 +267,7 @@ export const defaultHomeSettings: HomeSettings = {
       "Greater Noida Press Club works towards promoting ethical journalism, professional growth and stronger media collaboration.",
 
     buttonLabel:
-      "Learn More",
+      "View All Objectives",
 
     buttonHref:
       "/about",
@@ -354,7 +354,7 @@ export const defaultHomeSettings: HomeSettings = {
       "Explore recent events, press activities and memorable moments.",
 
     buttonLabel:
-      "View Gallery",
+      "View Full Gallery",
 
     buttonHref:
       "/gallery",
