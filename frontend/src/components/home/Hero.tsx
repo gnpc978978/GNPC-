@@ -249,7 +249,7 @@ export default function Hero() {
             duration: 1,
             ease: [0.22, 1, 0.36, 1],
           }}
-            className="relative mx-auto mt-8 w-full max-w-[1180px] sm:mt-10 lg:mt-12"
+            className="relative mx-auto mt-8 w-full max-w-[1380px] sm:mt-10 lg:mt-12"
         >
           <HeroCarousel
             fallbackImage={heroImage}
