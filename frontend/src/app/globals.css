@@ -1,739 +1,214 @@
 @import "tailwindcss";
 
-/* =========================================================
-   GNPC PREMIUM EDITORIAL DESIGN SYSTEM
-   STEP 5 — RESPONSIVE + SPACING + VISUAL POLISH
-   ========================================================= */
-
 :root {
-  --gnpc-primary: #155eef;
-  --gnpc-primary-hover: #004eeb;
-  --gnpc-primary-dark: #0b3b83;
-
-  --gnpc-accent: #155eef;
-  --gnpc-accent-dark: #004eeb;
-
-  --gnpc-background: #f8fafc;
-  --gnpc-background-warm: #f1f5f9;
-
+  --gnpc-ink: #111827;
+  --gnpc-ink-soft: #273449;
+  --gnpc-navy: #0b1f3a;
+  --gnpc-navy-2: #102d50;
+  --gnpc-gold: #c9a45c;
+  --gnpc-gold-soft: #e8d7ad;
+  --gnpc-cream: #f6f1e8;
+  --gnpc-paper: #fbfaf7;
   --gnpc-surface: #ffffff;
-  --gnpc-surface-soft: #f1f5f9;
-  --gnpc-surface-muted: #e2e8f0;
-
-  --gnpc-text: #0f172a;
-  --gnpc-text-secondary: #334155;
-  --gnpc-text-muted: #64748b;
-  --gnpc-text-subtle: #94a3b8;
-
-  --gnpc-border: #e2e8f0;
-  --gnpc-border-strong: #cbd5e1;
-
-  --gnpc-success: #15803d;
-  --gnpc-warning: #b45309;
-  --gnpc-danger: #c62828;
-  --gnpc-info: #0369a1;
-
-  --gnpc-radius-sm: 0.5rem;
-  --gnpc-radius-md: 0.75rem;
-  --gnpc-radius-lg: 1rem;
-  --gnpc-radius-xl: 1.25rem;
-  --gnpc-radius-2xl: 1.5rem;
-
-  --gnpc-shadow-sm:
-    0 2px 8px rgba(15, 23, 42, 0.05);
-
-  --gnpc-shadow-md:
-    0 12px 30px rgba(15, 23, 42, 0.08);
-
-  --gnpc-shadow-lg:
-    0 24px 60px rgba(15, 23, 42, 0.12);
-
-  --gnpc-shadow-hover:
-    0 22px 50px rgba(15, 23, 42, 0.16);
-
-  --gnpc-container: 1280px;
-
-  --gnpc-section-spacing: clamp(
-    4rem,
-    7vw,
-    7rem
-  );
-
-  --gnpc-transition-fast: 150ms ease;
-  --gnpc-transition: 260ms cubic-bezier(0.22, 1, 0.36, 1);
-  --gnpc-transition-slow: 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  --gnpc-muted: #6b7280;
+  --gnpc-border: #e5dfd2;
+  --gnpc-danger: #b42318;
+  --gnpc-container: 1320px;
+  --gnpc-radius: 22px;
+  --gnpc-shadow: 0 18px 60px rgba(17, 24, 39, .10);
+  --gnpc-shadow-lg: 0 30px 90px rgba(11, 31, 58, .16);
+  --gnpc-ease: cubic-bezier(.22,1,.36,1);
 }
 
-
-/* =========================================================
-   RESET
-   ========================================================= */
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-html,
-body {
-  min-height: 100%;
-}
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   margin: 0;
   min-height: 100vh;
-
+  color: var(--gnpc-ink);
   background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(255, 255, 255, 0.9),
-      transparent 30%
-    ),
-    linear-gradient(
-      180deg,
-      #f8fafc 0%,
-      #f1f5f9 100%
-    );
-
-  color: var(--gnpc-text);
-
-  font-family:
-    "Plus Jakarta Sans",
-    Inter,
-    Arial,
-    Helvetica,
-    sans-serif;
-
+    radial-gradient(circle at 10% 0%, rgba(201,164,92,.10), transparent 28rem),
+    radial-gradient(circle at 90% 18%, rgba(11,31,58,.07), transparent 32rem),
+    var(--gnpc-paper);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-
   overflow-x: hidden;
 }
+img { display:block; max-width:100%; }
+a { color:inherit; text-decoration:none; }
+button { cursor:pointer; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor:not-allowed; }
 
-img {
-  display: block;
-  max-width: 100%;
+h1,h2,h3,h4,h5,h6 {
+  margin:0;
+  color:var(--gnpc-ink);
+  letter-spacing:-.045em;
+  text-wrap:balance;
 }
+p { margin:0; }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-}
-
-
-/* =========================================================
-   TYPOGRAPHY
-   ========================================================= */
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-
-  color: var(--gnpc-text);
-
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-p {
-  margin: 0;
-}
-
-
-/* =========================================================
-   SELECTION
-   ========================================================= */
-
-::selection {
-  background: var(--gnpc-accent);
-  color: #ffffff;
-}
-
-
-/* =========================================================
-   FOCUS
-   ========================================================= */
-
-:focus-visible {
-  outline: 2px solid var(--gnpc-accent);
-  outline-offset: 3px;
-}
-
-
-/* =========================================================
-   GLOBAL CONTAINER
-   ========================================================= */
+::selection { background:var(--gnpc-gold); color:var(--gnpc-navy); }
+:focus-visible { outline:2px solid var(--gnpc-gold); outline-offset:3px; }
 
 .gnpc-container {
-  width: 100%;
-  max-width: var(--gnpc-container);
-
-  margin-inline: auto;
-
-  padding-inline: 1rem;
+  width:100%;
+  max-width:var(--gnpc-container);
+  margin-inline:auto;
+  padding-inline:1rem;
 }
+@media (min-width:640px){.gnpc-container{padding-inline:1.5rem}}
+@media (min-width:1024px){.gnpc-container{padding-inline:2.5rem}}
+@media (min-width:1280px){.gnpc-container{padding-inline:3rem}}
 
-@media (min-width: 640px) {
-  .gnpc-container {
-    padding-inline: 1.5rem;
-  }
+.gnpc-public {
+  min-height:100vh;
+  background:
+    linear-gradient(180deg, rgba(251,250,247,.94), rgba(246,241,232,.86));
+  color:var(--gnpc-ink);
 }
-
-@media (min-width: 768px) {
-  .gnpc-container {
-    padding-inline: 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .gnpc-container {
-    padding-inline: 2.5rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .gnpc-container {
-    padding-inline: 3rem;
-  }
-}
-
-
-/* =========================================================
-   SECTIONS
-   ========================================================= */
 
 .gnpc-section {
-  position: relative;
-  padding-block: var(--gnpc-section-spacing);
+  position:relative;
+  padding-block:clamp(4rem,7vw,7.5rem);
+}
+.gnpc-section-white { background:rgba(255,255,255,.78); }
+.gnpc-section-muted { background:linear-gradient(180deg,#f6f1e8,#fbfaf7); }
+.gnpc-section-blue { background:linear-gradient(135deg,#0b1f3a,#17395f); }
+
+.gnpc-section::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(11,31,58,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(11,31,58,.025) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
 }
 
-.gnpc-section-white {
-  background: #ffffff;
-}
-
-.gnpc-section-muted {
-  background: var(--gnpc-background);
-}
-
-.gnpc-section-blue {
-  background: #eff6ff;
-}
-
-
-/* =========================================================
-   SECTION HEADINGS
-   ========================================================= */
-
-.gnpc-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-
-  color: var(--gnpc-accent);
-
-  font-size: 0.7rem;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.gnpc-eyebrow::before {
-  content: "";
-
-  display: block;
-
-  width: 24px;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background: var(--gnpc-accent);
-}
-
-/* =========================================================
-   TEXT COMPOSITION
-   ========================================================= */
-
-.gnpc-text-composition {
-  display: flex;
-  width: min(100%, 48rem);
-  flex-direction: column;
-}
-
+.gnpc-eyebrow,
 .gnpc-composition-eyebrow {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  color: var(--gnpc-primary);
+  display:inline-flex;
+  align-items:center;
+  gap:.7rem;
+  color:var(--gnpc-gold);
+  font-size:.68rem;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.gnpc-eyebrow::before,
+.gnpc-composition-eyebrow > span:first-child {
+  background:currentColor !important;
 }
 
-.gnpc-composition-eyebrow-text {
-  font-size: 0.6875rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.gnpc-text-composition { display:flex; width:min(100%,52rem); flex-direction:column; }
+.gnpc-composition-eyebrow-text { font-size:.68rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+.gnpc-page-title,.gnpc-section-title {
+  color:var(--gnpc-ink);
+  font-weight:900;
+  line-height:1.02;
+  letter-spacing:-.055em;
 }
-
-.gnpc-page-title,
-.gnpc-section-title {
-  max-width: 100%;
-  color: var(--gnpc-text);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-  text-wrap: balance;
-}
-
-.gnpc-page-title {
-  margin-top: 1rem;
-  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
-}
-
-.gnpc-section-title {
-  margin-top: 0.875rem;
-}
-
+.gnpc-page-title { margin-top:1rem; font-size:clamp(2.6rem,6vw,5.3rem); }
 .gnpc-composition-description {
-  width: min(100%, 42rem);
-  margin-top: 1rem;
-  color: var(--gnpc-text-secondary);
-  font-size: clamp(1rem, 1.5vw, 1.125rem);
-  line-height: 1.65;
-  text-wrap: pretty;
+  width:min(100%,44rem);
+  margin-top:1.25rem;
+  color:var(--gnpc-muted);
+  font-size:clamp(1rem,1.5vw,1.18rem);
+  line-height:1.75;
 }
-
-.gnpc-text-composition.items-center .gnpc-composition-description {
-  text-align: center;
-}
-
-.gnpc-text-composition.items-start .gnpc-composition-description {
-  text-align: left;
-}
-
-@media (max-width: 639px) {
-  .gnpc-text-composition {
-    width: 100%;
-  }
-
-  .gnpc-page-title {
-    font-size: clamp(2.1rem, 11vw, 2.75rem);
-    line-height: 1.1;
-  }
-
-  .gnpc-composition-description {
-    margin-top: 0.875rem;
-    line-height: 1.6;
-  }
-}
-
-
-/* =========================================================
-   PREMIUM INTERACTION
-   ========================================================= */
-
-.gnpc-interactive {
-  transition:
-    transform var(--gnpc-transition),
-    box-shadow var(--gnpc-transition),
-    border-color var(--gnpc-transition),
-    background-color var(--gnpc-transition);
-}
-
-.gnpc-interactive:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--gnpc-shadow-hover);
-}
-
-
-/* =========================================================
-   PREMIUM CARD
-   ========================================================= */
+.gnpc-text-composition.items-center .gnpc-composition-description{text-align:center}
+.gnpc-text-composition.items-start .gnpc-composition-description{text-align:left}
 
 .gnpc-card {
-  position: relative;
-
-  overflow: hidden;
-
-  border: 1px solid var(--gnpc-border);
-
-  border-radius: var(--gnpc-radius-xl);
-
-  background: rgba(255, 255, 255, 0.88);
-
-  box-shadow: var(--gnpc-shadow-sm);
-
-  transition:
-    transform var(--gnpc-transition),
-    box-shadow var(--gnpc-transition),
-    border-color var(--gnpc-transition);
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(17,24,39,.09);
+  border-radius:var(--gnpc-radius);
+  background:rgba(255,255,255,.86);
+  box-shadow:var(--gnpc-shadow);
+  backdrop-filter:blur(18px);
+  transition:transform .45s var(--gnpc-ease),box-shadow .45s var(--gnpc-ease),border-color .3s ease;
 }
-
-.gnpc-card:hover {
-  transform: translateY(-3px);
-
-  border-color: #bfdbfe;
-
-  box-shadow: var(--gnpc-shadow-hover);
-}
-
-/* Public pages still contain a few legacy utility colours. Keep their CMS
-   content intact while mapping those colours into the shared GNPC palette. */
-.gnpc-public .bg-\[\#f4ede2\] {
-  background-color: var(--gnpc-background) !important;
-}
-
-.gnpc-public .bg-\[\#59684e\] {
-  background-color: var(--gnpc-primary-dark) !important;
-}
-
-.gnpc-public .bg-\[\#171717\] {
-  background-color: var(--gnpc-primary-dark) !important;
-}
-
-.gnpc-public .text-\[\#171717\],
-.gnpc-public .text-\[\#18222d\] {
-  color: var(--gnpc-text) !important;
-}
-
-.gnpc-public .text-\[\#839669\],
-.gnpc-public .text-\[\#17324d\] {
-  color: var(--gnpc-primary) !important;
-}
-
-.gnpc-public .bg-\[\#e6d8c5\],
-.gnpc-public .bg-\[\#e2d7c8\],
-.gnpc-public .bg-\[\#ded0bb\],
-.gnpc-public .bg-\[\#ded0bd\],
-.gnpc-public .bg-\[\#d9cbb7\] {
-  background-color: #dbeafe !important;
-}
-
-.gnpc-public .bg-\[\#d8c7af\]\/30,
-.gnpc-public .bg-\[\#d8c7af\]\/45 {
-  background-color: rgba(191, 219, 254, 0.55) !important;
-}
-
-.gnpc-public .hover\:bg-\[\#f4ede2\]:hover,
-.gnpc-public .hover\:bg-\[\#f7f2e9\]:hover,
-.gnpc-public .hover\:bg-\[\#fbf8f2\]:hover {
-  background-color: #eff6ff !important;
-}
+.gnpc-card:hover { transform:translateY(-6px); box-shadow:var(--gnpc-shadow-lg); border-color:rgba(201,164,92,.42); }
 
 .gnpc-btn {
-  align-items: center;
-  border-radius: var(--gnpc-radius-md);
-  font-weight: 700;
-  line-height: 1.2;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  min-height:44px;
+  padding:.8rem 1.15rem;
+  border-radius:14px;
+  font-weight:800;
+  line-height:1;
+  transition:transform .3s var(--gnpc-ease),box-shadow .3s var(--gnpc-ease),background-color .3s ease,border-color .3s ease;
 }
+.gnpc-btn:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(11,31,58,.14); }
+.gnpc-btn svg { transition:transform .3s var(--gnpc-ease); }
+.gnpc-btn:hover svg { transform:translateX(3px); }
 
-/* Shared public and CMS controls. These rules deliberately style only
-   presentation; individual form, filter, and table behavior is unchanged. */
-.gnpc-public :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
-  border-color: var(--gnpc-border-strong);
-  border-radius: var(--gnpc-radius-md);
-  color: var(--gnpc-text);
-  background-color: var(--gnpc-surface);
+.gnpc-image-wrap { overflow:hidden; }
+.gnpc-image-wrap img { transition:transform .8s var(--gnpc-ease),filter .5s ease; }
+.gnpc-image-wrap:hover img { transform:scale(1.06); }
+
+.gnpc-public :is(input:not([type=checkbox]):not([type=radio]),select,textarea) {
+  border:1px solid var(--gnpc-border);
+  border-radius:14px;
+  background:rgba(255,255,255,.92);
+  color:var(--gnpc-ink);
+  transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease;
 }
-
-.gnpc-public :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus {
-  border-color: var(--gnpc-primary);
-  box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.14);
-  outline: none;
+.gnpc-public :is(input:not([type=checkbox]):not([type=radio]),select,textarea):focus {
+  border-color:var(--gnpc-gold);
+  box-shadow:0 0 0 4px rgba(201,164,92,.15);
+  outline:none;
 }
+.gnpc-public input::placeholder,.gnpc-public textarea::placeholder{color:#9ca3af}
 
-.gnpc-public input::placeholder,
-.gnpc-public textarea::placeholder {
-  color: var(--gnpc-text-subtle);
-  opacity: 1;
+.gnpc-public section { scroll-margin-top:128px; }
+
+.gnpc-public .border-blue-100,.gnpc-public .border-slate-200,.gnpc-public .border-slate-100 { border-color:rgba(17,24,39,.09) !important; }
+.gnpc-public .text-blue-500,.gnpc-public .text-blue-600,.gnpc-public .text-\[\#155eef\] { color:var(--gnpc-gold) !important; }
+.gnpc-public .bg-blue-50,.gnpc-public .bg-slate-50 { background-color:#f6f1e8 !important; }
+.gnpc-public .text-slate-900,.gnpc-public .text-slate-800 { color:var(--gnpc-ink) !important; }
+.gnpc-public .text-slate-600,.gnpc-public .text-slate-500 { color:var(--gnpc-muted) !important; }
+
+@keyframes gnpc-reveal { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.gnpc-reveal { animation:gnpc-reveal .7s var(--gnpc-ease) both; }
+
+@media (max-width:767px){
+  .gnpc-section{padding-block:3.8rem}
+  .gnpc-page-title{font-size:clamp(2.35rem,12vw,3.4rem)}
 }
-
-.gnpc-public table {
-  border-color: var(--gnpc-border);
-  color: var(--gnpc-text-secondary);
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#ece7dd}
+::-webkit-scrollbar-thumb{background:#a79a84;border:2px solid #ece7dd;border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#806f54}
 
-.gnpc-public thead {
-  background: var(--gnpc-surface-soft);
-  color: var(--gnpc-text);
-}
+.gnpc-section-shell{position:relative;overflow:hidden}
+.gnpc-shell-paper{background:linear-gradient(180deg,#fbfaf7 0%,#fff 45%,#f7f2e9 100%)}
+.gnpc-shell-muted{background:linear-gradient(180deg,#f1eadf 0%,#fbfaf7 100%)}
+.gnpc-shell-paper:nth-child(even){background:linear-gradient(180deg,#fff 0%,#f6f1e8 100%)}
+.gnpc-section-shell > section{position:relative}
+.gnpc-section-shell > section::after{content:"";position:absolute;right:-9rem;top:15%;width:20rem;height:20rem;border-radius:50%;background:radial-gradient(circle,rgba(201,164,92,.10),transparent 68%);pointer-events:none}
 
-.gnpc-public th {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.gnpc-public tr {
-  border-color: var(--gnpc-border);
-}
-
-.gnpc-public tr:hover {
-  background: #f8fbff;
-}
-
-
-/* =========================================================
-   IMAGE INTERACTION
-   ========================================================= */
-
-.gnpc-image-wrap {
-  overflow: hidden;
-}
-
-.gnpc-image-wrap img {
-  transition:
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 500ms ease;
-}
-
-.gnpc-image-wrap:hover img {
-  transform: scale(1.055);
-}
-
-
-/* =========================================================
-   SHINE EFFECT
-   ========================================================= */
-
-.gnpc-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.gnpc-shine::after {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  bottom: 0;
-
-  left: -120%;
-
-  width: 60%;
-
-  transform: skewX(-18deg);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.35),
-      transparent
-    );
-
-  transition: left 700ms ease;
-}
-
-.gnpc-shine:hover::after {
-  left: 140%;
-}
-
-
-/* =========================================================
-   FLOATING MOTION
-   ========================================================= */
-
-@keyframes gnpc-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.gnpc-float {
-  animation: gnpc-float 4s ease-in-out infinite;
-}
-
-
-/* =========================================================
-   SOFT PULSE
-   ========================================================= */
-
-@keyframes gnpc-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scale(0.95);
-  }
-
-  50% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-}
-
-.gnpc-pulse {
-  animation: gnpc-pulse 2.8s ease-in-out infinite;
-}
-
-
-/* =========================================================
-   REVEAL ANIMATION
-   ========================================================= */
-
-@keyframes gnpc-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.gnpc-reveal {
-  animation:
-    gnpc-reveal
-    650ms
-    cubic-bezier(0.22, 1, 0.36, 1)
-    both;
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-
-/* =========================================================
-   MOBILE POLISH
-   ========================================================= */
-
-@media (max-width: 767px) {
-  body {
-    background:
-      linear-gradient(
-        180deg,
-        #f8fafc 0%,
-        #f1f5f9 100%
-      );
-  }
-
-  .gnpc-section {
-    padding-block: 3.75rem;
-  }
-
-  .gnpc-card {
-    border-radius: 1rem;
-  }
-}
-
-
-/* =========================================================
-   TABLET POLISH
-   ========================================================= */
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .gnpc-section {
-    padding-block: 4.75rem;
-  }
-}
-
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-::-webkit-scrollbar {
-  width: 9px;
-}
-
-::-webkit-scrollbar-track {
-  background: #e8eaed;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #aeb5be;
-  border-radius: 999px;
-  border: 2px solid #e8eaed;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #7d8794;
-}
-
-
-/* Public-page safeguards for third-party/CMS content that still uses legacy markup. */
-.gnpc-public {
-  background: var(--gnpc-background);
-  color: var(--gnpc-text);
-}
-
-.gnpc-public .gnpc-btn {
-  text-wrap: nowrap;
-}
-
-.gnpc-public .gnpc-btn svg {
-  flex: 0 0 auto;
-  transition: transform var(--gnpc-transition-fast);
-}
-
-.gnpc-public .gnpc-btn:hover svg {
-  transform: translateX(2px);
-}
-
-.gnpc-public .gnpc-section-heading {
-  width: min(100%, 48rem);
-  margin-inline: auto;
-  text-align: center;
-}
-
-.gnpc-public .gnpc-section-heading > p {
-  width: min(100%, 42rem);
-  margin-inline: auto;
-  text-wrap: pretty;
-}
-
-.gnpc-public section {
-  scroll-margin-top: 120px;
-}
-
-.gnpc-public .gnpc-section-tight {
-  padding-block: clamp(3.5rem, 6vw, 5.5rem);
-}
+/* Legacy public palette translated into the new GNPC art direction. */
+.gnpc-public .bg-\[\#0b3b83\]{background-color:var(--gnpc-navy)!important}
+.gnpc-public .bg-\[\#0f4c81\]{background-color:var(--gnpc-navy-2)!important}
+.gnpc-public .bg-\[\#eff6ff\]{background-color:#f3eee5!important}
+.gnpc-public .bg-\[\#f4ede2\]{background-color:#f6f1e8!important}
+.gnpc-public .border-\[\#0b3b83\]{border-color:rgba(11,31,58,.7)!important}
+.gnpc-public .border-blue-900{border-color:rgba(11,31,58,.7)!important}
+.gnpc-public .text-\[\#0b3b83\],.gnpc-public .text-\[\#0f4c81\]{color:var(--gnpc-navy)!important}
+.gnpc-public .text-\[\#155eef\]{color:var(--gnpc-gold)!important}
+.gnpc-public .bg-\[\#ded0bb\],.gnpc-public .bg-\[\#d8c7af\]\/30,.gnpc-public .bg-\[\#d8c7af\]\/45{background-color:#e8dfd0!important}
+.gnpc-public .hover\:bg-\[\#0b3b83\]:hover{background-color:#17395f!important}
+.gnpc-public .hover\:text-\[\#155eef\]:hover{color:var(--gnpc-gold)!important}
