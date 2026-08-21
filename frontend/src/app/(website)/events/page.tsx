@@ -84,7 +84,7 @@ export default function EventsPage() {
   }, []);
 
   return (
-    <main className="bg-white">
+    <main className="bg-[#f8fafc]">
       <PageHero
         eyebrow="GNPC Events"
         title="Events"
@@ -167,7 +167,7 @@ export default function EventsPage() {
                         href={`/events/${encodeURIComponent(
                           identifier
                         )}`}
-                        className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+                        className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md"
                       >
                         {event.banner ? (
                           <img
@@ -181,7 +181,7 @@ export default function EventsPage() {
 
                         <div className="p-6">
                           {event.date && (
-                            <p className="text-sm font-semibold text-blue-700">
+                            <p className="text-sm font-semibold text-[#9a7631]">
                               {new Date(
                                 event.date
                               ).toLocaleDateString(
@@ -213,7 +213,7 @@ export default function EventsPage() {
                             </p>
                           )}
 
-                          <span className="mt-5 inline-block text-sm font-semibold text-blue-700">
+                          <span className="mt-5 inline-block text-sm font-semibold text-[#9a7631]">
                             View Event →
                           </span>
                         </div>
