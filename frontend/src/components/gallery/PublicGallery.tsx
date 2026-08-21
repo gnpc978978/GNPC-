@@ -349,7 +349,7 @@ export default function PublicGallery({
 
   if (loading) {
     return (
-      <section className="bg-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <section className="bg-[#f8fafc] px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex gap-2 overflow-hidden">
             {[1, 2, 3, 4].map(
@@ -395,7 +395,7 @@ export default function PublicGallery({
 
   if (error) {
     return (
-      <section className="bg-white px-4 py-12 sm:px-6 lg:px-8">
+      <section className="bg-[#f8fafc] px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-xl rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
           <h2 className="text-lg font-bold text-slate-900">
             Gallery unavailable
@@ -408,7 +408,7 @@ export default function PublicGallery({
           <button
             type="button"
             onClick={loadGallery}
-            className="mt-5 rounded-lg bg-[#155eef] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#004eeb]"
+            className="mt-5 rounded-lg bg-[#d4b06a] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b08a3e]"
           >
             Try Again
           </button>
@@ -423,7 +423,7 @@ export default function PublicGallery({
           PHOTO GALLERY
           ===================================================== */}
 
-      <section className="bg-white px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <section className="bg-[#f8fafc] px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
           {/* =================================================
               FILTERS
@@ -448,7 +448,7 @@ export default function PublicGallery({
                       className={[
                         "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200",
                         active
-                          ? "bg-[#155eef] text-white shadow-sm"
+                          ? "bg-[#d4b06a] text-white shadow-sm"
                           : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900",
                       ].join(" ")}
                     >
@@ -508,7 +508,7 @@ export default function PublicGallery({
                             globalIndex
                           )
                         }
-                        className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 text-left outline-none ring-offset-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#155eef]"
+                        className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 text-left outline-none ring-offset-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#d4b06a]"
                       >
                         <div className="relative aspect-[4/3] overflow-hidden">
                           <Image
@@ -647,7 +647,7 @@ export default function PublicGallery({
                               "h-10 min-w-10 rounded-xl px-3 text-sm font-semibold transition",
                               page ===
                               pageNumber
-                                ? "bg-[#155eef] text-white"
+                                ? "bg-[#d4b06a] text-white"
                                 : "text-slate-600 hover:bg-slate-100",
                             ].join(
                               " "
