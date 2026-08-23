@@ -28,7 +28,7 @@ const labels: Record<CmsPageKey, string> = {
   latestUpdates: "Latest Updates Section",
   pressConference: "Press Conference Section",
   officeBearers: "Office Bearers Section",
-  executiveCommittee: "Executive Committee Section",
+  members: "Members Section",
 };
 
 const managerLinks: Record<
@@ -64,14 +64,14 @@ const managerLinks: Record<
   ],
   officeBearers: [
     {
-      href: "/admin/members",
+      href: "/admin/office-bearers",
       label: "Manage Office Bearers",
     },
   ],
-  executiveCommittee: [
+  members: [
     {
-      href: "/admin/executive-committee",
-      label: "Manage Executive Committee Members",
+      href: "/admin/members",
+      label: "Manage Members",
     },
   ],
 };
@@ -507,7 +507,7 @@ export default function PageSettingsForm({
       )}
 
       {(pageKey === "officeBearers" ||
-        pageKey === "executiveCommittee") && (
+        pageKey === "members") && (
         <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
           <h2 className="text-2xl font-black text-slate-900">
             Directory Display

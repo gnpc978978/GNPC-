@@ -73,7 +73,7 @@ const errorMessage = (
  */
 
 const HOME_MEDIA_PATTERN =
-  /^homeMedia_(about|objectives|latestUpdates|gallery|pressConferences|executiveCommittee|officeBearers|membership)_(\d+)$/;
+  /^homeMedia_(about|objectives|latestUpdates|gallery|pressConferences|members|officeBearers|membership)_(\d+)$/;
 
 const MAX_MEDIA_PER_SECTION = 4;
 

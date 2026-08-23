@@ -391,7 +391,7 @@ export default function About() {
         statsLabels[0] ||
         "Members",
       icon: Users,
-      href: "/committee",
+      href: "/members",
     },
     {
       value:

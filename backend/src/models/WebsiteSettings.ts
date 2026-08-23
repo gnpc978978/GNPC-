@@ -26,7 +26,7 @@ export type HomeSectionKey =
   | "latestUpdates"
   | "gallery"
   | "pressConferences"
-  | "executiveCommittee"
+  | "members"
   | "officeBearers"
   | "membership";
 
@@ -72,7 +72,7 @@ export interface IHomeSettings {
     unknown
   >;
 
-  executiveCommittee: Record<
+  members: Record<
     string,
     unknown
   >;
@@ -94,7 +94,7 @@ export type CmsPageKey =
   | "latestUpdates"
   | "pressConference"
   | "officeBearers"
-  | "executiveCommittee";
+  | "members";
 
 export interface IPageSettings {
   about: Record<
@@ -122,7 +122,7 @@ export interface IPageSettings {
     unknown
   >;
 
-  executiveCommittee: Record<
+  members: Record<
     string,
     unknown
   >;
@@ -235,15 +235,15 @@ export const DEFAULT_PAGE_SETTINGS: IPageSettings =
         true,
     },
 
-    executiveCommittee: {
+    members: {
       pageEyebrow:
         "Our Strength",
 
       pageTitle:
-        "Executive Committee",
+        "Members",
 
       pageDescription:
-        "Meet the executive committee of Greater Noida Press Club.",
+        "Meet the members of Greater Noida Press Club.",
 
       pageSize: 100,
 
@@ -335,7 +335,7 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
         background: "white",
       },
 
-      executiveCommittee: {
+      members: {
         enabled: true,
         order: 7,
         background: "slate",
@@ -580,21 +580,21 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
       media: [],
     },
 
-    executiveCommittee: {
+    members: {
       eyebrow:
         "Our Strength",
 
       title:
-        "Executive Committee",
+        "Members",
 
       description:
-        "Meet the executive committee of Greater Noida Press Club.",
+        "Meet the members of Greater Noida Press Club.",
 
       buttonLabel:
         "View All",
 
       buttonHref:
-        "/committee",
+        "/members",
 
       displayCount:
         3,

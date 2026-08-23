@@ -45,7 +45,7 @@ The project is divided into two parts:
 * Announcements
 * Press Conferences
 * Events
-* Executive Committee
+* Members
 * Gallery
 * Contact
 * Download Membership Form
@@ -64,7 +64,7 @@ The project is divided into two parts:
 * Press Conferences
 * Events
 * Gallery
-* Executive Committee
+* Members
 * Contact Messages
 * Website Settings
 * Profile Management
@@ -77,7 +77,7 @@ The project is divided into two parts:
 * Press Conferences
 * Events
 * Gallery
-* Executive Committee
+* Members
 * Contact Messages
 * Profile Management
 
@@ -115,7 +115,7 @@ src
 │   ├── announcements
 │   ├── contact
 │   ├── events
-│   ├── executive-committee
+│   ├── members
 │   ├── gallery
 │   ├── login
 │   ├── press-conferences
@@ -129,7 +129,7 @@ src
 │   ├── common
 │   ├── contact
 │   ├── events
-│   ├── executive-committee
+│   ├── members
 │   ├── gallery
 │   ├── home
 │   ├── layout
@@ -163,7 +163,7 @@ src
 │   ├── pressConference
 │   ├── event
 │   ├── gallery
-│   ├── committee
+│   ├── members
 │   ├── contact
 │   └── settings
 │
@@ -188,7 +188,7 @@ src
 * press_conferences
 * events
 * galleries
-* committees
+* members
 * contacts
 * settings
 

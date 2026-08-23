@@ -1,8 +1,0 @@
-"use client";
-
-import { useState } from "react";
-import { importMembers } from "@/services/member.service";
-import type { ImportSummary } from "@/types/member";
-import { toast } from "sonner";
-
-export default function MemberImport({ onComplete }: { onComplete?: () => void }) { const [summary, setSummary] = useState<ImportSummary | null>(null); const upload = async (file?: File) => { if (!file) return; try { const result = await importMembers(file); setSummary(result); toast.success(`${result.imported} office bearers imported.`); onComplete?.(); } catch (error) { toast.error(error instanceof Error ? error.message : "Import failed."); } }; return <section className="rounded-xl bg-white p-6 shadow"><h2 className="text-xl font-bold">Import Office Bearers</h2><p className="mt-2 text-sm text-slate-600">Upload .xlsx, .xls, or .csv with Full Name, Email, Phone, Designation, Organization, State, District, and optional Photo URL columns.</p><label className="mt-5 inline-flex cursor-pointer rounded-lg bg-slate-800 px-4 py-2.5 font-semibold text-white">Choose file<input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={(event) => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label>{summary && <div className="mt-5 rounded-lg bg-blue-50 p-4 text-sm"><p>Imported: <strong>{summary.imported}</strong></p><p>Skipped: <strong>{summary.failed}</strong></p>{summary.failedRows.length > 0 && <ul className="mt-3 list-disc pl-5">{summary.failedRows.slice(0, 10).map((row) => <li key={row.row}>Row {row.row}: {row.reason}</li>)}</ul>}</div>}</section>; }

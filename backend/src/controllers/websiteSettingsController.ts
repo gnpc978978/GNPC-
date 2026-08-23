@@ -82,9 +82,9 @@ const mergeHomeSettings = (
         {}),
     },
 
-    executiveCommittee: {
-      ...DEFAULT_HOME_SETTINGS.executiveCommittee,
-      ...((source.executiveCommittee as object) ||
+    members: {
+      ...DEFAULT_HOME_SETTINGS.members,
+      ...((source.members as object) ||
         {}),
     },
 

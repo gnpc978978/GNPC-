@@ -1,0 +1,2 @@
+import OfficeBearerImport from "@/components/admin/office-bearers/OfficeBearerImport";
+export default function ImportOfficeBearersPage() { return <div className="p-6"><h1 className="mb-6 text-3xl font-bold">Import Office Bearers</h1><OfficeBearerImport /></div>; }

@@ -136,8 +136,7 @@ export default function AdminLoginPage() {
 
             <p className="mt-6 max-w-md text-lg leading-8 text-slate-300">
               Manage press releases, press
-              conferences, events, Executive
-              Committee, gallery, advertisements
+              conferences, events, Members, gallery, advertisements
               and website settings from one secure
               dashboard.
             </p>

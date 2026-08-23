@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import ExecutiveCommittee from "../models/ExecutiveCommittee";
+import Member from "../models/Member";
 import PressRelease from "../models/pressRelease.model";
 import Event from "../models/event.model";
 
@@ -101,7 +101,7 @@ export const getPublicStats = async (
     // This keeps homepage figures aligned with the same public CMS records
     // visitors can read and includes the office-bearer collection.
     const [members, pressReleases, events] = await Promise.all([
-      ExecutiveCommittee.countDocuments({ status: "active" }),
+      Member.countDocuments({ status: "active" }),
       PressRelease.countDocuments({ status: "PUBLISHED", isActive: { $ne: false } }),
       Event.countDocuments({ status: "published", isActive: { $ne: false } }),
     ]);

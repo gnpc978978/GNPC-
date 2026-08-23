@@ -114,9 +114,9 @@ export const eventUpload =
 export const galleryUpload =
   createUploader("gallery");
 
-export const executiveUpload =
+export const membersUpload =
   createUploader(
-    "executive-members"
+    "members"
   );
 
 export const sponsorUpload =

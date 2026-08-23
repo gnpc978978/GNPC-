@@ -15,7 +15,7 @@ const galleryUpload = multer({
   fileFilter: imageFilter,
 });
 
-export const executiveImportUpload = multer({
+export const membersImportUpload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_req, file, callback) => {

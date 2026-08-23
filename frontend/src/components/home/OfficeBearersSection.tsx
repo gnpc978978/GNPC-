@@ -10,7 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { usePublicMembers } from "@/hooks/useMembers";
+import { usePublicOfficeBearers } from "@/hooks/useOfficeBearers";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import { mergeHomeSettings } from "@/types/homeSettings";
 import Button from "@/components/ui/Button";
@@ -31,7 +31,7 @@ export default function OfficeBearersSection() {
     data,
     isLoading,
     isError,
-  } = usePublicMembers(1, count);
+  } = usePublicOfficeBearers(1, count);
 
   const members = data?.data || [];
 
@@ -50,7 +50,7 @@ export default function OfficeBearersSection() {
     setActiveIndex((current) =>
       Math.min(current, members.length - 1)
     );
-  }, [members.length]);
+  }, [members.length, setActiveIndex]);
 
   /*
    * Move carousel forward.
@@ -63,7 +63,7 @@ export default function OfficeBearersSection() {
         ? 0
         : current + 1
     );
-  }, [members.length]);
+  }, [members.length, setActiveIndex]);
 
   /*
    * Move carousel backward.
@@ -76,7 +76,7 @@ export default function OfficeBearersSection() {
         ? members.length - 1
         : current - 1
     );
-  }, [members.length]);
+  }, [members.length, setActiveIndex]);
 
   /*
    * Automatic carousel.

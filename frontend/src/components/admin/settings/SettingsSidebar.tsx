@@ -60,8 +60,8 @@ const menu = [
     icon: <FaUserTie />,
   },
   {
-    name: "Executive Committee Section",
-    link: "/admin/settings/executive-committee",
+    name: "Members Section",
+    link: "/admin/settings/members",
     icon: <FaUsers />,
   },
   {

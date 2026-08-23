@@ -1176,8 +1176,8 @@ export default function AboutPage() {
           Office Bearers
         </Link>
 
-        <Link href="/committee">
-          Executive Committee
+        <Link href="/members">
+          Members
         </Link>
       </div>
     </main>

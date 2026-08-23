@@ -8,7 +8,7 @@ import LatestUpdates from "@/components/home/LatestUpdates";
 import Objectives from "@/components/home/Objectives";
 import OfficeBearersSection from "@/components/home/OfficeBearersSection";
 import PressConference from "@/components/home/PressConference";
-import ExecutiveCommitteeSection from "@/components/website/ExecutiveCommitteeSection";
+import MembersSection from "@/components/website/MembersSection";
 
 import {
   mergeHomeSettings,
@@ -127,31 +127,31 @@ export default function Home() {
           </div>
         );
 
-      case "executiveCommittee":
+      case "members":
         return (
           <div
             key={key}
             className={wrapperClass}
           >
-            <ExecutiveCommitteeSection
+            <MembersSection
               limit={
                 home
-                  .executiveCommittee
+                  .members
                   .displayCount
               }
               showViewAll={
                 home
-                  .executiveCommittee
+                  .members
                   .showViewAll
               }
               title={
                 home
-                  .executiveCommittee
+                  .members
                   .title
               }
               settings={
                 settings.pageSettings
-                  ?.executiveCommittee
+                  ?.members
               }
             />
           </div>

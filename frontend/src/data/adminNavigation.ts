@@ -71,13 +71,13 @@ export const adminNavigation: AdminNavItem[] = [
   {
     name: "Office Bearers",
     icon: Users,
-    href: "/admin/members",
+    href: "/admin/office-bearers",
   },
 
   {
-    name: "Executive Committee",
+    name: "Members",
     icon: Users,
-    href: "/admin/executive-committee",
+    href: "/admin/members",
   },
 
   {

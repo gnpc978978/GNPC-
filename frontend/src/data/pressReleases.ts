@@ -19,9 +19,9 @@ export const pressReleases: PressRelease[] = [
     date: "26 July 2026",
     status: "Published",
     description:
-      "Annual meeting organized with executive members and press club representatives.",
+      "Annual meeting organized with members and press club representatives.",
     content:
-      "Greater Noida Press Club annual meeting was successfully organized with all executive members.",
+      "Greater Noida Press Club annual meeting was successfully organized with all members.",
   },
   {
     id: 2,

@@ -30,7 +30,7 @@ const sectionLabels: Record<HomeSectionKey, string> = {
   latestUpdates: "Latest Updates",
   gallery: "Gallery",
   pressConferences: "Press Conferences",
-  executiveCommittee: "Executive Committee",
+  members: "Members",
   officeBearers: "Office Bearers",
   membership: "Membership CTA",
 };
@@ -42,7 +42,7 @@ const sectionOrder: HomeSectionKey[] = [
   "latestUpdates",
   "gallery",
   "pressConferences",
-  "executiveCommittee",
+  "members",
   "officeBearers",
   "membership",
 ];
@@ -1776,19 +1776,19 @@ export default function HomeSectionForm() {
       </Panel>
 
       <Panel
-        title="Executive Committee Section"
-        description="Member records remain in the Executive Committee CMS. This controls the homepage section heading, count, CTA and optional editorial photos."
+        title="Members Section"
+        description="Member records remain in the Members CMS. This controls the homepage section heading, count, CTA and optional editorial photos."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
             label="Eyebrow"
             value={
-              home.executiveCommittee
+              home.members
                 .eyebrow
             }
             onChange={(event) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 {
                   eyebrow:
                     event.target.value,
@@ -1800,12 +1800,12 @@ export default function HomeSectionForm() {
           <Field
             label="Title"
             value={
-              home.executiveCommittee
+              home.members
                 .title
             }
             onChange={(event) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 {
                   title:
                     event.target.value,
@@ -1818,12 +1818,12 @@ export default function HomeSectionForm() {
             <TextArea
               label="Description"
               value={
-                home.executiveCommittee
+                home.members
                   .description
               }
               onChange={(event) =>
                 updateNested(
-                  "executiveCommittee",
+                  "members",
                   {
                     description:
                       event.target.value,
@@ -1836,12 +1836,12 @@ export default function HomeSectionForm() {
           <Field
             label="Button Label"
             value={
-              home.executiveCommittee
+              home.members
                 .buttonLabel
             }
             onChange={(event) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 {
                   buttonLabel:
                     event.target.value,
@@ -1853,12 +1853,12 @@ export default function HomeSectionForm() {
           <Field
             label="Button Route / Href"
             value={
-              home.executiveCommittee
+              home.members
                 .buttonHref
             }
             onChange={(event) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 {
                   buttonHref:
                     event.target.value,
@@ -1870,14 +1870,14 @@ export default function HomeSectionForm() {
           <NumberField
             label="Cards shown"
             value={
-              home.executiveCommittee
+              home.members
                 .displayCount
             }
             min={1}
             max={12}
             onChange={(value) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 {
                   displayCount:
                     value,
@@ -1889,12 +1889,12 @@ export default function HomeSectionForm() {
           <Toggle
             label="Show View All button"
             checked={
-              home.executiveCommittee
+              home.members
                 .showViewAll
             }
             onChange={(value) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 {
                   showViewAll:
                     value,
@@ -1906,15 +1906,15 @@ export default function HomeSectionForm() {
 
         <div className="mt-7">
           <HomeMediaManager
-            section="executiveCommittee"
-            label="Executive Committee Photos"
+            section="members"
+            label="Members Photos"
             media={
-              home.executiveCommittee
+              home.members
                 .media
             }
             onChange={(media) =>
               updateNested(
-                "executiveCommittee",
+                "members",
                 { media }
               )
             }

@@ -15,15 +15,14 @@ import pressConferenceRoutes from "./routes/pressConference.routes";
 import announcementRoutes from "./routes/announcement.routes";
 import eventRoutes from "./routes/event.routes";
 import galleryRoutes from "./routes/galleryRoutes";
-import executiveCommitteeRoutes from "./routes/executiveCommitteeRoutes";
-import publicExecutiveRoutes from "./routes/publicExecutive.routes";
+import membersRoutes from "./routes/membersRoutes";
 import contactMessageRoutes from "./routes/contactMessageRoutes";
 import websiteSettingsRoutes from "./routes/websiteSettingsRoutes";
 import sponsorRoutes from "./routes/sponsorRoutes";
 import advertisementRoutes from "./routes/advertisement.routes";
 import bannerRoutes from "./routes/banner.routes";
 import latestUpdatesRoutes from "./routes/latestUpdates.routes";
-import memberRoutes from "./routes/member.routes";
+import officeBearersRoutes from "./routes/officeBearers.routes";
 
 const app = express();
 
@@ -55,15 +54,14 @@ app.use("/api/press-conferences", pressConferenceRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/gallery", galleryRoutes);
-app.use("/api/executive-committee", executiveCommitteeRoutes);
-app.use("/api/executive", publicExecutiveRoutes);
+app.use("/api/members", membersRoutes);
 app.use("/api/contact-messages", contactMessageRoutes);
 app.use("/api/settings", websiteSettingsRoutes);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/advertisements", advertisementRoutes);
 app.use("/api/banner", bannerRoutes);
 app.use("/api/latest-updates", latestUpdatesRoutes);
-app.use("/api/members", memberRoutes);
+app.use("/api/office-bearers", officeBearersRoutes);
 
 const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
   if (error instanceof multer.MulterError) {

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { SearchX } from "lucide-react";
 import OfficeBearerCard from "./OfficeBearerCard";
 import OfficeBearersSkeleton from "./OfficeBearersSkeleton";
-import { usePublicMembers } from "@/hooks/useMembers";
+import { usePublicOfficeBearers } from "@/hooks/useOfficeBearers";
 import type { OfficeBearersPageSettings } from "@/types/pageSettings";
 
 const optionsFrom = (
@@ -62,7 +62,7 @@ export default function OfficeBearersPage({
     data,
     isLoading,
     isError,
-  } = usePublicMembers(
+  } = usePublicOfficeBearers(
     page,
     12,
     filters,
@@ -126,8 +126,8 @@ export default function OfficeBearersPage({
 
               {optionsFrom(
                 directoryOptions.map(
-                  (member) =>
-                    member.organization
+                  (officeBearer) =>
+                    officeBearer.organization
                 )
               ).map((value) => (
                 <option
@@ -154,8 +154,8 @@ export default function OfficeBearersPage({
 
               {optionsFrom(
                 directoryOptions.map(
-                  (member) =>
-                    member.designation
+                  (officeBearer) =>
+                    officeBearer.designation
                 )
               ).map((value) => (
                 <option
@@ -182,7 +182,7 @@ export default function OfficeBearersPage({
 
               {optionsFrom(
                 directoryOptions.map(
-                  (member) => member.state
+                  (officeBearer) => officeBearer.state
                 )
               ).map((value) => (
                 <option
@@ -209,8 +209,8 @@ export default function OfficeBearersPage({
 
               {optionsFrom(
                 directoryOptions.map(
-                  (member) =>
-                    member.district
+                  (officeBearer) =>
+                    officeBearer.district
                 )
               ).map((value) => (
                 <option
@@ -261,10 +261,10 @@ export default function OfficeBearersPage({
           </p>
         ) : data?.data.length ? (
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {visibleMembers.map((member) => (
+            {visibleMembers.map((officeBearer) => (
               <OfficeBearerCard
-                key={member._id}
-                member={member}
+                key={officeBearer._id}
+                officeBearer={officeBearer}
               />
             ))}
           </div>

@@ -1,32 +1,70 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IMember extends Document {
-  fullName: string;
-  photo: string;
-  email?: string;
-  phone?: string;
-  designation?: string;
+  name: string;
+  designation: string;
+  email: string;
+  phone: string;
   organization?: string;
   state?: string;
-  district?: string;
+  photo: string;
   displayOrder: number;
+  status: "active" | "inactive";
   createdAt: Date;
   updatedAt: Date;
 }
 
-const MemberSchema = new Schema<IMember>({
-  fullName: { type: String, required: true, trim: true },
-  photo: { type: String, required: true, trim: true, default: "/images/members/default.png" },
-  email: { type: String, trim: true, lowercase: true },
-  phone: { type: String, trim: true },
-  designation: { type: String, trim: true },
-  organization: { type: String, trim: true },
-  state: { type: String, trim: true },
-  district: { type: String, trim: true },
-  displayOrder: { type: Number, default: 0, min: 0 },
-}, { timestamps: true });
+const memberSchema = new Schema<IMember>(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    designation: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      unique: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    organization: { type: String, trim: true },
+    state: { type: String, trim: true },
+    photo: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    displayOrder: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-MemberSchema.index({ fullName: "text", email: "text", phone: "text", designation: "text", organization: "text" });
-MemberSchema.index({ displayOrder: 1, createdAt: 1 });
+memberSchema.index({ designation: 1, organization: 1, state: 1, status: 1, displayOrder: 1 });
 
-export default mongoose.models.Member || mongoose.model<IMember>("Member", MemberSchema);
+const Member = mongoose.models.Member || mongoose.model<IMember>(
+  "Member",
+  memberSchema
+);
+
+export default Member;

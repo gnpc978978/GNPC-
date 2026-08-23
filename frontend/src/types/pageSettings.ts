@@ -4,7 +4,7 @@ export type CmsPageKey =
   | "latestUpdates"
   | "pressConference"
   | "officeBearers"
-  | "executiveCommittee";
+  | "members";
 
 export type CommonPageSettings = {
   pageEyebrow: string;
@@ -44,7 +44,7 @@ export type OfficeBearersPageSettings = CommonPageSettings & {
   showFilters: boolean;
 };
 
-export type ExecutiveCommitteePageSettings = CommonPageSettings & {
+export type MembersPageSettings = CommonPageSettings & {
   pageSize: number;
   showSearch: boolean;
   showFilters: boolean;
@@ -56,7 +56,7 @@ export type PageSettings = {
   latestUpdates: LatestUpdatesPageSettings;
   pressConference: PressConferencePageSettings;
   officeBearers: OfficeBearersPageSettings;
-  executiveCommittee: ExecutiveCommitteePageSettings;
+  members: MembersPageSettings;
 };
 
 export const defaultPageSettings: PageSettings = {
@@ -108,11 +108,11 @@ export const defaultPageSettings: PageSettings = {
     showSearch: true,
     showFilters: true,
   },
-  executiveCommittee: {
+  members: {
     pageEyebrow: "Our Strength",
-    pageTitle: "Executive Committee",
+    pageTitle: "Members",
     pageDescription:
-      "Meet the executive committee of Greater Noida Press Club.",
+      "Meet the members of Greater Noida Press Club.",
     pageSize: 100,
     showSearch: true,
     showFilters: true,
@@ -145,9 +145,9 @@ export function mergePageSettings(
       ...defaultPageSettings.officeBearers,
       ...(source.officeBearers || {}),
     },
-    executiveCommittee: {
-      ...defaultPageSettings.executiveCommittee,
-      ...(source.executiveCommittee || {}),
+    members: {
+      ...defaultPageSettings.members,
+      ...(source.members || {}),
     },
   };
 }

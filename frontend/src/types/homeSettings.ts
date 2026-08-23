@@ -5,7 +5,7 @@ export type HomeSectionKey =
   | "latestUpdates"
   | "gallery"
   | "pressConferences"
-  | "executiveCommittee"
+  | "members"
   | "officeBearers"
   | "membership";
 
@@ -102,7 +102,7 @@ export type HomeSettings = {
     media: string[];
   };
 
-  executiveCommittee: {
+  members: {
     eyebrow: string;
     title: string;
     description: string;
@@ -174,7 +174,7 @@ export const defaultHomeSettings: HomeSettings = {
       background: "white",
     },
 
-    executiveCommittee: {
+    members: {
       enabled: true,
       order: 7,
       background: "slate",
@@ -385,21 +385,21 @@ export const defaultHomeSettings: HomeSettings = {
     media: [],
   },
 
-  executiveCommittee: {
+  members: {
     eyebrow:
       "Our Strength",
 
     title:
-      "Executive Committee",
+      "Members",
 
     description:
-      "Meet the executive committee of Greater Noida Press Club.",
+      "Meet the members of Greater Noida Press Club.",
 
     buttonLabel:
       "View All",
 
     buttonHref:
-      "/committee",
+      "/members",
 
     displayCount: 3,
 
@@ -587,14 +587,14 @@ export function mergeHomeSettings(
         source.pressConferences
       ),
 
-    executiveCommittee: {
-      ...defaultHomeSettings.executiveCommittee,
-      ...(source.executiveCommittee ||
+    members: {
+      ...defaultHomeSettings.members,
+      ...(source.members ||
         {}),
 
       media: normalizeMedia(
         source
-          .executiveCommittee
+          .members
           ?.media
       ),
     },

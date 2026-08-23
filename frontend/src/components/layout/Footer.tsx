@@ -23,7 +23,7 @@ export default function Footer() {
   ].filter(x=>Boolean(x.href));
   const quickLinks=[
     ["About Us","/about"],["Latest Updates","/latest-updates"],["Gallery","/gallery"],
-    ["Office Bearers","/office-bearers"],["Executive Committee","/committee"],["Contact","/contact"]
+    ["Office Bearers","/office-bearers"],["Members","/members"],["Contact","/contact"]
   ];
   const updateLinks=[
     ["Press Releases","/press-releases"],["Announcements","/announcements"],["Events","/events"],["Press Conferences","/press-conference"]

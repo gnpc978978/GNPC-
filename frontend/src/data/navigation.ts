@@ -24,8 +24,8 @@ export const navigation = [
     href: "/office-bearers",
   },
   {
-    name: "Executive Committee",
-    href: "/committee",
+    name: "Members",
+    href: "/members",
   },
   {
     name: "Contact",
