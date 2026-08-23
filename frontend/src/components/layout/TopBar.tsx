@@ -34,8 +34,6 @@ export default function TopBar() {
       <div className="gnpc-container flex min-h-[38px] items-center justify-between gap-3 sm:min-h-[40px]">
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           <div className="flex items-center gap-2">
-            <FaMapMarkerAlt size={10} className="text-[#c9a45c]" aria-hidden="true"/>
-            <span className="hidden text-[10px] font-extrabold uppercase tracking-[.18em] sm:inline">Greater Noida</span>
           </div>
           <span className="hidden h-4 w-px bg-white/15 sm:block"/>
           <span className="hidden text-[10px] font-bold uppercase tracking-[.12em] text-white/45 md:inline">Est. 2003</span>
