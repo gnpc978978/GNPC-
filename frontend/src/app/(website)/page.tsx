@@ -59,12 +59,15 @@ export default function Home() {
      * for section visibility/order.
      */
 
-    const wrapperClass = [
-      "gnpc-section-shell",
-      section.background === "slate"
-        ? "gnpc-shell-muted"
-        : "gnpc-shell-paper",
-    ].join(" ");
+    const wrapperClass =
+      key === "hero" || key === "membership"
+        ? [
+            "gnpc-section-shell",
+            section.background === "slate"
+              ? "gnpc-shell-muted"
+              : "gnpc-shell-paper",
+          ].join(" ")
+        : "gnpc-section-shell gnpc-home-content";
 
     switch (key) {
       case "hero":

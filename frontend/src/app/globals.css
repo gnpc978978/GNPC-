@@ -203,6 +203,20 @@ button {
     linear-gradient(135deg, #edf2f7 0%, #f8fafc 55%, #e9f0f6 100%);
 }
 
+/* Homepage content intentionally shares one uninterrupted canvas between the
+ * Hero and CTA. The selectors are scoped to that wrapper, so page-specific
+ * sections and the Hero/CTA retain their existing visual systems. */
+.gnpc-home-content,
+.gnpc-home-content > :is(section, main),
+.gnpc-home-content > main > section {
+  background: #f8fafc !important;
+}
+
+.gnpc-home-content > section > [aria-hidden="true"].pointer-events-none.absolute.inset-0,
+.gnpc-home-content > main > section > [aria-hidden="true"].pointer-events-none.absolute.inset-0 {
+  display: none;
+}
+
 .gnpc-section-title,
 .gnpc-section-heading {
   color: var(--gnpc-ink);
