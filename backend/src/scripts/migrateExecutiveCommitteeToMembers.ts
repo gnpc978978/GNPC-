@@ -66,8 +66,15 @@ const migrate = async () => {
   try {
     // The old `members` collection contains Office Bearers. Move it first so
     // the Members collection can receive the former Executive Committee data.
-    await renameCollectionSafely("members", "officebearers");
-    await renameCollectionSafely("executivecommittees", "members");
+    const executiveCollectionExists = await collectionExists("executivecommittees");
+    if (executiveCollectionExists) {
+      await renameCollectionSafely("members", "officebearers");
+      await renameCollectionSafely("executivecommittees", "members");
+    } else if (await collectionExists("members")) {
+      console.log("Collection migration already completed; skipping collection renames.");
+    } else {
+      console.log("No legacy Executive Committee collection found; skipping collection renames.");
+    }
     await migrateSettingsKeys();
     console.log("Executive Committee → Members migration completed.");
   } finally {
