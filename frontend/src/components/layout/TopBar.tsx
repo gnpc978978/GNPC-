@@ -35,7 +35,6 @@ export default function TopBar() {
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           <div className="flex items-center gap-2">
           </div>
-          <span className="hidden h-4 w-px bg-white/15 sm:block"/>
           <span className="hidden text-[10px] font-bold uppercase tracking-[.12em] text-white/45 md:inline">Est. 2003</span>
           <span className="hidden text-[10px] font-extrabold uppercase tracking-[.12em] text-[#e8d7ad] lg:inline">23 Years of Truthful Journalism</span>
         </div>
@@ -43,11 +42,6 @@ export default function TopBar() {
           <div className="hidden items-center gap-2 lg:flex">
             <HiCalendarDays size={13} className="text-[#c9a45c]" aria-hidden="true"/>
             <span className="text-[10px] font-bold uppercase tracking-[.06em] text-white/50">{date}</span>
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-3 py-1.5">
-            <span className="relative flex h-2 w-2"><span className="absolute h-full w-full animate-ping rounded-full bg-[#c9a45c]/40"/><span className="relative h-2 w-2 rounded-full bg-[#c9a45c]"/></span>
-            <HiClock size={13} className="text-white/45" aria-hidden="true"/>
-            <span className="whitespace-nowrap text-[10px] font-black tracking-[.08em] text-white sm:text-xs">{time}</span>
           </div>
           {socialLinks.length>0 && <div className="hidden items-center gap-1 md:flex">
             {socialLinks.map(({label,href,icon:Icon})=>(
