@@ -14,7 +14,6 @@ import { usePublicOfficeBearers } from "@/hooks/useOfficeBearers";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import { mergeHomeSettings } from "@/types/homeSettings";
 import Button from "@/components/ui/Button";
-import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function OfficeBearersSection() {
   const { settings } = useWebsiteSettings();
@@ -154,32 +153,46 @@ export default function OfficeBearersSection() {
         {/* =========================================
             SECTION HEADER
         ========================================== */}
-        <SectionHeading
-          badge={section.eyebrow || "Our Leaders"}
-          title={section.title || "Office Bearers"}
-          description={section.description}
-          action={
-            section.showViewAll ? (
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.7 }}
+          className="gnpc-section-heading mx-auto max-w-[900px] text-center"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <span aria-hidden="true" className="h-px w-8 bg-black/20 sm:w-12" />
+            <span className="text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
+              {section.eyebrow || "Our Leaders"}
+            </span>
+            <span aria-hidden="true" className="h-px w-8 bg-black/20 sm:w-12" />
+          </div>
+
+          <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">
+            {section.title || "Office Bearers"}
+          </h2>
+
+          {section.description && (
+            <p className="mx-auto mt-5 max-w-[720px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
+              {section.description}
+            </p>
+          )}
+
+          {section.showViewAll && (
+            <div className="mt-7 flex justify-center">
               <Button
-                href={
-                  section.buttonHref ||
-                  "/office-bearers"
-                }
+                href={section.buttonHref || "/office-bearers"}
                 variant="outline"
                 size="md"
               >
-                {section.buttonLabel
-                  ?.trim()
-                  .toLowerCase() === "explore"
+                {section.buttonLabel?.trim().toLowerCase() === "explore"
                   ? "View All"
-                  : section.buttonLabel ||
-                    "View All"}
-
+                  : section.buttonLabel || "View All"}
                 <ArrowRight size={16} />
               </Button>
-            ) : undefined
-          }
-        />
+            </div>
+          )}
+        </motion.div>
 
         {/* =========================================
             LOADING STATE
