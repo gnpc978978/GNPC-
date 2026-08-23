@@ -781,19 +781,22 @@ export default function PressConferenceList({
                 className="mt-10 flex justify-center sm:mt-12"
               >
                 <Button
-              href={
-                section.buttonHref ||
-                "/press-conference"
-              }
-              variant="outline"
-              size="md"
-            >
-              {section.buttonLabel.trim().toLowerCase() === "explore"
-                ? "View All"
-                : section.buttonLabel}
+                  href={
+                    buttonHref
+                  }
+                  variant="outline"
+                  size="lg"
+                  className="border-[#b9c5d2] bg-white"
+                >
+                  {
+                    buttonLabel
+                  }
 
-              <ArrowRight size={17} />
-            </Button>
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Button>
                 
               </motion.div>
             )}
