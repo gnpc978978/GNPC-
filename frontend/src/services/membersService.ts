@@ -15,8 +15,7 @@ import {
 const toFormData = (
   data: MemberFormData
 ) => {
-  const formData =
-    new FormData();
+  const formData = new FormData();
 
   formData.append(
     "name",
@@ -50,9 +49,7 @@ const toFormData = (
 
   formData.append(
     "displayOrder",
-    String(
-      data.displayOrder
-    )
+    String(data.displayOrder)
   );
 
   formData.append(
@@ -75,13 +72,18 @@ const toFormData = (
 const queryString = (
   params: URLSearchParams
 ) => {
-  const value =
-    params.toString();
+  const value = params.toString();
 
   return value
     ? `?${value}`
     : "";
 };
+
+/*
+ * ==========================================================
+ * ADMIN MEMBERS
+ * ==========================================================
+ */
 
 export const getMembers =
   async (
@@ -99,15 +101,22 @@ export const getMembers =
     );
   };
 
+/*
+ * ==========================================================
+ * PUBLIC MEMBERS
+ * ==========================================================
+ *
+ * Uses the dedicated public endpoint so the public website
+ * does not inherit the admin endpoint's default limit of 10.
+ */
+
 export const getPublicMembers =
   async (
     params = new URLSearchParams()
-  ): Promise<
-    Member[]
-  > => {
+  ): Promise<Member[]> => {
     const response =
       await apiFetch(
-        `/members${queryString(
+        `/members/public${queryString(
           params
         )}`
       );
@@ -119,6 +128,12 @@ export const getPublicMembers =
 
     return payload.data;
   };
+
+/*
+ * ==========================================================
+ * SINGLE MEMBER
+ * ==========================================================
+ */
 
 export const getMember =
   async (
@@ -137,6 +152,12 @@ export const getMember =
     return payload.data;
   };
 
+/*
+ * ==========================================================
+ * MEMBER STATISTICS
+ * ==========================================================
+ */
+
 export const getMembersStats =
   async () => {
     const response =
@@ -151,6 +172,12 @@ export const getMembersStats =
 
     return payload.data;
   };
+
+/*
+ * ==========================================================
+ * CREATE MEMBER
+ * ==========================================================
+ */
 
 export const createMember =
   async (
@@ -174,6 +201,12 @@ export const createMember =
 
     return payload.data;
   };
+
+/*
+ * ==========================================================
+ * UPDATE MEMBER
+ * ==========================================================
+ */
 
 export const updateMember =
   async (
@@ -199,6 +232,12 @@ export const updateMember =
     return payload.data;
   };
 
+/*
+ * ==========================================================
+ * DELETE MEMBER
+ * ==========================================================
+ */
+
 export const deleteMember =
   async (
     id: string
@@ -215,6 +254,12 @@ export const deleteMember =
       response
     );
   };
+
+/*
+ * ==========================================================
+ * IMPORT MEMBERS
+ * ==========================================================
+ */
 
 export const importMembers =
   async (
@@ -244,6 +289,12 @@ export const importMembers =
 
     return payload.data;
   };
+
+/*
+ * ==========================================================
+ * EXPORT MEMBERS
+ * ==========================================================
+ */
 
 export const exportMembers =
   async (
@@ -276,6 +327,7 @@ export const exportMembers =
       );
 
     link.href = url;
+
     link.download =
       "members.xlsx";
 
