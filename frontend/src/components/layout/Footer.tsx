@@ -273,20 +273,11 @@ export default function Footer() {
 
           </div>
 
-          {/* Content Management */}
-          <p>
-            Content Managed by{" "}
-
-            <span className="font-medium text-white/70">
-              Greater Noida Press Club
-            </span>
-          </p>
-
           {/* Maintenance */}
           <div className="flex flex-wrap items-center gap-1">
 
             <span>
-              Maintained by
+             Website Maintained by
             </span>
 
             <a
