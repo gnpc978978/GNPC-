@@ -8,7 +8,8 @@ export type AuthUser = {
   role: "ADMIN" | "SUPER_ADMIN";
 };
 
-const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+const rawApiUrl =
+  process.env.NEXT_PUBLIC_API_URL?.trim();
 
 export const API_BASE_URL = rawApiUrl
   ? rawApiUrl.replace(/\/+$/, "")
@@ -16,44 +17,58 @@ export const API_BASE_URL = rawApiUrl
     ? "http://localhost:5001/api"
     : "";
 
-export const apiUrl = (path = ""): string => {
+export const apiUrl = (
+  path = ""
+): string => {
   if (!API_BASE_URL) {
     throw new Error(
       "NEXT_PUBLIC_API_URL is not configured. Configure the frontend API base URL before making API requests."
     );
   }
 
-  const normalizedPath = path.startsWith("/")
-    ? path
-    : `/${path}`;
+  const normalizedPath =
+    path.startsWith("/")
+      ? path
+      : `/${path}`;
 
   return `${API_BASE_URL}${normalizedPath}`;
 };
 
-export const getAuthToken = (): string | null => {
-  if (typeof window === "undefined") {
-    return null;
-  }
+export const getAuthToken =
+  (): string | null => {
+    if (
+      typeof window === "undefined"
+    ) {
+      return null;
+    }
 
-  return localStorage.getItem("token");
-};
+    return localStorage.getItem(
+      "token"
+    );
+  };
 
-export const getAuthHeaders = (): HeadersInit => {
-  const token = getAuthToken();
+export const getAuthHeaders =
+  (): HeadersInit => {
+    const token =
+      getAuthToken();
 
-  return token
-    ? {
-        Authorization: `Bearer ${token}`,
-      }
-    : {};
-};
+    return token
+      ? {
+          Authorization:
+            `Bearer ${token}`,
+        }
+      : {};
+  };
 
 export const authenticatedFetch = (
   input: RequestInfo | URL,
   init: RequestInit = {}
 ) => {
-  const headers = new Headers(init.headers);
-  const token = getAuthToken();
+  const headers =
+    new Headers(init.headers);
+
+  const token =
+    getAuthToken();
 
   if (token) {
     headers.set(
@@ -73,10 +88,13 @@ export const apiFetch = (
   path: string,
   init: RequestInit = {}
 ) => {
-  return fetch(apiUrl(path), {
-    ...init,
-    credentials: "include",
-  });
+  return fetch(
+    apiUrl(path),
+    {
+      ...init,
+      credentials: "include",
+    }
+  );
 };
 
 export const authenticatedApiFetch = (
@@ -89,23 +107,73 @@ export const authenticatedApiFetch = (
   );
 };
 
-export const clearExpiredSession = () => {
-  if (typeof window === "undefined") {
-    return;
-  }
+/*
+=========================================
+CLEAR EXPIRED SESSION
+=========================================
 
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+IMPORTANT:
 
-  if (
-    window.location.pathname !==
-    "/admin/login"
-  ) {
-    window.location.replace(
-      "/admin/login"
+Public website pages should NEVER redirect
+to the admin login page.
+
+Only protected /admin pages should redirect
+when authentication expires.
+*/
+
+export const clearExpiredSession =
+  () => {
+    if (
+      typeof window === "undefined"
+    ) {
+      return;
+    }
+
+    /*
+    Remove expired authentication data.
+    */
+
+    localStorage.removeItem(
+      "token"
     );
-  }
-};
+
+    localStorage.removeItem(
+      "user"
+    );
+
+    const currentPath =
+      window.location.pathname;
+
+    /*
+    Only redirect to login if the user is
+    currently inside the protected admin area.
+
+    Public pages like:
+
+    /
+    /about
+    /gallery
+    /events
+    /members
+
+    must remain accessible.
+    */
+
+    const isProtectedAdminPage =
+      currentPath.startsWith(
+        "/admin"
+      ) &&
+      currentPath !==
+        "/admin/login" &&
+      currentPath !==
+        "/admin/forgot-password";
+
+    if (isProtectedAdminPage) {
+      window.location.replace(
+        "/admin/login"
+      );
+    }
+  };
 
 const fallbackMessages: Record<
   number,
@@ -113,18 +181,24 @@ const fallbackMessages: Record<
 > = {
   400:
     "The request is invalid. Please review the submitted information.",
+
   401:
     "Your session has expired. Please sign in again.",
+
   403:
     "You do not have permission to perform this action.",
+
   404:
     "The requested resource was not found.",
+
   409:
     "This request conflicts with existing data.",
+
   422:
     "The submitted information could not be processed.",
+
   500:
-    "The server could not complete your request. Please try again later.",
+    "The server could not complete the request. Please try again later.",
 };
 
 export const apiErrorMessage = (
@@ -155,7 +229,19 @@ export const responseJson =
         .json()
         .catch(() => ({}));
 
-    if (response.status === 401) {
+    /*
+    If authentication expires:
+
+    1. Remove invalid token.
+    2. Redirect ONLY when the user is
+       on a protected admin page.
+    3. Never redirect public website
+       visitors to /admin/login.
+    */
+
+    if (
+      response.status === 401
+    ) {
       clearExpiredSession();
     }
 
@@ -195,5 +281,7 @@ export const axiosErrorMessage = (
     return error.message;
   }
 
-  return "Unable to reach the server. Please check your connection and try again.";
+  return (
+    "Unable to reach the server. Please check your connection and try again."
+  );
 };
