@@ -12,10 +12,17 @@ import {
   responseJson,
 } from "@/services/api";
 
+/*
+|--------------------------------------------------------------------------
+| FORM DATA
+|--------------------------------------------------------------------------
+*/
+
 const toFormData = (
   data: MemberFormData
 ) => {
-  const formData = new FormData();
+  const formData =
+    new FormData();
 
   formData.append(
     "name",
@@ -49,7 +56,9 @@ const toFormData = (
 
   formData.append(
     "displayOrder",
-    String(data.displayOrder)
+    String(
+      data.displayOrder
+    )
   );
 
   formData.append(
@@ -72,7 +81,8 @@ const toFormData = (
 const queryString = (
   params: URLSearchParams
 ) => {
-  const value = params.toString();
+  const value =
+    params.toString();
 
   return value
     ? `?${value}`
@@ -80,10 +90,10 @@ const queryString = (
 };
 
 /*
- * ==========================================================
- * ADMIN MEMBERS
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| ADMIN
+|--------------------------------------------------------------------------
+*/
 
 export const getMembers =
   async (
@@ -102,13 +112,10 @@ export const getMembers =
   };
 
 /*
- * ==========================================================
- * PUBLIC MEMBERS
- * ==========================================================
- *
- * Uses the dedicated public endpoint so the public website
- * does not inherit the admin endpoint's default limit of 10.
- */
+|--------------------------------------------------------------------------
+| PUBLIC MEMBERS
+|--------------------------------------------------------------------------
+*/
 
 export const getPublicMembers =
   async (
@@ -123,22 +130,34 @@ export const getPublicMembers =
 
     const payload =
       await responseJson<{
+        success: boolean;
         data: Member[];
       }>(response);
+
+    if (
+      !payload ||
+      !Array.isArray(
+        payload.data
+      )
+    ) {
+      throw new Error(
+        "The members API returned an invalid response."
+      );
+    }
 
     return payload.data;
   };
 
 /*
- * ==========================================================
- * SINGLE MEMBER
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| SINGLE MEMBER
+|--------------------------------------------------------------------------
+*/
 
 export const getMember =
   async (
     id: string
-  ) => {
+  ): Promise<Member> => {
     const response =
       await authenticatedApiFetch(
         `/members/${id}`
@@ -153,13 +172,13 @@ export const getMember =
   };
 
 /*
- * ==========================================================
- * MEMBER STATISTICS
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| STATS
+|--------------------------------------------------------------------------
+*/
 
 export const getMembersStats =
-  async () => {
+  async (): Promise<MembersStats> => {
     const response =
       await authenticatedApiFetch(
         "/members/stats"
@@ -174,15 +193,15 @@ export const getMembersStats =
   };
 
 /*
- * ==========================================================
- * CREATE MEMBER
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| CREATE
+|--------------------------------------------------------------------------
+*/
 
 export const createMember =
   async (
     data: MemberFormData
-  ) => {
+  ): Promise<Member> => {
     const response =
       await authenticatedApiFetch(
         "/members",
@@ -203,16 +222,16 @@ export const createMember =
   };
 
 /*
- * ==========================================================
- * UPDATE MEMBER
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| UPDATE
+|--------------------------------------------------------------------------
+*/
 
 export const updateMember =
   async (
     id: string,
     data: MemberFormData
-  ) => {
+  ): Promise<Member> => {
     const response =
       await authenticatedApiFetch(
         `/members/${id}`,
@@ -233,10 +252,10 @@ export const updateMember =
   };
 
 /*
- * ==========================================================
- * DELETE MEMBER
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| DELETE
+|--------------------------------------------------------------------------
+*/
 
 export const deleteMember =
   async (
@@ -256,15 +275,15 @@ export const deleteMember =
   };
 
 /*
- * ==========================================================
- * IMPORT MEMBERS
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| IMPORT
+|--------------------------------------------------------------------------
+*/
 
 export const importMembers =
   async (
     file: File
-  ) => {
+  ): Promise<ImportSummary> => {
     const formData =
       new FormData();
 
@@ -291,10 +310,10 @@ export const importMembers =
   };
 
 /*
- * ==========================================================
- * EXPORT MEMBERS
- * ==========================================================
- */
+|--------------------------------------------------------------------------
+| EXPORT
+|--------------------------------------------------------------------------
+*/
 
 export const exportMembers =
   async (
@@ -331,7 +350,13 @@ export const exportMembers =
     link.download =
       "members.xlsx";
 
+    document.body.appendChild(
+      link
+    );
+
     link.click();
+
+    link.remove();
 
     URL.revokeObjectURL(
       url
