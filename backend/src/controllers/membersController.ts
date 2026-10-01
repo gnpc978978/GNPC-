@@ -7,264 +7,1302 @@ import { deleteCloudinaryAssets } from "../utils/cloudinaryCleanup";
 const statuses = ["active", "inactive"] as const;
 type MemberStatus = (typeof statuses)[number];
 
-const normalizeMember = (body: Request["body"]) => {
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const designation = typeof body.designation === "string" ? body.designation.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
-  const organization = typeof body.organization === "string" ? body.organization.trim() : "";
-  const state = typeof body.state === "string" ? body.state.trim() : "";
-  const displayOrder = Number(body.displayOrder);
-  const status = body.status === "inactive" ? "inactive" : "active";
+const DEFAULT_MEMBER_PHOTO = "/images/members/default.png";
 
-  if (!name || !designation || !email || !/^\S+@\S+\.\S+$/.test(email) || !phone || !Number.isInteger(displayOrder) || displayOrder < 0) {
+const normalizeMember = (body: Request["body"]) => {
+  const name =
+    typeof body.name === "string"
+      ? body.name.trim()
+      : "";
+
+  const designation =
+    typeof body.designation === "string"
+      ? body.designation.trim()
+      : "";
+
+  const email =
+    typeof body.email === "string"
+      ? body.email.trim().toLowerCase()
+      : "";
+
+  const phone =
+    typeof body.phone === "string"
+      ? body.phone.trim()
+      : "";
+
+  const organization =
+    typeof body.organization === "string"
+      ? body.organization.trim()
+      : "";
+
+  const state =
+    typeof body.state === "string"
+      ? body.state.trim()
+      : "";
+
+  const displayOrder = Number(
+    body.displayOrder
+  );
+
+  const status =
+    body.status === "inactive"
+      ? "inactive"
+      : "active";
+
+  if (
+    !name ||
+    !designation ||
+    !email ||
+    !/^\S+@\S+\.\S+$/.test(email) ||
+    !phone ||
+    !Number.isInteger(displayOrder) ||
+    displayOrder < 0
+  ) {
     return null;
   }
 
-  return { name, designation, email, phone, organization, state, displayOrder, status: status as MemberStatus };
+  return {
+    name,
+    designation,
+    email,
+    phone,
+    organization,
+    state,
+    displayOrder,
+    status: status as MemberStatus,
+  };
 };
 
-const uploadPhoto = async (file?: Express.Multer.File) => {
-  if (!file) return undefined;
-  const result = await cloudinary.uploader.upload(
-    `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
-    { folder: "members" }
-  );
+const uploadPhoto = async (
+  file?: Express.Multer.File
+) => {
+  if (!file) {
+    return undefined;
+  }
+
+  const result =
+    await cloudinary.uploader.upload(
+      `data:${file.mimetype};base64,${file.buffer.toString(
+        "base64"
+      )}`,
+      {
+        folder: "members",
+      }
+    );
+
   return result.secure_url;
 };
 
-export const getMembers = async (req: Request, res: Response) => {
+/*
+|--------------------------------------------------------------------------
+| ADMIN - GET MEMBERS
+|--------------------------------------------------------------------------
+*/
+
+export const getMembers = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const page = Math.max(Number(req.query.page) || 1, 1);
-    const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 100);
-    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
-    const designation = typeof req.query.designation === "string" ? req.query.designation.trim() : "";
-    const status = typeof req.query.status === "string" ? req.query.status : "";
-    const filter: Record<string, unknown> = {};
+    const page = Math.max(
+      Number(req.query.page) || 1,
+      1
+    );
 
-    if (search) filter.$or = ["name", "designation", "organization"].map((field) => ({ [field]: { $regex: search, $options: "i" } }));
-    if (designation) filter.designation = { $regex: designation, $options: "i" };
-    const organization = typeof req.query.organization === "string" ? req.query.organization.trim() : "";
-    const state = typeof req.query.state === "string" ? req.query.state.trim() : "";
-    if (organization) filter.organization = { $regex: organization, $options: "i" };
-    if (state) filter.state = { $regex: state, $options: "i" };
-    if (status && statuses.includes(status as MemberStatus)) filter.status = status;
+    const limit = Math.min(
+      Math.max(
+        Number(req.query.limit) || 10,
+        1
+      ),
+      100
+    );
 
-    const [data, total] = await Promise.all([
-      Member.find(filter).sort({ displayOrder: 1, createdAt: -1 }).skip((page - 1) * limit).limit(limit),
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.trim()
+        : "";
+
+    const designation =
+      typeof req.query.designation === "string"
+        ? req.query.designation.trim()
+        : "";
+
+    const organization =
+      typeof req.query.organization === "string"
+        ? req.query.organization.trim()
+        : "";
+
+    const state =
+      typeof req.query.state === "string"
+        ? req.query.state.trim()
+        : "";
+
+    const status =
+      typeof req.query.status === "string"
+        ? req.query.status
+        : "";
+
+    const filter: Record<
+      string,
+      unknown
+    > = {};
+
+    if (search) {
+      filter.$or = [
+        {
+          name: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          fullName: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          designation: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          organization: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          email: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          phone: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    if (designation) {
+      filter.designation = {
+        $regex: designation,
+        $options: "i",
+      };
+    }
+
+    if (organization) {
+      filter.organization = {
+        $regex: organization,
+        $options: "i",
+      };
+    }
+
+    if (state) {
+      filter.state = {
+        $regex: state,
+        $options: "i",
+      };
+    }
+
+    if (
+      status &&
+      statuses.includes(
+        status as MemberStatus
+      )
+    ) {
+      filter.status = status;
+    }
+
+    const [
+      documents,
+      total,
+    ] = await Promise.all([
+      Member.find(filter)
+        .sort({
+          displayOrder: 1,
+          createdAt: -1,
+        })
+        .skip(
+          (page - 1) * limit
+        )
+        .limit(limit)
+        .lean(),
+
       Member.countDocuments(filter),
     ]);
 
-    return res.json({ success: true, data, pagination: { page, limit, total, pages: Math.max(Math.ceil(total / limit), 1) } });
-  } catch (error) {
-    console.error("Get Members Error:", error);
-    return res.status(500).json({ success: false, message: "Failed to fetch members." });
-  }
-};
+    const data = documents.map(
+      (member: any) => ({
+        ...member,
 
-export const getPublicMembers = async (req: Request, res: Response) => {
-  const requestedLimit = Number(req.query.limit);
-  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 100) : undefined;
+        name:
+          member.name ||
+          member.fullName ||
+          "GNPC Member",
 
-  try {
-    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
-    const designation = typeof req.query.designation === "string" ? req.query.designation.trim() : "";
-    const organization = typeof req.query.organization === "string" ? req.query.organization.trim() : "";
-    const state = typeof req.query.state === "string" ? req.query.state.trim() : "";
-    const filter: Record<string, unknown> = { status: "active" };
-    if (search) filter.$or = ["name", "designation", "organization"].map((field) => ({ [field]: { $regex: search, $options: "i" } }));
-    if (designation) filter.designation = { $regex: designation, $options: "i" };
-    if (organization) filter.organization = { $regex: organization, $options: "i" };
-    if (state) filter.state = { $regex: state, $options: "i" };
-    const query = Member.find(filter)
-      .select("name designation organization state email phone photo displayOrder")
-      .sort({ displayOrder: 1, createdAt: 1 });
-    if (limit) query.limit(limit);
-    const data = await query;
-    return res.json({ success: true, data });
-  } catch {
-    return res.status(500).json({ success: false, message: "Failed to fetch members." });
-  }
-};
+        designation:
+          member.designation ||
+          "GNPC Member",
 
-export const getMembersStats = async (_req: Request, res: Response) => {
-  try {
-    const [total, active, inactive] = await Promise.all([
-      Member.countDocuments(),
-      Member.countDocuments({ status: "active" }),
-      Member.countDocuments({ status: "inactive" }),
-    ]);
-    return res.json({ success: true, data: { total, active, inactive } });
-  } catch {
-    return res.status(500).json({ success: false, message: "Failed to fetch member statistics." });
-  }
-};
+        email:
+          member.email || "",
 
-export const getMember = async (req: Request, res: Response) => {
-  try {
-    const data = await Member.findById(req.params.id);
-    return data ? res.json({ success: true, data }) : res.status(404).json({ success: false, message: "Member not found." });
-  } catch {
-    return res.status(400).json({ success: false, message: "Invalid member id." });
-  }
-};
+        phone:
+          member.phone || "",
 
-export const createMember = async (req: Request, res: Response) => {
-  try {
-    const member = normalizeMember(req.body);
-    if (!member) return res.status(400).json({ success: false, message: "Name, designation, valid email, phone, and non-negative display order are required." });
-    const existing = await Member.exists({ email: member.email });
-    if (existing) return res.status(409).json({ success: false, message: "A member with this email already exists." });
-    const photo = await uploadPhoto(req.file);
-    const data = await Member.create({ ...member, photo: photo || "" });
-    return res.status(201).json({ success: true, data });
-  } catch (error) {
-    console.error("Create GNPC Member Error:", error);
-    return res.status(500).json({ success: false, message: "Failed to create GNPC Member." });
-  }
-};
+        organization:
+          member.organization || "",
 
-export const updateMember = async (req: Request, res: Response) => {
-  try {
-    const member = normalizeMember(req.body);
-    if (!member) return res.status(400).json({ success: false, message: "Name, designation, valid email, phone, and non-negative display order are required." });
-    const existing = await Member.findById(req.params.id);
-    if (!existing) return res.status(404).json({ success: false, message: "Member not found." });
-    const duplicate = await Member.exists({ email: member.email, _id: { $ne: existing._id } });
-    if (duplicate) return res.status(409).json({ success: false, message: "A member with this email already exists." });
-    const photo = await uploadPhoto(req.file);
-    const data = await Member.findByIdAndUpdate(req.params.id, { ...member, ...(photo ? { photo } : {}) }, { returnDocument: "after", runValidators: true });
-    if (photo && existing.photo !== photo) await deleteCloudinaryAssets([existing.photo]);
-    return res.json({ success: true, data });
-  } catch (error) {
-    console.error("Update GNPC Member Error:", error);
-    return res.status(500).json({ success: false, message: "Failed to update GNPC Member." });
-  }
-};
+        state:
+          member.state || "",
 
-export const deleteMember = async (req: Request, res: Response) => {
-  try {
-    const data = await Member.findByIdAndDelete(req.params.id);
-    if (!data) return res.status(404).json({ success: false, message: "Member not found." });
-    await deleteCloudinaryAssets([data.photo]);
-    return res.json({ success: true, message: "Member deleted successfully." });
-  } catch {
-    return res.status(400).json({ success: false, message: "Invalid member id." });
-  }
-};
+        photo:
+          member.photo ||
+          DEFAULT_MEMBER_PHOTO,
 
-export const importMembers = async (req: Request, res: Response) => {
-  if (!req.file) return res.status(400).json({ success: false, message: "An .xlsx or .xls file is required." });
-  try {
-    const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json<unknown[]>(sheet, {
-  header: 1,
-  defval: "",
-  blankrows: true,
-  raw: false
-});
+        displayOrder:
+          Number(
+            member.displayOrder
+          ) || 0,
 
-if (!rows.length || !Array.isArray(rows[0])) {
-  return res.status(400).json({
-    success: false,
-    message: "Excel file is empty or invalid.",
-  });
-}
+        status:
+          member.status ||
+          "active",
+      })
+    );
 
-const headers = (Array.isArray(rows[0]) ? rows[0] : []).map((value: unknown) =>
-  String(value ?? "").trim().toLowerCase()
-);
-    const columns = new Set(headers);
-    const requiredColumns = ["name", "designation", "email", "phone", "display order"];
-    if (!requiredColumns.every((column) => columns.has(column))) return res.status(400).json({ success: false, message: "Required columns: Name, Designation, Email, Phone, Display Order." });
-    const headerIndex = (name: string) => headers.indexOf(name);
-    const records = rows.slice(1);
-    const existing = await Member.find({}, { email: 1, displayOrder: 1 }).lean();
-    const existingEmails = new Set(
-  existing
-    .map((member) => String(member.email ?? "").trim().toLowerCase())
-    .filter((email) => email.length > 0)
-);
-
-const existingOrders = new Set(
-  existing
-    .map((member) => Number(member.displayOrder))
-    .filter((order) => !Number.isNaN(order))
-);
-    const seenEmails = new Set<string>();
-    const seenOrders = new Set<number>();
-    const validMembers: Array<{ name: string; designation: string; email: string; phone: string; organization: string; state: string; displayOrder: number; status: MemberStatus; photo: string }> = [];
-    const failedRows: Array<{ row: number; reason: string }> = [];
-    console.log("Headers:", headers);
-console.log("Existing Member:", existing);
-    records.forEach((row, index) => {
-      const values = Array.isArray(row) ? row : [];
-      const value = (name: string) => String(values[headerIndex(name)] ?? "").trim();
-      const name = value("name");
-      const designation = value("designation");
-      const email = value("email").toLowerCase();
-      const phone = value("phone");
-      const displayOrderText = value("display order");
-      const rowNumber = index + 2;
-      const reasons: string[] = [];
-
-      if (!name && !designation && !email && !phone && !displayOrderText) reasons.push("Empty row");
-      else {
-        if (!name) reasons.push("Name is required");
-        if (!designation) reasons.push("Designation is required");
-        if (!/^\S+@\S+\.\S+$/.test(email)) reasons.push("Valid email is required");
-        if (!/^\+?[0-9\s-]{7,20}$/.test(phone) || phone.replace(/\D/g, "").length < 7 || phone.replace(/\D/g, "").length > 15) reasons.push("Valid phone number is required");
-        const displayOrder = Number(displayOrderText);
-        if (!Number.isInteger(displayOrder) || displayOrder < 0) reasons.push("Valid display order is required");
-        else {
-          if (existingOrders.has(displayOrder)) reasons.push("Display order already exists");
-          if (seenOrders.has(displayOrder)) reasons.push("Duplicate display order in file");
-        }
-        if (existingEmails.has(email)) reasons.push("Email already exists");
-        if (seenEmails.has(email)) reasons.push("Duplicate email in file");
-
-        if (!reasons.length) {
-          validMembers.push({ name, designation, email, phone, organization: value("organization"), state: value("state"), displayOrder, status: value("status").toLowerCase() === "inactive" ? "inactive" : "active", photo: "" });
-          seenEmails.add(email);
-          seenOrders.add(displayOrder);
-        }
-      }
-      if (reasons.length) failedRows.push({ row: rowNumber, reason: reasons.join("; ") });
+    return res.json({
+      success: true,
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.max(
+          Math.ceil(
+            total / limit
+          ),
+          1
+        ),
+      },
     });
-
-    if (validMembers.length) await Member.insertMany(validMembers, { ordered: true });
-    const summary = { totalRows: records.length, imported: validMembers.length, failed: failedRows.length, failedRows };
-    return res.json({ success: true, data: summary });
   } catch (error) {
-    console.error("Import Member Error:", error);
-    return res.status(400).json({ success: false, message: "Unable to read the import file." });
+    console.error(
+      "Get Members Error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to fetch members.",
+    });
   }
 };
 
-export const exportMembers = async (req: Request, res: Response) => {
+/*
+|--------------------------------------------------------------------------
+| PUBLIC - GET MEMBERS
+|--------------------------------------------------------------------------
+|
+| IMPORTANT:
+| This endpoint must NOT require authentication.
+|
+| It also supports old member documents that used:
+|
+|   fullName
+|
+| instead of:
+|
+|   name
+|
+| and old records where status was not present.
+|--------------------------------------------------------------------------
+*/
+
+export const getPublicMembers = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const status = typeof req.query.status === "string" ? req.query.status : "";
-    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
-    const designation = typeof req.query.designation === "string" ? req.query.designation.trim() : "";
-    const filter: Record<string, unknown> = {};
-    if (status && statuses.includes(status as MemberStatus)) filter.status = status;
-    if (search) filter.$or = ["name", "designation", "organization"].map((field) => ({ [field]: { $regex: search, $options: "i" } }));
-    if (designation) filter.designation = { $regex: designation, $options: "i" };
-    const organization = typeof req.query.organization === "string" ? req.query.organization.trim() : "";
-    const state = typeof req.query.state === "string" ? req.query.state.trim() : "";
-    if (organization) filter.organization = { $regex: organization, $options: "i" };
-    if (state) filter.state = { $regex: state, $options: "i" };
-    const members = await Member.find(filter).sort({ displayOrder: 1, createdAt: -1 }).lean();
-    const rows = members.map((member) => ({ Name: member.name, Designation: member.designation, Organization: member.organization || "", State: member.state || "", Email: member.email, Phone: member.phone, "Display Order": member.displayOrder, Status: member.status, "Created Date": member.createdAt.toISOString() }));
-    const worksheet = XLSX.utils.json_to_sheet(rows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
-    const content = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
-    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", "attachment; filename=members.xlsx");
-    return res.send(content);
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.trim()
+        : "";
+
+    const designation =
+      typeof req.query.designation === "string"
+        ? req.query.designation.trim()
+        : "";
+
+    const organization =
+      typeof req.query.organization === "string"
+        ? req.query.organization.trim()
+        : "";
+
+    const state =
+      typeof req.query.state === "string"
+        ? req.query.state.trim()
+        : "";
+
+    const requestedLimit =
+      Number(req.query.limit);
+
+    const limit =
+      Number.isInteger(
+        requestedLimit
+      ) &&
+      requestedLimit > 0
+        ? Math.min(
+            requestedLimit,
+            100
+          )
+        : 100;
+
+    /*
+     * Existing records may not have status.
+     *
+     * Therefore:
+     *
+     * status = active
+     *
+     * OR
+     *
+     * status does not exist
+     */
+    const filter: Record<
+      string,
+      unknown
+    > = {
+      $or: [
+        {
+          status: "active",
+        },
+        {
+          status: {
+            $exists: false,
+          },
+        },
+        {
+          status: null,
+        },
+      ],
+    };
+
+    /*
+     * SEARCH
+     */
+    if (search) {
+      filter.$and = [
+        {
+          $or: [
+            {
+              name: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              fullName: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              designation: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              organization: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              email: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+          ],
+        },
+      ];
+    }
+
+    if (designation) {
+      filter.$and = [
+        ...(Array.isArray(
+          filter.$and
+        )
+          ? filter.$and
+          : []),
+
+        {
+          designation: {
+            $regex: designation,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    if (organization) {
+      filter.$and = [
+        ...(Array.isArray(
+          filter.$and
+        )
+          ? filter.$and
+          : []),
+
+        {
+          organization: {
+            $regex: organization,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    if (state) {
+      filter.$and = [
+        ...(Array.isArray(
+          filter.$and
+        )
+          ? filter.$and
+          : []),
+
+        {
+          state: {
+            $regex: state,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    /*
+     * IMPORTANT:
+     *
+     * Do not use Member.find().select(...)
+     * here because old migrated documents may
+     * contain fields not defined in the current
+     * Mongoose schema.
+     *
+     * Access the documents using lean().
+     */
+    const documents =
+      await Member.find(filter)
+        .sort({
+          displayOrder: 1,
+          createdAt: 1,
+        })
+        .limit(limit)
+        .lean();
+
+    const data =
+      documents.map(
+        (member: any) => ({
+          _id:
+            String(
+              member._id
+            ),
+
+          name:
+            member.name ||
+            member.fullName ||
+            "GNPC Member",
+
+          designation:
+            member.designation ||
+            "GNPC Member",
+
+          email:
+            member.email ||
+            "",
+
+          phone:
+            member.phone ||
+            "",
+
+          organization:
+            member.organization ||
+            "",
+
+          state:
+            member.state ||
+            "",
+
+          photo:
+            member.photo ||
+            member.photoUrl ||
+            DEFAULT_MEMBER_PHOTO,
+
+          displayOrder:
+            Number(
+              member.displayOrder
+            ) || 0,
+
+          status:
+            member.status ===
+            "inactive"
+              ? "inactive"
+              : "active",
+
+          createdAt:
+            member.createdAt
+              ? new Date(
+                  member.createdAt
+                ).toISOString()
+              : new Date().toISOString(),
+
+          updatedAt:
+            member.updatedAt
+              ? new Date(
+                  member.updatedAt
+                ).toISOString()
+              : new Date().toISOString(),
+        })
+      );
+
+    console.log(
+      `[PUBLIC MEMBERS] ${data.length} member(s) returned`
+    );
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error(
+      "Get Public Members Error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to fetch members.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| MEMBER STATS
+|--------------------------------------------------------------------------
+*/
+
+export const getMembersStats = async (
+  _req: Request,
+  res: Response
+) => {
+  try {
+    const [
+      total,
+      active,
+      inactive,
+    ] = await Promise.all([
+      Member.countDocuments(),
+
+      Member.countDocuments({
+        $or: [
+          {
+            status: "active",
+          },
+          {
+            status: {
+              $exists: false,
+            },
+          },
+        ],
+      }),
+
+      Member.countDocuments({
+        status: "inactive",
+      }),
+    ]);
+
+    return res.json({
+      success: true,
+      data: {
+        total,
+        active,
+        inactive,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Get Members Stats Error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to fetch member statistics.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| GET SINGLE MEMBER
+|--------------------------------------------------------------------------
+*/
+
+export const getMember = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const data =
+      await Member.findById(
+        req.params.id
+      ).lean();
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Member not found.",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        ...data,
+
+        name:
+          (data as any).name ||
+          (data as any).fullName ||
+          "GNPC Member",
+
+        photo:
+          (data as any).photo ||
+          DEFAULT_MEMBER_PHOTO,
+
+        status:
+          (data as any).status ||
+          "active",
+      },
+    });
   } catch {
-    return res.status(500).json({ success: false, message: "Failed to export members." });
+    return res.status(400).json({
+      success: false,
+      message:
+        "Invalid member id.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| CREATE MEMBER
+|--------------------------------------------------------------------------
+*/
+
+export const createMember = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const member =
+      normalizeMember(
+        req.body
+      );
+
+    if (!member) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Name, designation, valid email, phone, and non-negative display order are required.",
+      });
+    }
+
+    const existing =
+      await Member.exists({
+        email: member.email,
+      });
+
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        message:
+          "A member with this email already exists.",
+      });
+    }
+
+    const photo =
+      await uploadPhoto(
+        req.file
+      );
+
+    const data =
+      await Member.create({
+        ...member,
+        photo:
+          photo ||
+          DEFAULT_MEMBER_PHOTO,
+      });
+
+    return res.status(201).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error(
+      "Create GNPC Member Error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to create GNPC Member.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| UPDATE MEMBER
+|--------------------------------------------------------------------------
+*/
+
+export const updateMember = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const member =
+      normalizeMember(
+        req.body
+      );
+
+    if (!member) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Name, designation, valid email, phone, and non-negative display order are required.",
+      });
+    }
+
+    const existing =
+      await Member.findById(
+        req.params.id
+      );
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Member not found.",
+      });
+    }
+
+    const duplicate =
+      await Member.exists({
+        email: member.email,
+        _id: {
+          $ne: existing._id,
+        },
+      });
+
+    if (duplicate) {
+      return res.status(409).json({
+        success: false,
+        message:
+          "A member with this email already exists.",
+      });
+    }
+
+    const photo =
+      await uploadPhoto(
+        req.file
+      );
+
+    const data =
+      await Member.findByIdAndUpdate(
+        req.params.id,
+        {
+          ...member,
+          ...(photo
+            ? { photo }
+            : {}),
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+    if (
+      photo &&
+      existing.photo &&
+      existing.photo !== photo
+    ) {
+      await deleteCloudinaryAssets([
+        existing.photo,
+      ]);
+    }
+
+    return res.json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error(
+      "Update GNPC Member Error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to update GNPC Member.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| DELETE MEMBER
+|--------------------------------------------------------------------------
+*/
+
+export const deleteMember = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const data =
+      await Member.findByIdAndDelete(
+        req.params.id
+      );
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Member not found.",
+      });
+    }
+
+    if (data.photo) {
+      await deleteCloudinaryAssets([
+        data.photo,
+      ]);
+    }
+
+    return res.json({
+      success: true,
+      message:
+        "Member deleted successfully.",
+    });
+  } catch {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Invalid member id.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| IMPORT / EXPORT
+|--------------------------------------------------------------------------
+|
+| Keep your existing importMembers() and
+| exportMembers() functions below this point.
+|--------------------------------------------------------------------------
+*/
+
+export const importMembers = async (
+  req: Request,
+  res: Response
+) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "An .xlsx or .xls file is required.",
+    });
+  }
+
+  try {
+    const workbook =
+      XLSX.read(
+        req.file.buffer,
+        {
+          type: "buffer",
+        }
+      );
+
+    const sheet =
+      workbook.Sheets[
+        workbook.SheetNames[0]
+      ];
+
+    const rows =
+      XLSX.utils.sheet_to_json<
+        unknown[]
+      >(sheet, {
+        header: 1,
+        defval: "",
+        blankrows: true,
+        raw: false,
+      });
+
+    if (
+      !rows.length ||
+      !Array.isArray(rows[0])
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Excel file is empty or invalid.",
+      });
+    }
+
+    const headers =
+      rows[0].map(
+        (value: unknown) =>
+          String(
+            value ?? ""
+          )
+            .trim()
+            .toLowerCase()
+      );
+
+    const columns =
+      new Set(headers);
+
+    const requiredColumns = [
+      "name",
+      "designation",
+      "email",
+      "phone",
+      "display order",
+    ];
+
+    if (
+      !requiredColumns.every(
+        (column) =>
+          columns.has(column)
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Required columns: Name, Designation, Email, Phone, Display Order.",
+      });
+    }
+
+    const failedRows: Array<{
+      row: number;
+      reason: string;
+    }> = [];
+
+    const validRows: Array<
+      Record<string, unknown>
+    > = [];
+
+    rows
+      .slice(1)
+      .forEach(
+        (
+          row,
+          index
+        ) => {
+          if (
+            !Array.isArray(
+              row
+            )
+          ) {
+            return;
+          }
+
+          const value =
+            (
+              column: string
+            ) => {
+              const position =
+                headers.indexOf(
+                  column
+                );
+
+              return position >=
+                0
+                ? String(
+                    row[
+                      position
+                    ] ??
+                      ""
+                  ).trim()
+                : "";
+            };
+
+          const name =
+            value("name");
+
+          const designation =
+            value(
+              "designation"
+            );
+
+          const email =
+            value("email").toLowerCase();
+
+          const phone =
+            value("phone");
+
+          const organization =
+            value(
+              "organization"
+            );
+
+          const state =
+            value("state");
+
+          const displayOrder =
+            Number(
+              value(
+                "display order"
+              ) || 0
+            );
+
+          const status =
+            value(
+              "status"
+            ) ===
+            "inactive"
+              ? "inactive"
+              : "active";
+
+          if (
+            !name ||
+            !designation ||
+            !email ||
+            !/^\S+@\S+\.\S+$/.test(
+              email
+            ) ||
+            !phone ||
+            !Number.isInteger(
+              displayOrder
+            ) ||
+            displayOrder < 0
+          ) {
+            failedRows.push({
+              row:
+                index + 2,
+              reason:
+                "Name, designation, valid email, phone, and non-negative display order are required.",
+            });
+
+            return;
+          }
+
+          validRows.push({
+            name,
+            designation,
+            email,
+            phone,
+            organization,
+            state,
+            displayOrder,
+            status,
+            photo:
+              DEFAULT_MEMBER_PHOTO,
+          });
+        }
+      );
+
+    if (validRows.length) {
+      await Member.insertMany(
+        validRows,
+        {
+          ordered: false,
+        }
+      );
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        totalRows:
+          rows.length - 1,
+        imported:
+          validRows.length,
+        failed:
+          failedRows.length,
+        failedRows,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Import Members Error:",
+      error
+    );
+
+    return res.status(400).json({
+      success: false,
+      message:
+        "Unable to read the import file.",
+    });
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| EXPORT MEMBERS
+|--------------------------------------------------------------------------
+*/
+
+export const exportMembers = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.trim()
+        : "";
+
+    const filter: Record<
+      string,
+      unknown
+    > = {};
+
+    if (search) {
+      filter.$or = [
+        {
+          name: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          fullName: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          designation: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          organization: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    const members =
+      await Member.find(
+        filter
+      )
+        .sort({
+          displayOrder: 1,
+          createdAt: 1,
+        })
+        .lean();
+
+    const rows =
+      members.map(
+        (member: any) => ({
+          Name:
+            member.name ||
+            member.fullName ||
+            "",
+
+          Designation:
+            member.designation ||
+            "",
+
+          Email:
+            member.email || "",
+
+          Phone:
+            member.phone || "",
+
+          Organization:
+            member.organization ||
+            "",
+
+          State:
+            member.state || "",
+
+          "Display Order":
+            member.displayOrder ||
+            0,
+
+          Status:
+            member.status ||
+            "active",
+
+          "Photo URL":
+            member.photo ||
+            DEFAULT_MEMBER_PHOTO,
+        })
+      );
+
+    const workbook =
+      XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      XLSX.utils.json_to_sheet(
+        rows
+      ),
+      "Members"
+    );
+
+    const content =
+      XLSX.write(
+        workbook,
+        {
+          type: "buffer",
+          bookType: "xlsx",
+        }
+      );
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="members.xlsx"'
+    );
+
+    return res.send(
+      content
+    );
+  } catch (error) {
+    console.error(
+      "Export Members Error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to export members.",
+    });
   }
 };
