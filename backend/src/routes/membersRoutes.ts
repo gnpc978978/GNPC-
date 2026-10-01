@@ -1,16 +1,19 @@
 import { Router } from "express";
+
 import {
-  createMember,
-  deleteMember,
-  exportMembers,
   getMembers,
   getPublicMembers,
-  getMember,
   getMembersStats,
-  importMembers,
+  getMember,
+  createMember,
   updateMember,
+  deleteMember,
+  importMembers,
+  exportMembers,
 } from "../controllers/membersController";
+
 import authMiddleware from "../middleware/auth.middleware";
+
 import galleryUpload, {
   membersImportUpload,
 } from "../middleware/galleryUpload";
@@ -18,69 +21,82 @@ import galleryUpload, {
 const router = Router();
 
 /*
- * PUBLIC ROUTES
- * These routes are intentionally placed before "/:id".
- */
+|--------------------------------------------------------------------------
+| PUBLIC ROUTES
+|--------------------------------------------------------------------------
+|
+| IMPORTANT:
+| /public MUST come before /:id
+|
+| No authentication is used here.
+|--------------------------------------------------------------------------
+*/
 
-// Public members directory
-router.get("/public", getPublicMembers);
+router.get(
+  "/public",
+  getPublicMembers
+);
 
 /*
- * ADMIN ROUTES
- */
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
 
-// Admin members listing
-router.get("/", authMiddleware, getMembers);
+router.get(
+  "/",
+  authMiddleware,
+  getMembers
+);
 
-// Admin statistics
 router.get(
   "/stats",
   authMiddleware,
   getMembersStats
 );
 
-// Admin export
 router.get(
   "/export",
   authMiddleware,
   exportMembers
 );
 
-// Admin single member
 router.get(
   "/:id",
   authMiddleware,
   getMember
 );
 
-// Create member
 router.post(
   "/",
   authMiddleware,
-  galleryUpload.single("photo"),
+  galleryUpload.single(
+    "photo"
+  ),
   createMember
 );
 
-// Update member
 router.put(
   "/:id",
   authMiddleware,
-  galleryUpload.single("photo"),
+  galleryUpload.single(
+    "photo"
+  ),
   updateMember
 );
 
-// Delete member
 router.delete(
   "/:id",
   authMiddleware,
   deleteMember
 );
 
-// Import members
 router.post(
   "/import",
   authMiddleware,
-  membersImportUpload.single("file"),
+  membersImportUpload.single(
+    "file"
+  ),
   importMembers
 );
 
