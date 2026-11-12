@@ -102,30 +102,6 @@ export default function Hero() {
             />
           </div>
 
-          {/* Identity */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 8,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              delay: 0.15,
-              duration: 0.5,
-            }}
-            className="gnpc-hero-pill mx-auto mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px]"
-          >
-            <span className="gnpc-hero-icon flex h-5 w-5 items-center justify-center rounded-full">
-              <Newspaper size={10} />
-            </span>
-
-            {identityLabel}
-          </motion.div>
-
           {/* Main Heading */}
 
           <h1
@@ -134,6 +110,11 @@ export default function Hero() {
           >
             {heroTitle}
           </h1>
+
+          {/* Supporting identity label */}
+          <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#e2c27d] sm:text-[11px]">
+            {identityLabel}
+          </p>
 
           {/* Accent */}
 
@@ -190,17 +171,15 @@ export default function Hero() {
         <motion.div
           initial={{
             opacity: 0,
-            y: 35,
-            scale: 0.97,
+            y: 18,
           }}
           animate={{
             opacity: 1,
             y: 0,
-            scale: 1,
           }}
           transition={{
-            delay: 0.25,
-            duration: 1,
+            delay: 0.2,
+            duration: 0.7,
             ease: [0.22, 1, 0.36, 1],
           }}
             className="relative mx-auto mt-6 w-full max-w-[1100px] sm:mt-7 lg:mt-8"
