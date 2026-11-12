@@ -100,34 +100,40 @@ const upsertSession = async (
 ) => {
   const context = getClientContext(req);
   const referrerSource = getReferrerSource(req.body?.referrer, String(req.headers.origin || ""));
+  const sessionUpdate = {
+    $set: {
+      lastSeenAt: now,
+      currentPath: path,
+      deviceType: context.deviceType,
+      browser: context.browser,
+      retentionAt: retentionDate(now),
+    },
+    $setOnInsert: {
+      visitorKey: identity.visitorKey,
+      firstSeenAt: now,
+      entryPath: path,
+      referrerSource,
+    },
+  };
+  const visitorUpdate = {
+    $set: { lastSeenAt: now, retentionAt: retentionDate(now) },
+    $setOnInsert: { firstSeenAt: now },
+  };
+
+  // A browser can emit a page-view and heartbeat concurrently (or open two
+  // tabs). Recover from the unique-index race without dropping either event.
+  const safeUpsert = async (model: any, filter: Record<string, string>, update: any) => {
+    try {
+      await model.findOneAndUpdate(filter, update, { upsert: true, setDefaultsOnInsert: true });
+    } catch (error: any) {
+      if (error?.code !== 11000) throw error;
+      await model.findOneAndUpdate(filter, { $set: update.$set });
+    }
+  };
+
   await Promise.all([
-    AnalyticsSession.findOneAndUpdate(
-      { sessionKey: identity.sessionKey },
-      {
-        $set: {
-          lastSeenAt: now,
-          currentPath: path,
-          deviceType: context.deviceType,
-          browser: context.browser,
-        },
-        $setOnInsert: {
-          visitorKey: identity.visitorKey,
-          firstSeenAt: now,
-          entryPath: path,
-          referrerSource,
-          retentionAt: retentionDate(now),
-        },
-      },
-      { upsert: true, setDefaultsOnInsert: true }
-    ),
-    AnalyticsVisitor.findOneAndUpdate(
-      { visitorKey: identity.visitorKey },
-      {
-        $set: { lastSeenAt: now, retentionAt: retentionDate(now) },
-        $setOnInsert: { firstSeenAt: now },
-      },
-      { upsert: true, setDefaultsOnInsert: true }
-    ),
+    safeUpsert(AnalyticsSession, { sessionKey: identity.sessionKey }, sessionUpdate),
+    safeUpsert(AnalyticsVisitor, { visitorKey: identity.visitorKey }, visitorUpdate),
   ]);
   return { ...context, referrerSource };
 };
