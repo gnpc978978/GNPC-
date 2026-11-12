@@ -50,31 +50,18 @@ export default function Logo({
     >
       {/* Logo */}
 
-      <span
-        className={[
-          "flex",
-          "h-11",
-          "w-11",
-          "shrink-0",
-          "items-center",
-          "justify-center",
-          "overflow-hidden",
-          "rounded-full",
-          "border",
-          "border-slate-200",
-          "bg-white",
-          isDark ? "" : "border-white/20",
-        ].join(" ")}
-      >
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-visible bg-transparent sm:h-14 sm:w-14">
         <Image
           src={logo}
           alt={siteName}
-          width={44}
-          height={44}
+          width={56}
+          height={56}
           priority
-          className="h-11 w-11 object-contain"
+          className="h-full w-full object-contain"
         />
       </span>
+
+      
 
       {/* Brand text */}
 
