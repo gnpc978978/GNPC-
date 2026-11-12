@@ -64,8 +64,8 @@ export default function AnalyticsTracker() {
 
     const { visitorId, sessionId } = getIdentity();
     const path = pathname.split(/[?#]/, 1)[0].slice(0, 200) || "/";
-    const startedAt = Date.now();
-    let durationSent = false;
+    let visibleSegmentStartedAt: number | null = Date.now();
+    let accumulatedVisibleMs = 0;
 
     const post = (endpoint: string, payload: Record<string, unknown>) => {
       void apiFetch(endpoint, {
@@ -77,6 +77,7 @@ export default function AnalyticsTracker() {
     };
 
     const heartbeat = () => {
+      if (document.visibilityState === "hidden") return;
       try {
         sessionStorage.setItem(
           "gnpc_analytics_session",
@@ -105,10 +106,16 @@ export default function AnalyticsTracker() {
       });
     };
 
+    const finishVisibleSegment = () => {
+      if (visibleSegmentStartedAt === null) return;
+      accumulatedVisibleMs += Date.now() - visibleSegmentStartedAt;
+      visibleSegmentStartedAt = null;
+    };
+
     const sendDuration = () => {
-      if (durationSent) return;
-      durationSent = true;
-      const seconds = Math.min(1800, Math.floor((Date.now() - startedAt) / 1000));
+      finishVisibleSegment();
+      const seconds = Math.min(1800, Math.floor(accumulatedVisibleMs / 1000));
+      accumulatedVisibleMs = 0;
       if (seconds > 0) sendEvent("page_duration", "", seconds);
     };
 
@@ -166,7 +173,12 @@ export default function AnalyticsTracker() {
     };
 
     const handleVisibility = () => {
-      if (document.visibilityState === "hidden") sendDuration();
+      if (document.visibilityState === "hidden") {
+        finishVisibleSegment();
+      } else {
+        visibleSegmentStartedAt = Date.now();
+        heartbeat();
+      }
     };
 
     const viewedSections = new Set<string>();
