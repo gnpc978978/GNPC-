@@ -88,14 +88,15 @@ export const getLatestUpdates = async (
                 type: "Event",
                 image: item.banner || "",
                 featuredImage: item.banner || "",
-                publishedAt: item.date || item.createdAt,
+                publishedAt: item.createdAt || item.date,
             })),
 
             ...pressConferences.map((item) => ({
                 ...item,
                 type: "Press Conference",
                 image: item.featuredImage || "",
-                publishedAt: item.date || item.createdAt,
+                featuredImage: item.featuredImage || "",
+                publishedAt: item.createdAt || item.date,
             })),
         ].sort(
             (a, b) =>
