@@ -77,13 +77,10 @@ export default function AnalyticsTracker() {
 
     const heartbeat = () => {
       try {
-        const stored = sessionStorage.getItem("gnpc_analytics_session");
-        const parsed = stored ? JSON.parse(stored) : null;
         sessionStorage.setItem(
           "gnpc_analytics_session",
           JSON.stringify({ id: sessionId, lastSeenAt: Date.now() })
         );
-        void parsed;
       } catch {
         // Tracking must never interfere with website navigation.
       }
@@ -114,7 +111,6 @@ export default function AnalyticsTracker() {
       if (seconds > 0) sendEvent("page_duration", "", seconds);
     };
 
-    heartbeat();
     sendEvent("page_view");
     const heartbeatTimer = window.setInterval(heartbeat, 25_000);
 
