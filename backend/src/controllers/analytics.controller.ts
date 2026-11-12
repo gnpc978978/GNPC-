@@ -209,6 +209,59 @@ export const analyticsEvent = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Lightweight live endpoint. The CMS polls this separately so active visitor
+ * counts stay fresh without re-running the historical aggregation pipelines.
+ */
+export const getLiveAnalytics = async (_req: Request, res: Response) => {
+  try {
+    const since = new Date(Date.now() - ACTIVE_WINDOW_MS);
+    const recentSince = new Date(Date.now() - 30 * 60 * 1000);
+    const [activeVisitors, activeSessions, recentEvents] = await Promise.all([
+      AnalyticsVisitor.countDocuments({ lastSeenAt: { $gte: since } }),
+      AnalyticsSession.find({ lastSeenAt: { $gte: since } })
+        .sort({ lastSeenAt: -1 })
+        .limit(12)
+        .select("sessionKey entryPath currentPath firstSeenAt lastSeenAt deviceType referrerSource")
+        .lean(),
+      AnalyticsEvent.find({ createdAt: { $gte: recentSince } })
+        .sort({ createdAt: -1 })
+        .limit(100)
+        .select("sessionKey eventType path label createdAt")
+        .lean(),
+    ]);
+
+    const live = activeSessions.map((session: any) => ({
+      session: session.sessionKey.slice(0, 10),
+      entryPath: session.entryPath,
+      currentPath: session.currentPath,
+      firstSeenAt: session.firstSeenAt,
+      lastSeenAt: session.lastSeenAt,
+      deviceType: session.deviceType,
+      referrerSource: session.referrerSource,
+      steps: recentEvents
+        .filter((event: any) => event.sessionKey === session.sessionKey)
+        .slice(0, 8)
+        .reverse()
+        .map((event: any) => ({
+          type: event.eventType,
+          path: event.path,
+          label: event.label,
+          at: event.createdAt,
+        })),
+    }));
+
+    return res.json({ success: true, data: { activeVisitors, live } });
+  } catch (error) {
+    console.error("Live analytics failed:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Unable to load live visitor activity.",
+      data: { activeVisitors: 0, live: [] },
+    });
+  }
+};
+
 const parseRange = (req: Request) => {
   const fromValue = typeof req.query.from === "string" ? req.query.from : "";
   const toValue = typeof req.query.to === "string" ? req.query.to : "";
@@ -274,9 +327,6 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
       sources,
       visitorClassification,
       sessionsCount,
-      activeVisitors,
-      activeSessions,
-      recentEvents,
       previousTotals,
       previousVisitors,
     ] = await Promise.all([
@@ -370,12 +420,6 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         { $group: { _id: null, newVisitors: { $sum: { $cond: [{ $gte: ["$visitor.firstSeenAt", from] }, 1, 0] } }, returningVisitors: { $sum: { $cond: [{ $lt: ["$visitor.firstSeenAt", from] }, 1, 0] } } } },
       ]),
       AnalyticsSession.countDocuments({ firstSeenAt: { $gte: from, $lt: to } }),
-      AnalyticsVisitor.countDocuments({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } }),
-      AnalyticsSession.find({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } })
-        .sort({ lastSeenAt: -1 }).limit(12).select("sessionKey entryPath currentPath firstSeenAt lastSeenAt deviceType referrerSource").lean(),
-      AnalyticsEvent.find({ createdAt: { $gte: new Date(Date.now() - 30 * 60 * 1000) } })
-        .sort({ createdAt: -1 }).limit(100)
-        .select("sessionKey eventType path label createdAt durationSeconds").lean(),
       AnalyticsEvent.countDocuments({ eventType: "page_view", createdAt: { $gte: previousFrom, $lt: from } }),
       countUniqueVisitors(previousFrom, from),
     ]);
@@ -389,26 +433,6 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
     }));
     const comparisonAvailable =
       previousFrom.getTime() >= Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
-    const journeys = activeSessions.map((session: any) => ({
-      session: session.sessionKey.slice(0, 10),
-      entryPath: session.entryPath,
-      currentPath: session.currentPath,
-      firstSeenAt: session.firstSeenAt,
-      lastSeenAt: session.lastSeenAt,
-      deviceType: session.deviceType,
-      referrerSource: session.referrerSource,
-      steps: recentEvents
-        .filter((event: any) => event.sessionKey === session.sessionKey)
-        .slice(0, 8)
-        .reverse()
-        .map((event: any) => ({
-          type: event.eventType,
-          path: event.path,
-          label: event.label,
-          at: event.createdAt,
-        })),
-    }));
-
     const classification = visitorClassification[0] || { newVisitors: 0, returningVisitors: 0 };
     return res.json({
       success: true,
@@ -418,7 +442,6 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
           uniqueVisitors,
           pageViews,
           sessions: sessionsCount,
-          activeVisitors,
           averageTimeSeconds: durationStats[0]?.averageSeconds || 0,
           newVisitors: classification.newVisitors || 0,
           returningVisitors: classification.returningVisitors || 0,
@@ -432,7 +455,6 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         sections,
         features,
         audience: { devices, browsers, sources },
-        live: journeys,
       },
     });
   } catch (error) {
