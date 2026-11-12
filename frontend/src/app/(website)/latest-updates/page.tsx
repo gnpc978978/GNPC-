@@ -6,6 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
   FileText,
+  LayoutGrid,
+  List as ListIcon,
   MapPin,
   Search,
   Sparkles,
@@ -1033,6 +1035,9 @@ export default function LatestUpdatesPage() {
   const [query, setQuery] =
     useState("");
 
+  const [viewMode, setViewMode] =
+    useState<"cards" | "list">("cards");
+
   const [
     sortOrder,
     setSortOrder,
@@ -1388,57 +1393,72 @@ export default function LatestUpdatesPage() {
             )}
           </div>
 
-          {pageSettings.showSearch || pageSettings.showSort ? (
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
             {pageSettings.showSearch && (
-            <label className="relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={18}
-              />
+              <label className="relative">
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={18}
+                />
 
-              <input
-                value={query}
-                onChange={(
-                  event
-                ) =>
-                  setQuery(
-                    event.target
-                      .value
-                  )
-                }
-                placeholder={pageSettings.searchPlaceholder}
-                className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-[#d4b06a] focus:ring-4 focus:ring-[#d4b06a]/20 sm:w-60"
-              />
-            </label>
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={pageSettings.searchPlaceholder}
+                  className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-[#d4b06a] focus:ring-4 focus:ring-[#d4b06a]/20 sm:w-60"
+                />
+              </label>
             )}
 
             {pageSettings.showSort && (
-            <select
-              value={sortOrder}
-              onChange={(
-                event
-              ) =>
-                setSortOrder(
-                  event.target
-                    .value as
-                    | "newest"
-                    | "oldest"
-                )
-              }
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#d4b06a]"
-            >
-              <option value="newest">
-                Newest first
-              </option>
-
-              <option value="oldest">
-                Oldest first
-              </option>
-            </select>
+              <select
+                value={sortOrder}
+                onChange={(event) =>
+                  setSortOrder(event.target.value as "newest" | "oldest")
+                }
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 outline-none focus:border-[#d4b06a]"
+              >
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+              </select>
             )}
+
+            <div
+              role="group"
+              aria-label="Choose latest updates view"
+              className="inline-flex w-fit items-center rounded-xl border border-slate-200 bg-white p-1 shadow-sm"
+            >
+              <button
+                type="button"
+                onClick={() => setViewMode("cards")}
+                aria-pressed={viewMode === "cards"}
+                className={[
+                  "inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+                  viewMode === "cards"
+                    ? "bg-[#0b1f3a] text-white shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100",
+                ].join(" ")}
+              >
+                <LayoutGrid size={16} />
+                Cards
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewMode("list")}
+                aria-pressed={viewMode === "list"}
+                className={[
+                  "inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+                  viewMode === "list"
+                    ? "bg-[#0b1f3a] text-white shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100",
+                ].join(" ")}
+              >
+                <ListIcon size={16} />
+                List
+              </button>
+            </div>
           </div>
-          ) : null}
         </div>
 
         {pageSettings.showCalendar &&
@@ -1474,7 +1494,13 @@ export default function LatestUpdatesPage() {
             0 ? (
             <EmptyState />
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div
+              className={
+                viewMode === "cards"
+                  ? "grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+                  : "flex flex-col gap-4"
+              }
+            >
               {updates.map(
                 (
                   item,
@@ -1516,9 +1542,20 @@ export default function LatestUpdatesPage() {
                           0.25
                         ),
                       }}
-                      className="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition-shadow hover:shadow-xl"
+                      className={
+                        viewMode === "cards"
+                          ? "group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 transition-shadow hover:shadow-xl"
+                          : "group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition-shadow hover:shadow-lg sm:flex-row"
+                      }
                     >
-                      <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
+                      <div
+                        className={[
+                          "relative shrink-0 overflow-hidden bg-slate-100",
+                          viewMode === "cards"
+                            ? "aspect-[16/9] w-full"
+                            : "h-48 w-full sm:h-40 sm:w-56 lg:w-64",
+                        ].join(" ")}
+                      >
                         {image ? (
                           <img
                             src={image}
@@ -1543,8 +1580,14 @@ export default function LatestUpdatesPage() {
                         </span>
                       </div>
 
-                      <div className="p-6">
-                        <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
+                      <div
+                        className={
+                          viewMode === "cards"
+                            ? "flex flex-1 flex-col p-6"
+                            : "flex min-w-0 flex-1 flex-col justify-center p-4 sm:p-5"
+                        }
+                      >
+                        <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-500">
                           <CalendarDays
                             size={16}
                             className="text-[#b08a3e]"
@@ -1555,13 +1598,25 @@ export default function LatestUpdatesPage() {
                           )}
                         </div>
 
-                        <h2 className="mt-4 line-clamp-2 text-xl font-extrabold text-slate-900">
+                        <h2
+                          className={
+                            viewMode === "cards"
+                              ? "mt-4 line-clamp-2 text-xl font-extrabold text-slate-900"
+                              : "mt-2 line-clamp-2 text-lg font-extrabold text-slate-900"
+                          }
+                        >
                           {
                             item.title
                           }
                         </h2>
 
-                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
+                        <p
+                          className={
+                            viewMode === "cards"
+                              ? "mt-3 line-clamp-3 text-sm leading-6 text-slate-600"
+                              : "mt-2 line-clamp-2 text-sm leading-5 text-slate-600"
+                          }
+                        >
                           {
                             description
                           }
@@ -1572,7 +1627,10 @@ export default function LatestUpdatesPage() {
                             item.slug ||
                               item._id
                           )}`}
-                          className="mt-6 inline-flex items-center gap-1 text-sm font-extrabold text-[#9a7631] transition group-hover:gap-2"
+                          className={[
+                            "inline-flex w-fit items-center gap-1 text-sm font-extrabold text-[#9a7631] transition group-hover:gap-2",
+                            viewMode === "cards" ? "mt-6" : "mt-3",
+                          ].join(" ")}
                         >
                           {pageSettings.readMoreLabel}
                           <ChevronRight
