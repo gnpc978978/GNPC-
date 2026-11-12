@@ -50,7 +50,6 @@ type AnalyticsData = {
     uniqueVisitors: number;
     pageViews: number;
     sessions: number;
-    activeVisitors: number;
     averageTimeSeconds: number;
     newVisitors: number;
     returningVisitors: number;
@@ -64,10 +63,10 @@ type AnalyticsData = {
   sections: { section: string; views: number }[];
   features: FeatureRow[];
   audience: { devices: Breakdown[]; browsers: Breakdown[]; sources: Breakdown[] };
-  live: Journey[];
 };
 
 type ApiResponse = { success: boolean; message?: string; data?: AnalyticsData };
+type LiveResponse = { success: boolean; message?: string; data?: { activeVisitors: number; live: Journey[] } };
 
 const dateString = (date: Date) => {
   const y = date.getFullYear();
@@ -158,9 +157,23 @@ export default function AnalyticsPage() {
   const [to, setTo] = useState(() => dateString(today));
   const [grouping, setGrouping] = useState<"daily" | "weekly" | "monthly">("daily");
   const [data, setData] = useState<AnalyticsData | null>(null);
+  const [liveData, setLiveData] = useState<{ activeVisitors: number; live: Journey[] }>({ activeVisitors: 0, live: [] });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+
+  const loadLive = useCallback(async () => {
+    try {
+      const response = await authenticatedApiFetch("/analytics/live", {
+        method: "GET",
+        headers: { Accept: "application/json" },
+      });
+      const result = await responseJson<LiveResponse>(response);
+      if (result.success && result.data) setLiveData(result.data);
+    } catch {
+      // Live polling is best-effort and must not interrupt historical reports.
+    }
+  }, []);
 
   const loadReport = useCallback(async (quiet = false) => {
     if (!quiet) setLoading(true);
@@ -188,9 +201,10 @@ export default function AnalyticsPage() {
   }, [loadReport]);
 
   useEffect(() => {
-    const timer = window.setInterval(() => void loadReport(true), 20_000);
+    void loadLive();
+    const timer = window.setInterval(() => void loadLive(), 20_000);
     return () => window.clearInterval(timer);
-  }, [loadReport]);
+  }, [loadLive]);
 
   const chartData = useMemo(() => {
     const source = grouping === "daily"
@@ -285,7 +299,7 @@ export default function AnalyticsPage() {
           <button onClick={exportCsv} className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
             <Download size={16} /> CSV
           </button>
-          <button onClick={() => void loadReport(true)} disabled={refreshing} aria-label="Refresh analytics" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+          <button onClick={() => { void loadReport(true); void loadLive(); }} disabled={refreshing} aria-label="Refresh analytics" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50">
             <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
           </button>
         </div>
@@ -303,7 +317,7 @@ export default function AnalyticsPage() {
       {error && <p className="rounded-lg bg-amber-50 px-4 py-2 text-sm text-amber-800">{error} Showing the last successfully loaded report.</p>}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <StatCard title="Live visitors" value={number(data.summary.activeVisitors)} detail="" icon={Activity} live />
+        <StatCard title="Live visitors" value={number(liveData.activeVisitors)} detail="" icon={Activity} live />
         <StatCard title="Unique visitors" value={number(data.summary.uniqueVisitors)} detail="Distinct anonymous visitors" icon={Users} change={data.summary.visitorChange} />
         <StatCard title="Page views" value={number(data.summary.pageViews)} detail="Total recorded page views" icon={Eye} change={data.summary.pageViewChange} />
         <StatCard title="Sessions" value={number(data.summary.sessions)} detail="Visitor sessions started" icon={Globe2} />
@@ -413,10 +427,10 @@ export default function AnalyticsPage() {
             <h2 className="font-bold text-slate-900">Live visitor activity</h2>
             <p className="mt-1 text-xs text-slate-500">Anonymous sessions active within the last 90 seconds</p>
           </div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800"><span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" /> {number(data.summary.activeVisitors)} active visitors</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800"><span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" /> {number(liveData.activeVisitors)} active visitors</span>
         </div>
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
-          {data.live.map((journey) => (
+          {liveData.live.map((journey) => (
             <div key={journey.session} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-mono text-xs font-semibold text-slate-500">Visitor session · {journey.session}</span>
@@ -433,7 +447,7 @@ export default function AnalyticsPage() {
               </div>}
             </div>
           ))}
-          {!data.live.length && <div className="rounded-xl bg-slate-50 p-8 text-center text-sm text-slate-400 lg:col-span-2">No active visitors at this moment. New visits will appear here automatically.</div>}
+          {!liveData.live.length && <div className="rounded-xl bg-slate-50 p-8 text-center text-sm text-slate-400 lg:col-span-2">No active visitors at this moment. New visits will appear here automatically.</div>}
         </div>
       </section>
 
