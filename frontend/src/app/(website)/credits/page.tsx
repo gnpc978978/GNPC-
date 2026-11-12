@@ -52,8 +52,8 @@ const contributors: Contributor[] = [
   },
 ];
 
-// These contact destinations were not present in the repository. Keep them
-// empty until Ayzent Solutions supplies its official public contact links.
+// Official Ayzent Solutions contact destinations. Displayed once, below
+// Ayush's contributor card and outside the card itself.
 const ayzentContact = {
   instagram: "https://www.instagram.com/ayzent.in/",
   whatsapp: "https://wa.me/919870970278",
@@ -124,6 +124,12 @@ function LinkedInLink({ person }: { person: Contributor }) {
 
 function AyzentContactLinks() {
   const links = [
+    {
+      label: "Ayzent Solutions",
+      href: ayzentWebsite,
+      icon: <ExternalLink size={15} aria-hidden="true" />,
+      primary: true,
+    },
     ayzentContact.instagram
       ? {
           label: "Instagram",
@@ -150,9 +156,9 @@ function AyzentContactLinks() {
   if (!links.length) return null;
 
   return (
-    <div className="mt-5 border-t border-white/10 pt-4">
-      <p className="mb-3 text-[9px] font-bold uppercase tracking-[.2em] text-[#c9a45c]">
-        Ayzent Solutions
+    <div className="mt-4 rounded-2xl border border-[#c9a45c]/20 bg-[#10243a]/75 p-4 sm:p-5">
+      <p className="mb-3 text-[9px] font-bold uppercase tracking-[.2em] text-[#d8ba79]">
+        Ayzent Solutions · Connect
       </p>
       <div className="flex flex-wrap gap-2">
         {links.map((item) => (
@@ -161,11 +167,15 @@ function AyzentContactLinks() {
             href={item.href}
             target={item.href.startsWith("mailto:") ? undefined : "_blank"}
             rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-xs font-medium text-white/70 transition hover:border-[#c9a45c]/60 hover:text-[#ead8ae]"
+            className={
+              item.primary
+                ? "credits-primary-action inline-flex items-center gap-2 rounded-full bg-[#c9a45c] px-4 py-2.5 text-xs font-bold transition hover:bg-[#e7d3a2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e3c783]"
+                : "inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-3.5 py-2.5 text-xs font-semibold text-white/85 transition hover:border-[#c9a45c]/60 hover:bg-white/[.08] hover:text-[#ead8ae] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e3c783]"
+            }
           >
             {item.icon}
             {item.label}
-            <ArrowUpRight size={12} aria-hidden="true" />
+            {!item.primary ? <ArrowUpRight size={12} aria-hidden="true" /> : null}
           </a>
         ))}
       </div>
@@ -203,23 +213,9 @@ function ContributorCard({ person }: { person: Contributor }) {
         </p>
 
         {person.featured ? (
-          <>
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              <a
-                href={ayzentWebsite}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="credits-primary-action inline-flex items-center gap-2 rounded-full bg-[#c9a45c] px-4 py-2.5 text-xs font-bold transition hover:bg-[#e7d3a2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e3c783]"
-              >
-                Ayzent Solutions
-                <ExternalLink size={13} aria-hidden="true" />
-              </a>
-              <span className="text-[10px] font-medium text-white/65">
-                Founder
-              </span>
-            </div>
-            <AyzentContactLinks />
-          </>
+          <p className="mt-4 text-[10px] font-medium text-white/65">
+            Founder
+          </p>
         ) : null}
       </div>
     </article>
@@ -273,9 +269,12 @@ export default function CreditsPage() {
           aria-label="Website designers and developers"
           className="mx-auto mt-10 grid max-w-[1180px] grid-cols-1 items-center gap-5 md:mt-14 md:grid-cols-[minmax(0,1fr)_52px_minmax(0,1fr)] md:gap-3 lg:gap-5"
         >
-          <ContributorCard person={ayush} />
+          <div className="min-w-0">
+            <ContributorCard person={ayush} />
+            <AyzentContactLinks />
+          </div>
 
-          <div className="flex items-center justify-center py-1 md:py-0">
+          <div className="flex items-center justify-center py-1 md:py-0 md:mt-64">
             <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#c9a45c]/35 bg-[#c9a45c]/[.08] font-serif text-2xl text-[#d8ba79]">
               ×
             </span>
@@ -288,15 +287,9 @@ export default function CreditsPage() {
           <p className="text-[10px] font-medium uppercase tracking-[.16em] text-white/65">
             Designed & developed with intent.
           </p>
-          <a
-            href={ayzentWebsite}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 text-xs font-semibold text-[#d8ba79] transition hover:text-[#f0dfb6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e3c783]"
-          >
-            Ayzent Solutions
-            <ArrowUpRight size={13} aria-hidden="true" />
-          </a>
+          <span className="text-xs font-medium text-[#d8ba79]">
+            Greater Noida Press Club
+          </span>
         </footer>
       </div>
     </main>
