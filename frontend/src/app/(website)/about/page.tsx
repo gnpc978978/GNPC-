@@ -565,7 +565,7 @@ export default function AboutPage() {
   }
 
   return (
-    <main className="bg-[#f4f7fb] text-[#171717]">
+    <main className="gnpc-page-about bg-[#f4f7fb] text-[#171717]">
       {/* =====================================================
           PAGE HERO
           ===================================================== */}
