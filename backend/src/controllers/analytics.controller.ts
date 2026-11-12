@@ -431,7 +431,7 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
 
     const pageViews = totals[0]?.pageViews || 0;
     const uniqueVisitors = totals[0]?.uniqueVisitors || 0;
-    const pageTimeMap = new Map(pageDurationStats.map((item: any) => [item.path, item.averageTimeSeconds]));
+    const pageTimeMap = new Map<string, number>(pageDurationStats.map((item: any) => [String(item.path), Number(item.averageTimeSeconds)] as [string, number]));
     const pagesWithTime = pages.map((item: any) => ({
       ...item,
       averageTimeSeconds: pageTimeMap.get(item.path) || 0,
