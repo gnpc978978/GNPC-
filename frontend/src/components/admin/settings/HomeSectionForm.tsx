@@ -28,7 +28,7 @@ const sectionLabels: Record<HomeSectionKey, string> = {
   objectives: "Objectives",
   latestUpdates: "Latest Updates",
   gallery: "Gallery",
-  pressConferences: "Press Conferences",
+  pressConferences: "Upcoming Events",
   members: "Members",
   officeBearers: "Office Bearers",
   membership: "Membership CTA",
@@ -38,11 +38,11 @@ const sectionOrder: HomeSectionKey[] = [
   "hero",
   "about",
   "objectives",
-  "latestUpdates",
-  "gallery",
-  "pressConferences",
-  "members",
   "officeBearers",
+  "latestUpdates",
+  "pressConferences",
+  "gallery",
+  "members",
   "membership",
 ];
 
@@ -1556,8 +1556,8 @@ export default function HomeSectionForm() {
       </Panel>
 
       <Panel
-        title="Press Conferences Section"
-        description="Conference records and their featured images remain managed in the Press Conferences CMS. These settings control the homepage heading, card count and link."
+        title="Upcoming Events Section"
+        description="The homepage automatically shows published upcoming events from the Events CMS. These settings control its heading, number of event cards and link."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
