@@ -10,7 +10,6 @@ import {
 import { toast } from "sonner";
 
 import BannerManager from "@/components/admin/BannerManager";
-import HomeMediaManager from "@/components/admin/settings/HomeMediaManager";
 import {
   authenticatedApiFetch,
   responseJson,
@@ -668,27 +667,6 @@ export default function HomeSectionForm() {
     );
   }
 
-  const Media = ({
-    section,
-  }: {
-    section: Exclude<
-      HomeSectionKey,
-      "hero"
-    >;
-  }) => (
-    <HomeMediaManager
-      section={section}
-      media={home[section].media}
-      onChange={(media) =>
-        updateNested(
-          section,
-          { media }
-        )
-      }
-      max={4}
-    />
-  );
-
   return (
     <form
       onSubmit={save}
@@ -696,7 +674,7 @@ export default function HomeSectionForm() {
     >
       <Panel
         title="Homepage Section Manager"
-        description="Control the visibility, order and background treatment of every homepage section. The content and media editors below remain attached to the same CMS source."
+        description="Control the visibility, order and background treatment of every homepage section. Edit each section's text, cards and links below."
       >
         <div className="space-y-3">
           {sortedSections.map(
@@ -993,7 +971,7 @@ export default function HomeSectionForm() {
 
       <Panel
         title="About Section"
-        description="The redesigned About block uses these CMS fields and the section-specific photo collection."
+        description="Manage the homepage About heading, description, features and statistics. The About page image is managed in the About Section CMS."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1194,27 +1172,11 @@ export default function HomeSectionForm() {
           </div>
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="about"
-            label="About Photos"
-            media={
-              home.about.media
-            }
-            onChange={(media) =>
-              updateNested(
-                "about",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Objectives Section"
-        description="Control the section heading, CTA, number of cards and every objective card. You can also upload up to four editorial photos for the visual layout."
+        description="Control the section heading, CTA, number of cards and every objective card shown on the homepage."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1365,28 +1327,11 @@ export default function HomeSectionForm() {
           Add Objective Card
         </button>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="objectives"
-            label="Objectives Photos"
-            media={
-              home.objectives
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "objectives",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Latest Updates Section"
-        description="The actual press releases, announcements and events remain in their own CMS modules. These settings control the homepage editorial presentation, CTA and optional section photos."
+        description="The actual press releases, announcements and events remain in their own CMS modules. These settings control the homepage presentation, card count and CTA."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1496,28 +1441,11 @@ export default function HomeSectionForm() {
           />
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="latestUpdates"
-            label="Latest Updates Photos"
-            media={
-              home.latestUpdates
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "latestUpdates",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Gallery Section"
-        description="The real gallery images remain managed through the Gallery CMS. The section-level photos below are optional editorial images used by the redesigned homepage layout."
+        description="Gallery images are managed through the Gallery CMS. These settings control the homepage gallery heading, description, link and number of images shown."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1625,28 +1553,11 @@ export default function HomeSectionForm() {
           />
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="gallery"
-            label="Gallery Editorial Photos"
-            media={
-              home.gallery
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "gallery",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Press Conferences Section"
-        description="The real conference records and their own featured images remain managed in Press Conferences CMS. These settings control the homepage section and optional editorial photos."
+        description="Conference records and their featured images remain managed in the Press Conferences CMS. These settings control the homepage heading, card count and link."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1756,28 +1667,11 @@ export default function HomeSectionForm() {
           />
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="pressConferences"
-            label="Press Conference Photos"
-            media={
-              home.pressConferences
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "pressConferences",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Members Section"
-        description="Member records remain in the Members CMS. This controls the homepage section heading, count, CTA and optional editorial photos."
+        description="Member records remain in the Members CMS. This controls the homepage section heading, count and CTA."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -1904,28 +1798,11 @@ export default function HomeSectionForm() {
           />
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="members"
-            label="Members Photos"
-            media={
-              home.members
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "members",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Office Bearers Section"
-        description="Office bearer records and member photos remain in their own CMS. This controls the homepage section, CTA, card count and optional editorial photos."
+        description="Office bearer records and member photos remain in their own CMS. This controls the homepage heading, CTA and card count."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -2052,28 +1929,11 @@ export default function HomeSectionForm() {
           />
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="officeBearers"
-            label="Office Bearers Photos"
-            media={
-              home.officeBearers
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "officeBearers",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <Panel
         title="Membership CTA Section"
-        description="Control the final homepage call-to-action, both routes and the optional editorial photos used in the redesigned CTA."
+        description="Control the final homepage call-to-action, its text and both button routes."
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -2198,23 +2058,6 @@ export default function HomeSectionForm() {
           />
         </div>
 
-        <div className="mt-7">
-          <HomeMediaManager
-            section="membership"
-            label="Membership CTA Photos"
-            media={
-              home.membership
-                .media
-            }
-            onChange={(media) =>
-              updateNested(
-                "membership",
-                { media }
-              )
-            }
-            max={4}
-          />
-        </div>
       </Panel>
 
       <div className="sticky bottom-4 z-30 flex justify-end">
