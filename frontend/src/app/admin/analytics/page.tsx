@@ -16,6 +16,7 @@ import {
   Tablet,
   Users,
   UserRoundCheck,
+  type LucideIcon,
 } from "lucide-react";
 import {
   CartesianGrid,
@@ -100,7 +101,7 @@ function StatCard({
   title: string;
   value: string;
   detail: string;
-  icon: typeof Users;
+  icon: LucideIcon;
   change?: number;
   live?: boolean;
 }) {
@@ -126,7 +127,7 @@ function StatCard({
   );
 }
 
-function BreakdownList({ title, rows, icon: Icon }: { title: string; rows: Breakdown[]; icon: typeof Globe2 }) {
+function BreakdownList({ title, rows, icon: Icon }: { title: string; rows: Breakdown[]; icon: LucideIcon }) {
   const max = Math.max(1, ...rows.map((row) => row.count));
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
