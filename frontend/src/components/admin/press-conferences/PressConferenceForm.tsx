@@ -22,6 +22,7 @@ export default function PressConferenceForm({
     date: initialData?.date ? initialData.date.slice(0, 10) : "",
     description: initialData?.description || "",
     content: initialData?.content || "",
+    status: initialData?.status || "PUBLISHED",
   });
 
   const [featuredImage, setFeaturedImage] =
@@ -33,7 +34,7 @@ export default function PressConferenceForm({
 
   const handleChange = (
     e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     setFormData({
@@ -95,6 +96,21 @@ export default function PressConferenceForm({
         />
       </div>
 
+
+      <div>
+        <label className="mb-2 block text-sm font-medium">
+          Publication Status
+        </label>
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="w-full rounded-md border p-2"
+        >
+          <option value="DRAFT">Draft — only visible in admin</option>
+          <option value="PUBLISHED">Published — visible on website</option>
+        </select>
+      </div>
 
       <div>
         <label className="mb-2 block text-sm font-medium">
@@ -163,9 +179,9 @@ export default function PressConferenceForm({
         disabled={submitting}
         className="rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
       >
-        {initialData
-          ? "Updating..."
-          : initialData ? "Update Press Conference" : "Save Press Conference"}
+        {submitting
+          ? (initialData ? "Updating..." : "Saving...")
+          : (initialData ? "Update Press Conference" : "Save Press Conference")}
       </button>
 
     </form>
