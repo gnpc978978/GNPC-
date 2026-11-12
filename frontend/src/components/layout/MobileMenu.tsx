@@ -158,16 +158,14 @@ export default function MobileMenu({
 
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-5 sm:px-7">
               <Logo variant="gold" />
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
                 aria-label="Close navigation menu"
                 className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[.06] transition hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#0b1f3a]"
               >
-                  <HiXMark size={24} />
-                </button>
-              </div>
+                <HiXMark size={24} />
+              </button>
             </div>
 
             <div className="border-b border-white/10 bg-white/[.03] px-5 py-5 sm:px-7">
@@ -204,14 +202,7 @@ export default function MobileMenu({
             </nav>
 
             <div className="border-t border-white/10 p-5 sm:p-7">
-              <Link
-                href="/admin/login"
-                onClick={() => setOpen(false)}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#c9a45c] text-sm font-extrabold text-[#0b1f3a] transition hover:-translate-y-0.5 hover:bg-[#e8d7ad]"
-              >
-                Admin Login <HiArrowRight size={16} />
-              </Link>
-              <p className="mt-4 text-center text-[10px] font-bold uppercase tracking-[.14em] text-white/30">
+              <p className="text-center text-[10px] font-bold uppercase tracking-[.14em] text-white/30">
                 {settings.siteName || "Greater Noida Press Club"}
               </p>
             </div>
