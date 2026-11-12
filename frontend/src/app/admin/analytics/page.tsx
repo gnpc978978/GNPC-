@@ -243,9 +243,33 @@ export default function AnalyticsPage() {
       ["Date", "Unique visitors", "Page views"],
       ...data.trend.map((item) => [item.date, item.uniqueVisitors, item.pageViews]),
       [],
+      ["Weekly traffic"],
+      ["Week starting", "Unique visitors", "Page views"],
+      ...data.weeklyTrend.map((item) => [item.date, item.uniqueVisitors, item.pageViews]),
+      [],
+      ["Monthly traffic"],
+      ["Month", "Unique visitors", "Page views"],
+      ...data.monthlyTrend.map((item) => [item.date, item.uniqueVisitors, item.pageViews]),
+      [],
       ["Top pages"],
       ["Page", "Unique visitors", "Page views", "Average time (seconds)"],
       ...data.pages.map((item) => [item.path, item.uniqueVisitors, item.pageViews, item.averageTimeSeconds]),
+      [],
+      ["Popular sections"],
+      ["Section", "Views"],
+      ...data.sections.map((item) => [item.section, item.views]),
+      [],
+      ["Devices"],
+      ["Device", "Sessions"],
+      ...data.audience.devices.map((item) => [item.name, item.count]),
+      [],
+      ["Browsers"],
+      ["Browser", "Sessions"],
+      ...data.audience.browsers.map((item) => [item.name, item.count]),
+      [],
+      ["Referral sources"],
+      ["Source", "Sessions"],
+      ...data.audience.sources.map((item) => [item.name, item.count]),
       [],
       ["Feature engagement"],
       ["Event", "Feature", "Count"],
@@ -257,7 +281,7 @@ export default function AnalyticsPage() {
     link.href = url;
     link.download = `gnpc-analytics-${from}-to-${to}.csv`;
     link.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   if (loading && !data) {
