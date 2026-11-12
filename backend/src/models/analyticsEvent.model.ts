@@ -3,8 +3,8 @@ import mongoose, { Schema } from "mongoose";
 const analyticsEventSchema = new Schema(
   {
     eventId: { type: String, required: true, unique: true, maxlength: 80 },
-    sessionKey: { type: String, required: true, index: true },
-    visitorKey: { type: String, required: true, index: true },
+    sessionKey: { type: String, required: true },
+    visitorKey: { type: String, required: true },
     eventType: {
       type: String,
       enum: ["page_view", "page_duration", "section_view", "button_click", "link_click", "registration", "download", "feature"],
