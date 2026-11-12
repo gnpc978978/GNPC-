@@ -3,7 +3,7 @@
 import { useState } from "react";
 import RichTextEditor from "./RichTextEditor";
 import FileUpload from "./FileUpload";
-import { PressConference, PressConferenceFormData } from "@/types/pressConference";
+import type { PressConference, PressConferenceFormData } from "@/types/pressConference";
 
 interface PressConferenceFormProps {
   initialData?: PressConference;
@@ -11,12 +11,17 @@ interface PressConferenceFormProps {
   submitting?: boolean;
 }
 
+type PressConferenceFormState = Omit<
+  PressConferenceFormData,
+  "featuredImage" | "pdfFile"
+>;
+
 export default function PressConferenceForm({
   initialData,
   onSubmit,
   submitting = false,
 }: PressConferenceFormProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PressConferenceFormState>({
     title: initialData?.title || "",
     venue: initialData?.venue || "",
     date: initialData?.date ? initialData.date.slice(0, 10) : "",
