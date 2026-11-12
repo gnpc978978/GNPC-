@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const analyticsSessionSchema = new Schema(
   {
-    sessionKey: { type: String, required: true, unique: true, index: true },
+    sessionKey: { type: String, required: true, unique: true },
     visitorKey: { type: String, required: true, index: true },
     firstSeenAt: { type: Date, required: true, index: true },
     lastSeenAt: { type: Date, required: true, index: true },
