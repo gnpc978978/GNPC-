@@ -793,3 +793,8 @@ button {
 .gnpc-public main.gnpc-credits-page .credits-primary-action {
   color: #0b1f3a !important;
 }
+
+.gnpc-public[data-theme="dark"] main.gnpc-credits-page {
+  background: #071629 !important;
+  color: #f8fafc !important;
+}
