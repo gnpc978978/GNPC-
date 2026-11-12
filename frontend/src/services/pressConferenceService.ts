@@ -45,6 +45,7 @@ const toFormData = (
     "content",
     data.content
   );
+  formData.append("status", data.status);
 
   if (data.featuredImage) {
     formData.append(
@@ -68,7 +69,7 @@ export const getPressConferences =
     PressConference[]
   > => {
     const response =
-      await apiFetch(
+      await authenticatedApiFetch(
         "/press-conferences",
         {
           method: "GET",
@@ -92,7 +93,7 @@ export const getPressConference =
     id: string
   ): Promise<PressConference> => {
     const response =
-      await apiFetch(
+      await authenticatedApiFetch(
         `/press-conferences/${encodeURIComponent(
           id
         )}`
