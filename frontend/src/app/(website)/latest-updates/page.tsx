@@ -1062,71 +1062,32 @@ export default function LatestUpdatesPage() {
       setError(null);
 
       try {
-        const [
-          latestResponse,
-          eventsResponse,
-          conferencesResponse,
-        ] = await Promise.all([
-          apiFetch(
-            "/latest-updates"
-          ),
-          apiFetch("/events"),
-          apiFetch(
-            "/press-conferences"
-          ),
-        ]);
-
-        const latest =
-          await responseJson<FeedResponse>(
-            latestResponse
-          );
-
-        const eventsPayload =
-          await responseJson<{
-            success?: boolean;
-            data?: Event[];
-          }>(
-            eventsResponse
-          );
-
-        const conferencesPayload =
-          await responseJson<{
-            success?: boolean;
-            data?: PressConference[];
-          }>(
-            conferencesResponse
-          );
-
-        setFeed({
-          pressReleases:
-            latest.pressReleases ||
-            [],
-          pressConferences:
-            latest.pressConferences ||
-            [],
-          announcements:
-            latest.announcements ||
-            [],
-          events:
-            latest.events ||
-            [],
+        // The unified endpoint is the single public source of truth.
+        // It already excludes drafts and inactive records.
+        const response = await apiFetch("/latest-updates", {
+          method: "GET",
+          cache: "no-store",
         });
 
-        setEvents(
-          Array.isArray(
-            eventsPayload.data
-          )
-            ? eventsPayload.data
-            : []
-        );
+        const latest =
+          await responseJson<FeedResponse>(response);
 
-        setPressConferences(
-          Array.isArray(
-            conferencesPayload.data
-          )
-            ? conferencesPayload.data
-            : []
-        );
+        const publishedEvents = Array.isArray(latest.events)
+          ? latest.events
+          : [];
+        const publishedConferences = Array.isArray(latest.pressConferences)
+          ? latest.pressConferences
+          : [];
+
+        setFeed({
+          pressReleases: latest.pressReleases || [],
+          pressConferences: publishedConferences,
+          announcements: latest.announcements || [],
+          events: publishedEvents,
+        });
+
+        setEvents(publishedEvents);
+        setPressConferences(publishedConferences);
       } catch (err) {
         console.error(
           "Failed to load latest updates:",
