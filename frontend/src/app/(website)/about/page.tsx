@@ -363,11 +363,13 @@ function CMSImage({
   alt,
   className = "",
   priority = false,
+  transparent = false,
 }: {
   src?: string;
   alt: string;
   className?: string;
   priority?: boolean;
+  transparent?: boolean;
 }) {
   if (!src) {
     return (
@@ -394,7 +396,9 @@ function CMSImage({
   return (
     <div
       className={[
-        "relative overflow-hidden rounded-[2rem] border-[7px] border-white bg-white shadow-[0_30px_80px_rgba(38,32,23,0.16)]",
+        transparent
+          ? "relative overflow-visible rounded-none border-0 bg-transparent shadow-none"
+          : "relative overflow-hidden rounded-[2rem] border-[7px] border-white bg-white shadow-[0_30px_80px_rgba(38,32,23,0.16)]",
         className,
       ].join(" ")}
     >
@@ -404,10 +408,12 @@ function CMSImage({
         fill
         priority={priority}
         sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover transition duration-700 hover:scale-[1.025]"
+        className={transparent ? "object-contain" : "object-cover transition duration-700 hover:scale-[1.025]"}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/5" />
+      {!transparent && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/5" />
+      )}
     </div>
   );
 }
@@ -704,8 +710,6 @@ export default function AboutPage() {
               }}
               className="relative w-full min-w-0 max-w-full"
             >
-              <div className="absolute -bottom-5 -left-3 h-full w-full rounded-[2rem] bg-[#b8c7d8]/45 sm:-left-5" />
-
               <CMSImage
                 src={
                   content.image
@@ -715,7 +719,8 @@ export default function AboutPage() {
                   "Greater Noida Press Club"
                 }
                 priority
-                className="aspect-[6/5] min-h-[260px] w-full max-w-full sm:min-h-[450px]"
+                transparent
+                className="aspect-[6/5] min-h-[260px] w-full max-w-full bg-transparent"
               />
 
               <div className="absolute -bottom-5 right-4 z-20 rounded-2xl border border-black/10 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-md sm:right-7">
