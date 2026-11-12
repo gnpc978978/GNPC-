@@ -92,7 +92,7 @@ export default function WebsiteLayout({
 
   return (
     <WebsiteThemeProvider>
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen">
       {/* =====================================================
           FIXED GLOBAL WEBSITE HEADER
 
