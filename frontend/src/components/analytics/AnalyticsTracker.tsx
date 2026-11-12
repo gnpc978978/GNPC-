@@ -133,7 +133,7 @@ export default function AnalyticsTracker() {
       let eventType: AnalyticsEventType = "button_click";
       if (explicitEvent && ["feature", "registration", "download", "button_click", "link_click"].includes(explicitEvent)) {
         eventType = explicitEvent as AnalyticsEventType;
-      } else if (explicit === "registration" || /register|membership application/i.test(label)) {
+      } else if (explicit === "registration" || /register|membership|become a member|join (?:the )?press club/i.test(label)) {
         eventType = "registration";
       } else if (element instanceof HTMLAnchorElement) {
         const href = element.getAttribute("href") || "";
