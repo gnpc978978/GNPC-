@@ -610,8 +610,8 @@ export default function AboutPage() {
           className="pointer-events-none absolute -bottom-40 right-0 h-[26rem] w-[26rem] rounded-full bg-[#b8c7d8]/30 blur-3xl"
         />
 
-        <div className="relative mx-auto max-w-7xl">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.03fr_0.97fr] lg:gap-16">
+        <div className="relative mx-auto w-full min-w-0 max-w-7xl">
+          <div className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1.03fr)_minmax(0,0.97fr)] lg:gap-12">
             <motion.div
               initial={{
                 opacity: 0,
@@ -628,20 +628,20 @@ export default function AboutPage() {
               transition={{
                 duration: 0.75,
               }}
-              className="relative min-w-0"
+              className="relative w-full min-w-0 max-w-full"
             >
               <span className="inline-flex rounded-full border border-black/10 bg-white/55 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-black/50 backdrop-blur-md">
                 Our Story
               </span>
 
-              <h2 className="mt-5 text-3xl font-black leading-[1.02] tracking-[-0.045em] sm:text-4xl lg:text-[3.7rem]">
+              <h2 className="mt-5 break-words text-3xl font-black leading-[1.02] tracking-[-0.045em] sm:text-4xl lg:text-[3.7rem]">
                 {
                   content.heading
                 }
               </h2>
 
               {content.description && content.description.trim().toLowerCase() !== "hello" && (
-                <p className="mt-6 max-w-2xl text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
+                <p className="mt-6 w-full max-w-2xl break-words text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
                   {
                     content.description
                   }
@@ -649,7 +649,7 @@ export default function AboutPage() {
               )}
 
               {content.secondaryDescription && (
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-black/50 sm:text-base sm:leading-8">
+                <p className="mt-4 w-full max-w-2xl break-words text-sm leading-7 text-black/50 sm:text-base sm:leading-8">
                   {
                     content.secondaryDescription
                   }
@@ -657,23 +657,23 @@ export default function AboutPage() {
               )}
 
               {content.commitmentTitle && (
-                <div className="mt-8 rounded-[1.75rem] border border-black/10 bg-white/60 p-5 backdrop-blur-md sm:p-6">
-                  <div className="flex items-start gap-4">
+                <div className="mt-8 w-full min-w-0 max-w-full rounded-[1.75rem] border border-black/10 bg-white/60 p-4 backdrop-blur-md sm:p-6">
+                  <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#171717] text-white">
                       <ShieldCheck
                         size={19}
                       />
                     </div>
 
-                    <div>
-                      <h3 className="text-lg font-black tracking-[-0.025em]">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="break-words text-lg font-black tracking-[-0.025em]">
                         {
                           content.commitmentTitle
                         }
                       </h3>
 
                       {content.commitmentDescription && (
-                        <p className="mt-2 text-sm leading-7 text-black/50">
+                        <p className="mt-2 break-words text-sm leading-7 text-black/50 [overflow-wrap:anywhere]">
                           {
                             content.commitmentDescription
                           }
@@ -702,9 +702,9 @@ export default function AboutPage() {
                 duration: 0.75,
                 delay: 0.08,
               }}
-              className="relative"
+              className="relative w-full min-w-0 max-w-full"
             >
-              <div className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] bg-[#b8c7d8]/45" />
+              <div className="absolute -bottom-5 -left-3 h-full w-full rounded-[2rem] bg-[#b8c7d8]/45 sm:-left-5" />
 
               <CMSImage
                 src={
@@ -715,7 +715,7 @@ export default function AboutPage() {
                   "Greater Noida Press Club"
                 }
                 priority
-                className="aspect-[6/5] min-h-[350px] sm:min-h-[450px]"
+                className="aspect-[6/5] min-h-[260px] w-full max-w-full sm:min-h-[450px]"
               />
 
               <div className="absolute -bottom-5 right-4 z-20 rounded-2xl border border-black/10 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-md sm:right-7">
@@ -814,7 +814,7 @@ export default function AboutPage() {
                 },
               },
             }}
-            className="mt-12 grid gap-5 md:grid-cols-2 lg:mt-16"
+            className="mt-8 grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2 lg:mt-12 lg:gap-5"
           >
             <motion.article
               variants={itemVariants}
@@ -911,7 +911,7 @@ export default function AboutPage() {
                   },
                 },
               }}
-              className="mt-12 grid gap-4 sm:mt-16 md:grid-cols-2 lg:grid-cols-3"
+              className="mt-8 grid min-w-0 grid-cols-1 gap-4 sm:mt-10 md:grid-cols-2 lg:grid-cols-3"
             >
               {content.objectives.map(
                 (
