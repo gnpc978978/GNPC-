@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
+  LayoutGrid,
+  List as ListIcon,
   MapPin,
   Mic2,
   Sparkles,
@@ -135,7 +137,7 @@ function ConferenceImage({
       src={src}
       alt={alt}
       fill
-      sizes="(min-width: 1024px) 50vw, 100vw"
+      sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
       className="object-cover transition duration-700 group-hover:scale-[1.04]"
     />
   );
@@ -205,7 +207,7 @@ function ConferenceCard({
           CONTENT
           =================================================== */}
 
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
         <div className="max-w-[760px]">
           <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#d4b06a]">
             <Mic2 size={13} /> Press Conference
@@ -236,7 +238,7 @@ function ConferenceCard({
           <h3
             className={[
               "mt-3 font-bold leading-tight tracking-[-0.025em] text-slate-950",
-              "text-xl sm:text-2xl",
+              "text-lg sm:text-xl",
             ].join(" ")}
           >
             {item.title}
@@ -246,7 +248,7 @@ function ConferenceCard({
 
           {(item.description ||
             item.content) && (
-            <p className="mt-3 line-clamp-3 max-w-[720px] text-sm leading-6 text-slate-600">
+            <p className="mt-2 line-clamp-3 text-sm leading-5 text-slate-600">
               {item.description ||
                 item.content}
             </p>
@@ -254,7 +256,7 @@ function ConferenceCard({
 
           {/* Individual route */}
 
-          <Link href={`/press-conference/${item._id}`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#d4b06a] transition hover:text-[#b08a3e]">
+          <Link href={`/press-conference/${item._id}`} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#d4b06a] transition hover:text-[#b08a3e]">
             View Details
 
             <ArrowRight
@@ -262,6 +264,62 @@ function ConferenceCard({
             />
           </Link>
         </div>
+      </div>
+    </motion.article>
+  );
+}
+
+
+function ConferenceListItem({
+  item,
+}: {
+  item: PressConference;
+}) {
+  const date = item.date || item.createdAt;
+
+  return (
+    <motion.article
+      variants={cardVariants}
+      className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md sm:flex-row"
+    >
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#f7f2e6] sm:h-auto sm:min-h-[176px] sm:w-52 lg:w-60">
+        <ConferenceImage src={item.featuredImage} alt={item.title} />
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col justify-center p-4 sm:p-5">
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#c49a4a]">
+          <Mic2 size={12} />
+          Press Conference
+        </span>
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-slate-500">
+          <span className="inline-flex items-center gap-1.5">
+            <CalendarDays size={13} />
+            {formatDate(date)}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <MapPin size={13} />
+            {item.venue || "Greater Noida Press Club"}
+          </span>
+        </div>
+
+        <h3 className="mt-2 text-lg font-bold leading-snug tracking-[-0.02em] text-slate-950">
+          {item.title}
+        </h3>
+
+        {(item.description || item.content) && (
+          <p className="mt-2 line-clamp-2 text-sm leading-5 text-slate-600">
+            {item.description || item.content}
+          </p>
+        )}
+
+        <Link
+          href={`/press-conference/${item._id}`}
+          className="mt-3 inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#d4b06a] transition hover:text-[#b08a3e]"
+        >
+          View Details
+          <ArrowRight size={15} />
+        </Link>
       </div>
     </motion.article>
   );
@@ -314,6 +372,8 @@ export default function PressConferenceList({
   ] = useState<
     string | null
   >(null);
+
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
 
   /*
    * ==========================================================
@@ -616,20 +676,78 @@ export default function PressConferenceList({
               </motion.div>
             )}
 
+          {!latestOnly && (
+            <div className="relative mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm font-medium text-slate-500">
+                Browse published press conferences
+              </p>
+
+              <div
+                role="group"
+                aria-label="Choose press conference view"
+                className="inline-flex w-fit items-center rounded-xl border border-slate-200 bg-white p-1 shadow-sm"
+              >
+                <button
+                  type="button"
+                  onClick={() => setViewMode("cards")}
+                  aria-pressed={viewMode === "cards"}
+                  className={[
+                    "inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+                    viewMode === "cards"
+                      ? "bg-[#0b1f3a] text-white shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100",
+                  ].join(" ")}
+                >
+                  <LayoutGrid size={16} />
+                  Cards
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setViewMode("list")}
+                  aria-pressed={viewMode === "list"}
+                  className={[
+                    "inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+                    viewMode === "list"
+                      ? "bg-[#0b1f3a] text-white shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100",
+                  ].join(" ")}
+                >
+                  <ListIcon size={16} />
+                  List
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* =================================================
               LOADING
               ================================================= */}
 
           {loading && (
-            <div className="relative mt-12 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-              <div className="min-h-[500px] animate-pulse rounded-[2rem] bg-black/5" />
-
-              <div className="grid gap-4">
-                <div className="min-h-[240px] animate-pulse rounded-[2rem] bg-black/5" />
-
-                <div className="min-h-[240px] animate-pulse rounded-[2rem] bg-black/5" />
+            latestOnly ? (
+              <div className="relative mt-12 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
+                <div className="min-h-[500px] animate-pulse rounded-[2rem] bg-black/5" />
+                <div className="grid gap-4">
+                  <div className="min-h-[240px] animate-pulse rounded-[2rem] bg-black/5" />
+                  <div className="min-h-[240px] animate-pulse rounded-[2rem] bg-black/5" />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="relative mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                    <div className="aspect-[16/9] animate-pulse bg-slate-200" />
+                    <div className="space-y-3 p-5">
+                      <div className="h-3 w-28 animate-pulse rounded bg-slate-200" />
+                      <div className="h-5 w-4/5 animate-pulse rounded bg-slate-200" />
+                      <div className="h-3 w-full animate-pulse rounded bg-slate-100" />
+                      <div className="h-3 w-2/3 animate-pulse rounded bg-slate-100" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
           )}
 
           {/* =================================================
@@ -707,7 +825,12 @@ export default function PressConferenceList({
                 className={
                   latestOnly
                     ? "relative mt-12 grid gap-4 lg:mt-16 lg:grid-cols-[1.3fr_0.7fr]"
-                    : "relative mt-8 grid gap-5 md:mt-12 md:grid-cols-2"
+                    : [
+                        "relative mt-8 grid gap-5 sm:mt-10",
+                        viewMode === "cards"
+                          ? "sm:grid-cols-2 xl:grid-cols-3"
+                          : "grid-cols-1",
+                      ].join(" ")
                 }
               >
                 {latestOnly ? (
@@ -737,21 +860,14 @@ export default function PressConferenceList({
                         )}
                     </div>
                   </>
+                ) : viewMode === "list" ? (
+                  items.map((item) => (
+                    <ConferenceListItem key={item._id} item={item} />
+                  ))
                 ) : (
-                  items.map(
-                    (
-                      item
-                    ) => (
-                      <ConferenceCard
-                        key={
-                          item._id
-                        }
-                        item={
-                          item
-                        }
-                      />
-                    )
-                  )
+                  items.map((item) => (
+                    <ConferenceCard key={item._id} item={item} />
+                  ))
                 )}
               </motion.div>
             )}
