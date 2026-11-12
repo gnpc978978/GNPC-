@@ -19,6 +19,7 @@ const getValidatedFields = (body: Request["body"]) => {
     title,
     venue,
     date: new Date(date),
+    status: body.status === "DRAFT" ? "DRAFT" as const : "PUBLISHED" as const,
     description: typeof body.description === "string" ? body.description.trim() : "",
     content: typeof body.content === "string" ? body.content : "",
   };
@@ -52,9 +53,18 @@ export const createPressConference = async (req: Request, res: Response) => {
   }
 };
 
-export const getPressConferences = async (_req: Request, res: Response) => {
+export const getPressConferences = async (req: Request, res: Response) => {
   try {
-    const pressConferences = await PressConference.find().sort({ date: -1, createdAt: -1 });
+    const filter = (req as any).user
+      ? {}
+      : {
+          isActive: { $ne: false },
+          $or: [
+            { status: "PUBLISHED" },
+            { status: { $exists: false } },
+          ],
+        };
+    const pressConferences = await PressConference.find(filter).sort({ date: -1, createdAt: -1 });
     return res.status(200).json({ success: true, data: pressConferences });
   } catch (error) {
     console.error("Get Press Conferences Error:", error);
@@ -66,7 +76,15 @@ export const getPressConference = async (req: Request, res: Response) => {
   try {
     const pressConference = await PressConference.findById(req.params.id);
 
-    if (!pressConference) {
+    const isAuthenticatedAdmin = Boolean((req as any).user);
+    const isLegacyPublished = !pressConference?.status;
+
+    if (
+      !pressConference ||
+      (!isAuthenticatedAdmin &&
+        (pressConference.isActive === false ||
+          (!isLegacyPublished && pressConference.status !== "PUBLISHED")))
+    ) {
       return res.status(404).json({ success: false, message: "Press conference not found." });
     }
 
