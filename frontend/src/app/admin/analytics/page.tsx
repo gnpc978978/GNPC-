@@ -234,7 +234,7 @@ export default function AnalyticsPage() {
       ["Unique visitors", data.summary.uniqueVisitors],
       ["Page views", data.summary.pageViews],
       ["Sessions", data.summary.sessions],
-      ["Active visitors now", data.summary.activeVisitors],
+      ["Active visitors now", liveData.activeVisitors],
       ["Average time on page (seconds)", data.summary.averageTimeSeconds],
       ["New visitors", data.summary.newVisitors],
       ["Returning visitors", data.summary.returningVisitors],
