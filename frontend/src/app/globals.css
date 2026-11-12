@@ -121,10 +121,8 @@ button {
   overflow: hidden;
   color: #fff;
   background:
-    radial-gradient(circle at 13% 8%, rgba(212, 176, 106, 0.20), transparent 24rem),
-    radial-gradient(circle at 84% 30%, rgba(38, 118, 161, 0.22), transparent 30rem),
-    radial-gradient(circle at 52% 100%, rgba(9, 56, 87, 0.72), transparent 38rem),
-    linear-gradient(135deg, #061426 0%, #0a2139 46%, #071a2e 100%);
+    radial-gradient(ellipse at 50% 38%, rgba(31, 76, 101, 0.20), transparent 58%),
+    linear-gradient(155deg, #061426 0%, #0a2036 54%, #071a2e 100%);
 }
 
 .gnpc-hero::before {
@@ -132,26 +130,16 @@ button {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: 0.28;
+  opacity: 0.16;
   background-image:
-    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 64px 64px;
   mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
 
 .gnpc-hero::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -20rem;
-  width: 58rem;
-  height: 30rem;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: rgba(212, 176, 106, 0.10);
-  filter: blur(70px);
-  z-index: -1;
+  content: none;
 }
 
 .gnpc-hero .gnpc-hero-copy {
@@ -170,8 +158,8 @@ button {
   border-color: rgba(255,255,255,.14);
   background: rgba(255,255,255,.075);
   color: rgba(255,255,255,.72);
-  box-shadow: 0 12px 35px rgba(0,0,0,.16);
-  backdrop-filter: blur(16px);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .gnpc-hero .gnpc-hero-icon {
