@@ -9,7 +9,6 @@ import { HiArrowRight, HiChevronDown, HiXMark } from "react-icons/hi2";
 import { navigation, type NavigationItem } from "@/data/navigation";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
 
 function isActive(pathname: string, href: string) {
   const [targetPath, targetQuery] = href.split("?");
@@ -160,7 +159,6 @@ export default function MobileMenu({
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-5 sm:px-7">
               <Logo variant="gold" />
               <div className="flex items-center gap-2">
-                <ThemeToggle compact />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
