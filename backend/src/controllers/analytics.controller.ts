@@ -356,9 +356,12 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         { $project: { name: "$_id", _id: 0, count: "$sessions" } },
         { $sort: { count: -1 } },
       ]),
-      AnalyticsVisitor.aggregate([
-        { $match: { lastSeenAt: { $gte: from, $lt: to } } },
-        { $group: { _id: null, newVisitors: { $sum: { $cond: [{ $gte: ["$firstSeenAt", from] }, 1, 0] } }, returningVisitors: { $sum: { $cond: [{ $lt: ["$firstSeenAt", from] }, 1, 0] } } } },
+      AnalyticsEvent.aggregate([
+        { $match: pageViewMatch },
+        { $group: { _id: "$visitorKey" } },
+        { $lookup: { from: AnalyticsVisitor.collection.name, localField: "_id", foreignField: "visitorKey", as: "visitor" } },
+        { $unwind: "$visitor" },
+        { $group: { _id: null, newVisitors: { $sum: { $cond: [{ $gte: ["$visitor.firstSeenAt", from] }, 1, 0] } }, returningVisitors: { $sum: { $cond: [{ $lt: ["$visitor.firstSeenAt", from] }, 1, 0] } } } },
       ]),
       AnalyticsSession.countDocuments({ firstSeenAt: { $gte: from, $lt: to } }),
       AnalyticsVisitor.countDocuments({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } }),
