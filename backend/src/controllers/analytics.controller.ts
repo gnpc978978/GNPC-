@@ -10,6 +10,7 @@ const MAX_REPORT_DAYS = 366;
 const ALLOWED_EVENTS = new Set([
   "page_view",
   "page_duration",
+  "section_view",
   "button_click",
   "link_click",
   "registration",
@@ -312,12 +313,16 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         { $limit: 10 },
       ]),
       AnalyticsEvent.aggregate([
-        { $match: pageViewMatch },
-        { $project: { section: { $let: { vars: { parts: { $split: ["$path", "/"] } }, in: { $cond: [{ $eq: [{ $arrayElemAt: ["$$parts", 1] }, ""] }, "Home", { $arrayElemAt: ["$$parts", 1] }] } } } } },
+        { $match: { createdAt: { $gte: from, $lt: to }, eventType: { $in: ["page_view", "section_view"] } } },
+        { $project: { section: { $cond: [
+          { $eq: ["$eventType", "section_view"] },
+          { $concat: ["$path", " · #", "$label"] },
+          { $let: { vars: { parts: { $split: ["$path", "/"] } }, in: { $cond: [{ $eq: [{ $arrayElemAt: ["$parts", 1] }, ""] }, "Home page", { $concat: ["Page: ", { $arrayElemAt: ["$parts", 1] }] }] } } },
+        ] } } },
         { $group: { _id: "$section", views: { $sum: 1 } } },
         { $project: { section: "$_id", _id: 0, views: 1 } },
         { $sort: { views: -1 } },
-        { $limit: 8 },
+        { $limit: 10 },
       ]),
       AnalyticsEvent.aggregate([
         { $match: { createdAt: { $gte: from, $lt: to }, eventType: { $in: ["button_click", "link_click", "registration", "download", "feature"] } } },
