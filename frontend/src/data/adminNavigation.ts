@@ -1,6 +1,7 @@
 import {
   BadgeDollarSign,
   CalendarDays,
+  ChartNoAxesCombined,
   ChevronDown,
   Images,
   LayoutDashboard,
@@ -48,6 +49,12 @@ export const adminNavigation: AdminNavItem[] = [
         href: "/admin/announcements",
       },
     ],
+  },
+
+  {
+    name: "Analytics & Insights",
+    icon: ChartNoAxesCombined,
+    href: "/admin/analytics",
   },
 
   {
