@@ -209,12 +209,12 @@ function ContributorCard({ person }: { person: Contributor }) {
                 href={ayzentWebsite}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-[#c9a45c] px-4 py-2.5 text-xs font-bold text-[#0b1f3a] transition hover:bg-[#e7d3a2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e3c783]"
+                className="credits-primary-action inline-flex items-center gap-2 rounded-full bg-[#c9a45c] px-4 py-2.5 text-xs font-bold transition hover:bg-[#e7d3a2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e3c783]"
               >
                 Ayzent Solutions
                 <ExternalLink size={13} aria-hidden="true" />
               </a>
-              <span className="text-[10px] font-medium text-white/35">
+              <span className="text-[10px] font-medium text-white/65">
                 Founder
               </span>
             </div>
@@ -285,7 +285,7 @@ export default function CreditsPage() {
         </section>
 
         <footer className="mx-auto mt-10 flex max-w-[1180px] flex-col gap-3 border-t border-white/10 pt-5 text-center sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:text-left">
-          <p className="text-[10px] font-medium uppercase tracking-[.16em] text-white/35">
+          <p className="text-[10px] font-medium uppercase tracking-[.16em] text-white/65">
             Designed & developed with intent.
           </p>
           <a
