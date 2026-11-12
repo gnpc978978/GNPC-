@@ -3,40 +3,33 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { HiArrowRight, HiChevronDown, HiXMark } from "react-icons/hi2";
 
 import { navigation, type NavigationItem } from "@/data/navigation";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import Logo from "./Logo";
 
-function isActive(pathname: string, search: string, href: string) {
+function isActive(pathname: string, href: string) {
   const [targetPath, targetQuery] = href.split("?");
-  if (pathname !== targetPath) return false;
-  if (!targetQuery) return true;
-
-  const expected = new URLSearchParams(targetQuery);
-  const actual = new URLSearchParams(search);
-  return Array.from(expected.entries()).every(
-    ([key, value]) => actual.get(key) === value
-  );
+  // Query-tab destinations share a pathname; keep their parent active
+  // without marking every child tab as selected.
+  return pathname === targetPath && !targetQuery;
 }
 
 function MobileNavigationItem({
   item,
   pathname,
-  search,
   setOpen,
 }: {
   item: NavigationItem;
   pathname: string;
-  search: string;
   setOpen: (value: boolean) => void;
 }) {
   const active = item.children?.length
-    ? item.children.some((child) => isActive(pathname, search, child.href)) ||
+    ? item.children.some((child) => isActive(pathname, child.href)) ||
       pathname === item.href
-    : isActive(pathname, search, item.href);
+    : isActive(pathname, item.href);
 
   const [expanded, setExpanded] = useState(active);
 
@@ -100,7 +93,7 @@ function MobileNavigationItem({
           >
             <div className="mx-4 mb-3 space-y-1 border-l border-white/10 pl-3">
               {item.children.map((child) => {
-                const childActive = isActive(pathname, search, child.href);
+                const childActive = isActive(pathname, child.href);
                 return (
                   <Link
                     key={child.href}
@@ -134,9 +127,7 @@ export default function MobileMenu({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { settings } = useWebsiteSettings();
-  const search = searchParams.toString();
 
   return (
     <AnimatePresence>
@@ -204,7 +195,6 @@ export default function MobileMenu({
                   <MobileNavigationItem
                     item={item}
                     pathname={pathname}
-                    search={search}
                     setOpen={setOpen}
                   />
                 </motion.div>
