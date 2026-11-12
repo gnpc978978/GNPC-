@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiArrowUpRight, HiBars3 } from "react-icons/hi2";
+import { HiBars3 } from "react-icons/hi2";
 import { navigation } from "@/data/navigation";
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
 import NavDropdown from "./NavDropdown";
-import Button from "@/components/ui/Button";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
@@ -42,9 +41,6 @@ export default function Navbar() {
 
             <div className="hidden shrink-0 items-center gap-3 xl:flex">
               <ThemeToggle />
-              <Button href="/admin/login" variant="outline" size="md" className="border-white/25 bg-white/[0.05] text-xs tracking-[0.06em] text-white hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#0b1f3a]">
-               Login <HiArrowUpRight size={16} aria-hidden="true" />
-              </Button>
             </div>
 
             <div className="flex shrink-0 items-center gap-2 xl:hidden">
