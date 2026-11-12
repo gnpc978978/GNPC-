@@ -7,6 +7,7 @@ import {
   analyticsEvent,
   analyticsHeartbeat,
   getAnalyticsReport,
+  getLiveAnalytics,
 } from "../controllers/analytics.controller";
 
 const router = express.Router();
@@ -38,5 +39,6 @@ const dashboardAccess = [
 router.post("/heartbeat", intakeLimiter, asyncHandler(analyticsHeartbeat));
 router.post("/event", intakeLimiter, asyncHandler(analyticsEvent));
 router.get("/report", ...dashboardAccess, asyncHandler(getAnalyticsReport));
+router.get("/live", ...dashboardAccess, asyncHandler(getLiveAnalytics));
 
 export default router;
