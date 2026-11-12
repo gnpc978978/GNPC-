@@ -643,7 +643,7 @@ export default function HeroCarousel({
                     "absolute left-1/2 top-1/2",
                     "aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)]",
                     "-translate-x-1/2 -translate-y-1/2",
-                    "overflow-hidden rounded-[1.2rem] sm:rounded-[1.35rem]",
+                    "overflow-hidden rounded-[1.2rem]",
                     "border-[5px] border-white/95 sm:border-[6px]",
                     "bg-white",
                     "shadow-[0_20px_48px_rgba(0,0,0,0.20)]",
