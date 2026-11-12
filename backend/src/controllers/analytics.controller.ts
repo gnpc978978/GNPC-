@@ -265,6 +265,7 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
       weeklyTrend,
       monthlyTrend,
       pages,
+      pageDurationStats,
       sections,
       features,
       durationStats,
@@ -313,6 +314,11 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         { $project: { path: "$_id", _id: 0, pageViews: 1, uniqueVisitors: 1 } },
         { $sort: { pageViews: -1 } },
         { $limit: 10 },
+      ]),
+      AnalyticsEvent.aggregate([
+        { $match: { eventType: "page_duration", createdAt: { $gte: from, $lt: to }, durationSeconds: { $gt: 0 } } },
+        { $group: { _id: "$path", averageTimeSeconds: { $avg: "$durationSeconds" } } },
+        { $project: { path: "$_id", _id: 0, averageTimeSeconds: { $round: ["$averageTimeSeconds", 1] } } },
       ]),
       AnalyticsEvent.aggregate([
         { $match: { createdAt: { $gte: from, $lt: to }, eventType: { $in: ["page_view", "section_view"] } } },
@@ -376,6 +382,13 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
 
     const pageViews = totals[0]?.pageViews || 0;
     const uniqueVisitors = totals[0]?.uniqueVisitors || 0;
+    const pageTimeMap = new Map(pageDurationStats.map((item: any) => [item.path, item.averageTimeSeconds]));
+    const pagesWithTime = pages.map((item: any) => ({
+      ...item,
+      averageTimeSeconds: pageTimeMap.get(item.path) || 0,
+    }));
+    const comparisonAvailable =
+      previousFrom.getTime() >= Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
     const journeys = activeSessions.map((session: any) => ({
       session: session.sessionKey.slice(0, 10),
       entryPath: session.entryPath,
@@ -409,13 +422,13 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
           averageTimeSeconds: durationStats[0]?.averageSeconds || 0,
           newVisitors: classification.newVisitors || 0,
           returningVisitors: classification.returningVisitors || 0,
-          visitorChange: percentChange(uniqueVisitors, previousVisitors),
-          pageViewChange: percentChange(pageViews, previousTotals),
+          visitorChange: comparisonAvailable ? percentChange(uniqueVisitors, previousVisitors) : null,
+          pageViewChange: comparisonAvailable ? percentChange(pageViews, previousTotals) : null,
         },
         trend,
         weeklyTrend,
         monthlyTrend,
-        pages,
+        pages: pagesWithTime,
         sections,
         features,
         audience: { devices, browsers, sources },
