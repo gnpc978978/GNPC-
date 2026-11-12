@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -7,7 +5,6 @@ import {
   ArrowUpRight,
   ExternalLink,
   Mail,
-  MessageCircle,
   Sparkles,
 } from "lucide-react";
 import {
