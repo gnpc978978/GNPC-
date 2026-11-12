@@ -135,6 +135,7 @@ function AyzentContactLinks() {
           label: "Instagram",
           href: ayzentContact.instagram,
           icon: <FaInstagram size={15} aria-hidden="true" />,
+          primary: false,
         }
       : null,
     ayzentContact.whatsapp
@@ -142,6 +143,7 @@ function AyzentContactLinks() {
           label: "WhatsApp",
           href: ayzentContact.whatsapp,
           icon: <FaWhatsapp size={15} aria-hidden="true" />,
+          primary: false,
         }
       : null,
     ayzentContact.email
@@ -149,6 +151,7 @@ function AyzentContactLinks() {
           label: "Email",
           href: `mailto:${ayzentContact.email}`,
           icon: <Mail size={15} aria-hidden="true" />,
+          primary: false,
         }
       : null,
   ].filter((item): item is NonNullable<typeof item> => Boolean(item));
@@ -267,7 +270,7 @@ export default function CreditsPage() {
 
         <section
           aria-label="Website designers and developers"
-          className="mx-auto mt-10 grid max-w-[1180px] grid-cols-1 items-center gap-5 md:mt-14 md:grid-cols-[minmax(0,1fr)_52px_minmax(0,1fr)] md:gap-3 lg:gap-5"
+          className="mx-auto mt-10 grid max-w-[1180px] grid-cols-1 items-start gap-5 md:mt-14 md:grid-cols-[minmax(0,1fr)_52px_minmax(0,1fr)] md:gap-3 lg:gap-5"
         >
           <div className="min-w-0">
             <ContributorCard person={ayush} />
