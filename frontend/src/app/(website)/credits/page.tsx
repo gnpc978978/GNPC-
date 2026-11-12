@@ -6,7 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa6";
 export const metadata: Metadata = {
   title: "Website Credits | Greater Noida Press Club",
   description:
-    "Meet Ayush Chauhan and Shreyansh Mishra, the developers and collaborators behind the Greater Noida Press Club website, with acknowledgement to Ayzent Solutions.",
+    "Meet the developers and collaborators behind the Greater Noida Press Club website.",
 };
 
 const contributors = [
