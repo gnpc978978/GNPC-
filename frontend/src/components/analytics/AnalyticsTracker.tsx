@@ -154,8 +154,14 @@ export default function AnalyticsTracker() {
       const marker = `${form.id} ${form.getAttribute("name") || ""} ${form.dataset.analytics || ""}`;
       if (/registration|register|membership/i.test(marker)) {
         sendEvent("registration", form.dataset.analyticsLabel || form.id || "Membership registration");
-      } else if (form.dataset.analytics === "feature") {
-        sendEvent("feature", form.dataset.analyticsLabel || form.id || "Form submission");
+      } else {
+        sendEvent(
+          "feature",
+          form.dataset.analyticsLabel ||
+            form.id ||
+            form.getAttribute("aria-label") ||
+            "Public form submission"
+        );
       }
     };
 
