@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const analyticsVisitorSchema = new Schema(
   {
-    visitorKey: { type: String, required: true, unique: true, index: true },
+    visitorKey: { type: String, required: true, unique: true },
     firstSeenAt: { type: Date, required: true, index: true },
     lastSeenAt: { type: Date, required: true, index: true },
     retentionAt: { type: Date, required: true },
