@@ -47,9 +47,12 @@ export default function Navbar() {
               </Button>
             </div>
 
-            <button type="button" onClick={() => setMenuOpen(true)} aria-label="Open navigation menu" aria-expanded={menuOpen} aria-controls="mobile-navigation" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.07] text-white transition hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#0b1f3a] focus-visible:outline-none xl:hidden">
-              <HiBars3 size={24} aria-hidden="true" />
-            </button>
+            <div className="flex shrink-0 items-center gap-2 xl:hidden">
+              <ThemeToggle compact />
+              <button type="button" onClick={() => setMenuOpen(true)} aria-label="Open navigation menu" aria-expanded={menuOpen} aria-controls="mobile-navigation" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.07] text-white transition hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#0b1f3a] focus-visible:outline-none">
+                <HiBars3 size={24} aria-hidden="true" />
+              </button>
+            </div>
           </div>
         </nav>
       </div>
