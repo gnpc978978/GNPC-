@@ -7,6 +7,7 @@ import { apiFetch } from "@/services/api";
 type AnalyticsEventType =
   | "page_view"
   | "page_duration"
+  | "section_view"
   | "button_click"
   | "link_click"
   | "registration"
@@ -162,12 +163,37 @@ export default function AnalyticsTracker() {
       if (document.visibilityState === "hidden") sendDuration();
     };
 
+    const viewedSections = new Set<string>();
+    const sectionObserver = typeof IntersectionObserver !== "undefined"
+      ? new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const section = entry.target as HTMLElement;
+            const sectionName =
+              section.dataset.analyticsSection ||
+              section.id ||
+              section.getAttribute("aria-label") ||
+              "";
+            if (sectionName && !viewedSections.has(sectionName)) {
+              viewedSections.add(sectionName);
+              sendEvent("section_view", sectionName);
+            }
+          });
+        }, { threshold: 0.35 })
+      : null;
+
+    if (sectionObserver) {
+      document.querySelectorAll<HTMLElement>("main section[id], main [data-analytics-section]")
+        .forEach((section) => sectionObserver.observe(section));
+    }
+
     document.addEventListener("click", handleClick, true);
     document.addEventListener("submit", handleSubmit, true);
     document.addEventListener("visibilitychange", handleVisibility);
     window.addEventListener("pagehide", sendDuration);
 
     return () => {
+      sectionObserver?.disconnect();
       window.clearInterval(heartbeatTimer);
       sendDuration();
       document.removeEventListener("click", handleClick, true);
