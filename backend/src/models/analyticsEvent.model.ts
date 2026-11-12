@@ -7,7 +7,7 @@ const analyticsEventSchema = new Schema(
     visitorKey: { type: String, required: true, index: true },
     eventType: {
       type: String,
-      enum: ["page_view", "page_duration", "button_click", "link_click", "registration", "download", "feature"],
+      enum: ["page_view", "page_duration", "section_view", "button_click", "link_click", "registration", "download", "feature"],
       required: true,
     },
     path: { type: String, required: true, maxlength: 200 },
