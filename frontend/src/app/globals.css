@@ -518,3 +518,150 @@ button {
     transition-duration: .001ms !important;
   }
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* USER-CONTROLLED DARK THEME — PUBLIC WEBSITE                                */
+/* -------------------------------------------------------------------------- */
+
+.gnpc-public[data-theme="dark"] {
+  color-scheme: dark;
+  --gnpc-ink: #edf3fa;
+  --gnpc-ink-soft: #b0bdcc;
+  --gnpc-surface: #101a27;
+  --gnpc-surface-2: #172536;
+  --gnpc-white: #1b2a3b;
+  --gnpc-line: rgba(226, 236, 248, 0.13);
+  --gnpc-shadow: 0 20px 70px rgba(0, 0, 0, 0.28);
+  background: #101a27 !important;
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] main,
+.gnpc-public[data-theme="dark"] .gnpc-home-content,
+.gnpc-public[data-theme="dark"] .gnpc-home-content > :is(section, main),
+.gnpc-public[data-theme="dark"] .gnpc-home-content > main > section {
+  background-color: #101a27 !important;
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-shell-paper {
+  background: linear-gradient(180deg, #111d2b, #101a27) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-shell-muted {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(212,176,106,.07), transparent 25rem),
+    linear-gradient(135deg, #172536 0%, #111d2b 55%, #172536 100%) !important;
+}
+
+/* Light utility surfaces become dark surfaces. Images are not targeted. */
+.gnpc-public[data-theme="dark"] :is(
+  [class~="bg-white"],
+  [class~="bg-slate-50"],
+  [class~="bg-slate-100"],
+  [class~="bg-gray-50"],
+  [class~="bg-gray-100"],
+  [class~="bg-[#f4f7fb]"],
+  [class~="bg-[#f8fafc]"],
+  [class~="bg-[#eef3f8]"],
+  [class~="bg-[#f7f2e6]"]
+) {
+  background-color: #1b2a3b !important;
+}
+
+/* Semi-transparent white panels used for cards and filter surfaces. */
+.gnpc-public[data-theme="dark"] [class*="bg-white/"] {
+  background-color: rgba(27, 42, 59, 0.88) !important;
+}
+
+/* Replace dark text utilities with readable light text in dark mode. */
+.gnpc-public[data-theme="dark"] :is(
+  [class~="text-black"],
+  [class~="text-slate-950"],
+  [class~="text-slate-900"],
+  [class~="text-slate-800"],
+  [class~="text-slate-700"],
+  [class~="text-gray-900"],
+  [class~="text-gray-800"],
+  [class~="text-gray-700"],
+  [class~="text-[#171717]"]
+) {
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] :is(
+  [class~="text-slate-600"],
+  [class~="text-slate-500"],
+  [class~="text-gray-600"],
+  [class~="text-gray-500"],
+  [class~="text-black/50"],
+  [class~="text-black/55"],
+  [class~="text-black/60"]
+) {
+  color: #b0bdcc !important;
+}
+
+.gnpc-public[data-theme="dark"] :is(
+  [class~="border-slate-100"],
+  [class~="border-slate-200"],
+  [class~="border-slate-300"],
+  [class~="border-gray-100"],
+  [class~="border-gray-200"],
+  [class~="border-gray-300"],
+  [class~="border-black/5"],
+  [class~="border-black/10"]
+) {
+  border-color: rgba(226, 236, 248, 0.14) !important;
+}
+
+.gnpc-public[data-theme="dark"] :is(
+  input,
+  textarea,
+  select
+) {
+  border-color: rgba(226, 236, 248, 0.2) !important;
+  background-color: #172536 !important;
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] :is(input, textarea)::placeholder {
+  color: #91a1b4 !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-card {
+  border-color: var(--gnpc-line);
+  background: rgba(27, 42, 59, 0.9);
+  box-shadow: var(--gnpc-shadow);
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-card-hover:hover {
+  background: #223449;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-btn-secondary {
+  border-color: rgba(226, 236, 248, 0.2);
+  background: #1b2a3b;
+  color: #edf3fa;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-btn-secondary:hover {
+  background: #26384d;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-image-frame {
+  border-color: rgba(226, 236, 248, 0.14);
+  background: #172536;
+}
+
+.gnpc-public[data-theme="dark"] .text-slate-400,
+.gnpc-public[data-theme="dark"] .text-gray-400 {
+  color: #91a1b4 !important;
+}
+
+/* Preserve the GNPC navy header, mobile navigation and dark footer branding. */
+.gnpc-public[data-theme="dark"] .gnpc-site-header,
+.gnpc-public[data-theme="dark"] .gnpc-nav-frame {
+  background: #071a2e;
+}
+
