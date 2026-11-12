@@ -552,16 +552,11 @@ export default function About() {
             }}
             className="relative"
           >
-            {/* Decorative back card */}
-
-            <div
-              aria-hidden="true"
-              className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] border border-black/5 bg-[#b8c7d8]/45 sm:-bottom-7 sm:-left-7"
-            />
+            {/* Transparent image area: no card, border, shadow or background */}
 
             {/* Transparent logo / image holder */}
 
-            <div className="relative mx-auto flex aspect-[6/5] min-h-[240px] w-full max-w-full items-center justify-center overflow-visible bg-transparent p-4 sm:min-h-[320px] sm:p-6">
+            <div className="relative mx-auto flex aspect-[6/5] min-h-[240px] w-full max-w-full items-center justify-center overflow-visible bg-transparent p-0">
               {aboutImage ? (
                 <Image
                   src={aboutImage}
