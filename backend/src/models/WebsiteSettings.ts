@@ -317,34 +317,34 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
         background: "slate",
       },
 
-      latestUpdates: {
+      officeBearers: {
         enabled: true,
         order: 4,
         background: "white",
       },
 
-      gallery: {
+      latestUpdates: {
         enabled: true,
         order: 5,
-        background: "slate",
+        background: "white",
       },
 
       pressConferences: {
         enabled: true,
         order: 6,
+        background: "slate",
+      },
+
+      gallery: {
+        enabled: true,
+        order: 7,
         background: "white",
       },
 
       members: {
         enabled: true,
-        order: 7,
-        background: "slate",
-      },
-
-      officeBearers: {
-        enabled: true,
         order: 8,
-        background: "white",
+        background: "slate",
       },
 
       membership: {
@@ -379,7 +379,7 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
             "Press Releases",
 
           href:
-            "/press-releases",
+            "/latest-updates?tab=press-releases",
         },
 
         {
@@ -387,7 +387,7 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
             "Press Conferences",
 
           href:
-            "/press-conference",
+            "/latest-updates?tab=press-conferences",
         },
 
         {
@@ -560,19 +560,19 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
 
     pressConferences: {
       eyebrow:
-        "Media & Journalism",
+        "What's Coming Up",
 
       title:
-        "Latest Press Conference",
+        "Upcoming Events & Activities",
 
       description:
-        "The latest media interaction and official briefing from Greater Noida Press Club.",
+        "Discover upcoming workshops, meetings, seminars and activities organised by Greater Noida Press Club.",
 
       buttonLabel:
-        "View All",
+        "View All Events",
 
       buttonHref:
-        "/press-conference",
+        "/events",
 
       displayCount:
         3,
