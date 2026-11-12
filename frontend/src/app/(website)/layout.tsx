@@ -8,6 +8,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingContactButton from "@/components/layout/FloatingContactButton";
 import { apiFetch } from "@/services/api";
+import { WebsiteThemeProvider } from "@/context/WebsiteThemeContext";
 
 interface WebsiteLayoutProps {
   children: React.ReactNode;
@@ -90,7 +91,8 @@ export default function WebsiteLayout({
   }, []);
 
   return (
-    <div className="gnpc-public min-h-screen bg-white text-slate-900">
+    <WebsiteThemeProvider>
+    <div className="min-h-screen bg-white text-slate-900">
       {/* =====================================================
           FIXED GLOBAL WEBSITE HEADER
 
@@ -146,5 +148,6 @@ export default function WebsiteLayout({
         <FloatingContactButton />
       )}
     </div>
+    </WebsiteThemeProvider>
   );
 }
