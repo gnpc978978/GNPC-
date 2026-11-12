@@ -207,7 +207,7 @@ export default function AnalyticsTracker() {
               sendEvent("section_view", sectionName);
             }
           });
-        }, { threshold: 0.35 })
+        }, { threshold: 0.1 })
       : null;
 
     if (sectionObserver) {
