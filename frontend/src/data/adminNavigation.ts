@@ -29,7 +29,7 @@ export const adminNavigation: AdminNavItem[] = [
   },
 
   {
-    name: "Latest Updates",
+    name: "Newsroom",
     icon: Newspaper,
     children: [
       {
@@ -38,22 +38,22 @@ export const adminNavigation: AdminNavItem[] = [
         href: "/admin/press-releases",
       },
       {
+        name: "Press Conferences",
+        icon: Presentation,
+        href: "/admin/press-conferences",
+      },
+      {
         name: "Announcements",
         icon: Megaphone,
         href: "/admin/announcements",
-      },
-      {
-        name: "Events",
-        icon: CalendarDays,
-        href: "/admin/events",
       },
     ],
   },
 
   {
-    name: "Press Conferences",
-    icon: Presentation,
-    href: "/admin/press-conferences",
+    name: "Events & Activities",
+    icon: CalendarDays,
+    href: "/admin/events",
   },
 
   {
