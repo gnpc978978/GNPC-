@@ -3,9 +3,9 @@ import mongoose, { Schema } from "mongoose";
 const analyticsSessionSchema = new Schema(
   {
     sessionKey: { type: String, required: true, unique: true },
-    visitorKey: { type: String, required: true, index: true },
-    firstSeenAt: { type: Date, required: true, index: true },
-    lastSeenAt: { type: Date, required: true, index: true },
+    visitorKey: { type: String, required: true },
+    firstSeenAt: { type: Date, required: true },
+    lastSeenAt: { type: Date, required: true },
     entryPath: { type: String, required: true, maxlength: 200 },
     currentPath: { type: String, required: true, maxlength: 200 },
     referrerSource: { type: String, default: "Direct", maxlength: 120 },
