@@ -64,29 +64,11 @@ export default function Hero() {
           BACKGROUND
           ===================================================== */}
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <div className="absolute -left-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-[#d4b06a]/10 blur-3xl" />
-
-        <div className="absolute -bottom-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-[#2f789d]/20 blur-3xl" />
-
-        <div
-          className="absolute inset-0 opacity-[0.16]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-        />
-      </div>
-
       {/* =====================================================
           HERO CONTENT
           ===================================================== */}
 
-      <div className="gnpc-container relative pb-8 pt-10 sm:pb-10 sm:pt-14 lg:pb-12 lg:pt-16">
+      <div className="gnpc-container relative pb-6 pt-8 sm:pb-7 sm:pt-10 lg:pb-8 lg:pt-12">
         <motion.div
           initial={{
             opacity: 0,
@@ -100,7 +82,7 @@ export default function Hero() {
             duration: 0.8,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="mx-auto max-w-[950px] text-center"
+          className="mx-auto max-w-[1040px] text-center"
         >
           {/* Eyebrow */}
 
@@ -135,7 +117,7 @@ export default function Hero() {
               delay: 0.15,
               duration: 0.5,
             }}
-            className="gnpc-hero-pill mx-auto mt-5 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px]"
+            className="gnpc-hero-pill mx-auto mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:text-[10px]"
           >
             <span className="gnpc-hero-icon flex h-5 w-5 items-center justify-center rounded-full">
               <Newspaper size={10} />
@@ -148,7 +130,7 @@ export default function Hero() {
 
           <h1
             id="gnpc-hero-title"
-            className="gnpc-hero-copy mx-auto mt-6 max-w-[900px] text-[2.6rem] font-black leading-[1.02] tracking-[-0.045em] text-white sm:text-5xl md:text-6xl lg:text-[4.5rem]"
+            className="gnpc-hero-copy mx-auto mt-4 max-w-[1000px] text-[clamp(2rem,4.6vw,4rem)] font-black leading-[1.04] tracking-[-0.04em] text-white"
           >
             {heroTitle}
           </h1>
@@ -167,23 +149,23 @@ export default function Hero() {
               duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mx-auto mt-5 h-1 rounded-full bg-[#d4b06a]"
+            className="mx-auto mt-3 h-[3px] rounded-full bg-[#d4b06a]"
           />
 
           {/* Description */}
 
           {heroDescription && (
-            <p className="gnpc-hero-muted mx-auto mt-5 max-w-[650px] text-sm leading-6 sm:text-base sm:leading-7">
+            <p className="gnpc-hero-muted mx-auto mt-3 max-w-[700px] text-sm leading-6 sm:text-[15px] sm:leading-6">
               {heroDescription}
             </p>
           )}
 
           {/* Buttons */}
 
-          <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
             <MembershipFormLink
-              className="gnpc-btn gnpc-btn-md gnpc-btn-primary group flex-1"
-              unavailableClassName="gnpc-btn gnpc-btn-md inline-flex flex-1 items-center justify-center border border-slate-300 bg-slate-100 text-slate-500"
+              className="w-auto !px-4 sm:!px-5"
+              unavailableClassName="!px-4 sm:!px-5"
             >
               {primaryLabel}
               <ArrowRight size={16} />
@@ -193,7 +175,7 @@ export default function Hero() {
               href={home.hero.quickLinks[0]?.href || "/latest-updates"}
               variant="outline"
               size="md"
-              className="flex-1"
+              className="shrink-0 !px-4 sm:!px-5"
             >
               <span>{secondaryLabel}</span>
               <ArrowRight size={16} />
@@ -221,7 +203,7 @@ export default function Hero() {
             duration: 1,
             ease: [0.22, 1, 0.36, 1],
           }}
-            className="relative mx-auto mt-8 w-full max-w-[1240px] sm:mt-10 lg:mt-12"
+            className="relative mx-auto mt-6 w-full max-w-[1100px] sm:mt-7 lg:mt-8"
         >
           <HeroCarousel
             fallbackImage={heroImage}
@@ -247,7 +229,7 @@ export default function Hero() {
               delay: 0.7,
               duration: 0.6,
             }}
-            className="gnpc-hero-links mx-auto mt-7 flex max-w-[850px] flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t pt-5"
+            className="gnpc-hero-links mx-auto mt-5 flex max-w-[850px] flex-wrap items-center justify-center gap-x-5 gap-y-2.5 border-t pt-4"
           >
             {home.hero.quickLinks.map(
               (item, index) => (
@@ -283,7 +265,7 @@ export default function Hero() {
 
       <div
         aria-hidden="true"
-        className="h-5 bg-transparent"
+        className="h-2 bg-transparent"
       />
     </section>
   );
