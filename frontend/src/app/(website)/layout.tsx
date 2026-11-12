@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import TopBar from "@/components/layout/TopBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingContactButton from "@/components/layout/FloatingContactButton";
-import { apiFetch } from "@/services/api";
+import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
 import { WebsiteThemeProvider } from "@/context/WebsiteThemeContext";
 
 interface WebsiteLayoutProps {
@@ -23,76 +22,11 @@ export default function WebsiteLayout({
     pathname === "/contact" ||
     pathname.startsWith("/contact/");
 
-  /*
-   * =========================================================
-   * WEBSITE TRAFFIC TRACKING
-   * =========================================================
-   */
-
-  useEffect(() => {
-    let sessionId =
-      localStorage.getItem(
-        "gnpc_traffic_session"
-      );
-
-    if (!sessionId) {
-      sessionId =
-        typeof crypto !== "undefined" &&
-        typeof crypto.randomUUID ===
-          "function"
-          ? crypto.randomUUID()
-          : `${Date.now()}-${Math.random()
-              .toString(36)
-              .substring(2)}`;
-
-      localStorage.setItem(
-        "gnpc_traffic_session",
-        sessionId
-      );
-    }
-
-    const sendHeartbeat = async () => {
-      try {
-        await apiFetch(
-          "/dashboard/traffic",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              sessionId,
-              page:
-                window.location.pathname,
-            }),
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Traffic heartbeat error:",
-          error
-        );
-      }
-    };
-
-    void sendHeartbeat();
-
-    const interval =
-      window.setInterval(
-        sendHeartbeat,
-        30_000
-      );
-
-    return () => {
-      window.clearInterval(interval);
-    };
-  }, []);
 
   return (
     <WebsiteThemeProvider>
     <div className="min-h-screen">
+      <AnalyticsTracker />
       {/* =====================================================
           FIXED GLOBAL WEBSITE HEADER
 
