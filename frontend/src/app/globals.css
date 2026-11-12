@@ -111,6 +111,28 @@ button {
   color: var(--gnpc-ink) !important;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* CONSISTENT SECTION RHYTHM — HOME, ABOUT & CONTACT                          */
+/* -------------------------------------------------------------------------- */
+
+/* The homepage previously stacked 64–112px of bottom padding from one
+   section with another 40–112px at the top of the next section. Keep a
+   deliberate but compact 36–48px rhythm instead. */
+.gnpc-home-content > section,
+.gnpc-home-content > main > section,
+.gnpc-section-shell > section#membership {
+  padding-block: clamp(2.25rem, 3vw, 3rem) !important;
+}
+
+/* About and Contact use standalone sections rather than the homepage
+   section wrapper. Tighten their vertical rhythm without shrinking the
+   dark PageHero at the top of either page. */
+.gnpc-page-about > section:not([aria-labelledby="page-hero-title"]),
+.gnpc-page-contact > section:not([aria-labelledby="page-hero-title"]) {
+  padding-block: clamp(2.25rem, 3vw, 3rem) !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /* HERO                                                                      */
 /* -------------------------------------------------------------------------- */
