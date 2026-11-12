@@ -78,23 +78,41 @@ button {
 }
 
 .gnpc-container {
-  width: min(100% - 2rem, 1240px);
+  width: min(calc(100% - 2rem), 1840px);
+  max-width: 1840px;
   margin-inline: auto;
 }
 
 @media (min-width: 640px) {
   .gnpc-container {
-    width: min(100% - 3rem, 1240px);
+    width: min(calc(100% - 3rem), 1840px);
   }
 }
 
 @media (min-width: 1024px) {
   .gnpc-container {
-    width: min(100% - 5rem, 1240px);
+    width: min(96vw, 1840px);
   }
 }
 
-/* Cool neutral replacements for legacy public-page backgrounds. */
+/* -------------------------------------------------------------------------- */
+/* FLUID PUBLIC PAGE WIDTHS                                                   */
+/* -------------------------------------------------------------------------- */
+
+/* Let wide screens use the available canvas instead of stopping at legacy
+   1152–1280px utility widths. Scoped to the public website and desktop only,
+   so mobile/tablet retain their normal readable gutters and stacking. */
+@media (min-width: 1280px) {
+  .gnpc-public [class~="max-w-7xl"],
+  .gnpc-public [class~="max-w-6xl"],
+  .gnpc-public [class~="max-w-[1280px]"] {
+    max-width: min(96vw, 1840px) !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* COOL NEUTRAL REPLACEMENTS FOR LEGACY PUBLIC-PAGE BACKGROUNDS. */
+
 .gnpc-public .bg-\[\#f4f7fb\] {
   background-color: var(--gnpc-surface) !important;
 }
@@ -455,6 +473,8 @@ button {
 }
 
 .gnpc-nav-frame {
+  width: 100%;
+  max-width: none;
   background: var(--gnpc-navy);
 }
 
