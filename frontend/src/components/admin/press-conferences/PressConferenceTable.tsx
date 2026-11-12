@@ -31,6 +31,9 @@ export default function PressConferenceTable({
             <th className="px-4 py-3 text-left">
               Date
             </th>
+            <th className="px-4 py-3 text-left">
+              Status
+            </th>
 
             <th className="px-4 py-3 text-left">
               Image
@@ -67,7 +70,12 @@ export default function PressConferenceTable({
 
 
                 <td className="px-4 py-3">
-                  {conference.date}
+                  {new Date(conference.date).toLocaleDateString("en-IN")}
+                </td>
+                <td className="px-4 py-3">
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${conference.status === "DRAFT" ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>
+                    {conference.status || "PUBLISHED"}
+                  </span>
                 </td>
 
 
@@ -123,7 +131,7 @@ export default function PressConferenceTable({
 
             <tr>
               <td
-                colSpan={6}
+                colSpan={7}
                 className="px-4 py-10 text-center text-gray-500"
               >
                 No Press Conferences Found
