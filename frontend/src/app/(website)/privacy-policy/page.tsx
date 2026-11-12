@@ -58,7 +58,7 @@ export default function PrivacyPolicyPage() {
               </h2>
 
               <p className="mt-3">
-                The website may use infrastructure or service providers for hosting, media storage, analytics, communication, or other technical functions. Such services may process information only as necessary to provide their functions.
+                The website may use infrastructure or service providers for hosting, media storage, communication, or other technical functions. Such services may process information only as necessary to provide their functions.
               </p>
             </section>
 
