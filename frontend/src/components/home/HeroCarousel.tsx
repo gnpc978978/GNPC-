@@ -474,12 +474,12 @@ export default function HeroCarousel({
 
   if (loading) {
     return (
-      <div className="relative mx-auto h-[250px] w-full max-w-[1080px] sm:h-[285px] md:h-[300px] lg:h-[310px]">
+      <div className="relative mx-auto h-[220px] w-full max-w-[1080px] sm:h-[285px] md:h-[300px] lg:h-[300px]">
         <div className="absolute left-1/2 top-1/2 aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)] -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-[1.25rem] bg-black/5" />
 
-        <div className="absolute left-[18%] top-1/2 hidden aspect-video w-[min(78vw,480px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
+        <div className="absolute left-[18%] top-1/2 hidden aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
 
-        <div className="absolute right-[18%] top-1/2 hidden aspect-video w-[min(78vw,480px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
+        <div className="absolute right-[18%] top-1/2 hidden aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
       </div>
     );
   }
@@ -571,6 +571,9 @@ export default function HeroCarousel({
 
   return (
     <div
+      role="region"
+      aria-label="GNPC hero image carousel"
+      aria-roledescription="carousel"
       className="relative mx-auto w-full max-w-[1080px]"
       onMouseEnter={() =>
         setIsPaused(true)
@@ -587,12 +590,12 @@ export default function HeroCarousel({
           PHOTO STAGE
           ====================================================== */}
 
-      <div className="relative h-[220px] w-full overflow-hidden sm:h-[285px] md:h-[300px] lg:h-[310px] lg:overflow-visible">
+      <div className="relative h-[220px] w-full overflow-hidden sm:h-[285px] md:h-[300px] lg:h-[300px] lg:overflow-visible">
         {/* Ground shadow */}
 
         <div
           aria-hidden="true"
-          className="absolute bottom-6 left-1/2 h-10 w-[58%] -translate-x-1/2 rounded-[50%] bg-black/10 blur-2xl sm:bottom-8"
+          className="absolute bottom-5 left-1/2 h-7 w-[48%] -translate-x-1/2 rounded-[50%] bg-black/15 blur-xl sm:bottom-6"
         />
 
         {/* Photos */}
@@ -641,7 +644,7 @@ export default function HeroCarousel({
                     "aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)]",
                     "-translate-x-1/2 -translate-y-1/2",
                     "overflow-hidden rounded-[1.2rem] sm:rounded-[1.35rem]",
-                    "border-[6px] border-white",
+                    "border-[5px] border-white/95 sm:border-[6px]",
                     "bg-white",
                     "shadow-[0_20px_48px_rgba(0,0,0,0.20)]",
                     "sm:rounded-[1.4rem] lg:rounded-[1.5rem]",
@@ -677,7 +680,7 @@ export default function HeroCarousel({
                       isCenter ||
                       index < 3
                     }
-                    sizes="335px"
+                    sizes="(max-width: 640px) 86vw, (max-width: 1024px) 56vw, 420px"
                     className="object-cover"
                   />
 
@@ -740,7 +743,7 @@ export default function HeroCarousel({
             type="button"
             onClick={previous}
             aria-label="Previous hero photo"
-            className="absolute left-2 top-1/2 z-40 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/85 text-black shadow-lg backdrop-blur-md transition duration-300 hover:-translate-y-1/2 hover:bg-white sm:left-5 sm:h-12 sm:w-12 lg:-left-5"
+            className="absolute left-1 top-1/2 z-40 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/90 text-[#071a2e] shadow-md transition duration-200 hover:-translate-y-1/2 hover:bg-[#d4b06a] sm:left-2 sm:h-11 sm:w-11 lg:-left-4"
           >
             <ChevronLeft
               size={19}
@@ -757,7 +760,7 @@ export default function HeroCarousel({
             type="button"
             onClick={next}
             aria-label="Next hero photo"
-            className="absolute right-2 top-1/2 z-40 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/85 text-black shadow-lg backdrop-blur-md transition duration-300 hover:-translate-y-1/2 hover:bg-white sm:right-5 sm:h-12 sm:w-12 lg:-right-5"
+            className="absolute right-1 top-1/2 z-40 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/90 text-[#071a2e] shadow-md transition duration-200 hover:-translate-y-1/2 hover:bg-[#d4b06a] sm:right-2 sm:h-11 sm:w-11 lg:-right-4"
           >
             <ChevronRight
               size={19}
