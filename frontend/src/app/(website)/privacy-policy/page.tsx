@@ -64,6 +64,24 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h2 className="text-2xl font-bold text-slate-900">
+                First-party website analytics
+              </h2>
+
+              <p className="mt-3">
+                GNPC operates a first-party analytics system on its own website and backend to understand overall website usage and improve its pages and features. It uses random browser identifiers to distinguish anonymous visitors and sessions, and records page paths, page views, interaction categories and labels, visit times, broad device and browser categories, and the referring website domain. Browser identifiers are kept for up to 400 days and analytics records are automatically removed after their retention period.
+              </p>
+
+              <p className="mt-3">
+                The analytics system does not intentionally collect IP addresses, names, email addresses, phone numbers, account credentials, form field values, or sensitive personal information. URL query strings are not recorded. Visitor identifiers are pseudonymous and may be reset by clearing this website's browser storage or using a different browser or device. Analytics data is used for aggregate reporting, traffic measurement and anonymous session journeys; it is not used to identify individual visitors.
+              </p>
+
+              <p className="mt-3">
+                This website analytics system is operated by GNPC using its own application and database. It does not send website analytics events to Google Analytics, Firebase, or external analytics platforms.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-slate-900">
                 Contact
               </h2>
 
