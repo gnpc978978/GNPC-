@@ -374,7 +374,7 @@ export default function AnalyticsPage() {
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="font-bold text-slate-900">Popular website sections</h2>
-          <p className="mt-1 text-xs text-slate-500">Page views grouped by top-level route</p>
+          <p className="mt-1 text-xs text-slate-500">Visible in-page sections and top-level routes</p>
           <div className="mt-4 space-y-4">
             {data.sections.length ? data.sections.map((row) => {
               const max = Math.max(1, ...data.sections.map((item) => item.views));
