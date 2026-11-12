@@ -6,7 +6,7 @@ import {
   getPressConferences,
   updatePressConference,
 } from "../controllers/pressConference.controller";
-import authMiddleware from "../middleware/auth.middleware";
+import authMiddleware, { optionalAuthMiddleware } from "../middleware/auth.middleware";
 import { pressConferenceUpload } from "../middleware/upload.middleware";
 
 const router = Router();
@@ -15,8 +15,8 @@ const uploadFields = pressConferenceUpload.fields([
   { name: "pdfFile", maxCount: 1 },
 ]);
 
-router.get("/", getPressConferences);
-router.get("/:id", getPressConference);
+router.get("/", optionalAuthMiddleware, getPressConferences);
+router.get("/:id", optionalAuthMiddleware, getPressConference);
 router.post("/", authMiddleware, uploadFields, createPressConference);
 router.put("/:id", authMiddleware, uploadFields, updatePressConference);
 router.delete("/:id", authMiddleware, deletePressConference);
