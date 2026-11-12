@@ -244,49 +244,15 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Developer Credits */}
-          <div className="flex flex-wrap items-center gap-1">
-
-            <span>
-              Designed & Developed by
-            </span>
-
-            <a
-              href="https://www.linkedin.com/in/itxayushrajput"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-[#c9a45c] transition hover:text-white"
-            >
-              Ayush
-            </a>
-
-            <span>&</span>
-
-            <a
-              href="https://www.linkedin.com/in/shreyansh-mishra-66615437b"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-[#c9a45c] transition hover:text-white"
-            >
-              Shreyansh
-            </a>
-
-          </div>
-
-          {/* Maintenance */}
-          <div className="flex flex-wrap items-center gap-1">
-
-            <span>
-             Website Maintained by
-            </span>
-
+          {/* Creator Credits */}
+          <div className="flex flex-wrap items-center">
             <Link
               href="/credits"
-              className="font-medium text-[#c9a45c] transition hover:text-white"
+              className="inline-flex max-w-full items-center justify-center gap-2 rounded-lg border border-[#c9a45c]/45 bg-white/[.04] px-4 py-3 text-center text-xs font-semibold leading-5 text-[#e4c47f] transition-all duration-200 hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#07172b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c9a45c] sm:text-sm"
             >
-              Ayzent Solutions
+              Get to Know the Creators: Ayush &amp; Shreyansh
+              <ArrowUpRight size={15} aria-hidden="true" className="shrink-0" />
             </Link>
-
           </div>
 
         </div>
