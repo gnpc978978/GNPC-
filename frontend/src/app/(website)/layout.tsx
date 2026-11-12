@@ -123,7 +123,7 @@ export default function WebsiteLayout({
 
       <div
         aria-hidden="true"
-        className="h-[108px] sm:h-[118px] lg:h-[120px]"
+        className="h-[70px] sm:h-[118px] lg:h-[120px]"
       />
 
       {/* =====================================================
