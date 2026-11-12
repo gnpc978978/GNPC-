@@ -502,7 +502,7 @@ export default function About() {
             MAIN ABOUT
             =================================================== */}
 
-        <div className="mt-14 grid items-center gap-10 lg:mt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div className="mt-10 grid items-center gap-8 lg:mt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* =================================================
               IMAGE
               ================================================= */}
@@ -774,7 +774,7 @@ export default function About() {
             transition={{
               duration: 0.7,
             }}
-            className="mt-20 sm:mt-24"
+            className="mt-10 sm:mt-12"
           >
             <div className="rounded-[2rem] border border-black/10 bg-white/55 p-3 shadow-[0_20px_60px_rgba(38,32,23,0.08)] backdrop-blur-md sm:p-4">
               <div className="grid grid-cols-3 divide-x divide-black/10">
