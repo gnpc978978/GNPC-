@@ -7,7 +7,7 @@ import Hero from "@/components/home/Hero";
 import LatestUpdates from "@/components/home/LatestUpdates";
 import Objectives from "@/components/home/Objectives";
 import OfficeBearersSection from "@/components/home/OfficeBearersSection";
-import PressConference from "@/components/home/PressConference";
+import UpcomingEvents from "@/components/home/UpcomingEvents";
 import MembersSection from "@/components/website/MembersSection";
 
 import {
@@ -126,7 +126,7 @@ export default function Home() {
             key={key}
             className={wrapperClass}
           >
-            <PressConference />
+            <UpcomingEvents />
           </div>
         );
 
