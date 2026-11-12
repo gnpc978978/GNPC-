@@ -40,23 +40,20 @@ export default function EventsPage() {
         setLoading(true);
         setError(false);
 
-        const response =
-          await apiFetch(
-            "/events"
-          );
+        const response = await apiFetch("/latest-updates", {
+          method: "GET",
+          cache: "no-store",
+        });
 
-        const payload =
-          await responseJson<{
-            success: boolean;
-            data: EventItem[];
-          }>(response);
+        const payload = await responseJson<{
+          success?: boolean;
+          data?: Array<EventItem & { type?: string }>;
+        }>(response);
 
         if (!cancelled) {
           setEvents(
-            Array.isArray(
-              payload.data
-            )
-              ? payload.data
+            Array.isArray(payload.data)
+              ? payload.data.filter((item) => item.type === "Event")
               : []
           );
         }
