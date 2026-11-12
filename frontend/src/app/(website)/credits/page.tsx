@@ -55,9 +55,9 @@ const contributors: Contributor[] = [
 // These contact destinations were not present in the repository. Keep them
 // empty until Ayzent Solutions supplies its official public contact links.
 const ayzentContact = {
-  instagram: "",
-  whatsapp: "",
-  email: "",
+  instagram: "https://www.instagram.com/ayzent.in/",
+  whatsapp: "https://wa.me/919870970278",
+  email: "ayzentsolutions@gmail.com",
 };
 
 const ayzentWebsite = "https://ayzent-solutions.vercel.app";
