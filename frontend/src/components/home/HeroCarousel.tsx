@@ -133,47 +133,6 @@ function getCardAnimation(position: Position) {
   }
 }
 
-function getMobileAnimation(position: Position) {
-  switch (position) {
-    case "center":
-      return {
-        x: 0,
-        y: 0,
-        scale: 1,
-        opacity: 1,
-        zIndex: 30,
-      };
-
-    case "left":
-      return {
-        x: "-78%",
-        y: 12,
-        scale: 0.88,
-        opacity: 0.68,
-        zIndex: 20,
-      };
-
-    case "right":
-      return {
-        x: "78%",
-        y: 12,
-        scale: 0.88,
-        opacity: 0.68,
-        zIndex: 20,
-      };
-
-    case "far-left":
-    case "far-right":
-      return {
-        x: 0,
-        y: 0,
-        scale: 0.8,
-        opacity: 0,
-        zIndex: 0,
-      };
-  }
-}
-
 function createFallbackBanner(
   image: string
 ): Banner {
@@ -657,11 +616,6 @@ export default function HeroCarousel({
 
               const desktopAnimation =
                 getCardAnimation(
-                  position
-                );
-
-              const mobileAnimation =
-                getMobileAnimation(
                   position
                 );
 
