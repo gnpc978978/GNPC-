@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import {
+  Suspense,
   useEffect,
   useMemo,
   useState,
@@ -973,7 +974,7 @@ function UpdatesCalendar({
   );
 }
 
-export default function LatestUpdatesPage() {
+function LatestUpdatesPageContent() {
   const { settings } = useWebsiteSettings();
   const pageSettings = mergePageSettings(
     settings.pageSettings
@@ -1635,5 +1636,32 @@ export default function LatestUpdatesPage() {
       </Container>
       </section>
     </main>
+  );
+}
+
+export default function LatestUpdatesPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="bg-white">
+          <PageHero
+            eyebrow="News & Updates"
+            title="Latest Updates"
+            description="Stay informed with the latest news and activities from Greater Noida Press Club."
+            breadcrumbs={[
+              { label: "Home", href: "/" },
+              { label: "Latest Updates" },
+            ]}
+          />
+          <section className="min-h-screen bg-[#f4f7fb] py-14 sm:py-20">
+            <Container>
+              <Skeletons />
+            </Container>
+          </section>
+        </main>
+      }
+    >
+      <LatestUpdatesPageContent />
+    </Suspense>
   );
 }
