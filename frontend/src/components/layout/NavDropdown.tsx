@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiChevronDown } from "react-icons/hi2";
 
@@ -15,12 +15,11 @@ export default function NavDropdown({
   light?: boolean;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setOpen(false);
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -68,9 +67,7 @@ export default function NavDropdown({
             const [targetPath, targetQuery] = child.href.split("?");
             const activeChild =
               pathname === targetPath &&
-              (!targetQuery ||
-                new URLSearchParams(targetQuery).get("tab") ===
-                  searchParams.get("tab"));
+              !targetQuery;
 
             return (
               <Link
