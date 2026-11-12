@@ -216,9 +216,7 @@ function ContributorCard({ person }: { person: Contributor }) {
         </p>
 
         {person.featured ? (
-          <p className="mt-4 text-[10px] font-medium text-white/65">
           
-          </p>
         ) : null}
       </div>
     </article>
