@@ -278,9 +278,8 @@ function ConferenceListItem({
   const date = item.date || item.createdAt;
 
   return (
-    <motion.article
-      variants={cardVariants}
-      className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md sm:flex-row"
+    <article
+      className="group flex w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md sm:flex-row"
     >
       <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#f7f2e6] sm:h-40 sm:w-56 lg:w-60">
         <ConferenceImage src={item.featuredImage} alt={item.title} />
@@ -321,7 +320,7 @@ function ConferenceListItem({
           <ArrowRight size={15} />
         </Link>
       </div>
-    </motion.article>
+    </article>
   );
 }
 
@@ -803,71 +802,51 @@ export default function PressConferenceList({
 
           {!loading &&
             !error &&
-            items.length >
-              0 && (
+            items.length > 0 &&
+            (latestOnly ? (
               <motion.div
                 initial="hidden"
                 whileInView="visible"
-                viewport={{
-                  once: true,
-                  amount: 0.12,
-                }}
+                viewport={{ once: true, amount: 0.12 }}
                 variants={{
                   hidden: {},
-
                   visible: {
-                    transition: {
-                      staggerChildren:
-                        0.1,
-                    },
+                    transition: { staggerChildren: 0.1 },
                   },
                 }}
-                className={
-                  latestOnly
-                    ? "relative mt-12 grid gap-4 lg:mt-16 lg:grid-cols-[1.3fr_0.7fr]"
-                    : viewMode === "list"
-                      ? "relative mt-8 flex flex-col gap-4 sm:mt-10"
-                      : "relative mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 xl:grid-cols-3"
-                }
+                className="relative mt-12 grid gap-4 lg:mt-16 lg:grid-cols-[1.3fr_0.7fr]"
               >
-                {latestOnly ? (
-                  <>
-                    {items[0] && (
-                      <ConferenceCard item={items[0]} />
-                    )}
-
-                    <div className="grid gap-4">
-                      {items
-                        .slice(
-                          1
-                        )
-                        .map(
-                          (
-                            item
-                          ) => (
-                            <ConferenceCard
-                              key={
-                                item._id
-                              }
-                              item={
-                                item
-                              }
-                            />
-                          )
-                        )}
-                    </div>
-                  </>
-                ) : viewMode === "list" ? (
-                  items.map((item) => (
-                    <ConferenceListItem key={item._id} item={item} />
-                  ))
-                ) : (
-                  items.map((item) => (
+                {items[0] && <ConferenceCard item={items[0]} />}
+                <div className="grid gap-4">
+                  {items.slice(1).map((item) => (
                     <ConferenceCard key={item._id} item={item} />
-                  ))
-                )}
+                  ))}
+                </div>
               </motion.div>
-            )}
+            ) : viewMode === "list" ? (
+              <div className="relative mt-8 flex w-full flex-col gap-4 sm:mt-10">
+                {items.map((item) => (
+                  <ConferenceListItem key={item._id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.12 }}
+                variants={{
+                  hidden: {},
+                  visible: {
+                    transition: { staggerChildren: 0.1 },
+                  },
+                }}
+                className="relative mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 xl:grid-cols-3"
+              >
+                {items.map((item) => (
+                  <ConferenceCard key={item._id} item={item} />
+                ))}
+              </motion.div>
+            ))}
 
           {/* =================================================
               BOTTOM CMS CTA
