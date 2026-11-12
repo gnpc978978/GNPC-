@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { createHash, randomUUID } from "crypto";
 import AnalyticsEvent from "../models/analyticsEvent.model";
 import AnalyticsSession from "../models/analyticsSession.model";
+import AnalyticsVisitor from "../models/analyticsVisitor.model";
 
 const RETENTION_DAYS = 400;
 const ACTIVE_WINDOW_MS = 90_000;
@@ -99,25 +100,35 @@ const upsertSession = async (
 ) => {
   const context = getClientContext(req);
   const referrerSource = getReferrerSource(req.body?.referrer, String(req.headers.origin || ""));
-  await AnalyticsSession.findOneAndUpdate(
-    { sessionKey: identity.sessionKey },
-    {
-      $set: {
-        lastSeenAt: now,
-        currentPath: path,
-        deviceType: context.deviceType,
-        browser: context.browser,
+  await Promise.all([
+    AnalyticsSession.findOneAndUpdate(
+      { sessionKey: identity.sessionKey },
+      {
+        $set: {
+          lastSeenAt: now,
+          currentPath: path,
+          deviceType: context.deviceType,
+          browser: context.browser,
+        },
+        $setOnInsert: {
+          visitorKey: identity.visitorKey,
+          firstSeenAt: now,
+          entryPath: path,
+          referrerSource,
+          retentionAt: retentionDate(now),
+        },
       },
-      $setOnInsert: {
-        visitorKey: identity.visitorKey,
-        firstSeenAt: now,
-        entryPath: path,
-        referrerSource,
-        retentionAt: retentionDate(now),
+      { upsert: true, setDefaultsOnInsert: true }
+    ),
+    AnalyticsVisitor.findOneAndUpdate(
+      { visitorKey: identity.visitorKey },
+      {
+        $set: { lastSeenAt: now, retentionAt: retentionDate(now) },
+        $setOnInsert: { firstSeenAt: now },
       },
-    },
-    { upsert: true, setDefaultsOnInsert: true }
-  );
+      { upsert: true, setDefaultsOnInsert: true }
+    ),
+  ]);
   return { ...context, referrerSource };
 };
 
@@ -198,7 +209,8 @@ const parseRange = (req: Request) => {
   endOfToday.setUTCHours(0, 0, 0, 0);
   endOfToday.setUTCDate(endOfToday.getUTCDate() + 1);
 
-  const to = toValue ? new Date(`${toValue}T00:00:00.000Z`) : endOfToday;
+  const toDate = toValue ? new Date(`${toValue}T00:00:00.000Z`) : endOfToday;
+  const to = toValue ? new Date(toDate.getTime() + 24 * 60 * 60 * 1000) : endOfToday;
   const from = fromValue
     ? new Date(`${fromValue}T00:00:00.000Z`)
     : new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -236,6 +248,8 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
     const [
       totals,
       trend,
+      weeklyTrend,
+      monthlyTrend,
       pages,
       sections,
       features,
@@ -260,6 +274,18 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         { $match: pageViewMatch },
         { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "Asia/Kolkata" } }, pageViews: { $sum: 1 }, visitors: { $addToSet: "$visitorKey" } } },
         { $project: { date: "$_id", _id: 0, pageViews: 1, uniqueVisitors: { $size: "$visitors" } } },
+        { $sort: { date: 1 } },
+      ]),
+      AnalyticsEvent.aggregate([
+        { $match: pageViewMatch },
+        { $group: { _id: { $dateTrunc: { date: "$createdAt", unit: "week", startOfWeek: "monday", timezone: "Asia/Kolkata" } }, pageViews: { $sum: 1 }, visitors: { $addToSet: "$visitorKey" } } },
+        { $project: { date: { $dateToString: { format: "%Y-%m-%d", date: "$_id", timezone: "Asia/Kolkata" } }, _id: 0, pageViews: 1, uniqueVisitors: { $size: "$visitors" } } },
+        { $sort: { date: 1 } },
+      ]),
+      AnalyticsEvent.aggregate([
+        { $match: pageViewMatch },
+        { $group: { _id: { $dateTrunc: { date: "$createdAt", unit: "month", timezone: "Asia/Kolkata" } }, pageViews: { $sum: 1 }, visitors: { $addToSet: "$visitorKey" } } },
+        { $project: { date: { $dateToString: { format: "%Y-%m", date: "$_id", timezone: "Asia/Kolkata" } }, _id: 0, pageViews: 1, uniqueVisitors: { $size: "$visitors" } } },
         { $sort: { date: 1 } },
       ]),
       AnalyticsEvent.aggregate([
@@ -307,13 +333,12 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
         { $project: { name: "$_id", _id: 0, count: "$sessions" } },
         { $sort: { count: -1 } },
       ]),
-      AnalyticsSession.aggregate([
-        { $group: { _id: "$visitorKey", firstSeen: { $min: "$firstSeenAt" }, visitsInRange: { $sum: { $cond: [{ $and: [{ $gte: ["$firstSeenAt", from] }, { $lt: ["$firstSeenAt", to] }] }, 1, 0] } } } },
-        { $match: { visitsInRange: { $gt: 0 } } },
-        { $group: { _id: null, newVisitors: { $sum: { $cond: [{ $gte: ["$firstSeen", from] }, 1, 0] } }, returningVisitors: { $sum: { $cond: [{ $lt: ["$firstSeen", from] }, 1, 0] } } } },
+      AnalyticsVisitor.aggregate([
+        { $match: { lastSeenAt: { $gte: from, $lt: to } } },
+        { $group: { _id: null, newVisitors: { $sum: { $cond: [{ $gte: ["$firstSeenAt", from] }, 1, 0] } }, returningVisitors: { $sum: { $cond: [{ $lt: ["$firstSeenAt", from] }, 1, 0] } } } },
       ]),
       AnalyticsSession.countDocuments({ firstSeenAt: { $gte: from, $lt: to } }),
-      AnalyticsSession.distinct("visitorKey", { lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } }).then((items: string[]) => items.length),
+      AnalyticsVisitor.countDocuments({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } }),
       AnalyticsSession.find({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } })
         .sort({ lastSeenAt: -1 }).limit(12).select("sessionKey entryPath currentPath firstSeenAt lastSeenAt deviceType referrerSource").lean(),
       AnalyticsEvent.find({ createdAt: { $gte: from, $lt: to } })
@@ -362,6 +387,8 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
           pageViewChange: percentChange(pageViews, previousTotals),
         },
         trend,
+        weeklyTrend,
+        monthlyTrend,
         pages,
         sections,
         features,
