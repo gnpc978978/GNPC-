@@ -81,7 +81,7 @@ export default function CreditsPage() {
         <p className="mt-8 border-t border-[#e9e5dd] pt-5 text-xs leading-6 text-[#858b91] sm:mt-9 sm:text-sm">
           Website developed in collaboration with{" "}
           <a
-            href="https://www.linkedin.com/in/ayzent-solutions-983a86432"
+            href="http://ayzent-solutions.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-[#947747] transition-colors hover:text-[#172333] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b99a60]"
