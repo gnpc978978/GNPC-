@@ -122,7 +122,7 @@ button {
 .gnpc-home-content > section,
 .gnpc-home-content > main > section,
 .gnpc-section-shell > section#membership {
-  padding-block: clamp(2.25rem, 3vw, 3rem) !important;
+  padding-block: clamp(1.75rem, 2.5vw, 2.5rem) !important;
 }
 
 /* About and Contact use standalone sections rather than the homepage
@@ -130,7 +130,12 @@ button {
    dark PageHero at the top of either page. */
 .gnpc-page-about > section:not([aria-labelledby="page-hero-title"]),
 .gnpc-page-contact > section:not([aria-labelledby="page-hero-title"]) {
-  padding-block: clamp(2.25rem, 3vw, 3rem) !important;
+  padding-block: clamp(1.75rem, 2.5vw, 2.5rem) !important;
+}
+
+.gnpc-page-about > section:last-of-type,
+.gnpc-page-contact > section:last-of-type {
+  padding-top: 1rem !important;
 }
 
 /* -------------------------------------------------------------------------- */
