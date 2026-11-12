@@ -58,7 +58,13 @@ export const getLatestUpdates = async (
                 })
                 .lean(),
 
-            PressConference.find()
+            PressConference.find({
+                isActive: { $ne: false },
+                $or: [
+                    { status: "PUBLISHED" },
+                    { status: { $exists: false } },
+                ],
+            })
                 .sort({
                     date: -1,
                     createdAt: -1,
