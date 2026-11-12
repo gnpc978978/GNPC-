@@ -774,3 +774,22 @@ button {
   color: inherit;
 }
 
+
+
+/* -------------------------------------------------------------------------- */
+/* CREDITS PAGE — FIXED DARK BRAND SURFACE AND ACCESSIBLE CONTRAST             */
+/* -------------------------------------------------------------------------- */
+
+/* The public layout gives every main element a theme surface. Credits is an
+   intentionally dark editorial page in BOTH site themes, so preserve its
+   navy canvas and white foreground rather than inheriting a light surface. */
+.gnpc-public main.gnpc-credits-page {
+  background: #071629 !important;
+  color: #f8fafc !important;
+}
+
+/* Keep dark navy text on the gold Ayzent button. This is deliberately scoped
+   to this action so the global dark-mode text-contrast rules cannot invert it. */
+.gnpc-public main.gnpc-credits-page .credits-primary-action {
+  color: #0b1f3a !important;
+}
