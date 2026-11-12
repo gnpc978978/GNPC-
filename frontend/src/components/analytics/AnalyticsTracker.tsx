@@ -127,7 +127,7 @@ export default function AnalyticsTracker() {
       const label =
         element.dataset.analyticsLabel ||
         element.getAttribute("aria-label") ||
-        element.textContent?.replace(/\\s+/g, " ").trim() ||
+        element.textContent?.replace(/\s+/g, " ").trim() ||
         "";
 
       let eventType: AnalyticsEventType = "button_click";
@@ -137,7 +137,7 @@ export default function AnalyticsTracker() {
         eventType = "registration";
       } else if (element instanceof HTMLAnchorElement) {
         const href = element.getAttribute("href") || "";
-        eventType = element.hasAttribute("download") || /\\.(pdf|zip|docx?|xlsx?|pptx?)(?:$|[?#])/i.test(href)
+        eventType = element.hasAttribute("download") || /\.(pdf|zip|docx?|xlsx?|pptx?)(?:$|[?#])/i.test(href)
           ? "download"
           : "link_click";
       } else if (explicit === "feature") {
