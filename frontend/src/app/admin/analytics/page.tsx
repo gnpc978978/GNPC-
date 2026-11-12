@@ -32,7 +32,7 @@ import { authenticatedApiFetch, responseJson } from "@/services/api";
 
 type TrendPoint = { date: string; pageViews: number; uniqueVisitors: number };
 type Breakdown = { name: string; count: number };
-type PageRow = { path: string; pageViews: number; uniqueVisitors: number };
+type PageRow = { path: string; pageViews: number; uniqueVisitors: number; averageTimeSeconds: number };
 type FeatureRow = { type: string; label: string; count: number };
 type Journey = {
   session: string;
@@ -54,8 +54,8 @@ type AnalyticsData = {
     averageTimeSeconds: number;
     newVisitors: number;
     returningVisitors: number;
-    visitorChange: number;
-    pageViewChange: number;
+    visitorChange: number | null;
+    pageViewChange: number | null;
   };
   trend: TrendPoint[];
   weeklyTrend: TrendPoint[];
@@ -102,7 +102,7 @@ function StatCard({
   value: string;
   detail: string;
   icon: LucideIcon;
-  change?: number;
+  change?: number | null;
   live?: boolean;
 }) {
   return (
@@ -116,7 +116,7 @@ function StatCard({
       </div>
       <div className="mt-3 flex min-h-5 items-center gap-2 text-xs text-slate-500">
         {live ? <><span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" /> Live · updates every 20 seconds</> : detail}
-        {change !== undefined && (
+        {change !== undefined && change !== null && (
           <span className={`ml-auto inline-flex items-center gap-1 font-semibold ${change >= 0 ? "text-emerald-700" : "text-rose-600"}`}>
             {change >= 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
             {Math.abs(change)}% vs previous period
@@ -230,8 +230,8 @@ export default function AnalyticsPage() {
       ...data.trend.map((item) => [item.date, item.uniqueVisitors, item.pageViews]),
       [],
       ["Top pages"],
-      ["Page", "Unique visitors", "Page views"],
-      ...data.pages.map((item) => [item.path, item.uniqueVisitors, item.pageViews]),
+      ["Page", "Unique visitors", "Page views", "Average time (seconds)"],
+      ...data.pages.map((item) => [item.path, item.uniqueVisitors, item.pageViews, item.averageTimeSeconds]),
       [],
       ["Feature engagement"],
       ["Event", "Feature", "Count"],
@@ -363,10 +363,10 @@ export default function AnalyticsPage() {
           <p className="mt-1 text-xs text-slate-500">Ranked by recorded page views</p>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[420px] text-left text-sm">
-              <thead className="border-b border-slate-100 text-xs uppercase tracking-wide text-slate-400"><tr><th className="pb-3 font-semibold">Page</th><th className="pb-3 text-right font-semibold">Visitors</th><th className="pb-3 text-right font-semibold">Views</th></tr></thead>
+              <thead className="border-b border-slate-100 text-xs uppercase tracking-wide text-slate-400"><tr><th className="pb-3 font-semibold">Page</th><th className="pb-3 text-right font-semibold">Visitors</th><th className="pb-3 text-right font-semibold">Views</th><th className="pb-3 text-right font-semibold">Avg. time</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
-                {data.pages.map((row) => <tr key={row.path}><td className="max-w-[220px] truncate py-3 font-medium text-slate-700">{row.path}</td><td className="py-3 text-right tabular-nums text-slate-600">{number(row.uniqueVisitors)}</td><td className="py-3 text-right font-semibold tabular-nums text-slate-900">{number(row.pageViews)}</td></tr>)}
-                {!data.pages.length && <tr><td colSpan={3} className="py-8 text-center text-slate-400">No page views yet.</td></tr>}
+                {data.pages.map((row) => <tr key={row.path}><td className="max-w-[220px] truncate py-3 font-medium text-slate-700">{row.path}</td><td className="py-3 text-right tabular-nums text-slate-600">{number(row.uniqueVisitors)}</td><td className="py-3 text-right font-semibold tabular-nums text-slate-900">{number(row.pageViews)}</td><td className="py-3 text-right tabular-nums text-slate-600">{duration(row.averageTimeSeconds)}</td></tr>)}
+                {!data.pages.length && <tr><td colSpan={4} className="py-8 text-center text-slate-400">No page views yet.</td></tr>}
               </tbody>
             </table>
           </div>
