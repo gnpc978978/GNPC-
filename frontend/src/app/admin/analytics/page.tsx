@@ -57,6 +57,8 @@ type AnalyticsData = {
     pageViewChange: number;
   };
   trend: TrendPoint[];
+  weeklyTrend: TrendPoint[];
+  monthlyTrend: TrendPoint[];
   pages: PageRow[];
   sections: { section: string; views: number }[];
   features: FeatureRow[];
@@ -86,30 +88,6 @@ const csvCell = (value: unknown) => {
   return `"${text.replace(/"/g, '""')}"`;
 };
 
-function groupTrend(data: TrendPoint[], mode: "daily" | "weekly" | "monthly") {
-  if (mode === "daily") return data.map((item) => ({ ...item, label: item.date.slice(5) }));
-  const groups = new Map<string, { label: string; pageViews: number; visitors: Set<string> }>();
-  data.forEach((item) => {
-    const date = new Date(`${item.date}T00:00:00`);
-    let label = item.date.slice(0, 7);
-    if (mode === "weekly") {
-      const day = (date.getDay() + 6) % 7;
-      date.setDate(date.getDate() - day);
-      label = dateString(date).slice(5);
-    }
-    const group = groups.get(label) || { label, pageViews: 0, visitors: new Set<string>() };
-    group.pageViews += item.pageViews;
-    // The API reports daily unique visitors. Weekly/monthly trend sums are a
-    // daily reach indicator, not cross-day deduplicated people.
-    group.visitors.add(`${item.date}:${item.uniqueVisitors}`);
-    groups.set(label, group);
-  });
-  return Array.from(groups.values()).map((group) => ({
-    label: group.label,
-    pageViews: group.pageViews,
-    uniqueVisitors: Array.from(group.visitors).reduce((sum, key) => sum + Number(key.split(":")[1]), 0),
-  }));
-}
 
 function StatCard({
   title,
@@ -213,10 +191,17 @@ export default function AnalyticsPage() {
     return () => window.clearInterval(timer);
   }, [loadReport]);
 
-  const chartData = useMemo(
-    () => groupTrend(data?.trend || [], grouping),
-    [data?.trend, grouping]
-  );
+  const chartData = useMemo(() => {
+    const source = grouping === "daily"
+      ? data?.trend
+      : grouping === "weekly"
+        ? data?.weeklyTrend
+        : data?.monthlyTrend;
+    return (source || []).map((item) => ({
+      ...item,
+      label: grouping === "monthly" ? item.date : item.date.slice(5),
+    }));
+  }, [data?.trend, data?.weeklyTrend, data?.monthlyTrend, grouping]);
 
   const setPreset = (days: number) => {
     setFrom(dateString(new Date(Date.now() - (days - 1) * 86400000)));
@@ -345,12 +330,11 @@ export default function AnalyticsPage() {
                 <YAxis tick={{ fill: "#64748b", fontSize: 11 }} allowDecimals={false} />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="uniqueVisitors" name="Daily unique visitors" stroke="#2563eb" strokeWidth={2.5} dot={false} />
+                <Line type="monotone" dataKey="uniqueVisitors" name="Unique visitors" stroke="#2563eb" strokeWidth={2.5} dot={false} />
                 <Line type="monotone" dataKey="pageViews" name="Page views" stroke="#d49a36" strokeWidth={2.5} dot={false} />
               </LineChart>
             </ResponsiveContainer> : <div className="flex h-full items-center justify-center text-sm text-slate-400">No traffic recorded for this period yet.</div>}
           </div>
-          {grouping !== "daily" && <p className="mt-2 text-xs text-slate-400">Grouped visitor reach sums daily unique counts; the headline unique visitor metric is deduplicated across the full date range.</p>}
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
