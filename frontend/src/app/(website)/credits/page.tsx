@@ -1,6 +1,5 @@
 
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -19,8 +18,7 @@ type Contributor = {
   name: string;
   designation: string;
   affiliation: string;
-  image: string;
-  imageAlt: string;
+  initials: string;
   bio: string;
   contribution: string;
   linkedin: string;
@@ -32,9 +30,7 @@ const contributors: Contributor[] = [
     name: "Ayush Chauhan",
     designation: "Website Developer",
     affiliation: "Ayzent Solutions",
-    image: "/images/credits/ayush-chauhan.png",
-    imageAlt:
-      "Portrait of Ayush Chauhan wearing a navy blue blazer",
+    initials: "AC",
     bio:
       "Ayush Chauhan contributed to the GNPC website as its developer, bringing together website design, development and implementation as part of the collaborative project.",
     contribution:
@@ -47,9 +43,7 @@ const contributors: Contributor[] = [
     name: "Shreyansh Mishra",
     designation: "Website Developer & Project Collaborator",
     affiliation: "Independent Project Collaborator",
-    image: "/images/credits/shreyansh-mishra.png",
-    imageAlt:
-      "Portrait of Shreyansh Mishra wearing a light grey blazer",
+    initials: "SM",
     bio:
       "Shreyansh Mishra contributed to the GNPC website as a website developer and project collaborator, working alongside the project team to bring its digital experience together.",
     contribution:
@@ -68,15 +62,25 @@ function ContributorCard({
     <article className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-[#e5e2dc] bg-white shadow-[0_12px_45px_rgba(30,35,40,0.045)] transition-all duration-500 hover:-translate-y-1 hover:border-[#c9b88f] hover:shadow-[0_24px_65px_rgba(30,35,40,0.09)] motion-reduce:transform-none motion-reduce:transition-none">
 
       {/* Portrait */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#eae8e3]">
-
-        <Image
-          src={contributor.image}
-          alt={contributor.imageAlt}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 580px"
-          className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.035] motion-reduce:transition-none"
+      <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#eae8e3]">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.9), transparent 38%), linear-gradient(145deg, #eeece6 0%, #dedbd2 100%)",
+          }}
         />
+        <div
+          aria-label={`Portrait placeholder for ${contributor.name}`}
+          role="img"
+          className="relative flex h-36 w-36 items-center justify-center rounded-full border border-[#c9b88f] bg-white/75 font-serif text-5xl tracking-tight text-[#9b8359] shadow-[0_14px_40px_rgba(35,39,43,0.08)] transition-transform duration-700 group-hover:scale-[1.035] motion-reduce:transition-none"
+        >
+          {contributor.initials}
+        </div>
+        <p className="absolute bottom-20 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#777064]">
+          Portrait placeholder
+        </p>
 
         <div
           aria-hidden="true"
