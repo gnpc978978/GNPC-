@@ -6,7 +6,7 @@ import AboutCTA from "@/components/about/AboutCTA";
 
 export default function ContactPage() {
   return (
-    <main className="bg-[#f8fafc]">
+    <main className="gnpc-page-contact bg-[#f8fafc]">
       <PageHero
         eyebrow="Contact Us"
         title="Get in Touch with Greater Noida Press Club"
