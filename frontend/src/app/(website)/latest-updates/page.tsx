@@ -35,6 +35,7 @@ import {
 
 type UpdateType =
   | "press-releases"
+  | "press-conferences"
   | "announcements"
   | "events";
 
@@ -101,8 +102,9 @@ type PressConference = {
 
 type FeedResponse = {
   pressReleases?: Update[];
+  pressConferences?: PressConference[];
   announcements?: Update[];
-  events?: Update[];
+  events?: Event[];
 };
 
 type CalendarItem = {
@@ -119,6 +121,7 @@ type CalendarItem = {
 const tabValues: Tab[] = [
   "all",
   "press-releases",
+  "press-conferences",
   "announcements",
   "events",
 ];
@@ -129,6 +132,8 @@ const typeLabels: Record<
 > = {
   "press-releases":
     "Press Release",
+  "press-conferences":
+    "Press Conference",
   announcements:
     "Announcement",
   events: "Event",
@@ -140,6 +145,8 @@ const detailPaths: Record<
 > = {
   "press-releases":
     "/press-releases",
+  "press-conferences":
+    "/press-conference",
   announcements:
     "/announcements",
   events: "/events",
@@ -979,9 +986,11 @@ export default function LatestUpdatesPage() {
         ? pageSettings.allTabLabel
         : value === "press-releases"
           ? pageSettings.pressReleasesTabLabel
-          : value === "announcements"
-            ? pageSettings.announcementsTabLabel
-            : pageSettings.eventsTabLabel,
+          : value === "press-conferences"
+            ? "Press Conferences"
+            : value === "announcements"
+              ? pageSettings.announcementsTabLabel
+              : pageSettings.eventsTabLabel,
   }));
 
   const router =
@@ -1009,6 +1018,7 @@ export default function LatestUpdatesPage() {
   const [feed, setFeed] =
     useState<FeedResponse>({
       pressReleases: [],
+      pressConferences: [],
       announcements: [],
       events: [],
     });
@@ -1090,6 +1100,9 @@ export default function LatestUpdatesPage() {
         setFeed({
           pressReleases:
             latest.pressReleases ||
+            [],
+          pressConferences:
+            latest.pressConferences ||
             [],
           announcements:
             latest.announcements ||
@@ -1239,6 +1252,17 @@ export default function LatestUpdatesPage() {
             ...item,
             type:
               "press-releases" as const,
+          })
+        ),
+
+        ...(feed.pressConferences ||
+          []).map(
+          (item) => ({
+            ...item,
+            type:
+              "press-conferences" as const,
+            image:
+              item.featuredImage || "",
           })
         ),
 
