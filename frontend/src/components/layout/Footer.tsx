@@ -98,13 +98,9 @@ export default function Footer() {
 
           {/* Company Information */}
           <div>
-            <Link
-              href="/"
-              aria-label={`${siteName} home`}
-              className="inline-flex rounded-2xl bg-white p-3 shadow-2xl"
-            >
-              <Logo />
-            </Link>
+            <div className="inline-flex max-w-full items-center">
+              <Logo variant="light" />
+            </div>
 
             <p className="mt-6 max-w-md text-sm leading-7 text-white/55">
               {description}
