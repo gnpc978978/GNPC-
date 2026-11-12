@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const contributors = [
   {
     name: "Ayush Chauhan",
-    role: "Website Developer",
+    role: "Website Developer (@ Ayzent Solution)",
     linkedin: "https://www.linkedin.com/in/itxayushrajput",
   },
   {
@@ -46,9 +46,6 @@ export default function CreditsPage() {
           <h1 className="mt-3 font-serif text-3xl font-medium tracking-[-0.035em] text-[#14243a] sm:text-4xl lg:text-[2.75rem]">
             The People Behind GNPC
           </h1>
-          <p className="mt-4 max-w-xl text-sm leading-7 text-[#687382] sm:text-base">
-            The GNPC website is brought to life through collaboration, creativity, and technology.
-          </p>
         </header>
 
         <section
