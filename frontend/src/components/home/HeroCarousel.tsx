@@ -97,37 +97,37 @@ function getCardAnimation(position: Position) {
 
     case "left":
       return {
-        x: "-78%",
-        y: 16,
-        scale: 0.9,
-        opacity: 0.88,
+        x: "-82%",
+        y: 12,
+        scale: 0.88,
+        opacity: 0.82,
         zIndex: 20,
       };
 
     case "right":
       return {
-        x: "78%",
-        y: 16,
-        scale: 0.9,
-        opacity: 0.88,
+        x: "82%",
+        y: 12,
+        scale: 0.88,
+        opacity: 0.82,
         zIndex: 20,
       };
 
     case "far-left":
       return {
         x: "-148%",
-        y: 30,
-        scale: 0.8,
-        opacity: 0.48,
+        y: 20,
+        scale: 0.76,
+        opacity: 0.46,
         zIndex: 10,
       };
 
     case "far-right":
       return {
         x: "148%",
-        y: 30,
-        scale: 0.8,
-        opacity: 0.48,
+        y: 20,
+        scale: 0.76,
+        opacity: 0.46,
         zIndex: 10,
       };
   }
@@ -474,8 +474,8 @@ export default function HeroCarousel({
 
   if (loading) {
     return (
-      <div className="relative mx-auto h-[250px] w-full max-w-[1100px] sm:h-[320px] md:h-[350px] lg:h-[380px]">
-        <div className="absolute left-1/2 top-1/2 aspect-video w-[min(78vw,480px)] -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-[1.25rem] bg-black/5" />
+      <div className="relative mx-auto h-[250px] w-full max-w-[1080px] sm:h-[285px] md:h-[300px] lg:h-[310px]">
+        <div className="absolute left-1/2 top-1/2 aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)] -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-[1.25rem] bg-black/5" />
 
         <div className="absolute left-[18%] top-1/2 hidden aspect-video w-[min(78vw,480px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
 
@@ -492,7 +492,7 @@ export default function HeroCarousel({
 
   if (photos.length === 0) {
     return (
-      <div className="mx-auto flex h-[230px] w-full max-w-[650px] items-center justify-center rounded-[2rem] border border-black/10 bg-white/45 text-center sm:h-[300px]">
+      <div className="mx-auto flex h-[210px] w-full max-w-[620px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-white/[.04] text-center sm:h-[250px]">
         <div>
           <p className="text-[9px] font-black uppercase tracking-[0.25em] text-black/35">
             GNPC
@@ -520,7 +520,7 @@ export default function HeroCarousel({
     const photo = photos[0];
 
     return (
-      <div className="relative mx-auto flex min-h-[220px] w-full max-w-[700px] items-center justify-center py-4 sm:min-h-[300px]">
+      <div className="relative mx-auto flex min-h-[220px] w-full max-w-[740px] items-center justify-center py-3 sm:min-h-[270px]">
         <motion.div
           initial={{
             opacity: 0,
@@ -543,14 +543,14 @@ export default function HeroCarousel({
               1,
             ],
           }}
-          className="relative aspect-video w-[min(88vw,620px)] overflow-hidden rounded-[1.25rem] border-[5px] border-white bg-white shadow-[0_20px_55px_rgba(38,32,23,0.16)] sm:rounded-[1.5rem] sm:border-[6px]"
+          className="relative aspect-video w-[86vw] max-w-[740px] overflow-hidden rounded-[1.25rem] border-[5px] border-white bg-white shadow-[0_20px_55px_rgba(38,32,23,0.16)] sm:rounded-[1.5rem] sm:border-[6px]"
         >
           <Image
             src={photo.image}
             alt={alt}
             fill
             priority
-            sizes="(max-width: 640px) 88vw, 620px"
+            sizes="(max-width: 640px) 86vw, 740px"
             className="object-cover"
           />
 
@@ -571,7 +571,7 @@ export default function HeroCarousel({
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[1160px]"
+      className="relative mx-auto w-full max-w-[1080px]"
       onMouseEnter={() =>
         setIsPaused(true)
       }
@@ -587,7 +587,7 @@ export default function HeroCarousel({
           PHOTO STAGE
           ====================================================== */}
 
-      <div className="relative h-[250px] w-full overflow-hidden sm:h-[330px] md:h-[360px] lg:h-[390px] lg:overflow-visible">
+      <div className="relative h-[220px] w-full overflow-hidden sm:h-[285px] md:h-[300px] lg:h-[310px] lg:overflow-visible">
         {/* Ground shadow */}
 
         <div
@@ -638,12 +638,12 @@ export default function HeroCarousel({
                   }}
                   className={[
                     "absolute left-1/2 top-1/2",
-                    "aspect-video w-[min(78vw,480px)]",
+                    "aspect-video w-[86vw] max-w-[500px] sm:w-[min(68vw,440px)] md:w-[min(56vw,420px)] lg:w-[min(34vw,420px)]",
                     "-translate-x-1/2 -translate-y-1/2",
-                    "overflow-hidden rounded-[1.25rem]",
+                    "overflow-hidden rounded-[1.2rem] sm:rounded-[1.35rem]",
                     "border-[6px] border-white",
                     "bg-white",
-                    "shadow-[0_28px_65px_rgba(38,32,23,0.19)]",
+                    "shadow-[0_20px_48px_rgba(0,0,0,0.20)]",
                     "sm:rounded-[1.4rem] lg:rounded-[1.5rem]",
                     position ===
                       "far-left" ||
@@ -771,7 +771,7 @@ export default function HeroCarousel({
           ====================================================== */}
 
       {photos.length > 1 && (
-        <div className="relative z-50 mt-2 flex flex-col items-center gap-4 sm:mt-0">
+        <div className="relative z-50 mt-1 flex flex-col items-center gap-2.5 sm:mt-1.5">
           {/* Dots */}
 
           <div className="flex items-center justify-center gap-1.5">
@@ -813,8 +813,8 @@ export default function HeroCarousel({
                       className={[
                         "block h-1.5 rounded-full transition-all duration-300",
                         active
-                          ? "w-7 bg-[#c8102e]"
-                          : "w-1.5 bg-black/20 group-hover:bg-black/40",
+                          ? "w-7 bg-[#d4b06a]"
+                          : "w-1.5 bg-white/25 group-hover:bg-white/50",
                       ].join(" ")}
                     />
                   </button>
@@ -825,7 +825,7 @@ export default function HeroCarousel({
 
           {/* Counter */}
 
-          <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.18em] text-black/35">
+          <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.18em] text-white/45">
             <span>
               {String(
                 activeIndex +
@@ -836,7 +836,7 @@ export default function HeroCarousel({
               )}
             </span>
 
-            <span className="h-px w-6 bg-black/15" />
+            <span className="h-px w-6 bg-white/25" />
 
             <span>
               {String(
