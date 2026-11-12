@@ -8,6 +8,8 @@ export interface IPressConference extends Document {
   content: string;
   featuredImage?: string;
   pdfFile?: string;
+  status: "DRAFT" | "PUBLISHED";
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,6 +23,13 @@ const pressConferenceSchema = new Schema<IPressConference>(
     content: { type: String, default: "" },
     featuredImage: { type: String, default: "" },
     pdfFile: { type: String, default: "" },
+    status: {
+      type: String,
+      enum: ["DRAFT", "PUBLISHED"],
+      default: "PUBLISHED",
+      index: true,
+    },
+    isActive: { type: Boolean, default: true, index: true },
   },
   { timestamps: true }
 );
