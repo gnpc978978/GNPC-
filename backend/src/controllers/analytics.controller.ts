@@ -212,12 +212,14 @@ export const analyticsEvent = async (req: Request, res: Response) => {
 const parseRange = (req: Request) => {
   const fromValue = typeof req.query.from === "string" ? req.query.from : "";
   const toValue = typeof req.query.to === "string" ? req.query.to : "";
-  const indiaDate = new Intl.DateTimeFormat("en-CA", {
+  const indiaParts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Kolkata",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(new Date());
+  }).formatToParts(new Date());
+  const indiaPart = (type: string) => indiaParts.find((part) => part.type === type)?.value || "";
+  const indiaDate = `${indiaPart("year")}-${indiaPart("month")}-${indiaPart("day")}`;
   const endOfToday = new Date(`${indiaDate}T00:00:00+05:30`);
   endOfToday.setTime(endOfToday.getTime() + 24 * 60 * 60 * 1000);
 
@@ -362,7 +364,7 @@ export const getAnalyticsReport = async (req: Request, res: Response) => {
       AnalyticsVisitor.countDocuments({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } }),
       AnalyticsSession.find({ lastSeenAt: { $gte: new Date(Date.now() - ACTIVE_WINDOW_MS) } })
         .sort({ lastSeenAt: -1 }).limit(12).select("sessionKey entryPath currentPath firstSeenAt lastSeenAt deviceType referrerSource").lean(),
-      AnalyticsEvent.find({ createdAt: { $gte: from, $lt: to } })
+      AnalyticsEvent.find({ createdAt: { $gte: new Date(Date.now() - 30 * 60 * 1000) } })
         .sort({ createdAt: -1 }).limit(100)
         .select("sessionKey eventType path label createdAt durationSeconds").lean(),
       AnalyticsEvent.countDocuments({ eventType: "page_view", createdAt: { $gte: previousFrom, $lt: from } }),
