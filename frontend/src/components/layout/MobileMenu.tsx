@@ -9,6 +9,7 @@ import { HiArrowRight, HiChevronDown, HiXMark } from "react-icons/hi2";
 import { navigation, type NavigationItem } from "@/data/navigation";
 import { useWebsiteSettings } from "@/context/WebsiteSettingsContext";
 import Logo from "./Logo";
+import ThemeToggle from "./ThemeToggle";
 
 function isActive(pathname: string, href: string) {
   const [targetPath, targetQuery] = href.split("?");
@@ -158,14 +159,17 @@ export default function MobileMenu({
 
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-5 sm:px-7">
               <Logo variant="gold" />
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
+              <div className="flex items-center gap-2">
+                <ThemeToggle compact />
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
                 aria-label="Close navigation menu"
                 className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[.06] transition hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#0b1f3a]"
               >
-                <HiXMark size={24} />
-              </button>
+                  <HiXMark size={24} />
+                </button>
+              </div>
             </div>
 
             <div className="border-b border-white/10 bg-white/[.03] px-5 py-5 sm:px-7">
