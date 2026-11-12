@@ -23,6 +23,7 @@ import advertisementRoutes from "./routes/advertisement.routes";
 import bannerRoutes from "./routes/banner.routes";
 import latestUpdatesRoutes from "./routes/latestUpdates.routes";
 import officeBearersRoutes from "./routes/officeBearers.routes";
+import analyticsRoutes from "./routes/analytics.routes";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.get("/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/analytics", analyticsRoutes);
 app.use("/api/admin/activities", activityRoutes);
 app.use("/api/press-releases", pressReleaseRoutes);
 app.use("/api/press-conferences", pressConferenceRoutes);
