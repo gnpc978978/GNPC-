@@ -29,7 +29,7 @@ export default function TopBar() {
   ].filter(x=>Boolean(x.href));
 
   return (
-    <div className="relative z-[130] w-full overflow-hidden border-b border-white/10 bg-[#07172b] text-white/80">
+    <div className="relative z-[130] hidden w-full overflow-hidden border-b border-white/10 bg-[#07172b] text-white/80 sm:block">
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#c9a45c]/70 to-transparent"/>
       <div className="gnpc-container flex min-h-[38px] items-center justify-between gap-3 sm:min-h-[40px]">
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
