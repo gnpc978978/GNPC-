@@ -205,14 +205,19 @@ export const analyticsEvent = async (req: Request, res: Response) => {
 const parseRange = (req: Request) => {
   const fromValue = typeof req.query.from === "string" ? req.query.from : "";
   const toValue = typeof req.query.to === "string" ? req.query.to : "";
-  const endOfToday = new Date();
-  endOfToday.setUTCHours(0, 0, 0, 0);
-  endOfToday.setUTCDate(endOfToday.getUTCDate() + 1);
+  const indiaDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  const endOfToday = new Date(`${indiaDate}T00:00:00+05:30`);
+  endOfToday.setTime(endOfToday.getTime() + 24 * 60 * 60 * 1000);
 
-  const toDate = toValue ? new Date(`${toValue}T00:00:00.000Z`) : endOfToday;
+  const toDate = toValue ? new Date(`${toValue}T00:00:00+05:30`) : endOfToday;
   const to = toValue ? new Date(toDate.getTime() + 24 * 60 * 60 * 1000) : endOfToday;
   const from = fromValue
-    ? new Date(`${fromValue}T00:00:00.000Z`)
+    ? new Date(`${fromValue}T00:00:00+05:30`)
     : new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000);
 
   if (!Number.isFinite(from.getTime()) || !Number.isFinite(to.getTime()) || from >= to) {
