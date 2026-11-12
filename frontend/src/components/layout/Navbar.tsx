@@ -6,6 +6,7 @@ import { navigation } from "@/data/navigation";
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 import NavLink from "./NavLink";
+import NavDropdown from "./NavDropdown";
 import Button from "@/components/ui/Button";
 
 export default function Navbar() {
@@ -19,18 +20,22 @@ export default function Navbar() {
   return (
     <>
       <div className="gnpc-nav-frame w-full">
-        <nav aria-label="Primary navigation" className="relative z-[120] w-full max-w-none overflow-hidden rounded-[0_0_24px_24px] border-x-0 border-b border-t-0 border-white/10 bg-[#0b1f3a]/95 text-white shadow-[0_18px_50px_rgba(11,31,58,.24)] backdrop-blur-2xl">
+        <nav aria-label="Primary navigation" className="relative z-[120] w-full max-w-none rounded-[0_0_24px_24px] border-x-0 border-b border-t-0 border-white/10 bg-[#0b1f3a]/95 text-white shadow-[0_18px_50px_rgba(11,31,58,.24)] backdrop-blur-2xl">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45c] to-transparent" />
           <div className="mx-auto flex min-h-[70px] w-full max-w-[1840px] min-w-0 items-center justify-between gap-3 px-4 sm:min-h-[78px] sm:px-6 lg:gap-5 lg:px-8 2xl:px-10">
             <Logo variant="gold" />
 
             <div className="hidden flex-1 items-center justify-center xl:flex">
               <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-white/[0.06] p-1">
-                {navigation.map((item) => (
-                  <NavLink key={item.name} href={item.href} light>
-                    {item.name}
-                  </NavLink>
-                ))}
+                {navigation.map((item) =>
+                  item.children?.length ? (
+                    <NavDropdown key={item.name} item={item} light />
+                  ) : (
+                    <NavLink key={item.name} href={item.href} light>
+                      {item.name}
+                    </NavLink>
+                  )
+                )}
               </div>
             </div>
 
