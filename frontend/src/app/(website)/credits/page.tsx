@@ -4,8 +4,8 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Linkedin,
 } from "lucide-react";
+import { FaLinkedinIn } from "react-icons/fa6";
 
 export const metadata: Metadata = {
   title: "Website Credits",
@@ -129,7 +129,7 @@ function ContributorCard({
             aria-label={`View ${contributor.name} on LinkedIn`}
             className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#e6e2da] text-[#656565] transition-all hover:border-[#c9a45c] hover:bg-[#c9a45c] hover:text-[#20242a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a1844e]"
           >
-            <Linkedin size={17} />
+            <FaLinkedinIn size={17} />
           </a>
 
         </div>
