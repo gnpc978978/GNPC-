@@ -62,7 +62,8 @@ export default function AnalyticsTracker() {
   useEffect(() => {
     if (!pathname || pathname === "/admin" || pathname.startsWith("/admin/")) return;
 
-    const { visitorId, sessionId } = getIdentity();
+    const { visitorId, sessionId: initialSessionId } = getIdentity();
+    let sessionId = initialSessionId;
     const path = pathname.split(/[?#]/, 1)[0].slice(0, 200) || "/";
     let visibleSegmentStartedAt: number | null = Date.now();
     let accumulatedVisibleMs = 0;
@@ -78,10 +79,18 @@ export default function AnalyticsTracker() {
 
     const heartbeat = () => {
       if (document.visibilityState === "hidden") return;
+      const now = Date.now();
+      let sessionRestarted = false;
       try {
+        const stored = sessionStorage.getItem("gnpc_analytics_session");
+        const parsed = stored ? JSON.parse(stored) : null;
+        if (parsed?.id === sessionId && now - parsed.lastSeenAt >= 30 * 60 * 1000) {
+          sessionId = newId();
+          sessionRestarted = true;
+        }
         sessionStorage.setItem(
           "gnpc_analytics_session",
-          JSON.stringify({ id: sessionId, lastSeenAt: Date.now() })
+          JSON.stringify({ id: sessionId, lastSeenAt: now })
         );
       } catch {
         // Tracking must never interfere with website navigation.
@@ -90,6 +99,7 @@ export default function AnalyticsTracker() {
       post("/analytics/heartbeat", {
         referrer: document.referrer || "",
       });
+      if (sessionRestarted) sendEvent("page_view");
     };
 
     const sendEvent = (
