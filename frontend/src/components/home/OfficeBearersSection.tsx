@@ -262,7 +262,7 @@ export default function OfficeBearersSection() {
               {/* =====================================
                   CAROUSEL STAGE
               ====================================== */}
-              <div className="relative mx-auto h-[475px] w-full max-w-[1100px] overflow-hidden sm:h-[510px] lg:h-[540px]">
+              <div className="relative mx-auto h-[540px] w-full max-w-[1100px] overflow-hidden sm:h-[550px] lg:h-[560px]">
 
                 {/* Subtle background glow */}
                 <div className="pointer-events-none absolute left-1/2 top-[42%] h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4b06a]/10 blur-3xl sm:h-[360px] sm:w-[360px]" />
@@ -301,45 +301,43 @@ export default function OfficeBearersSection() {
                      */
                     let x = "0%";
                     let scale = 1;
-                    let rotate = 0;
                     let opacity = 1;
                     let zIndex = 30;
                     let blur = 0;
 
+                    // Keep every profile upright and aligned to one
+                    // shared horizontal top edge. Neighbouring cards
+                    // step outward evenly without the old angled fan.
                     if (position === -1) {
-                      x = "-78%";
-                      scale = 0.78;
-                      rotate = -7;
-                      opacity = 0.68;
+                      x = "-108%";
+                      scale = 0.84;
+                      opacity = 0.72;
                       zIndex = 20;
-                      blur = 0.3;
+                      blur = 0;
                     }
 
                     if (position === 1) {
-                      x = "78%";
-                      scale = 0.78;
-                      rotate = 7;
-                      opacity = 0.68;
+                      x = "108%";
+                      scale = 0.84;
+                      opacity = 0.72;
                       zIndex = 20;
-                      blur = 0.3;
+                      blur = 0;
                     }
 
                     if (position === -2) {
-                      x = "-138%";
-                      scale = 0.62;
-                      rotate = -11;
-                      opacity = 0.32;
+                      x = "-212%";
+                      scale = 0.72;
+                      opacity = 0.42;
                       zIndex = 10;
-                      blur = 1;
+                      blur = 0;
                     }
 
                     if (position === 2) {
-                      x = "138%";
-                      scale = 0.62;
-                      rotate = 11;
-                      opacity = 0.32;
+                      x = "212%";
+                      scale = 0.72;
+                      opacity = 0.42;
                       zIndex = 10;
-                      blur = 1;
+                      blur = 0;
                     }
 
                     return (
@@ -349,7 +347,6 @@ export default function OfficeBearersSection() {
                         animate={{
                           x,
                           scale,
-                          rotate,
                           opacity,
                           filter:
                             blur > 0
@@ -364,8 +361,9 @@ export default function OfficeBearersSection() {
                         }}
                         style={{
                           zIndex,
+                          transformOrigin: "center top",
                         }}
-                        className="absolute left-1/2 top-[37%] w-[210px] -translate-x-1/2 -translate-y-1/2 sm:w-[250px] lg:w-[280px]"
+                        className="absolute left-1/2 top-0 w-[210px] -translate-x-1/2 sm:w-[250px] lg:w-[280px]"
                       >
 
                         {/* =================================
@@ -388,8 +386,8 @@ export default function OfficeBearersSection() {
                           <div
                             className={`relative aspect-[4/5] overflow-hidden rounded-2xl bg-slate-200 ${
                               isActive
-                                ? "shadow-[0_25px_60px_rgba(15,23,42,0.22)] ring-1 ring-black/5"
-                                : "shadow-lg"
+                                ? "shadow-[0_22px_52px_rgba(15,23,42,0.18)] ring-1 ring-[#d4b06a]/35"
+                                : "shadow-md"
                             }`}
                           >
 
@@ -502,7 +500,7 @@ export default function OfficeBearersSection() {
                     type="button"
                     onClick={previous}
                     aria-label="Previous office bearer"
-                    className="absolute left-1 top-[37%] z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-md transition-all duration-200 hover:border-[#d4b06a] hover:bg-[#d4b06a] hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#d4b06a]/30 sm:left-4 sm:h-11 sm:w-11 lg:left-10"
+                    className="absolute left-1 top-[32%] z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-md transition-all duration-200 hover:border-[#d4b06a] hover:bg-[#d4b06a] hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#d4b06a]/30 sm:left-4 sm:h-11 sm:w-11 lg:left-10"
                   >
                     <ChevronLeft
                       size={20}
@@ -519,7 +517,7 @@ export default function OfficeBearersSection() {
                     type="button"
                     onClick={next}
                     aria-label="Next office bearer"
-                    className="absolute right-1 top-[37%] z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-md transition-all duration-200 hover:border-[#d4b06a] hover:bg-[#d4b06a] hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#d4b06a]/30 sm:right-4 sm:h-11 sm:w-11 lg:right-10"
+                    className="absolute right-1 top-[32%] z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-md transition-all duration-200 hover:border-[#d4b06a] hover:bg-[#d4b06a] hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#d4b06a]/30 sm:right-4 sm:h-11 sm:w-11 lg:right-10"
                   >
                     <ChevronRight
                       size={20}
