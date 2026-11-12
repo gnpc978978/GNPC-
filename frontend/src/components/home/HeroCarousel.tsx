@@ -84,15 +84,12 @@ function getRelativePosition(
   return null;
 }
 
-function getCardAnimation(
-  position: Position
-) {
+function getCardAnimation(position: Position) {
   switch (position) {
     case "center":
       return {
         x: 0,
         y: 0,
-        rotate: 0,
         scale: 1,
         opacity: 1,
         zIndex: 30,
@@ -100,9 +97,8 @@ function getCardAnimation(
 
     case "left":
       return {
-        x: "-66%",
-        y: 24,
-        rotate: -6,
+        x: "-78%",
+        y: 16,
         scale: 0.9,
         opacity: 0.88,
         zIndex: 20,
@@ -110,9 +106,8 @@ function getCardAnimation(
 
     case "right":
       return {
-        x: "66%",
-        y: 24,
-        rotate: 6,
+        x: "78%",
+        y: 16,
         scale: 0.9,
         opacity: 0.88,
         zIndex: 20,
@@ -120,35 +115,30 @@ function getCardAnimation(
 
     case "far-left":
       return {
-        x: "-126%",
-        y: 52,
-        rotate: -11,
-        scale: 0.78,
-        opacity: 0.55,
+        x: "-148%",
+        y: 30,
+        scale: 0.8,
+        opacity: 0.48,
         zIndex: 10,
       };
 
     case "far-right":
       return {
-        x: "126%",
-        y: 52,
-        rotate: 11,
-        scale: 0.78,
-        opacity: 0.55,
+        x: "148%",
+        y: 30,
+        scale: 0.8,
+        opacity: 0.48,
         zIndex: 10,
       };
   }
 }
 
-function getMobileAnimation(
-  position: Position
-) {
+function getMobileAnimation(position: Position) {
   switch (position) {
     case "center":
       return {
         x: 0,
         y: 0,
-        rotate: 0,
         scale: 1,
         opacity: 1,
         zIndex: 30,
@@ -156,21 +146,19 @@ function getMobileAnimation(
 
     case "left":
       return {
-        x: "-64%",
-        y: 16,
-        rotate: -5,
+        x: "-78%",
+        y: 12,
         scale: 0.88,
-        opacity: 0.72,
+        opacity: 0.68,
         zIndex: 20,
       };
 
     case "right":
       return {
-        x: "64%",
-        y: 16,
-        rotate: 5,
+        x: "78%",
+        y: 12,
         scale: 0.88,
-        opacity: 0.72,
+        opacity: 0.68,
         zIndex: 20,
       };
 
@@ -179,7 +167,6 @@ function getMobileAnimation(
       return {
         x: 0,
         y: 0,
-        rotate: 0,
         scale: 0.8,
         opacity: 0,
         zIndex: 0,
@@ -528,12 +515,12 @@ export default function HeroCarousel({
 
   if (loading) {
     return (
-      <div className="relative mx-auto h-[360px] w-full max-w-[1100px] sm:h-[460px] lg:h-[540px]">
-        <div className="absolute left-1/2 top-1/2 h-[315px] w-[220px] -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-[1.5rem] bg-black/5 sm:h-[410px] sm:w-[290px]" />
+      <div className="relative mx-auto h-[250px] w-full max-w-[1100px] sm:h-[320px] md:h-[350px] lg:h-[380px]">
+        <div className="absolute left-1/2 top-1/2 aspect-video w-[min(78vw,480px)] -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-[1.25rem] bg-black/5" />
 
-        <div className="absolute left-[14%] top-[20%] hidden h-[285px] w-[195px] -rotate-7 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
+        <div className="absolute left-[18%] top-1/2 hidden aspect-video w-[min(78vw,480px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
 
-        <div className="absolute right-[14%] top-[20%] hidden h-[285px] w-[195px] rotate-7 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
+        <div className="absolute right-[18%] top-1/2 hidden aspect-video w-[min(78vw,480px)] -translate-y-1/2 scale-90 animate-pulse rounded-[1.25rem] bg-black/[0.035] sm:block" />
       </div>
     );
   }
@@ -574,25 +561,22 @@ export default function HeroCarousel({
     const photo = photos[0];
 
     return (
-      <div className="relative mx-auto flex h-[390px] w-full max-w-[620px] items-center justify-center sm:h-[480px]">
+      <div className="relative mx-auto flex min-h-[220px] w-full max-w-[700px] items-center justify-center py-4 sm:min-h-[300px]">
         <motion.div
           initial={{
             opacity: 0,
-            y: 25,
-            rotate: -2,
+            y: 14,
           }}
           animate={{
             opacity: 1,
             y: 0,
-            rotate: -2,
           }}
           whileHover={{
-            y: -8,
-            rotate: 0,
-            scale: 1.025,
+            y: -5,
+            scale: 1.015,
           }}
           transition={{
-            duration: 0.75,
+            duration: 0.55,
             ease: [
               0.22,
               1,
@@ -600,14 +584,14 @@ export default function HeroCarousel({
               1,
             ],
           }}
-          className="relative h-[335px] w-[240px] overflow-hidden rounded-[1.5rem] border-[7px] border-white bg-white shadow-[0_28px_70px_rgba(38,32,23,0.2)] sm:h-[415px] sm:w-[300px]"
+          className="relative aspect-video w-[min(88vw,620px)] overflow-hidden rounded-[1.25rem] border-[5px] border-white bg-white shadow-[0_20px_55px_rgba(38,32,23,0.16)] sm:rounded-[1.5rem] sm:border-[6px]"
         >
           <Image
             src={photo.image}
             alt={alt}
             fill
             priority
-            sizes="300px"
+            sizes="(max-width: 640px) 88vw, 620px"
             className="object-cover"
           />
 
@@ -644,7 +628,7 @@ export default function HeroCarousel({
           PHOTO STAGE
           ====================================================== */}
 
-      <div className="relative h-[390px] w-full overflow-hidden sm:h-[500px] md:h-[560px] lg:h-[620px] lg:overflow-visible">
+      <div className="relative h-[250px] w-full overflow-hidden sm:h-[330px] md:h-[360px] lg:h-[390px] lg:overflow-visible">
         {/* Ground shadow */}
 
         <div
@@ -654,13 +638,7 @@ export default function HeroCarousel({
 
         {/* Photos */}
 
-        <div
-          className="absolute inset-0"
-          style={{
-            perspective:
-              "1400px",
-          }}
-        >
+        <div className="absolute inset-0">
           {photos.map(
             (
               photo,
@@ -706,15 +684,13 @@ export default function HeroCarousel({
                   }}
                   className={[
                     "absolute left-1/2 top-1/2",
-                    "h-[290px] w-[205px]",
+                    "aspect-video w-[min(78vw,480px)]",
                     "-translate-x-1/2 -translate-y-1/2",
-                    "overflow-hidden rounded-[1.35rem]",
+                    "overflow-hidden rounded-[1.25rem]",
                     "border-[6px] border-white",
                     "bg-white",
                     "shadow-[0_28px_65px_rgba(38,32,23,0.19)]",
-                    "sm:h-[380px] sm:w-[265px]",
-                    "md:h-[430px] md:w-[300px]",
-                    "lg:h-[480px] lg:w-[335px]",
+                    "sm:rounded-[1.4rem] lg:rounded-[1.5rem]",
                     position ===
                       "far-left" ||
                     position ===
@@ -729,8 +705,8 @@ export default function HeroCarousel({
                   whileHover={
                     isCenter
                       ? {
-                          y: "-53%",
-                          scale: 1.025,
+                          y: -5,
+                          scale: 1.015,
                         }
                       : undefined
                   }
