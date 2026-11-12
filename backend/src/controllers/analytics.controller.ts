@@ -177,7 +177,12 @@ export const analyticsEvent = async (req: Request, res: Response) => {
 
     const now = new Date();
     const path = cleanPath(req.body?.path);
-    const sessionContext = await upsertSession(req, identity, path, now);
+    const sessionContext = eventType === "page_duration"
+      ? {
+          ...getClientContext(req),
+          referrerSource: getReferrerSource(req.body?.referrer, String(req.headers.origin || "")),
+        }
+      : await upsertSession(req, identity, path, now);
     const rawLabel = typeof req.body?.label === "string" ? req.body.label : "";
     const label = rawLabel.replace(/[\u0000-\u001f<>]/g, " ").replace(/\s+/g, " ").trim().slice(0, 80);
     const duration = Number(req.body?.durationSeconds);
