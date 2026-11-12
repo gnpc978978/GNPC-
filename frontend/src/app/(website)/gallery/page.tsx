@@ -23,7 +23,7 @@ export default function GalleryPage() {
         ]}
       />
 
-      <PublicGallery settings={pageSettings} />
+      <PublicGallery />
     </main>
   );
 }
