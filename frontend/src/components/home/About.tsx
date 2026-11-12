@@ -33,6 +33,13 @@ type PublicStats = {
   events: number;
 };
 
+type AboutPageImageResponse = {
+  success?: boolean;
+  data?: {
+    image?: string;
+  };
+};
+
 const emptyStats: PublicStats = {
   members: 0,
   pressReleases: 0,
@@ -227,6 +234,9 @@ export default function About() {
   const [loadingStats, setLoadingStats] =
     useState(true);
 
+  const [aboutPageImage, setAboutPageImage] =
+    useState("");
+
   const [
     statsUnavailable,
     setStatsUnavailable,
@@ -321,17 +331,69 @@ export default function About() {
 
   /*
    * ----------------------------------------------------------
-   * CMS IMAGE
+   * SHARED ABOUT PAGE IMAGE
    * ----------------------------------------------------------
    *
-   * About image comes from:
+   * Use the same CMS record and endpoint as /about:
+   * GET /settings/about → data.image
    *
-   * Website Settings → Home → About Image
+   * The About CMS dispatches "about-settings-updated" after
+   * saving or uploading an image, so the homepage can refresh
+   * the shared image without maintaining a duplicate setting.
    */
+  useEffect(() => {
+    let cancelled = false;
 
-  const aboutImage =
-    settings.aboutImage ||
-    "";
+    const loadAboutPageImage = async () => {
+      try {
+        const response = await apiFetch(
+          "/settings/about",
+          { cache: "no-store" }
+        );
+
+        const payload =
+          await responseJson<AboutPageImageResponse>(response);
+
+        if (cancelled) return;
+
+        if (payload.success === false) {
+          throw new Error("Unable to load the shared About page image.");
+        }
+
+        setAboutPageImage(
+          typeof payload.data?.image === "string"
+            ? payload.data.image
+            : ""
+        );
+      } catch (error) {
+        console.error("Failed to load About page image:", error);
+
+        if (!cancelled) {
+          setAboutPageImage("");
+        }
+      }
+    };
+
+    const handleAboutSettingsUpdated = () => {
+      void loadAboutPageImage();
+    };
+
+    void loadAboutPageImage();
+    window.addEventListener(
+      "about-settings-updated",
+      handleAboutSettingsUpdated
+    );
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener(
+        "about-settings-updated",
+        handleAboutSettingsUpdated
+      );
+    };
+  }, []);
+
+  const aboutImage = aboutPageImage;
 
   /*
    * ----------------------------------------------------------
