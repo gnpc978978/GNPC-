@@ -156,34 +156,34 @@ export const defaultHomeSettings: HomeSettings = {
       background: "slate",
     },
 
-    latestUpdates: {
+    officeBearers: {
       enabled: true,
       order: 4,
       background: "white",
     },
 
-    gallery: {
+    latestUpdates: {
       enabled: true,
       order: 5,
-      background: "slate",
+      background: "white",
     },
 
     pressConferences: {
       enabled: true,
       order: 6,
+      background: "slate",
+    },
+
+    gallery: {
+      enabled: true,
+      order: 7,
       background: "white",
     },
 
     members: {
       enabled: true,
-      order: 7,
-      background: "slate",
-    },
-
-    officeBearers: {
-      enabled: true,
       order: 8,
-      background: "white",
+      background: "slate",
     },
 
     membership: {
@@ -215,11 +215,11 @@ export const defaultHomeSettings: HomeSettings = {
     quickLinks: [
       {
         label: "Press Releases",
-        href: "/press-releases",
+        href: "/latest-updates?tab=press-releases",
       },
       {
         label: "Press Conferences",
-        href: "/press-conference",
+        href: "/latest-updates?tab=press-conferences",
       },
       {
         label: "Events",
@@ -366,19 +366,19 @@ export const defaultHomeSettings: HomeSettings = {
 
   pressConferences: {
     eyebrow:
-      "Media & Journalism",
+      "What's Coming Up",
 
     title:
-      "Latest Press Conference",
+      "Upcoming Events & Activities",
 
     description:
-      "The latest media interaction and official briefing from Greater Noida Press Club.",
+      "Discover upcoming workshops, meetings, seminars and activities organised by Greater Noida Press Club.",
 
     buttonLabel:
-      "View All",
+      "View All Events",
 
     buttonHref:
-      "/press-conference",
+      "/events",
 
     displayCount: 3,
 
@@ -478,6 +478,25 @@ export function mergeHomeSettings(
   const source =
     value || {};
 
+  const legacySectionOrder: Record<HomeSectionKey, number> = {
+    hero: 1,
+    about: 2,
+    objectives: 3,
+    latestUpdates: 4,
+    gallery: 5,
+    pressConferences: 6,
+    members: 7,
+    officeBearers: 8,
+    membership: 9,
+  };
+
+  const usesLegacyDefaultOrder = (
+    Object.entries(legacySectionOrder) as [HomeSectionKey, number][]
+  ).every(([key, order]) => {
+    const configured = source.sections?.[key]?.order;
+    return configured === undefined || configured === order;
+  });
+
   const mergeSection = <
     T extends Record<
       string,
@@ -504,6 +523,35 @@ export function mergeHomeSettings(
     } as T;
   };
 
+  const configuredUpcomingEvents = mergeSection(
+    defaultHomeSettings.pressConferences,
+    source.pressConferences
+  );
+
+  const pressConferences = {
+    ...configuredUpcomingEvents,
+    eyebrow:
+      configuredUpcomingEvents.eyebrow === "Media & Journalism"
+        ? defaultHomeSettings.pressConferences.eyebrow
+        : configuredUpcomingEvents.eyebrow,
+    title:
+      configuredUpcomingEvents.title === "Latest Press Conference"
+        ? defaultHomeSettings.pressConferences.title
+        : configuredUpcomingEvents.title,
+    description:
+      configuredUpcomingEvents.description === "The latest media interaction and official briefing from Greater Noida Press Club."
+        ? defaultHomeSettings.pressConferences.description
+        : configuredUpcomingEvents.description,
+    buttonLabel:
+      configuredUpcomingEvents.buttonLabel === "View All"
+        ? defaultHomeSettings.pressConferences.buttonLabel
+        : configuredUpcomingEvents.buttonLabel,
+    buttonHref:
+      configuredUpcomingEvents.buttonHref === "/press-conference"
+        ? defaultHomeSettings.pressConferences.buttonHref
+        : configuredUpcomingEvents.buttonHref,
+  };
+
   return {
     ...defaultHomeSettings,
 
@@ -524,6 +572,9 @@ export function mergeHomeSettings(
               ...(source.sections?.[
                 key as HomeSectionKey
               ] || {}),
+              ...(usesLegacyDefaultOrder
+                ? { order: fallback.order }
+                : {}),
             },
           ]
         )
@@ -581,11 +632,7 @@ export function mergeHomeSettings(
         source.gallery
       ),
 
-    pressConferences:
-      mergeSection(
-        defaultHomeSettings.pressConferences,
-        source.pressConferences
-      ),
+    pressConferences,
 
     members: {
       ...defaultHomeSettings.members,
