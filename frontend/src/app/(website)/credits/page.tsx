@@ -38,7 +38,7 @@ const contributors: Contributor[] = [
     contribution: "DESIGN · DEVELOPMENT · DIGITAL STRATEGY",
     linkedin: "https://www.linkedin.com/in/itxayushrajput",
     // Add Ayush's supplied portrait at this path when it is provided.
-    photo: "/images/credits/ayush-chauhan.jpg",
+    photo: "/images/credits/ayush-chauhan.jpeg",
     featured: true,
   },
   {
@@ -48,7 +48,7 @@ const contributors: Contributor[] = [
     contribution: "DESIGN · DEVELOPMENT · COLLABORATION",
     linkedin: "https://www.linkedin.com/in/shreyansh-mishra-66615437b",
     // Add Shreyansh's supplied portrait at this path when it is provided.
-    photo: "/images/credits/shreyansh-mishra.jpg",
+    photo: "/images/credits/shreyansh-mishra.png",
   },
 ];
 
