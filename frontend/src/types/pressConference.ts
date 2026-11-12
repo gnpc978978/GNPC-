@@ -7,6 +7,8 @@ export interface PressConference {
   content: string;
   featuredImage?: string;
   pdfFile?: string;
+  status?: "DRAFT" | "PUBLISHED";
+  isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -17,6 +19,7 @@ export interface PressConferenceFormData {
   date: string;
   description: string;
   content: string;
+  status: "DRAFT" | "PUBLISHED";
   featuredImage: File | null;
   pdfFile: File | null;
 }
