@@ -4,7 +4,7 @@ const analyticsVisitorSchema = new Schema(
   {
     visitorKey: { type: String, required: true, unique: true },
     firstSeenAt: { type: Date, required: true, index: true },
-    lastSeenAt: { type: Date, required: true, index: true },
+    lastSeenAt: { type: Date, required: true },
     retentionAt: { type: Date, required: true },
   },
   { versionKey: false }
