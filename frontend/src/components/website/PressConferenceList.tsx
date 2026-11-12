@@ -282,7 +282,7 @@ function ConferenceListItem({
       variants={cardVariants}
       className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#d4b06a]/50 hover:shadow-md sm:flex-row"
     >
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#f7f2e6] sm:h-auto sm:min-h-[176px] sm:w-52 lg:w-60">
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#f7f2e6] sm:h-40 sm:w-56 lg:w-60">
         <ConferenceImage src={item.featuredImage} alt={item.title} />
       </div>
 
@@ -825,12 +825,9 @@ export default function PressConferenceList({
                 className={
                   latestOnly
                     ? "relative mt-12 grid gap-4 lg:mt-16 lg:grid-cols-[1.3fr_0.7fr]"
-                    : [
-                        "relative mt-8 grid gap-5 sm:mt-10",
-                        viewMode === "cards"
-                          ? "sm:grid-cols-2 xl:grid-cols-3"
-                          : "grid-cols-1",
-                      ].join(" ")
+                    : viewMode === "list"
+                      ? "relative mt-8 flex flex-col gap-4 sm:mt-10"
+                      : "relative mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 xl:grid-cols-3"
                 }
               >
                 {latestOnly ? (
