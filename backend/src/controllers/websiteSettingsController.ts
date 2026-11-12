@@ -15,6 +15,56 @@ const mergeHomeSettings = (
 ): IHomeSettings => {
   const source = value || {};
 
+  const legacySectionOrder: Record<string, number> = {
+    hero: 1,
+    about: 2,
+    objectives: 3,
+    latestUpdates: 4,
+    gallery: 5,
+    pressConferences: 6,
+    members: 7,
+    officeBearers: 8,
+    membership: 9,
+  };
+
+  const sourceSections =
+    (source.sections || {}) as Record<string, { order?: number }>;
+
+  const usesLegacyDefaultOrder =
+    Object.entries(legacySectionOrder).every(([key, order]) =>
+      sourceSections[key]?.order === undefined ||
+      sourceSections[key]?.order === order
+    );
+
+  const configuredUpcomingEvents = {
+    ...DEFAULT_HOME_SETTINGS.pressConferences,
+    ...((source.pressConferences as object) || {}),
+  } as Record<string, unknown>;
+
+  const pressConferences = {
+    ...configuredUpcomingEvents,
+    eyebrow:
+      configuredUpcomingEvents.eyebrow === "Media & Journalism"
+        ? DEFAULT_HOME_SETTINGS.pressConferences.eyebrow
+        : configuredUpcomingEvents.eyebrow,
+    title:
+      configuredUpcomingEvents.title === "Latest Press Conference"
+        ? DEFAULT_HOME_SETTINGS.pressConferences.title
+        : configuredUpcomingEvents.title,
+    description:
+      configuredUpcomingEvents.description === "The latest media interaction and official briefing from Greater Noida Press Club."
+        ? DEFAULT_HOME_SETTINGS.pressConferences.description
+        : configuredUpcomingEvents.description,
+    buttonLabel:
+      configuredUpcomingEvents.buttonLabel === "View All"
+        ? DEFAULT_HOME_SETTINGS.pressConferences.buttonLabel
+        : configuredUpcomingEvents.buttonLabel,
+    buttonHref:
+      configuredUpcomingEvents.buttonHref === "/press-conference"
+        ? DEFAULT_HOME_SETTINGS.pressConferences.buttonHref
+        : configuredUpcomingEvents.buttonHref,
+  };
+
   return {
     ...DEFAULT_HOME_SETTINGS,
 
@@ -41,6 +91,9 @@ const mergeHomeSettings = (
                 )?.[key] as object ||
                 {}
               ),
+              ...(usesLegacyDefaultOrder
+                ? { order: fallback.order }
+                : {}),
             },
           ]
         )
@@ -76,11 +129,7 @@ const mergeHomeSettings = (
         {}),
     },
 
-    pressConferences: {
-      ...DEFAULT_HOME_SETTINGS.pressConferences,
-      ...((source.pressConferences as object) ||
-        {}),
-    },
+    pressConferences,
 
     members: {
       ...DEFAULT_HOME_SETTINGS.members,
