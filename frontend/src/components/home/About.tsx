@@ -7,7 +7,6 @@ import {
   ArrowRight,
   CalendarDays,
   Check,
-  ImageOff,
   Newspaper,
   Users,
 } from "lucide-react";
@@ -112,42 +111,6 @@ function AnimatedNumber({
     <span ref={ref}>
       {display}
     </span>
-  );
-}
-
-function ImageBadge({
-  siteName,
-}: {
-  siteName?: string;
-}) {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: 15,
-      }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-      }}
-      viewport={{
-        once: true,
-        amount: 0.5,
-      }}
-      transition={{
-        duration: 0.6,
-      }}
-      className="absolute bottom-5 left-5 z-20 rounded-2xl border border-white/30 bg-black/55 px-4 py-3 text-white shadow-2xl backdrop-blur-md sm:bottom-7 sm:left-7"
-    >
-      <p className="text-[9px] font-black uppercase tracking-[0.22em] text-white/60">
-        Greater Noida
-      </p>
-
-      <p className="mt-1 text-sm font-black sm:text-base">
-        {siteName ||
-          "Press Club"}
-      </p>
-    </motion.div>
   );
 }
 
@@ -269,10 +232,6 @@ export default function About() {
     setStatsUnavailable,
   ] = useState(false);
 
-  const [
-    imageLoaded,
-    setImageLoaded,
-  ] = useState(false);
 
   /*
    * ----------------------------------------------------------
@@ -538,94 +497,31 @@ export default function About() {
               className="absolute -bottom-5 -left-5 h-full w-full rounded-[2rem] border border-black/5 bg-[#b8c7d8]/45 sm:-bottom-7 sm:-left-7"
             />
 
-            {/* Decorative top card */}
+            {/* Transparent logo / image holder */}
 
-            <div
-              aria-hidden="true"
-              className="absolute -right-3 -top-3 z-0 h-24 w-24 rounded-[1.5rem] border border-white/70 bg-white/55 backdrop-blur-md sm:-right-5 sm:-top-5 sm:h-32 sm:w-32"
-            />
-
-            <div className="relative z-10 overflow-hidden rounded-[2rem] border-[7px] border-white bg-white shadow-[0_30px_80px_rgba(38,32,23,0.18)]">
+            <div className="relative mx-auto flex aspect-[6/5] min-h-[240px] w-full max-w-full items-center justify-center overflow-visible bg-transparent p-4 sm:min-h-[320px] sm:p-6">
               {aboutImage ? (
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                  }}
-                  animate={{
-                    opacity:
-                      imageLoaded
-                        ? 1
-                        : 0,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                  }}
-                  className="relative aspect-[6/5] overflow-hidden bg-black/5"
-                >
-                  <Image
-                    src={
-                      aboutImage
-                    }
-                    alt={
-                      about.title ||
-                      settings.siteName ||
-                      "Greater Noida Press Club"
-                    }
-                    fill
-                    priority={false}
-                    sizes="(min-width: 1024px) 55vw, 100vw"
-                    onLoad={() =>
-                      setImageLoaded(
-                        true
-                      )
-                    }
-                    className="object-cover transition duration-700 hover:scale-[1.025]"
-                  />
-
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-white/5"
-                  />
-
-                  <ImageBadge
-                    siteName={
-                      settings.siteName
-                    }
-                  />
-                </motion.div>
+                <Image
+                  src={aboutImage}
+                  alt={
+                    about.title ||
+                    settings.siteName ||
+                    "Greater Noida Press Club"
+                  }
+                  fill
+                  priority={false}
+                  sizes="(min-width: 1024px) 55vw, 100vw"
+                  className="object-contain"
+                />
               ) : (
-                <div className="relative flex aspect-[6/5] items-center justify-center bg-gradient-to-br from-[#e6d8c5] via-[#f4f7fb] to-white">
-                  <div className="text-center text-black/40">
-                    <ImageOff
-                      className="mx-auto"
-                      size={42}
-                    />
-
-                    <p className="mt-3 text-xs font-bold uppercase tracking-[0.15em]">
-                      About image coming soon
-                    </p>
-                  </div>
-
-                  <ImageBadge
-                    siteName={
-                      settings.siteName
-                    }
-                  />
+                <div className="flex h-full w-full items-center justify-center bg-transparent text-center text-black/35">
+                  <p className="text-xs font-semibold uppercase tracking-[0.15em]">
+                    Upload a transparent logo or image
+                  </p>
                 </div>
               )}
             </div>
 
-            {/* Floating identity label */}
-
-            <div className="absolute -bottom-5 right-3 z-20 rounded-2xl border border-black/10 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-md sm:-bottom-6 sm:right-6">
-              <p className="text-[9px] font-black uppercase tracking-[0.18em] text-black/40">
-                GNPC
-              </p>
-
-              <p className="mt-1 text-xs font-black text-black sm:text-sm">
-                Journalism • Community
-              </p>
-            </div>
           </motion.div>
 
           {/* =================================================
