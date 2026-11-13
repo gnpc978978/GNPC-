@@ -741,10 +741,10 @@ export default function HomeSectionForm() {
                     className="rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm"
                   >
                     <option value="white">
-                      White background
+                      Warm editorial paper
                     </option>
                     <option value="slate">
-                      Light slate background
+                      Cool slate / mist
                     </option>
                   </select>
 
