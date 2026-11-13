@@ -16,7 +16,6 @@ import {
 } from "@/services/api";
 import {
   defaultHomeSettings,
-  type HomeCard,
   type HomeSectionKey,
   type HomeSettings,
   mergeHomeSettings,
@@ -25,25 +24,19 @@ import {
 const sectionLabels: Record<HomeSectionKey, string> = {
   hero: "Hero",
   about: "About",
-  objectives: "Objectives",
   latestUpdates: "Latest Updates",
   gallery: "Gallery",
   pressConferences: "Upcoming Events",
-  members: "Members",
   officeBearers: "Office Bearers",
-  membership: "Membership CTA",
 };
 
 const sectionOrder: HomeSectionKey[] = [
   "hero",
   "about",
-  "objectives",
   "officeBearers",
   "latestUpdates",
   "pressConferences",
   "gallery",
-  "members",
-  "membership",
 ];
 
 type WebsiteResponse = {
@@ -213,78 +206,6 @@ function Panel({
 
       {children}
     </section>
-  );
-}
-
-function CardEditor({
-  card,
-  index,
-  onChange,
-  onRemove,
-}: {
-  card: HomeCard;
-  index: number;
-  onChange: (
-    key: keyof HomeCard,
-    value: string
-  ) => void;
-  onRemove: () => void;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <h3 className="font-bold text-slate-900">
-          Objective Card {index + 1}
-        </h3>
-
-        <button
-          type="button"
-          onClick={onRemove}
-          className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
-        >
-          Remove
-        </button>
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-3">
-        <Field
-          label="Icon Name"
-          value={card.icon}
-          onChange={(event) =>
-            onChange(
-              "icon",
-              event.target.value
-            )
-          }
-          placeholder="Newspaper"
-        />
-
-        <Field
-          label="Title"
-          value={card.title}
-          onChange={(event) =>
-            onChange(
-              "title",
-              event.target.value
-            )
-          }
-        />
-
-        <div className="md:col-span-3">
-          <TextArea
-            label="Description"
-            value={card.description}
-            onChange={(event) =>
-              onChange(
-                "description",
-                event.target.value
-              )
-            }
-            rows={3}
-          />
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -550,65 +471,6 @@ export default function HomeSectionForm() {
               : item
         ),
     });
-  };
-
-  const addObjective = () => {
-    updateNested(
-      "objectives",
-      {
-        cards: [
-          ...home.objectives
-            .cards,
-          {
-            icon: "Star",
-            title: "New objective",
-            description:
-              "Describe this objective.",
-          },
-        ],
-      }
-    );
-  };
-
-  const removeObjective = (
-    index: number
-  ) => {
-    updateNested(
-      "objectives",
-      {
-        cards:
-          home.objectives.cards.filter(
-            (_, itemIndex) =>
-              itemIndex !== index
-          ),
-      }
-    );
-  };
-
-  const updateObjective = (
-    index: number,
-    key: keyof HomeCard,
-    value: string
-  ) => {
-    updateNested(
-      "objectives",
-      {
-        cards:
-          home.objectives.cards.map(
-            (
-              card,
-              itemIndex
-            ) =>
-              itemIndex ===
-              index
-                ? {
-                    ...card,
-                    [key]: value,
-                  }
-                : card
-          ),
-      }
-    );
   };
 
   const save = async (
@@ -1175,161 +1037,6 @@ export default function HomeSectionForm() {
       </Panel>
 
       <Panel
-        title="Objectives Section"
-        description="Control the section heading, CTA, number of cards and every objective card shown on the homepage."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          <Field
-            label="Eyebrow"
-            value={
-              home.objectives
-                .eyebrow
-            }
-            onChange={(event) =>
-              updateNested(
-                "objectives",
-                {
-                  eyebrow:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Title"
-            value={
-              home.objectives
-                .title
-            }
-            onChange={(event) =>
-              updateNested(
-                "objectives",
-                {
-                  title:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <div className="md:col-span-2">
-            <TextArea
-              label="Description"
-              value={
-                home.objectives
-                  .description
-              }
-              onChange={(event) =>
-                updateNested(
-                  "objectives",
-                  {
-                    description:
-                      event.target.value,
-                  }
-                )
-              }
-            />
-          </div>
-
-          <Field
-            label="Button Label"
-            value={
-              home.objectives
-                .buttonLabel
-            }
-            onChange={(event) =>
-              updateNested(
-                "objectives",
-                {
-                  buttonLabel:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Button Route / Href"
-            value={
-              home.objectives
-                .buttonHref
-            }
-            onChange={(event) =>
-              updateNested(
-                "objectives",
-                {
-                  buttonHref:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <NumberField
-            label="Cards shown"
-            value={
-              home.objectives
-                .displayCount
-            }
-            min={1}
-            max={
-              home.objectives
-                .cards.length || 1
-            }
-            onChange={(value) =>
-              updateNested(
-                "objectives",
-                {
-                  displayCount:
-                    value,
-                }
-              )
-            }
-          />
-        </div>
-
-        <div className="mt-7 space-y-4">
-          {home.objectives.cards.map(
-            (
-              card,
-              index
-            ) => (
-              <CardEditor
-                key={index}
-                card={card}
-                index={index}
-                onChange={(
-                  key,
-                  value
-                ) =>
-                  updateObjective(
-                    index,
-                    key,
-                    value
-                  )
-                }
-                onRemove={() =>
-                  removeObjective(
-                    index
-                  )
-                }
-              />
-            )
-          )}
-        </div>
-
-        <button
-          type="button"
-          onClick={addObjective}
-          className="mt-4 rounded-xl border border-slate-300 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50"
-        >
-          Add Objective Card
-        </button>
-
-      </Panel>
-
-      <Panel
         title="Latest Updates Section"
         description="The actual press releases, announcements and events remain in their own CMS modules. These settings control the homepage presentation, card count and CTA."
       >
@@ -1670,137 +1377,6 @@ export default function HomeSectionForm() {
       </Panel>
 
       <Panel
-        title="Members Section"
-        description="Member records remain in the Members CMS. This controls the homepage section heading, count and CTA."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          <Field
-            label="Eyebrow"
-            value={
-              home.members
-                .eyebrow
-            }
-            onChange={(event) =>
-              updateNested(
-                "members",
-                {
-                  eyebrow:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Title"
-            value={
-              home.members
-                .title
-            }
-            onChange={(event) =>
-              updateNested(
-                "members",
-                {
-                  title:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <div className="md:col-span-2">
-            <TextArea
-              label="Description"
-              value={
-                home.members
-                  .description
-              }
-              onChange={(event) =>
-                updateNested(
-                  "members",
-                  {
-                    description:
-                      event.target.value,
-                  }
-                )
-              }
-            />
-          </div>
-
-          <Field
-            label="Button Label"
-            value={
-              home.members
-                .buttonLabel
-            }
-            onChange={(event) =>
-              updateNested(
-                "members",
-                {
-                  buttonLabel:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Button Route / Href"
-            value={
-              home.members
-                .buttonHref
-            }
-            onChange={(event) =>
-              updateNested(
-                "members",
-                {
-                  buttonHref:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <NumberField
-            label="Cards shown"
-            value={
-              home.members
-                .displayCount
-            }
-            min={1}
-            max={12}
-            onChange={(value) =>
-              updateNested(
-                "members",
-                {
-                  displayCount:
-                    value,
-                }
-              )
-            }
-          />
-
-          <Toggle
-            label="Show View All button"
-            checked={
-              home.members
-                .showViewAll
-            }
-            onChange={(value) =>
-              updateNested(
-                "members",
-                {
-                  showViewAll:
-                    value,
-                }
-              )
-            }
-          />
-        </div>
-
-      </Panel>
-
-      <Panel
         title="Office Bearers Section"
         description="Office bearer records and member photos remain in their own CMS. This controls the homepage heading, CTA and card count."
       >
@@ -1923,135 +1499,6 @@ export default function HomeSectionForm() {
                 {
                   showViewAll:
                     value,
-                }
-              )
-            }
-          />
-        </div>
-
-      </Panel>
-
-      <Panel
-        title="Membership CTA Section"
-        description="Control the final homepage call-to-action, its text and both button routes."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          <Field
-            label="Eyebrow"
-            value={
-              home.membership
-                .eyebrow
-            }
-            onChange={(event) =>
-              updateNested(
-                "membership",
-                {
-                  eyebrow:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Title"
-            value={
-              home.membership
-                .title
-            }
-            onChange={(event) =>
-              updateNested(
-                "membership",
-                {
-                  title:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <div className="md:col-span-2">
-            <TextArea
-              label="Description"
-              value={
-                home.membership
-                  .description
-              }
-              onChange={(event) =>
-                updateNested(
-                  "membership",
-                  {
-                    description:
-                      event.target.value,
-                  }
-                )
-              }
-            />
-          </div>
-
-          <Field
-            label="Primary Button Label"
-            value={
-              home.membership
-                .primaryLabel
-            }
-            onChange={(event) =>
-              updateNested(
-                "membership",
-                {
-                  primaryLabel:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Primary Button Route / Href"
-            value={
-              home.membership
-                .primaryHref
-            }
-            onChange={(event) =>
-              updateNested(
-                "membership",
-                {
-                  primaryHref:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Secondary Button Label"
-            value={
-              home.membership
-                .secondaryLabel
-            }
-            onChange={(event) =>
-              updateNested(
-                "membership",
-                {
-                  secondaryLabel:
-                    event.target.value,
-                }
-              )
-            }
-          />
-
-          <Field
-            label="Secondary Button Route / Href"
-            value={
-              home.membership
-                .secondaryHref
-            }
-            onChange={(event) =>
-              updateNested(
-                "membership",
-                {
-                  secondaryHref:
-                    event.target.value,
                 }
               )
             }
