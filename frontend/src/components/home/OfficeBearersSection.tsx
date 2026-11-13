@@ -158,7 +158,7 @@ export default function OfficeBearersSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.7 }}
-          className="gnpc-section-heading mx-auto max-w-[900px] text-center"
+          className="gnpc-section-heading gnpc-home-editorial-heading mx-auto max-w-[900px] text-center"
         >
           <div className="flex items-center justify-center gap-3">
             <span aria-hidden="true" className="h-px w-8 bg-black/20 sm:w-12" />
