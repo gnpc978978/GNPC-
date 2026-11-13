@@ -22,13 +22,11 @@ export interface ISeoSettings {
 export type HomeSectionKey =
   | "hero"
   | "about"
-  | "objectives"
   | "latestUpdates"
   | "gallery"
   | "pressConferences"
-  | "members"
   | "officeBearers"
-  | "membership";
+;
 
 export interface IHomeSettings {
   sections: Record<
@@ -311,46 +309,28 @@ export const DEFAULT_HOME_SETTINGS: IHomeSettings =
         background: "white",
       },
 
-      objectives: {
-        enabled: true,
-        order: 3,
-        background: "slate",
-      },
-
       officeBearers: {
         enabled: true,
-        order: 4,
+        order: 3,
         background: "white",
       },
 
       latestUpdates: {
         enabled: true,
-        order: 5,
+        order: 4,
         background: "white",
       },
 
       pressConferences: {
         enabled: true,
-        order: 6,
+        order: 5,
         background: "slate",
       },
 
       gallery: {
         enabled: true,
-        order: 7,
+        order: 6,
         background: "white",
-      },
-
-      members: {
-        enabled: true,
-        order: 8,
-        background: "slate",
-      },
-
-      membership: {
-        enabled: true,
-        order: 9,
-        background: "slate",
       },
     },
 
