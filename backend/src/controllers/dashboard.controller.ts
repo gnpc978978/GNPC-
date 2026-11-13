@@ -5,6 +5,52 @@ import PressRelease from "../models/pressRelease.model";
 import Event from "../models/event.model";
 
 /**
+ * Public homepage statistics.
+ *
+ * Count only active members and published content so the public homepage
+ * never exposes draft or inactive CMS records.
+ */
+export const getPublicStats = async (
+  _req: Request,
+  res: Response
+) => {
+  try {
+    const [members, pressReleases, events] = await Promise.all([
+      Member.countDocuments({ status: "active" }),
+      PressRelease.countDocuments({
+        status: "PUBLISHED",
+        isActive: { $ne: false },
+      }),
+      Event.countDocuments({
+        status: "published",
+        isActive: { $ne: false },
+      }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        members,
+        pressReleases,
+        events,
+      },
+    });
+  } catch (error) {
+    console.error("getPublicStats error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch public statistics.",
+      data: {
+        members: 0,
+        pressReleases: 0,
+        events: 0,
+      },
+    });
+  }
+};
+
+/**
  * Get MongoDB database.
  */
 const getDatabase = () => {
