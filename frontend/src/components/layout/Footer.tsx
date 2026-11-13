@@ -197,23 +197,14 @@ export default function Footer() {
         </div>
 
         <div className="relative border-t border-white/10 py-6 sm:py-7">
-          <div className="flex flex-col gap-5 text-[11px] text-white/45 lg:flex-row lg:items-center lg:justify-between">
-            <p className="leading-6">
+          <div className="grid grid-cols-1 items-center gap-4 text-center text-[11px] text-white/45 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:text-left">
+            <p className="leading-6 md:justify-self-start">
               © {new Date().getFullYear()} {siteName}. All rights reserved.
             </p>
 
-            <nav aria-label="Legal information" className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link href="/privacy-policy" className="transition hover:text-[#e2c783]">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="transition hover:text-[#e2c783]">
-                Terms &amp; Conditions
-              </Link>
-            </nav>
-
             <Link
               href="/credits"
-              className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#d4b06a]/25 bg-[#d4b06a]/[0.06] px-4 py-2.5 text-[10px] font-semibold text-[#e2c783] transition hover:border-[#d4b06a]/60 hover:bg-[#d4b06a]/[0.12] hover:text-[#f1d99e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#e5c783]"
+              className="group inline-flex w-fit items-center justify-self-center gap-2 rounded-full border border-[#d4b06a]/25 bg-[#d4b06a]/[0.06] px-4 py-2.5 text-[10px] font-semibold text-[#e2c783] transition hover:border-[#d4b06a]/60 hover:bg-[#d4b06a]/[0.12] hover:text-[#f1d99e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#e5c783]"
             >
               Website credits
               <span className="text-white/45">·</span>
@@ -224,6 +215,18 @@ export default function Footer() {
                 aria-hidden="true"
               />
             </Link>
+
+            <nav
+              aria-label="Legal information"
+              className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 md:justify-self-end"
+            >
+              <Link href="/privacy-policy" className="transition hover:text-[#e2c783]">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="transition hover:text-[#e2c783]">
+                Terms &amp; Conditions
+              </Link>
+            </nav>
           </div>
         </div>
       </div>
