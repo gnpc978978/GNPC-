@@ -76,6 +76,7 @@ export default function Home() {
             "gnpc-section-shell",
             "gnpc-home-content",
             "gnpc-home-design-section",
+            "gnpc-home-redesign-v2",
             `gnpc-home-design-${key}`,
             surfaceClass,
           ].join(" ");
