@@ -1010,3 +1010,430 @@ button {
     padding-inline: 1rem !important;
   }
 }
+
+
+/* ==========================================================================
+   GNPC HOMEPAGE REDESIGN V2
+   This pass changes the actual composition of sections below the Hero.
+   Copy, media, cards, counts and links continue to come from Home CMS.
+   ========================================================================== */
+
+.gnpc-home-redesign-v2 {
+  --home-ink: #10243a;
+  --home-muted: #657386;
+  --home-gold: #b48b43;
+  --home-line: rgba(16, 36, 58, .12);
+  overflow: clip;
+}
+
+.gnpc-home-redesign-v2.gnpc-shell-paper {
+  background:
+    radial-gradient(ellipse at 12% 18%, rgba(180,139,67,.075), transparent 32rem),
+    linear-gradient(180deg, #fbfcfe 0%, #f4f7fb 100%) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-shell-muted {
+  background:
+    radial-gradient(ellipse at 88% 5%, rgba(180,139,67,.12), transparent 28rem),
+    linear-gradient(140deg, #e8eef5 0%, #f3f6fa 52%, #e9eff6 100%) !important;
+}
+
+.gnpc-home-redesign-v2 > section {
+  padding: clamp(3.75rem, 7vw, 7rem) 0 !important;
+  background: transparent !important;
+  color: var(--home-ink) !important;
+}
+
+.gnpc-home-redesign-v2 > section > .relative.mx-auto,
+.gnpc-home-redesign-v2 > section > .mx-auto {
+  width: min(100% - 2rem, 1740px) !important;
+  max-width: 1740px !important;
+  padding-inline: clamp(0px, 1.8vw, 2rem) !important;
+}
+
+/* Editorial section headers: a compact label, large left title and a
+   separate right-side description create a real change in hierarchy. */
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading,
+.gnpc-home-redesign-v2 .gnpc-section-heading.gnpc-home-editorial-heading {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(17rem, .85fr);
+  align-items: end;
+  column-gap: clamp(2rem, 6vw, 7rem);
+  row-gap: 1.1rem;
+  max-width: none !important;
+  margin: 0 0 clamp(2rem, 4vw, 3.5rem) !important;
+  text-align: left !important;
+}
+
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading > div:first-child {
+  grid-column: 1 / -1;
+  justify-content: flex-start !important;
+  margin: 0 !important;
+}
+
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading > div:first-child > span:first-child,
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading > div:first-child > span:last-child {
+  width: 2.25rem;
+  background: var(--home-gold) !important;
+}
+
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading > p:first-child {
+  grid-column: 1 / -1;
+  margin: 0 !important;
+  color: var(--home-gold) !important;
+  font-size: .66rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .22em !important;
+  text-transform: uppercase;
+}
+
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading > h2 {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0 !important;
+  max-width: 17ch;
+  color: var(--home-ink) !important;
+  font-family: var(--gnpc-font-editorial);
+  font-size: clamp(2.35rem, 4.8vw, 4.7rem) !important;
+  font-weight: 760 !important;
+  line-height: .94 !important;
+  letter-spacing: -.065em !important;
+  text-wrap: balance;
+}
+
+.gnpc-home-redesign-v2 .gnpc-home-editorial-heading > p:last-child {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+  width: min(100%, 39rem);
+  margin: 0 !important;
+  color: var(--home-muted) !important;
+  font-size: clamp(.88rem, 1.1vw, 1.02rem) !important;
+  line-height: 1.85 !important;
+  text-align: left !important;
+}
+
+/* ABOUT — a photographic story panel, not the old centered intro + repeated
+   title. Its image is still the shared About CMS image. */
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > .gnpc-section-heading {
+  display: none !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .92fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5.5rem) !important;
+  margin: 0 !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) > div:first-child {
+  min-height: clamp(24rem, 42vw, 42rem);
+  overflow: hidden;
+  border: 1px solid rgba(180,139,67,.24);
+  border-radius: 2.1rem;
+  background:
+    radial-gradient(circle at 82% 14%, rgba(212,176,106,.25), transparent 15rem),
+    linear-gradient(145deg, #e5ebf2, #f8fafc 58%, #e8eef5);
+  box-shadow: 0 30px 85px rgba(10, 30, 50, .12);
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) > div:first-child > div {
+  min-height: inherit;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) > div:last-child > span {
+  border-color: rgba(180,139,67,.3) !important;
+  background: rgba(255,255,255,.72) !important;
+  color: #8b682f !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) h3 {
+  max-width: 13ch;
+  margin-top: 1.25rem !important;
+  color: var(--home-ink) !important;
+  font-family: var(--gnpc-font-editorial);
+  font-size: clamp(2.4rem, 4.8vw, 4.8rem) !important;
+  font-weight: 760 !important;
+  line-height: .94 !important;
+  letter-spacing: -.065em !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) > div:last-child > p {
+  max-width: 42rem;
+  margin-top: 1.35rem !important;
+  color: var(--home-muted) !important;
+  font-size: clamp(.9rem, 1.1vw, 1.04rem) !important;
+  line-height: 1.9 !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about [class*="rounded-2xl"][class*="border"] {
+  border-color: var(--home-line) !important;
+  border-radius: 1rem !important;
+  background: rgba(255,255,255,.8) !important;
+  box-shadow: 0 12px 30px rgba(10,30,50,.055);
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:last-child {
+  margin-top: clamp(2rem, 4vw, 3.5rem) !important;
+  border: 1px solid var(--home-line);
+  border-radius: 1.6rem;
+  background: rgba(255,255,255,.75);
+  box-shadow: 0 18px 48px rgba(10,30,50,.065);
+}
+
+/* OBJECTIVES — larger editorial bento tiles, with the first objective as the
+   dark lead story and the rest as bright, quiet cards. */
+.gnpc-home-redesign-v2.gnpc-home-design-objectives #objectives article {
+  min-height: 15rem !important;
+  border-radius: 1.65rem !important;
+  border: 1px solid var(--home-line) !important;
+  box-shadow: 0 20px 54px rgba(10,30,50,.075) !important;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-objectives #objectives article:first-child {
+  min-height: 20rem !important;
+  border-color: rgba(180,139,67,.38) !important;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(212,176,106,.2), transparent 17rem),
+    linear-gradient(145deg, #07182b, #123653) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-objectives #objectives article:not(:first-child) {
+  background: rgba(255,255,255,.92) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-objectives #objectives article h3 {
+  font-size: clamp(1.25rem, 1.65vw, 1.8rem) !important;
+  letter-spacing: -.045em !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-objectives #objectives article:not(:first-child) p {
+  color: #68778a !important;
+}
+
+/* NEWSROOM — broad lead story and clean supporting story stack. */
+.gnpc-home-redesign-v2.gnpc-home-design-latestUpdates #latest-updates article {
+  border-radius: 1.85rem !important;
+  border: 1px solid rgba(16,36,58,.12) !important;
+  box-shadow: 0 22px 65px rgba(10,30,50,.1) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-latestUpdates #latest-updates article:first-child {
+  min-height: clamp(27rem, 42vw, 39rem) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-latestUpdates #latest-updates article:not(:first-child) {
+  min-height: 0 !important;
+  background: #fff !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-latestUpdates #latest-updates article:not(:first-child) > div {
+  border-radius: 1.45rem !important;
+}
+
+/* EVENTS — consistent cards with strong image-first presentation. */
+.gnpc-home-redesign-v2.gnpc-home-design-pressConferences article {
+  overflow: hidden;
+  border: 1px solid var(--home-line) !important;
+  border-radius: 1.65rem !important;
+  background: rgba(255,255,255,.94) !important;
+  box-shadow: 0 18px 52px rgba(10,30,50,.075) !important;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-pressConferences article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 28px 65px rgba(10,30,50,.13) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-pressConferences article > a:first-child {
+  aspect-ratio: 16 / 10 !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-pressConferences article h3 {
+  color: var(--home-ink) !important;
+  font-size: 1.2rem !important;
+  letter-spacing: -.035em;
+}
+
+/* GALLERY — asymmetric photo editorial with rounded, framed photography. */
+.gnpc-home-redesign-v2.gnpc-home-design-gallery #gallery article {
+  overflow: hidden;
+  border: 1px solid rgba(180,139,67,.18);
+  border-radius: 1.8rem !important;
+  background: #fff;
+  box-shadow: 0 22px 64px rgba(10,30,50,.105);
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-gallery #gallery article:first-child {
+  min-height: clamp(27rem, 40vw, 38rem) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-gallery #gallery article:not(:first-child) {
+  min-height: 13rem !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-gallery #gallery article img {
+  transition: transform .8s cubic-bezier(.2,.8,.2,1);
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-gallery #gallery article:hover img {
+  transform: scale(1.055);
+}
+
+/* MEMBERS — profile tiles become editorial cards with a wider photo area. */
+.gnpc-home-redesign-v2.gnpc-home-design-members .gnpc-home-editorial-heading {
+  margin-bottom: 2.5rem !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-members .relative.mx-auto > div.mt-12 {
+  margin-top: 0 !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-members article article,
+.gnpc-home-redesign-v2.gnpc-home-design-members article a.group {
+  overflow: hidden;
+  border: 1px solid var(--home-line) !important;
+  border-radius: 1.4rem !important;
+  background: rgba(255,255,255,.96) !important;
+  box-shadow: 0 16px 42px rgba(10,30,50,.075) !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-members article article > div:first-child,
+.gnpc-home-redesign-v2.gnpc-home-design-members article a.group > div:first-child {
+  aspect-ratio: 4 / 4.1 !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-members article h3 {
+  color: var(--home-ink) !important;
+  letter-spacing: -.035em;
+}
+
+/* LEADERS — remove the floating fan feeling and present the carousel as a
+   deliberate gallery stage while retaining its existing swipe/arrow controls. */
+.gnpc-home-redesign-v2.gnpc-home-design-officeBearers .relative.mx-auto.h-\[540px\] {
+  max-width: 1250px !important;
+  height: 35rem !important;
+  overflow: visible !important;
+  border-radius: 2rem;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(212,176,106,.15), transparent 35%),
+    linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0));
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-officeBearers .relative.mx-auto.h-\[540px\] img {
+  border-radius: 1.7rem !important;
+  box-shadow: 0 28px 65px rgba(10,30,50,.16);
+}
+
+/* MEMBERSHIP — give the final invitation a distinct full-width campaign panel. */
+.gnpc-home-redesign-v2.gnpc-home-design-membership #membership > .relative.mx-auto > div > div {
+  border-radius: 2rem !important;
+}
+
+.gnpc-home-redesign-v2.gnpc-home-design-membership #membership .relative.overflow-hidden.rounded-xl {
+  border: 1px solid rgba(212,176,106,.38) !important;
+  border-radius: 2rem !important;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(212,176,106,.17), transparent 19rem),
+    linear-gradient(125deg, #061629 0%, #0d2a45 55%, #173e5b 100%) !important;
+  box-shadow: 0 30px 85px rgba(7,26,46,.22) !important;
+}
+
+/* Clear type and surface contrast in the site's dark theme. */
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2 {
+  --home-ink: #eff5fc;
+  --home-muted: #b9c6d4;
+  --home-line: rgba(226,236,248,.13);
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-shell-paper {
+  background: linear-gradient(180deg, #111d2b 0%, #101a27 100%) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-shell-muted {
+  background: linear-gradient(140deg, #172536 0%, #111d2b 52%, #172536 100%) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2 .gnpc-home-editorial-heading > h2,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2 .gnpc-home-editorial-heading > p:last-child,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2 .gnpc-home-editorial-heading > p:first-child {
+  color: var(--home-ink) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) h3 {
+  color: var(--home-ink) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:last-child,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-members article article,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-members article a.group,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-pressConferences article,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-objectives #objectives article:not(:first-child) {
+  border-color: var(--home-line) !important;
+  background: #1b2a3b !important;
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-members article h3,
+.gnpc-public[data-theme="dark"] .gnpc-home-redesign-v2.gnpc-home-design-pressConferences article h3 {
+  color: #edf3fa !important;
+}
+
+@media (max-width: 760px) {
+  .gnpc-home-redesign-v2 > section {
+    padding-block: 3.25rem !important;
+  }
+
+  .gnpc-home-redesign-v2 > section > .relative.mx-auto,
+  .gnpc-home-redesign-v2 > section > .mx-auto {
+    width: min(100% - 2rem, 1740px) !important;
+    padding-inline: 0 !important;
+  }
+
+  .gnpc-home-redesign-v2 .gnpc-home-editorial-heading,
+  .gnpc-home-redesign-v2 .gnpc-section-heading.gnpc-home-editorial-heading {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+    margin-bottom: 2rem !important;
+    text-align: left !important;
+  }
+
+  .gnpc-home-redesign-v2 .gnpc-home-editorial-heading > h2 {
+    max-width: 15ch;
+    font-size: clamp(2.2rem, 9vw, 3.4rem) !important;
+  }
+
+  .gnpc-home-redesign-v2 .gnpc-home-editorial-heading > p:last-child {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gnpc-home-redesign-v2.gnpc-home-design-about #about > .relative.mx-auto > div:nth-child(2) > div:first-child {
+    min-height: 20rem;
+  }
+
+  .gnpc-home-redesign-v2.gnpc-home-design-officeBearers .relative.mx-auto.h-\[540px\] {
+    height: 32rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gnpc-home-redesign-v2 *,
+  .gnpc-home-redesign-v2 *::before,
+  .gnpc-home-redesign-v2 *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
