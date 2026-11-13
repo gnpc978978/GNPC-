@@ -153,37 +153,38 @@ export default function OfficeBearersSection() {
         {/* =========================================
             SECTION HEADER
         ========================================== */}
-        <motion.div
+        <motion.header
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.7 }}
-          className="gnpc-section-heading gnpc-home-editorial-heading mx-auto max-w-[900px] text-center"
+          className="gnpc-office-bearers-heading"
         >
-          <div className="flex items-center justify-center gap-3">
-            <span aria-hidden="true" className="h-px w-8 bg-black/20 sm:w-12" />
-            <span className="text-[9px] font-black uppercase tracking-[0.25em] text-black/45 sm:text-[10px]">
-              {section.eyebrow || "Our Leaders"}
-            </span>
-            <span aria-hidden="true" className="h-px w-8 bg-black/20 sm:w-12" />
+          <div className="gnpc-office-bearers-copy">
+            <div className="gnpc-office-bearers-eyebrow">
+              <span aria-hidden="true" />
+              <span>{section.eyebrow || "Our Leaders"}</span>
+              <span aria-hidden="true" />
+            </div>
+
+            <h2 className="gnpc-office-bearers-title">
+              {section.title || "Office Bearers"}
+            </h2>
+
+            {section.description && (
+              <p className="gnpc-office-bearers-description">
+                {section.description}
+              </p>
+            )}
           </div>
 
-          <h2 className="mt-5 text-4xl font-black leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-[4.5rem]">
-            {section.title || "Office Bearers"}
-          </h2>
-
-          {section.description && (
-            <p className="mx-auto mt-5 max-w-[720px] text-sm leading-6 text-black/50 sm:text-base sm:leading-7">
-              {section.description}
-            </p>
-          )}
-
           {section.showViewAll && (
-            <div className="mt-7 flex justify-center">
+            <div className="gnpc-office-bearers-action">
               <Button
                 href={section.buttonHref || "/office-bearers"}
                 variant="outline"
                 size="md"
+                className="gnpc-office-bearers-view-all"
               >
                 {section.buttonLabel?.trim().toLowerCase() === "explore"
                   ? "View All"
@@ -192,7 +193,7 @@ export default function OfficeBearersSection() {
               </Button>
             </div>
           )}
-        </motion.div>
+        </motion.header>
 
         {/* =========================================
             LOADING STATE
@@ -262,7 +263,7 @@ export default function OfficeBearersSection() {
               {/* =====================================
                   CAROUSEL STAGE
               ====================================== */}
-              <div className="relative mx-auto h-[540px] w-full max-w-[1100px] overflow-hidden sm:h-[550px] lg:h-[560px]">
+              <div className="gnpc-office-bearers-stage relative mx-auto h-[540px] w-full max-w-[1100px] overflow-hidden sm:h-[550px] lg:h-[560px]">
 
                 {/* Subtle background glow */}
                 <div className="pointer-events-none absolute left-1/2 top-[42%] h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4b06a]/10 blur-3xl sm:h-[360px] sm:w-[360px]" />
@@ -445,14 +446,14 @@ export default function OfficeBearersSection() {
                             }}
                             className="pointer-events-none mt-5 text-center"
                           >
-                            <h3 className="text-lg font-bold tracking-tight text-slate-950 sm:text-xl">
+                            <h3 className="gnpc-office-bearers-member-name text-lg font-bold tracking-tight text-slate-950 sm:text-xl">
                               {member.fullName}
                             </h3>
 
                             <div className="mx-auto mt-2 flex items-center justify-center gap-3">
                               <span className="h-px w-8 bg-[#9a7631]" />
 
-                              <p className="text-sm font-semibold uppercase tracking-wide text-[#9a7631]">
+                              <p className="gnpc-office-bearers-designation text-sm font-semibold uppercase tracking-wide text-[#9a7631]">
                                 {member.designation ||
                                   "GNPC Member"}
                               </p>
@@ -482,7 +483,7 @@ export default function OfficeBearersSection() {
                         {isActive && (
                           <a
                             href={`/office-bearers/${member._id}`}
-                            className="absolute left-1/2 top-[calc(100%+76px)] -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-500 transition hover:text-[#9a7631]"
+                            className="gnpc-office-bearers-profile-link absolute left-1/2 top-[calc(100%+76px)] -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-500 transition hover:text-[#9a7631]"
                           >
                             View Profile
                           </a>
