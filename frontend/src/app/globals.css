@@ -1437,3 +1437,210 @@ button {
     animation-iteration-count: 1 !important;
   }
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* OFFICE BEARERS HEADING + DARK THEME CONTRAST FIXES                          */
+/* -------------------------------------------------------------------------- */
+
+/* Keep the View All action attached to the heading, not in a third grid row. */
+.gnpc-office-bearers-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "copy action";
+  align-items: end;
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  row-gap: 1rem;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 clamp(2rem, 4vw, 3rem);
+  text-align: left;
+}
+
+.gnpc-office-bearers-copy {
+  grid-area: copy;
+  min-width: 0;
+}
+
+.gnpc-office-bearers-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  color: #b48b43;
+  font-size: .67rem;
+  font-weight: 850;
+  letter-spacing: .22em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.gnpc-office-bearers-eyebrow > span:first-child,
+.gnpc-office-bearers-eyebrow > span:last-child {
+  display: block;
+  width: 2.25rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.gnpc-office-bearers-title {
+  max-width: 16ch;
+  margin: 1.15rem 0 0 !important;
+  color: var(--gnpc-ink) !important;
+  font-family: var(--gnpc-font-editorial);
+  font-size: clamp(2.5rem, 5vw, 4.8rem) !important;
+  font-weight: 760 !important;
+  line-height: .94 !important;
+  letter-spacing: -.065em !important;
+  text-wrap: balance;
+}
+
+.gnpc-office-bearers-description {
+  max-width: 48rem;
+  margin: 1rem 0 0 !important;
+  color: var(--gnpc-ink-soft) !important;
+  font-size: clamp(.88rem, 1.1vw, 1rem) !important;
+  line-height: 1.8 !important;
+}
+
+.gnpc-office-bearers-action {
+  grid-area: action;
+  align-self: end;
+  justify-self: end;
+  margin: 0 0 .15rem;
+}
+
+.gnpc-office-bearers-view-all {
+  min-width: 8.5rem;
+}
+
+.gnpc-office-bearers-stage {
+  border: 1px solid rgba(16, 36, 58, .08);
+  border-radius: 2rem;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(212,176,106,.13), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.62), rgba(225,233,241,.25));
+}
+
+.gnpc-office-bearers-member-name {
+  color: var(--gnpc-ink) !important;
+}
+
+.gnpc-office-bearers-designation {
+  color: #9a7631 !important;
+}
+
+.gnpc-office-bearers-profile-link {
+  color: #536274 !important;
+  font-weight: 700;
+}
+
+.gnpc-office-bearers-profile-link:hover {
+  color: #9a7631 !important;
+}
+
+/* The shared Button outline variant uses a dark hard-coded foreground. Restore
+   a light-on-dark treatment for all such actions inside the public dark theme,
+   without changing gold primary or white inverse buttons. */
+.gnpc-public[data-theme="dark"] main .gnpc-btn:not([class*="bg-[#d4b06a]"]):not([class*="bg-[#e2c27d]"]):not([class*="bg-white "]):is(
+  [class*="text-[#0b1728]"],
+  [class*="text-[#0b1f3a]"],
+  [class*="text-[#071a2e]"],
+  [class*="text-[#07172b]"]
+) {
+  border-color: rgba(226, 194, 125, .42) !important;
+  background: rgba(226, 236, 248, .08) !important;
+  color: #edf3fa !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .16) !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-btn:not([class*="bg-[#d4b06a]"]):not([class*="bg-[#e2c27d]"]):not([class*="bg-white "]):is(
+  [class*="text-[#0b1728]"],
+  [class*="text-[#0b1f3a]"],
+  [class*="text-[#071a2e]"],
+  [class*="text-[#07172b]"]
+):hover {
+  border-color: #e2c27d !important;
+  background: #d4b06a !important;
+  color: #071a2e !important;
+}
+
+/* Lift low-contrast custom navy/charcoal text and dark mustard accents across
+   public page content. Gold actions/backgrounds are intentionally untouched. */
+.gnpc-public[data-theme="dark"] main :is(
+  [class*="text-[#0b1728]"],
+  [class*="text-[#10243a]"],
+  [class*="text-[#071a2e]"],
+  [class*="text-[#0b1f3a]"],
+  [class*="text-[#07172b]"],
+  [class*="text-[#1f2937]"],
+  [class*="text-[#334155]"]
+):not(.gnpc-btn):not([class*="bg-"]) {
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] main :is(
+  [class*="text-[#9a7631]"],
+  [class*="text-[#94743a]"],
+  [class*="text-[#7c5e25]"],
+  [class*="text-[#b08a3e]"]
+) {
+  color: #e2c27d !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-heading .gnpc-office-bearers-title,
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-member-name {
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-description {
+  color: #b8c5d4 !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-designation,
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-eyebrow {
+  color: #e2c27d !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-profile-link {
+  color: #c3cfdd !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-profile-link:hover {
+  color: #f0d99f !important;
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-stage {
+  border-color: rgba(226, 236, 248, .12);
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(212,176,106,.11), transparent 34%),
+    linear-gradient(180deg, rgba(33,49,67,.92), rgba(18,31,46,.88));
+}
+
+.gnpc-public[data-theme="dark"] main .gnpc-office-bearers-stage .rounded-full.border {
+  border-color: rgba(226, 236, 248, .2) !important;
+}
+
+@media (max-width: 760px) {
+  .gnpc-office-bearers-heading {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "copy"
+      "action";
+    row-gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .gnpc-office-bearers-title {
+    margin-top: .8rem !important;
+    font-size: clamp(2.25rem, 9vw, 3.45rem) !important;
+  }
+
+  .gnpc-office-bearers-action {
+    justify-self: start;
+    margin: 0;
+  }
+
+  .gnpc-office-bearers-stage {
+    border-radius: 1.5rem;
+  }
+}
