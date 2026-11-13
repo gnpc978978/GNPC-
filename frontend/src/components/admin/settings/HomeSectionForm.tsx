@@ -673,8 +673,8 @@ export default function HomeSectionForm() {
       className="space-y-6"
     >
       <Panel
-        title="Homepage Section Manager"
-        description="Control the visibility, order and background treatment of every homepage section. Edit each section's text, cards and links below."
+        title="Homepage Layout & Section Manager"
+        description="Control the visibility, order and editorial surface of every homepage section below the unchanged Hero. The section-specific panels below drive the new homepage layout, including its headings, descriptions, cards, media and calls to action."
       >
         <div className="space-y-3">
           {sortedSections.map(
