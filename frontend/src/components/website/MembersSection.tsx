@@ -745,7 +745,7 @@ export default function MembersSection({
           transition={{
             duration: 0.7,
           }}
-          className="mx-auto max-w-[850px] text-center"
+          className="gnpc-section-heading gnpc-home-editorial-heading mx-auto max-w-[850px] text-center"
         >
           <div className="flex items-center justify-center gap-3">
             <span className="h-px w-8 bg-blue-200 sm:w-12" />
