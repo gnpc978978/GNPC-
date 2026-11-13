@@ -798,3 +798,215 @@ button {
   background: #071629 !important;
   color: #f8fafc !important;
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* HOMEPAGE EDITORIAL REDESIGN — ALL SECTIONS BELOW THE ORIGINAL HERO          */
+/* -------------------------------------------------------------------------- */
+
+.gnpc-home-design-section {
+  position: relative;
+  isolation: isolate;
+  background: #f7f9fc !important;
+  --home-card-radius: 1.65rem;
+}
+
+/* The CMS surface selector now controls every homepage section, not only CTA. */
+.gnpc-home-design-section.gnpc-shell-paper {
+  background: linear-gradient(180deg, #fbfcfe 0%, #f4f7fb 100%) !important;
+}
+
+.gnpc-home-design-section.gnpc-shell-muted {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(212, 176, 106, 0.11), transparent 24rem),
+    linear-gradient(135deg, #eaf0f6 0%, #f4f7fb 55%, #edf2f7 100%) !important;
+}
+
+.gnpc-home-design-section > section {
+  width: 100%;
+  padding-block: clamp(3.25rem, 5.5vw, 5.75rem) !important;
+  background: transparent !important;
+  color: var(--gnpc-ink) !important;
+}
+
+.gnpc-home-design-section > section > div.relative.mx-auto {
+  width: min(100%, 1720px);
+  max-width: 1720px !important;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3.1vw, 3.75rem) !important;
+}
+
+/* A single editorial heading rhythm gives all sections one visual identity. */
+.gnpc-home-design-section > section > div.relative.mx-auto > div:first-child h2,
+.gnpc-home-design-section > section > div.mx-auto > div:first-child h2 {
+  color: var(--gnpc-ink) !important;
+  font-family: var(--gnpc-font-editorial);
+  font-size: clamp(2rem, 4.3vw, 3.8rem) !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.055em !important;
+  line-height: 0.98 !important;
+  text-wrap: balance;
+}
+
+.gnpc-home-design-section .gnpc-section-heading {
+  max-width: 960px !important;
+}
+
+.gnpc-home-design-section .gnpc-section-heading > div:first-child,
+.gnpc-home-design-section > section > div.relative.mx-auto > div:first-child > div:first-child {
+  color: #94743a;
+}
+
+.gnpc-home-design-section .gnpc-section-heading p,
+.gnpc-home-design-section > section > div.relative.mx-auto > div:first-child > p {
+  color: var(--gnpc-ink-soft);
+  line-height: 1.8;
+}
+
+/* About: remove the duplicated centered title and let the image/content pair
+   become the main story block. The displayed copy still comes from Home CMS. */
+.gnpc-home-design-about #about > div > div:first-child {
+  display: none;
+}
+
+.gnpc-home-design-about #about > div > div:nth-child(2) {
+  margin-top: 0 !important;
+}
+
+.gnpc-home-design-about #about > div > div:nth-child(2) > div:first-child {
+  border-radius: 2rem;
+}
+
+.gnpc-home-design-about #about > div > div:nth-child(2) h3 {
+  color: var(--gnpc-ink);
+  font-family: var(--gnpc-font-editorial);
+  font-size: clamp(2rem, 4.2vw, 3.8rem);
+  font-weight: 750;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.gnpc-home-design-about #about [class*="rounded-2xl"][class*="border"] {
+  border-color: rgba(11, 31, 58, 0.09) !important;
+  border-radius: 1rem !important;
+  background: rgba(255, 255, 255, 0.74) !important;
+  box-shadow: 0 12px 32px rgba(7, 26, 46, 0.045);
+}
+
+.gnpc-home-design-about #about [class*="rounded-[2rem]"][class*="border"] {
+  border-radius: 1.5rem !important;
+}
+
+/* Objectives: refined cards and generous rhythm, while preserving the
+   featured dark card and CMS-managed card order, icon and content. */
+.gnpc-home-design-objectives #objectives article {
+  border-radius: var(--home-card-radius) !important;
+  border-color: rgba(11, 31, 58, 0.09) !important;
+  box-shadow: 0 15px 42px rgba(7, 26, 46, 0.065) !important;
+}
+
+.gnpc-home-design-objectives #objectives article:not([class*="bg-[#0b1f3a]"]) {
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+.gnpc-home-design-objectives #objectives article > div:last-child {
+  border-radius: inherit;
+}
+
+/* Newsroom and event cards: shared editorial card surface and image treatment. */
+.gnpc-home-design-latestUpdates #latest-updates article,
+.gnpc-home-design-pressConferences article {
+  border-radius: var(--home-card-radius) !important;
+  border-color: rgba(11, 31, 58, 0.1) !important;
+  box-shadow: 0 18px 48px rgba(7, 26, 46, 0.075) !important;
+}
+
+.gnpc-home-design-latestUpdates #latest-updates article:not(:first-child),
+.gnpc-home-design-pressConferences article {
+  background: rgba(255, 255, 255, 0.94) !important;
+}
+
+.gnpc-home-design-latestUpdates #latest-updates article img,
+.gnpc-home-design-pressConferences article img {
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Gallery: the image mosaic is treated as a curated editorial spread. */
+.gnpc-home-design-gallery #gallery [class*="rounded-[2rem]"] {
+  border-radius: 1.5rem !important;
+}
+
+.gnpc-home-design-gallery #gallery img {
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Directory previews and office-bearer cards sit on the same paper surface. */
+.gnpc-home-design-members #members,
+.gnpc-home-design-members > section {
+  color: var(--gnpc-ink);
+}
+
+.gnpc-home-design-members [class*="rounded-xl"][class*="bg-white"],
+.gnpc-home-design-officeBearers [class*="rounded-2xl"][class*="bg-white"] {
+  border-color: rgba(11, 31, 58, 0.1);
+  box-shadow: 0 18px 48px rgba(7, 26, 46, 0.07);
+}
+
+.gnpc-home-design-officeBearers img {
+  border-radius: 1.35rem;
+}
+
+/* Membership CTA retains its deep navy focal surface, now with a refined
+   gold edge, larger radius and responsive internal spacing. */
+.gnpc-home-design-membership #membership .relative.overflow-hidden.rounded-xl {
+  border: 1px solid rgba(212, 176, 106, 0.28) !important;
+  border-radius: 2rem !important;
+  box-shadow: 0 28px 80px rgba(7, 26, 46, 0.2) !important;
+}
+
+/* Consistent focus and reduced motion remain available to keyboard users. */
+.gnpc-home-design-section a:focus-visible,
+.gnpc-home-design-section button:focus-visible {
+  outline: 2px solid #d4b06a;
+  outline-offset: 3px;
+}
+
+/* The editorial palette follows the public dark-theme selection as well. */
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section.gnpc-shell-paper {
+  background: linear-gradient(180deg, #111d2b 0%, #101a27 100%) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section.gnpc-shell-muted {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(212, 176, 106, 0.07), transparent 24rem),
+    linear-gradient(135deg, #172536 0%, #111d2b 55%, #172536 100%) !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section > section {
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section > section > div.relative.mx-auto > div:first-child h2,
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section > section > div.mx-auto > div:first-child h2,
+.gnpc-public[data-theme="dark"] .gnpc-home-design-about #about > div > div:nth-child(2) h3 {
+  color: #edf3fa !important;
+}
+
+.gnpc-public[data-theme="dark"] .gnpc-home-design-about #about [class*="rounded-2xl"][class*="border"],
+.gnpc-public[data-theme="dark"] .gnpc-home-design-objectives #objectives article:not([class*="bg-[#0b1f3a]"]),
+.gnpc-public[data-theme="dark"] .gnpc-home-design-latestUpdates #latest-updates article:not(:first-child),
+.gnpc-public[data-theme="dark"] .gnpc-home-design-pressConferences article {
+  border-color: rgba(226, 236, 248, 0.13) !important;
+  background: rgba(27, 42, 59, 0.94) !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.2) !important;
+}
+
+@media (max-width: 639px) {
+  .gnpc-home-design-section > section {
+    padding-block: 2.75rem !important;
+  }
+
+  .gnpc-home-design-section > section > div.relative.mx-auto {
+    padding-inline: 1rem !important;
+  }
+}
