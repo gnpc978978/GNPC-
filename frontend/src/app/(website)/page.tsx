@@ -59,15 +59,26 @@ export default function Home() {
      * for section visibility/order.
      */
 
+    const surfaceClass =
+      section.background === "slate"
+        ? "gnpc-shell-muted"
+        : "gnpc-shell-paper";
+
+    // The original Hero composition remains untouched. All following
+    // homepage sections share the new editorial system and CMS surface.
     const wrapperClass =
-      key === "hero" || key === "membership"
+      key === "hero"
         ? [
             "gnpc-section-shell",
-            section.background === "slate"
-              ? "gnpc-shell-muted"
-              : "gnpc-shell-paper",
+            surfaceClass,
           ].join(" ")
-        : "gnpc-section-shell gnpc-home-content";
+        : [
+            "gnpc-section-shell",
+            "gnpc-home-content",
+            "gnpc-home-design-section",
+            `gnpc-home-design-${key}`,
+            surfaceClass,
+          ].join(" ");
 
     switch (key) {
       case "hero":
