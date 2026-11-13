@@ -15,16 +15,15 @@ const mergeHomeSettings = (
 ): IHomeSettings => {
   const source = value || {};
 
+  // Recognize the previous homepage defaults while ignoring the retired
+  // Objectives, Members and Membership CTA section records.
   const legacySectionOrder: Record<string, number> = {
     hero: 1,
     about: 2,
-    objectives: 3,
-    latestUpdates: 4,
-    gallery: 5,
+    officeBearers: 4,
+    latestUpdates: 5,
     pressConferences: 6,
-    members: 7,
-    officeBearers: 8,
-    membership: 9,
+    gallery: 7,
   };
 
   const sourceSections =
