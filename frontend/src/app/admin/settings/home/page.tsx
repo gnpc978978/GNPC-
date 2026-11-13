@@ -8,9 +8,9 @@ export default function HomeSettingsPage() {
       </h1>
 
       <p className="mb-6 max-w-4xl text-sm leading-6 text-slate-500">
-        Control the complete homepage from one CMS screen:
-        section order, visibility, headings, descriptions,
-        buttons, card counts, objective cards and homepage media.
+        Manage the redesigned homepage below the existing Hero. Set section order,
+        visibility and surface style, then edit each section's headings,
+        descriptions, cards, media and calls to action from the panels below.
       </p>
 
       <HomeSectionForm />
