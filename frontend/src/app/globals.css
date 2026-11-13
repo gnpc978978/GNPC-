@@ -837,8 +837,8 @@ button {
 }
 
 /* A single editorial heading rhythm gives all sections one visual identity. */
-.gnpc-home-design-section > section > div.relative.mx-auto > div:first-child h2,
-.gnpc-home-design-section > section > div.mx-auto > div:first-child h2 {
+.gnpc-home-design-section:not(.gnpc-home-design-membership) > section > div.relative.mx-auto > div:first-child h2,
+.gnpc-home-design-section:not(.gnpc-home-design-membership) > section > div.mx-auto > div:first-child h2 {
   color: var(--gnpc-ink) !important;
   font-family: var(--gnpc-font-editorial);
   font-size: clamp(2rem, 4.3vw, 3.8rem) !important;
@@ -986,8 +986,8 @@ button {
   color: #edf3fa !important;
 }
 
-.gnpc-public[data-theme="dark"] .gnpc-home-design-section > section > div.relative.mx-auto > div:first-child h2,
-.gnpc-public[data-theme="dark"] .gnpc-home-design-section > section > div.mx-auto > div:first-child h2,
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section:not(.gnpc-home-design-membership) > section > div.relative.mx-auto > div:first-child h2,
+.gnpc-public[data-theme="dark"] .gnpc-home-design-section:not(.gnpc-home-design-membership) > section > div.mx-auto > div:first-child h2,
 .gnpc-public[data-theme="dark"] .gnpc-home-design-about #about > div > div:nth-child(2) h3 {
   color: #edf3fa !important;
 }
