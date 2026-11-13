@@ -1,13 +1,11 @@
 export type HomeSectionKey =
   | "hero"
   | "about"
-  | "objectives"
   | "latestUpdates"
   | "gallery"
   | "pressConferences"
-  | "members"
   | "officeBearers"
-  | "membership";
+;
 
 export type HomeSection = {
   enabled: boolean;
@@ -150,46 +148,28 @@ export const defaultHomeSettings: HomeSettings = {
       background: "white",
     },
 
-    objectives: {
-      enabled: true,
-      order: 3,
-      background: "slate",
-    },
-
     officeBearers: {
       enabled: true,
-      order: 4,
+      order: 3,
       background: "white",
     },
 
     latestUpdates: {
       enabled: true,
-      order: 5,
+      order: 4,
       background: "white",
     },
 
     pressConferences: {
       enabled: true,
-      order: 6,
+      order: 5,
       background: "slate",
     },
 
     gallery: {
       enabled: true,
-      order: 7,
+      order: 6,
       background: "white",
-    },
-
-    members: {
-      enabled: true,
-      order: 8,
-      background: "slate",
-    },
-
-    membership: {
-      enabled: true,
-      order: 9,
-      background: "slate",
     },
   },
 
@@ -481,13 +461,10 @@ export function mergeHomeSettings(
   const legacySectionOrder: Record<HomeSectionKey, number> = {
     hero: 1,
     about: 2,
-    objectives: 3,
-    latestUpdates: 4,
-    gallery: 5,
+    officeBearers: 4,
+    latestUpdates: 5,
     pressConferences: 6,
-    members: 7,
-    officeBearers: 8,
-    membership: 9,
+    gallery: 7,
   };
 
   const usesLegacyDefaultOrder = (
