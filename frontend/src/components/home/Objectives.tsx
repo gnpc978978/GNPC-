@@ -342,7 +342,7 @@ export default function Objectives() {
           transition={{
             duration: 0.7,
           }}
-          className="gnpc-section-heading mx-auto max-w-[900px] text-center"
+          className="gnpc-section-heading gnpc-home-editorial-heading mx-auto max-w-[900px] text-center"
         >
           <div className="flex items-center justify-center gap-3">
             <span
