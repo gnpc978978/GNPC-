@@ -214,10 +214,6 @@ function ContributorCard({ person }: { person: Contributor }) {
         <p className="mt-4 max-w-sm text-[10px] font-semibold leading-6 tracking-[.11em] text-white/55 sm:text-[11px]">
           {person.contribution}
         </p>
-
-        {person.featured ? (
-          
-        ) : null}
       </div>
     </article>
   );
