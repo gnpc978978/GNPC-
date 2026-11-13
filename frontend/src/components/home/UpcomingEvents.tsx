@@ -114,7 +114,7 @@ export default function UpcomingEvents() {
   return (
     <section className="relative overflow-hidden bg-[#f8fafc] py-12 text-[#171717] sm:py-16 lg:py-20">
       <div className="mx-auto w-full max-w-[1840px] px-4 sm:px-6 lg:px-[2vw]">
-        <div className="mx-auto max-w-4xl text-center">
+        <div className="gnpc-home-editorial-heading mx-auto max-w-4xl text-center">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#9a7631]">
             {section.eyebrow && section.eyebrow !== "Media & Journalism"
               ? section.eyebrow
